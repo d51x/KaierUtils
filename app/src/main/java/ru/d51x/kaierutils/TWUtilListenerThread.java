@@ -2,6 +2,7 @@ package ru.d51x.kaierutils;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 /**
  * Created by Dmitriy on 18.02.2015.
@@ -9,7 +10,7 @@ import android.os.Looper;
 public class TWUtilListenerThread extends Thread {
 
 	private Handler handler;
-	private TWUtilEx tw;
+	public TWUtilEx tw;
 
 
 
@@ -20,6 +21,7 @@ public class TWUtilListenerThread extends Thread {
 
 	@Override
 	public void run() {
+		Log.d ("TWUtilListenerThread", "run()");
 		try {
 			Looper.prepare();
 			handler = new Handler();
@@ -33,17 +35,18 @@ public class TWUtilListenerThread extends Thread {
 		}
 	}
 
-	public synchronized void tryStop() {
-		handler.post(new Runnable() {
-			@Override
-			public void run() {
-				if ( tw != null){
-					tw.Destroy ();
-					tw = null;
-				}
-				Looper.myLooper().quit();
-			}
-		});
-	}
+//	public synchronized void tryStop() {
+//		Log.d ("TWUtilListenerThread", "tryStop()");
+//		handler.post(new Runnable() {
+//			@Override
+//			public void run() {
+////				if ( tw != null){
+////					tw.Destroy ();
+////					tw = null;
+////				}
+//				//Looper.myLooper().quit();
+//			}
+//		});
+//	}
 
 }

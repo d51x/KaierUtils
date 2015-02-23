@@ -3,87 +3,80 @@ package ru.d51x.kaierutils;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.tw.john.TWUtil;
-import android.widget.Toast;
-import android.provider.Settings.System;
-
-import android.preference.PreferenceManager;
-
 
 public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 	public TWUtilBroadcastReceiver () {
 	}
 
+	public static int prevVolume = -1;
+	private static final String TAG = "TWUtilBroadcastReceiver";
+
 	@Override
 	public void onReceive (Context context, Intent intent) {
+
+		// TODO: надо ли так делать или достаточно при загрузке?
+		// context.startService(new Intent(context, TWUtilService.class));
+
 		String action = intent.getAction();
+		DebugLogger.ToLog (TAG, String.format("onReceive(), action %s", action));
 		if ( action.equals (Intent.ACTION_BOOT_COMPLETED ) ) {
-				// автозапуск
-				// TODO: проверка на автозапуск сервиса
-				context.startService(new Intent(context, TWUtilService.class));
+			context.startService(new Intent(context, TWUtilService.class));
 		}
 		else if ( action.equals ( Intent.ACTION_SHUTDOWN ) ||
-				    action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_SHUTDOWN ))
-		{
-			Toast.makeText (context, "KaierUtils: action shutdown", Toast.LENGTH_LONG).show();
-			// изменить натсройку звука
-			SetVolume( GetVolumePreference() );
+				  action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_SHUTDOWN ))
+		{	// изменение уровня громкости при выключении
+			SetVolumeAtStartUp();
+		}
+		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP ))
+		{	// изменение уровня громкости при sleep
+			SetVolumeAtWakeUp();
 		}
 		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP ))
 		{
-			Toast.makeText (context, "KaierUtils: action wakeup", Toast.LENGTH_LONG).show();
 			// TODO: что-то делаем при просыпании
 
 		}
-		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP ))
-		{
-			Toast.makeText (context, "KaierUtils: action sleep", Toast.LENGTH_LONG).show();
-			// изменить натсройку звука
-			SetVolume( GetVolumePreference() );
-		}
 		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_START ))
 		{
-			Toast.makeText (context, String.format("KaierUtils: action reverse activity start,  %i", TWUtilConst.TWUTIL_COMMAND_REVERSE_ACTIVITY), Toast.LENGTH_LONG).show();
-			SetVolume( 5 );
+			prevVolume = App.mGlobalSettings.getVolumeLevel ();
+			changeVolumeAtReverse();
 		}
 		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH ))
 		{
-			Toast.makeText (context, String.format("KaierUtils: action reverse activity finish,  %i", TWUtilConst.TWUTIL_COMMAND_REVERSE_ACTIVITY), Toast.LENGTH_LONG).show();
-			SetVolume( 8 );
-		}
-		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_TAG_START ))
-		{
-			Toast.makeText (context, String.format("KaierUtils: action reverse activity start %i", TWUtilConst.TWUTIL_CONTEXT_REVERSE_TAG), Toast.LENGTH_LONG).show();
-			SetVolume( 4 );
-		}
-		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_TAG_STOP ))
-		{
-			Toast.makeText (context, String.format("KaierUtils: action reverse activity stop %i", TWUtilConst.TWUTIL_CONTEXT_REVERSE_TAG), Toast.LENGTH_LONG).show();
-			SetVolume( 7 );
-
+			TWUtilEx.setVolumeLevel( prevVolume );
+			//App.mGlobalSettings.setVolumeLevel(prevVolume, true);
+			App.mGlobalSettings.getVolumeLevel ();
 		}
 
 	}
 
-	private void SetVolume(int value) {
-		TWUtil mTW = new TWUtil ();
-		if (mTW.open (new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL}) == 0) {
-			mTW.start ();
-			mTW.write ( TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL, 1, value);
-
-			Toast.makeText (App.getInstance (), String.format("KaierUtils: volume changed to %s", value), Toast.LENGTH_LONG).show();
-
-			mTW.write ( TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL, 255);
-			mTW.stop ();
-			mTW.close ();
+	private void changeVolumeAtReverse() {
+		if ( !App.mGlobalSettings.isNeedSoundDecreaseAtReverse  ) {
+			return;
 		}
-		mTW = null;
+		if ( App.mGlobalSettings.isFixedVolumeAtReverse ) {
+			if ( App.mGlobalSettings.FixedVolumeLevelAtReverse <= prevVolume ) {
+				//App.mGlobalSettings.setVolumeLevel(App.mGlobalSettings.FixedVolumeLevelAtReverse, true);
+				TWUtilEx.setVolumeLevel( App.mGlobalSettings.FixedVolumeLevelAtReverse );
+			}
+			return;
+		} else if (  App.mGlobalSettings.isPercentVolumeAtReverse ) {
+			int newLevel = Math.round(prevVolume * App.mGlobalSettings.PercentVolumeLevelAtReverse / 100);
+			//App.mGlobalSettings.setVolumeLevel(newLevel, true);
+			TWUtilEx.setVolumeLevel( newLevel );
+		}
 	}
 
-	private int GetVolumePreference() {
-		int res = -0;
-		// res = PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getInt("ru.d51x.volume_at_startup", 3);
-		res =  System.getInt(App.getInstance().getContentResolver(), "CAR_SETTINGS__VOLUME_AT_START_UP", 3);
-		return res;
+	private void SetVolumeAtStartUp(){
+		if ( App.mGlobalSettings.isNeedSoundDecreaseAtStartUp ) {
+			int level = App.mGlobalSettings.VolumeLevelAtStartUp;
+			App.mGlobalSettings.setVolumeLevel(level, true);
+		}
+	}
+	private void SetVolumeAtWakeUp(){
+		if ( App.mGlobalSettings.isNeedSoundDecreaseAtWakeUp ) {
+			int level = App.mGlobalSettings.VolumeLevelAtWakeUp;
+			App.mGlobalSettings.setVolumeLevel(level, true);
+		}
 	}
 }

@@ -4,5 +4,38 @@
     <string name="app_name">KaierUtils</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_settings_activity">Настройки громкости</string>
+    <string name="change_volume_at_startup_category">Громкость при включении устройства</string>
+    <string name="change_volume_at_startup_title">Изменение громкости при запуске</string>
+    <string name="change_volume_at_startup_summary">Установка уровня громкости на заданную величину при запуске усройства</string>
+    <string name="volume_level_at_startup_title">Уровень громкости</string>
+    <string name="volume_level_at_startup_summary">Текущее значение %1$d</string>
+    <string name="volume_level_at_startup_dialog">Выберите уровень громкости (от 1 до 10) </string>
+	<string name="change_volume_at_wakeup_title">Изменение громкости при просыпании</string>
+	<string name="change_volume_at_wakeup_summary">Установка уровня громкости на заданную величину при просыпании усройства</string>
+	<string name="volume_level_at_wakeup_title">Уровень громкости</string>
+	<string name="volume_level_at_wakeup_summary">Текущее значение %1$d</string>
+	<string name="volume_level_at_wakeup_dialog">Выберите уровень громкости (от 1 до 10) </string>
+
+
+
+    <string name="change_volume_at_reverse_category">Громкость при включении заднего хода</string>
+    <string name="change_volume_at_reverse_title">Уменьшение громкости при включении ЗХ</string>
+    <string name="change_volume_at_reverse_summary">Уменьшение уровня громкости до заданной величины при включении ЗХ. Приглушение громкости должно быть отключено.</string>
+    <string name="fixed_volume_available_at_reverse_title">Уменьшение громкости до уровня</string>
+    <string name="fixed_volume_available_at_reverse_summary"></string>
+    <string name="fixed_volume_level_at_startup_title">Уровень громкости</string>
+    <string name="fixed_volume_level_at_startup_summary">Текущее значение %1$d</string>
+    <string name="fixed_volume_level_at_startup_dialog">Выберите уровень громкости (от 1 до 10)</string>
+    <string name="percent_volume_available_at_reverse_title">Уменьшение громкости на процент</string>
+    <string name="percent_volume_available_at_reverse_summary">Уменьшение громкости на заданный процент</string>
+    <string name="percent_volume_level_at_startup_title">Процент уменьшения</string>
+    <string name="percent_volume_level_at_startup_summary">Текущее значение %1$d </string>
+    <string name="percent_volume_level_at_startup_dialog">Введите процент уменьшения</string>
+    <string name="sound_settings_title">Дополнительные настройки звука</string>
+    <string name="title_activity_brightness">Brightness</string>
+    <string name="id_button_brightness_title">Яркость</string>
+    <string name="title_activity_assign_program">AssignProgramActivity</string>
+	<string name="id_button_navi_title">Навигация</string>
 
 </resources>
