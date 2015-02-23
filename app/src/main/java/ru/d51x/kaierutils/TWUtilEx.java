@@ -32,6 +32,7 @@ public class TWUtilEx {
 
 
 	public TWUtilEx() {
+		if ( GlobalSettings.IN_EMULATOR ) return;
 		this.mTWUtilHandler = null;
 		isTWUtilOpened = false;
 		curVolume = -1;
@@ -88,6 +89,7 @@ public class TWUtilEx {
 	}
 
 	public void Init() {
+		if ( GlobalSettings.IN_EMULATOR ) return;
 		mTWUtil = new TWUtil();
 		int result = mTWUtil.open(twutil_contexts);
 		if ( result == 0) {
