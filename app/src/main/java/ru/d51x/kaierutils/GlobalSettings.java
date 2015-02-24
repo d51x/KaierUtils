@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
  */
 public class GlobalSettings {
 
-	public static final boolean IN_EMULATOR = false;
+	//public static final boolean IN_EMULATOR = true;
 	private int Volume;
 	//private int Brightness;
 	//private int BrightnessMode;

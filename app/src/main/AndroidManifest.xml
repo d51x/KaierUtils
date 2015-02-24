@@ -9,7 +9,7 @@
     <android:uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--<android:uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
     <android:uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
@@ -37,7 +37,7 @@
         </activity>
 
         <service
-            android:name=".TWUtilService"
+            android:name=".BackgroundService"
             android:enabled="true"
             android:exported="false" >
         </service>

@@ -5,11 +5,25 @@ import android.os.Handler;
 import android.os.Message;
 import android.tw.john.TWUtil;
 import android.util.Log;
+import java.lang.reflect.Type;
 
 /**
  * Created by Dmitriy on 18.02.2015.
  */
 public class TWUtilEx {
+
+	public static boolean isTWUtilAvailable() {
+		try {
+			Type type = TWUtil.class;
+			String name = type.getClass().getName();
+			Log.d("TWUtilEx", "PASS: TWUtil is available!");
+			return true;
+		}
+		catch (Throwable ex){
+			Log.d("TWUtilEx", "ERROR: TWUtil is not available");
+			return false;
+		}
+	}
 
 	private TWUtil mTWUtil;
 	private static int curVolume;
@@ -32,7 +46,7 @@ public class TWUtilEx {
 
 
 	public TWUtilEx() {
-		if ( GlobalSettings.IN_EMULATOR ) return;
+		mTWUtil = null;
 		this.mTWUtilHandler = null;
 		isTWUtilOpened = false;
 		curVolume = -1;
@@ -70,10 +84,9 @@ public class TWUtilEx {
 						}
 						break;
 					case TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL:
-                        if ( !isReverseMode ) {
-                            curVolume = message.arg1 & Integer.MAX_VALUE;
-                            App.mGlobalSettings.setVolumeLevel(curVolume, false);
-                        }
+                        if ( !isReverseMode ) break;
+                        curVolume = message.arg1 & Integer.MAX_VALUE;
+                        App.mGlobalSettings.setVolumeLevel(curVolume, false);
 						break;
 //					case TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS:
 //						curBrightness = message.arg1;
@@ -89,7 +102,6 @@ public class TWUtilEx {
 	}
 
 	public void Init() {
-		if ( GlobalSettings.IN_EMULATOR ) return;
 		mTWUtil = new TWUtil();
 		int result = mTWUtil.open(twutil_contexts);
 		if ( result == 0) {
@@ -125,7 +137,7 @@ public class TWUtilEx {
 //	public static int getBrightnessModeLevel () { return curBrightnessMode;	}
 
 	public static boolean setVolumeLevel(int value) {
-		if ( GlobalSettings.IN_EMULATOR ) return true;
+		if ( ! isTWUtilAvailable() ) return false;
 		TWUtil mTW = new TWUtil ();
 		if (mTW.open (new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL}) == 0) {
 			try {

@@ -18,7 +18,7 @@ public class MainActivity extends Activity {
 		super.onCreate (savedInstanceState);
 		setContentView (R.layout.main_activity);
 		Log.d ("SettingsActivity", "onCreate");
-		startService(new Intent(this, TWUtilService.class));
+		startService(new Intent(this, BackgroundService.class));
 		Toast.makeText (this, "Service started", 0);
 
 		btnSoundSettings = (Button) findViewById (R.id.id_button_sound_Settings);

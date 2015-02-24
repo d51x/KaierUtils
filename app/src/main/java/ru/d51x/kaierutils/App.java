@@ -22,7 +22,7 @@ public class App extends Application {
 		Log.d ("App", "onCreate");
 		self = this;
 		mGlobalSettings = new GlobalSettings();
-		this.startService (new Intent (this, TWUtilService.class));
+		this.startService (new Intent (this, BackgroundService.class));
 	}
 
 }

@@ -20,7 +20,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 		String action = intent.getAction();
 		DebugLogger.ToLog (TAG, String.format("onReceive(), action %s", action));
 		if ( action.equals (Intent.ACTION_BOOT_COMPLETED ) ) {
-			context.startService(new Intent(context, TWUtilService.class));
+			context.startService(new Intent(context, BackgroundService.class));
 		}
 		else if ( action.equals ( Intent.ACTION_SHUTDOWN ) ||
 				  action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_SHUTDOWN ))
