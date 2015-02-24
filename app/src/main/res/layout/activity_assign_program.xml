@@ -1,9 +1,0 @@
-<LinearLayout android:background="#ff404040" android:layout_width="fill_parent" android:layout_height="fill_parent"
-              xmlns:android="http://schemas.android.com/apk/res/android">
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="New Text"
-		android:id="@+id/textView1"/>
-	<ListView android:textSize="18.0sp" android:id="@+id/apps_list" android:background="#ff000000" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginRight="1.0dip" android:drawSelectorOnTop="false" android:fastScrollEnabled="true" />
-</LinearLayout>

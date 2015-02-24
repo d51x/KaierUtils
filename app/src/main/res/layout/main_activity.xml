@@ -14,16 +14,4 @@
 		android:text="@string/sound_settings_title"
 		android:id="@+id/id_button_sound_Settings" android:layout_alignParentTop="true"
 		android:layout_alignParentLeft="true"/>
-	<Button
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/id_button_brightness_title"
-		android:id="@+id/id_button_brightness" android:layout_below="@+id/id_button_sound_Settings"
-		android:layout_alignParentLeft="true"/>
-	<Button
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/id_button_navi_title"
-		android:id="@+id/id_button_navi" android:layout_below="@+id/id_button_brightness"
-		android:layout_alignParentLeft="true" android:visibility="gone"/>
 </RelativeLayout>

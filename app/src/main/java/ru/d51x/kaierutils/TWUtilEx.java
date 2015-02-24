@@ -13,8 +13,8 @@ public class TWUtilEx {
 
 	private TWUtil mTWUtil;
 	private static int curVolume;
-	private static int curBrightness;
-	private static int curBrightnessMode;
+	//private static int curBrightness;
+	//private static int curBrightnessMode;
 	protected static final String TWUTIL_HANDLER = "TWUtilHandler";
 
 
@@ -23,8 +23,8 @@ public class TWUtilEx {
 			TWUtilConst.TWUTIL_CONTEXT_SLEEP,                   // 514
 			TWUtilConst.TWUTIL_CONTEXT_REQUEST_SHUTDOWN,        // Shutdown 40720
 			TWUtilConst.TWUTIL_CONTEXT_REVERSE_ACTIVITY,        // reverse activity 40732
-			TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL,           // 515
-			TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS              // 258
+			TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL           // 515
+			//TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS              // 258
 	};
 
 	protected boolean isTWUtilOpened;
@@ -69,15 +69,17 @@ public class TWUtilEx {
 						}
 						break;
 					case TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL:
-						curVolume = message.arg1 & Integer.MAX_VALUE;
-						App.mGlobalSettings.setVolumeLevel (curVolume, false);
+                        if ( !isReverseMode ) {
+                            curVolume = message.arg1 & Integer.MAX_VALUE;
+                            App.mGlobalSettings.setVolumeLevel(curVolume, false);
+                        }
 						break;
-					case TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS:
-						curBrightness = message.arg1;
-						curBrightnessMode = message.arg2;
-						App.mGlobalSettings.setBrightnessLevel (curBrightness, false);
-						App.mGlobalSettings.setBrightnessMode (curBrightnessMode, false);
-						break;
+//					case TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS:
+//						curBrightness = message.arg1;
+//						curBrightnessMode = message.arg2;
+//						App.mGlobalSettings.setBrightnessLevel (curBrightness, false);
+//						App.mGlobalSettings.setBrightnessMode (curBrightnessMode, false);
+//						break;
 					default:
 						break;
 				}
@@ -117,8 +119,8 @@ public class TWUtilEx {
 	}
 
 	public static int getVolumeLevel () { return curVolume; 	}
-	public static int getBrightnessLevel () { return curBrightness; 	}
-	public static int getBrightnessModeLevel () { return curBrightnessMode;	}
+//	public static int getBrightnessLevel () { return curBrightness; 	}
+//	public static int getBrightnessModeLevel () { return curBrightnessMode;	}
 
 	public static boolean setVolumeLevel(int value) {
 		if ( GlobalSettings.IN_EMULATOR ) return true;
@@ -138,36 +140,36 @@ public class TWUtilEx {
 
 	}
 
-	public static boolean setBrightnessLevel (int value) {
-		if ( GlobalSettings.IN_EMULATOR ) return true;
-		TWUtil mTW = new TWUtil ();
-		if (mTW.open (new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS}) == 0) {
-			try {
-				mTW.start ();
-				mTW.write (TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS, 0, value);
-				mTW.stop ();
-				mTW.close ();
-				return true;
-			}  catch ( Exception e ) {
-				return false;
-			}
-		} else { return false; }
-	}
+//	public static boolean setBrightnessLevel (int value) {
+//		if ( GlobalSettings.IN_EMULATOR ) return true;
+//		TWUtil mTW = new TWUtil ();
+//		if (mTW.open (new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS}) == 0) {
+//			try {
+//				mTW.start ();
+//				mTW.write (TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS, 0, value);
+//				mTW.stop ();
+//				mTW.close ();
+//				return true;
+//			}  catch ( Exception e ) {
+//				return false;
+//			}
+//		} else { return false; }
+//	}
 
 
-	public static boolean setBrightnessMode (int mode) {
-		if ( GlobalSettings.IN_EMULATOR ) return true;
-		TWUtil mTW = new TWUtil ();
-		if (mTW.open (new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS}) == 0) {
-			try {
-				mTW.start ();
-				mTW.write (TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS, 1, mode);
-				mTW.stop ();
-				mTW.close ();
-				return true;
-			} catch ( Exception e ) {
-				return false;
-			}
-		} else { return false; }
-	}
+//	public static boolean setBrightnessMode (int mode) {
+//		if ( GlobalSettings.IN_EMULATOR ) return true;
+//		TWUtil mTW = new TWUtil ();
+//		if (mTW.open (new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS}) == 0) {
+//			try {
+//				mTW.start ();
+//				mTW.write (TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS, 1, mode);
+//				mTW.stop ();
+//				mTW.close ();
+//				return true;
+//			} catch ( Exception e ) {
+//				return false;
+//			}
+//		} else { return false; }
+//	}
 }

@@ -33,9 +33,6 @@
     <string name="percent_volume_level_at_startup_summary">Текущее значение %1$d </string>
     <string name="percent_volume_level_at_startup_dialog">Введите процент уменьшения</string>
     <string name="sound_settings_title">Дополнительные настройки звука</string>
-    <string name="title_activity_brightness">Brightness</string>
-    <string name="id_button_brightness_title">Яркость</string>
-    <string name="title_activity_assign_program">AssignProgramActivity</string>
-	<string name="id_button_navi_title">Навигация</string>
+
 
 </resources>

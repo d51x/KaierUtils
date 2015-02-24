@@ -8,10 +8,10 @@ import android.preference.PreferenceManager;
  */
 public class GlobalSettings {
 
-	public static final boolean IN_EMULATOR = true;
+	public static final boolean IN_EMULATOR = false;
 	private int Volume;
-	private int Brightness;
-	private int BrightnessMode;
+	//private int Brightness;
+	//private int BrightnessMode;
 
 	public boolean isNeedSoundDecreaseAtStartUp;
 	public int VolumeLevelAtStartUp;
@@ -26,8 +26,8 @@ public class GlobalSettings {
 
 	public GlobalSettings() {
 		Volume = 3;
-		Brightness = 7;
-		BrightnessMode = 0;
+		//Brightness = 7;
+		//BrightnessMode = 0;
 		isNeedSoundDecreaseAtStartUp = false;
 		isNeedSoundDecreaseAtWakeUp = false;
 		VolumeLevelAtStartUp = 3;
@@ -41,8 +41,8 @@ public class GlobalSettings {
 
 		try {
 			Volume = getVolumeLevel ();
-			Brightness = getBrightnessLevel ();
-			BrightnessMode = getBrightnessMode ();
+			//Brightness = getBrightnessLevel ();
+			//BrightnessMode = getBrightnessMode ();
 
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
 			isNeedSoundDecreaseAtStartUp = prefs.getBoolean ("CAR_SETTINGS__VOLUME_AT_START_UP__DO_CHANGE", false);
@@ -81,35 +81,35 @@ public class GlobalSettings {
 		} else { return false;}
 	}
 
-	public int getBrightnessLevel () {
-		return Brightness;
-	}
+//	public int getBrightnessLevel () {
+//		return Brightness;
+//	}
 
-	public boolean setBrightnessLevel (int level, boolean change) {
-		if ( !change ) {
-			Brightness = level;
-			return true;
-		}
+//	public boolean setBrightnessLevel (int level, boolean change) {
+//		if ( !change ) {
+//			Brightness = level;
+//			return true;
+//		}
+//
+//		if ( TWUtilEx.setBrightnessLevel (level)) {
+//			Brightness = level;
+//			return true;
+//		} else { return false;}
+//	}
 
-		if ( TWUtilEx.setBrightnessLevel (level)) {
-			Brightness = level;
-			return true;
-		} else { return false;}
-	}
+//	public int getBrightnessMode() {
+//		return BrightnessMode;
+//	}
 
-	public int getBrightnessMode() {
-		return BrightnessMode;
-	}
-
-	public boolean setBrightnessMode(int mode, boolean change) {
-		if ( !change ) {
-			BrightnessMode = mode;
-			return true;
-		}
-		if ( TWUtilEx.setBrightnessMode ( mode ) ) {
-			BrightnessMode = mode;
-			return true;
-		} else { return false; }
-	}
+//	public boolean setBrightnessMode(int mode, boolean change) {
+//		if ( !change ) {
+//			BrightnessMode = mode;
+//			return true;
+//		}
+//		if ( TWUtilEx.setBrightnessMode ( mode ) ) {
+//			BrightnessMode = mode;
+//			return true;
+//		} else { return false; }
+//	}
 
 }

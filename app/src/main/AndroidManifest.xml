@@ -39,7 +39,7 @@
         <service
             android:name=".TWUtilService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="false" >
         </service>
 
         <receiver
@@ -67,24 +67,6 @@
                 <category android:name="android.intent.category.PREFERENCE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".BrightnessActivity"
-            android:label="@string/title_activity_brightness" >
-            <intent-filter>
-                <action android:name="android.intent.action.Brightness" />
-
-                <category android:name="android.intent.category.PREFERENCE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".AppActivity"
-            android:label="@string/title_activity_assign_program" >
-	        <intent-filter>
-		        <action android:name="android.intent.action.AssignProgram" />
-		        <category android:name="android.intent.category.DEFAULT" />
-	        </intent-filter>
         </activity>
     </application>
 
