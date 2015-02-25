@@ -3,7 +3,11 @@ package ru.d51x.kaierutils;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +22,8 @@ import android.provider.Settings;
 
 public class MainActivity extends Activity implements CompoundButton.OnCheckedChangeListener{
 
+	public static final int NOTIFY_ID = 1;
+
 	private Button btnSoundSettings;
     private TextView tvDeviceName;
     private TextView tvCurrentVolume;
@@ -25,11 +31,16 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private Switch switch_show_notification_icon;
     private boolean isNotificationIconShow;
 
+	public TextView getTextViewByID(int id) {
+
+			return (TextView) findViewById(id);
+	}
+
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate (savedInstanceState);
 		setContentView (R.layout.main_activity);
-		Log.d ("SettingsActivity", "onCreate");
+		Log.d ("MainActivity", "onCreate");
 		startService(new Intent(this, BackgroundService.class));
 		Toast.makeText (this, "Service started", 0);
 
@@ -63,23 +74,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 			}
 		});
 
-
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL:
-                        String string_current_volume = String.format(getString(R.string.text_current_level), msg.arg1 & Integer.MAX_VALUE);
-                        tvCurrentVolume.setText( string_current_volume );
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
-
-
-
+		registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED));
 	}
 
     @Override
@@ -101,7 +96,10 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
                 notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
                 NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.notify(42 ,notification);
+	            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
+	            notification.setLatestEventInfo(this, "KaierUtils", "", pendingIntent);
+
+                notificationManager.notify (NOTIFY_ID, notification);
 
                 break;
             default:
@@ -109,6 +107,26 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         }
 
     }
+
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED ))
+			{
+				int vol = intent.getIntExtra (TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED, 0);
+				String string_current_volume = String.format( App.getInstance ().getString (R.string.text_current_level), vol);
+				tvCurrentVolume.setText (string_current_volume);
+			}
+		}
+	};
+
+	@Override
+	protected void onStop() {
+		//Отписываемся от событий сервиса
+		unregisterReceiver(receiver);
+		super.onStop();
+	}
 }
 
 

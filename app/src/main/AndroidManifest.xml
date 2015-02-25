@@ -28,7 +28,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+	        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,6 +56,7 @@
                 <action android:name="com.tw.service.action.REVERSE_ACTIVITY_START" />
                 <action android:name="com.tw.service.action.REVERSE_ACTIVITY_FINISH" />
                 <action android:name="android.intent.action.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE" />
+	            <action android:name="com.tw.service.action.VOLUME_CHANGED" />
             </intent-filter>
         </receiver>
 

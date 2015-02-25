@@ -12,6 +12,8 @@ public class TWUtilConst {
 	protected static final String TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_START = "com.tw.service.action.REVERSE_ACTIVITY_START";
 	protected static final String TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH = "com.tw.service.action.REVERSE_ACTIVITY_FINISH";
 
+	protected static final String TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED = "com.tw.service.action.VOLUME_CHANGED";
+
 	protected static final int TWUTIL_CONTEXT_SLEEP = 514;
 	protected static final int TWUTIL_COMMAND_SLEEP = 514;
 

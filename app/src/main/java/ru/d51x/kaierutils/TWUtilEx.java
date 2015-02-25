@@ -88,9 +88,8 @@ public class TWUtilEx {
                         if ( isReverseMode ) break;
                         curVolume = message.arg1 & Integer.MAX_VALUE;
                         App.mGlobalSettings.setVolumeLevel(curVolume, false);
-
-                        MainActivity.mHandler.sendMessage(message);
-
+						SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED,
+								TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED, curVolume);
 						break;
 //					case TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS:
 //						curBrightness = message.arg1;
@@ -106,6 +105,7 @@ public class TWUtilEx {
 	}
 
 	public void Init() {
+		Log.d ("TWUtilEx", "Init ");
 		mTWUtil = new TWUtil();
 		int result = mTWUtil.open(twutil_contexts);
 		if ( result == 0) {
@@ -113,7 +113,7 @@ public class TWUtilEx {
 			mTWUtil.start();
 			mTWUtil.addHandler(TWUTIL_HANDLER, mTWUtilHandler);
 			mTWUtil.write (TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL, 255);
-			mTWUtil.write (TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS, 255);
+			//mTWUtil.write (TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS, 255);
 		}
 	}
 
@@ -130,8 +130,20 @@ public class TWUtilEx {
 
 
 	private void SendBroadcastAction(String action) {
+		Log.d ("TWUtilEx", "SendBroadcastAction ");
 		Intent intent = new Intent();
 		intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+		intent.setAction(action);
+		App.getInstance ().sendBroadcast(intent);
+	}
+
+	private void SendBroadcastAction(String action, String key, int value) {
+		Log.d ("TWUtilEx", "SendBroadcastAction ");
+		Intent intent = new Intent();
+		intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+		if ( key != null ) {
+			intent.putExtra(key, value);
+		}
 		intent.setAction(action);
 		App.getInstance ().sendBroadcast(intent);
 	}
@@ -141,13 +153,14 @@ public class TWUtilEx {
 //	public static int getBrightnessModeLevel () { return curBrightnessMode;	}
 
 	public static boolean setVolumeLevel(int value) {
+		Log.d ("TWUtilEx", "setVolumeLevel ");
 		if ( ! isTWUtilAvailable() ) return false;
 		TWUtil mTW = new TWUtil ();
 		if (mTW.open (new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL}) == 0) {
 			try {
 				mTW.start ();
 				mTW.write ( TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL, 1, value);
-				mTW.write ( TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL, 255);
+				//mTW.write ( TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL, 255);
 				mTW.stop ();
 				mTW.close ();
 				return true;
@@ -192,6 +205,7 @@ public class TWUtilEx {
 //	}
 
 	public static String GetDeviceID () {
+		Log.d ("TWUtilEx", "GetDeviceID ");
         if ( ! TWUtilEx.isTWUtilAvailable() ) return "<Unknown>";
 		TWUtil mTW = new TWUtil ();
 		if (mTW.open (new short[]{(short) 65521}) == 0) {

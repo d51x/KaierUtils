@@ -3,6 +3,9 @@ package ru.d51x.kaierutils;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
+import android.widget.TextView;
+import android.view.View;
 
 public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 	public TWUtilBroadcastReceiver () {
@@ -16,6 +19,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 
 		// TODO: надо ли так делать или достаточно при загрузке?
 		// context.startService(new Intent(context, TWUtilService.class));
+		Log.d ("TWUtilBroadcastReceiver", "onReceive ");
 
 		String action = intent.getAction();
 		DebugLogger.ToLog (TAG, String.format("onReceive(), action %s", action));
@@ -47,10 +51,10 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 			//App.mGlobalSettings.setVolumeLevel(prevVolume, true);
 			App.mGlobalSettings.getVolumeLevel ();
 		}
-
 	}
 
 	private void changeVolumeAtReverse() {
+		Log.d ("TWUtilBroadcastReceiver", "changeVolumeAtReverse ");
 		if ( !App.mGlobalSettings.isNeedSoundDecreaseAtReverse  ) {
 			return;
 		}
@@ -68,12 +72,14 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	private void SetVolumeAtStartUp(){
+		Log.d ("TWUtilBroadcastReceiver", "SetVolumeAtStartUp ");
 		if ( App.mGlobalSettings.isNeedSoundDecreaseAtStartUp ) {
 			int level = App.mGlobalSettings.VolumeLevelAtStartUp;
 			App.mGlobalSettings.setVolumeLevel(level, true);
 		}
 	}
 	private void SetVolumeAtWakeUp(){
+		Log.d ("TWUtilBroadcastReceiver", "SetVolumeAtWakeUp ");
 		if ( App.mGlobalSettings.isNeedSoundDecreaseAtWakeUp ) {
 			int level = App.mGlobalSettings.VolumeLevelAtWakeUp;
 			App.mGlobalSettings.setVolumeLevel(level, true);
