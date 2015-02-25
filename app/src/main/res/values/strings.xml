@@ -33,6 +33,9 @@
     <string name="percent_volume_level_at_startup_summary">Текущее значение %1$d </string>
     <string name="percent_volume_level_at_startup_dialog">Введите процент уменьшения</string>
     <string name="sound_settings_title">Дополнительные настройки звука</string>
+    <string name="text_device_name">Ваше устройство %1$s</string>
+    <string name="text_current_level">Текущая громкость %1$d</string>
+    <string name="text_show_notification_icon">Отображать иконку в статусбаре</string>
 
 
 </resources>

@@ -3,6 +3,7 @@ package ru.d51x.kaierutils;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Bundle;
 import android.tw.john.TWUtil;
 import android.util.Log;
 import java.lang.reflect.Type;
@@ -87,6 +88,9 @@ public class TWUtilEx {
                         if ( isReverseMode ) break;
                         curVolume = message.arg1 & Integer.MAX_VALUE;
                         App.mGlobalSettings.setVolumeLevel(curVolume, false);
+
+                        MainActivity.mHandler.sendMessage(message);
+
 						break;
 //					case TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS:
 //						curBrightness = message.arg1;
@@ -186,4 +190,40 @@ public class TWUtilEx {
 //			}
 //		} else { return false; }
 //	}
+
+	public static String GetDeviceID () {
+        if ( ! TWUtilEx.isTWUtilAvailable() ) return "<Unknown>";
+		TWUtil mTW = new TWUtil ();
+		if (mTW.open (new short[]{(short) 65521}) == 0) {
+			try {
+				mTW.start ();
+				int res = mTW.write (65521);
+				mTW.stop ();
+				mTW.close ();
+                String rstr = "";
+                switch (res) {
+                    case 17:
+                    case 14:
+                        rstr = "Kaier (RP)";
+                        break;
+                    case 1:
+                        rstr = "Create";
+                        break;
+                    case 7:
+                    case 48:
+                        rstr = "Waybo";
+                        break;
+                    case 6:
+                        rstr = "Waybo";
+                        break;
+                    default:
+                        rstr = String.format("<Unknown> (ID: %d)", res);
+                        break;
+                }
+				return rstr;
+			} catch ( Exception e ) {
+				return "<Unknown>";
+			}
+		} else { return "<Unknown>"; }
+	}
 }

@@ -3,14 +3,15 @@ package ru.d51x.kaierutils;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.widget.Toast;
 import android.app.Notification;
+
 import android.app.NotificationManager;
 
 public class BackgroundService extends Service {
 
 	private TWUtilProcessingThread twUtilProcessingThread;
-
 
 	public BackgroundService () {
 		//super("TWUtilService");
@@ -88,12 +89,15 @@ public class BackgroundService extends Service {
 		super.onDestroy();
 	}
 
-	private Notification makeNotification(int notifyId, String Title, String Text, int smallIcon) {
-		Notification notification = new Notification.Builder(this)
-				.setContentTitle( Title )
-				.setSmallIcon( smallIcon )
-				.setAutoCancel(false)
-				.build();
+	public Notification makeNotification(int notifyId, String Title, String Text, int smallIcon) {
+        boolean showicon = Settings.System.getInt(getContentResolver(), "kaierutils_show_notification_icon", 0) == 1;
+
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle( Title );
+        builder.setAutoCancel(false);
+        if ( showicon ) builder.setSmallIcon( smallIcon );
+		Notification notification = builder.build();
+
 		notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		notificationManager.notify(notifyId ,notification);
