@@ -84,7 +84,7 @@ public class TWUtilEx {
 						}
 						break;
 					case TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL:
-                        if ( !isReverseMode ) break;
+                        if ( isReverseMode ) break;
                         curVolume = message.arg1 & Integer.MAX_VALUE;
                         App.mGlobalSettings.setVolumeLevel(curVolume, false);
 						break;
