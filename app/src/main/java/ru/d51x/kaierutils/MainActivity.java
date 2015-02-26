@@ -31,6 +31,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     public static final String OPTION_SHOW_VOLUME_ON_NOTIFICATION_ICON = "kaierutils_show_volume_on_notification_icon";
 
 	private Button btnSoundSettings;
+    private Button btnPowerAmpControl;
     private TextView tvDeviceName;
     private TextView tvCurrentVolume;
     public static Handler mHandler;
@@ -57,6 +58,8 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 		Toast.makeText (this, "Service started", 0);
 
 		btnSoundSettings = (Button) findViewById (R.id.id_button_sound_Settings);
+        btnPowerAmpControl = (Button) findViewById(R.id.btn_poweramp_control);
+
         tvDeviceName = (TextView) findViewById(R.id.txtDeviceName);
         String string_device_name = String.format(getString(R.string.text_device_name), TWUtilEx.GetDeviceID());
         tvDeviceName.setText( string_device_name );
@@ -112,6 +115,23 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
 			}
 		});
+
+        this.btnPowerAmpControl.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) // клик на кнопку
+            {
+
+                try {
+                    Intent it = new Intent();
+                    //Intent it = new Intent(this, SoundSettingsPreferenceActivity.class);
+                    it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.PowerAmpPreferenceActivity");
+                    //it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(it);
+                } catch (Exception e) {
+                }
+
+            }
+        });
 
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED));
 	}

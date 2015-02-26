@@ -29,6 +29,7 @@ public class PowerAmpProcessing {
         powerampReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                if (!App.mGlobalSettings.interactWithPowerAmp) return;
                 if (intent != null) {
                     String action = intent.getAction();
                     receiveStatusIntent = true;
@@ -37,10 +38,12 @@ public class PowerAmpProcessing {
                         int keypressed = intent.getIntExtra (TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED, -1);
                         switch (keypressed) {
                             case TWUtilConst.TWUTIL_SVC_BUTTON_NEXT:
-                                App.getInstance().startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND, PowerampAPI.Commands.NEXT_IN_CAT));
+                                if (App.mGlobalSettings.pressNextFolderPowerAmp)
+                                    App.getInstance().startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND, PowerampAPI.Commands.NEXT_IN_CAT));
                                 break;
                             case TWUtilConst.TWUTIL_SVC_BUTTON_PREV:
-                                App.getInstance().startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND, PowerampAPI.Commands.PREVIOUS_IN_CAT));
+                                if (App.mGlobalSettings.pressPrevFolderPowerAmp)
+                                    App.getInstance().startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND, PowerampAPI.Commands.PREVIOUS_IN_CAT));
                                 break;
                             default:
                                 break;
@@ -59,6 +62,7 @@ public class PowerAmpProcessing {
         sleepReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                if (!App.mGlobalSettings.interactWithPowerAmp) return;
                 if (intent != null) {
                     String action = intent.getAction();
                     if (action.equals(TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP)) {
@@ -85,6 +89,8 @@ public class PowerAmpProcessing {
     }
 
     private void doSleep(boolean a_powerampPlaying) {
+        if (!App.mGlobalSettings.interactWithPowerAmp) return;
+        if (!App.mGlobalSettings.needWatchSleepPowerAmp) return;
         isNeedPlayOnWakeUp = receiveStatusIntent && a_powerampPlaying;
         if (isNeedPlayOnWakeUp) {
             context.startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND, PowerampAPI.Commands.PAUSE));
@@ -92,6 +98,8 @@ public class PowerAmpProcessing {
     }
 
     private void doWakeUp() {
+        if (!App.mGlobalSettings.interactWithPowerAmp) return;
+        if (!App.mGlobalSettings.needWatchWakeUpPowerAmp) return;
         if (isNeedPlayOnWakeUp) {
             handler.postDelayed(new Runnable() {
                 @Override

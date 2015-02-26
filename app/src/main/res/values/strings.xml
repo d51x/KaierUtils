@@ -42,6 +42,22 @@
     <string name="text_sleep_mode_last_time">последний раз в %1$s</string>
     <string name="text_statistic_title">Статистика с момента включения:</string>
     <string name="text_working_start">Работает с %1$s</string>
+    <string name="text_poweramp_control">Управление PowerAMP</string>
 
+    <string name="title_activity_power_amp_preference">Управление PowerAmp</string>
+    <string name="poweramp_interaction_title">Взимодействовать с PowerAmp</string>
+    <string name="poweramp_interaction_summary">Отслеживание состояния, старт/остановка воспроизведения, переключение папок</string>
+    <string name="poweramp_watch_sleep_title">Вставать на паузу при Sleep</string>
+    <string name="poweramp_watch_wakeup_title">Начинать воспроизведение при просыпании</string>
+    <string name="poweramp_watch_bootup_title">Начинать воспроизведение при включении</string>
+
+    <string name="poweramp_watch_longpress_next_title">Переключать на следующий каталог</string>
+    <string name="poweramp_watch_longpress_next_summary">Отслеживание долгого нажатия кнопки переключения "вперед" на руле</string>
+    <string name="poweramp_watch_longpress_prev_title">Переключать на предыдущий каталог</string>
+    <string name="poweramp_watch_longpress_prev_summary">Отслеживание долгого нажатия кнопки переключения "назад" на руле</string>
+
+    <string name="poweramp_start_delay_title">Задержка включения воспроизведения</string>
+    <string name="poweramp_start_delay_summary">PowerAmp будет запущен с задержкой после просыпания или включения (через %1$d мсек)</string>
+    <string name="poweramp_start_delay_text">Укажите значение (мсек)</string>
 
 </resources>

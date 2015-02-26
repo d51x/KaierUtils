@@ -97,4 +97,13 @@
         android:id="@+id/tv_working_start"
         android:layout_above="@+id/tv_sleep_mode_count"
         android:layout_alignParentLeft="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_poweramp_control"
+        android:id="@+id/btn_poweramp_control"
+        android:layout_alignBottom="@+id/switch_show_volume_on_notification_icon"
+        android:layout_alignParentRight="true"
+        android:layout_alignLeft="@+id/id_button_sound_Settings"/>
 </RelativeLayout>

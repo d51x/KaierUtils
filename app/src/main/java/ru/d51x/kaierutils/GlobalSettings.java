@@ -30,6 +30,14 @@ public class GlobalSettings {
     public long workTime;
     public long lastSleep;
 
+    public boolean interactWithPowerAmp;
+    public boolean needWatchSleepPowerAmp;
+    public boolean needWatchWakeUpPowerAmp;
+    public boolean needWatchBootUpPowerAmp;
+
+    public boolean pressNextFolderPowerAmp;
+    public boolean pressPrevFolderPowerAmp;
+
     public boolean pa_isPlaying;
     public boolean pa_isStarted;
 
@@ -54,6 +62,16 @@ public class GlobalSettings {
         startDate = System.currentTimeMillis();
         lastSleep = 0;
         workTime = System.currentTimeMillis() - startDate;
+
+        interactWithPowerAmp = false;
+        needWatchSleepPowerAmp = false;
+        needWatchWakeUpPowerAmp = false;
+        needWatchBootUpPowerAmp = false;
+        pressNextFolderPowerAmp = false;
+        pressPrevFolderPowerAmp = false;
+
+
+
 
         pa_isPlaying = false;
         pa_isStarted = false;
