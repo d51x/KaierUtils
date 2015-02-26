@@ -41,6 +41,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private TextView tvReverseCount;
     private TextView tvSleepModeCount;
     private TextView tvSleepModeLastTime;
+    private TextView tvWorkingStart;
 
 	public TextView getTextViewByID(int id) {
 
@@ -85,9 +86,16 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         } else {
             Date date = new Date( App.mGlobalSettings.lastSleep );
             SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy  hh:mm");
-            tvSleepModeLastTime.setText( String.format("%s", ft.format(date)) );
+            tvSleepModeLastTime.setText( String.format(getString(R.string.text_sleep_mode_last_time), ft.format(date)) );
             tvSleepModeLastTime.setVisibility( View.VISIBLE );
         }
+
+        tvWorkingStart = (TextView) findViewById(R.id.tv_working_start);
+        Date date = new Date( App.mGlobalSettings.startDate );
+        SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy  hh:mm");
+        tvWorkingStart.setText( String.format(getString(R.string.text_working_start), ft.format(date)) );
+
+
         this.btnSoundSettings.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) // клик на кнопку
 			{

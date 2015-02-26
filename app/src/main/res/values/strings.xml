@@ -37,9 +37,11 @@
     <string name="text_current_level">Текущая громкость %1$d</string>
     <string name="text_show_notification_icon">Отображать иконку в статусбаре</string>
     <string name="text_show_volume_on_notification_icon">Отображение текущего уровня громкости на иконки уведомления</string>
-    <string name="text_reverse_count">Задних ход включался %1$в раз(а)</string>
+    <string name="text_reverse_count">Задний ход включался %1$d раз(а)</string>
     <string name="text_sleep_mode_count">SleepMode сработал %1$d раз(а)</string>
     <string name="text_sleep_mode_last_time">последний раз в %1$s</string>
+    <string name="text_statistic_title">Статистика с момента включения:</string>
+    <string name="text_working_start">Работает с %1$s</string>
 
 
 </resources>

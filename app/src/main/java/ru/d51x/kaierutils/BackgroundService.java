@@ -14,6 +14,7 @@ public class BackgroundService extends Service {
 
 
 	private TWUtilProcessingThread twUtilProcessingThread;
+    private PowerAmpProcessingThread powerAmpProcessingThread;
 
 	public BackgroundService () {
 		//super("TWUtilService");
@@ -74,9 +75,17 @@ public class BackgroundService extends Service {
 	}
 
 	private synchronized void startPowerAmpProcessingThread(){
-	}
+        Log.d ("BackgroundService", "startPowerAmpProcessingThread");
+        if ( powerAmpProcessingThread != null ) return;
+        powerAmpProcessingThread = new PowerAmpProcessingThread ();
+        powerAmpProcessingThread.start();
+    }
 
 	private synchronized void stopPowerAmpProcessingThread(){
+        Log.d ("BackgroundService", "stopPowerAmpProcessingThread");
+        if ( powerAmpProcessingThread == null) return;
+        powerAmpProcessingThread.tryStop();
+        powerAmpProcessingThread = null;
 	}
 
 	private synchronized void startRadioProcessingThread(){

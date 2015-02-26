@@ -30,6 +30,10 @@ public class GlobalSettings {
     public long workTime;
     public long lastSleep;
 
+    public boolean pa_isPlaying;
+    public boolean pa_isStarted;
+
+
 	public GlobalSettings() {
 		Volume = 3;
 		//Brightness = 7;
@@ -49,6 +53,10 @@ public class GlobalSettings {
         startDate = System.currentTimeMillis();
         lastSleep = 0;
         workTime = System.currentTimeMillis() - startDate;
+
+        pa_isPlaying = false;
+        pa_isStarted = false;
+
 		try {
 			Volume = getVolumeLevel ();
 			//Brightness = getBrightnessLevel ();
