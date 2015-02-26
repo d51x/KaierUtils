@@ -34,15 +34,17 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP ))
 		{	// изменение уровня громкости при sleep
 			SetVolumeAtWakeUp();
+            App.mGlobalSettings.lastSleep = System.currentTimeMillis();
 		}
 		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP ))
 		{
 			// TODO: что-то делаем при просыпании
-
+            App.mGlobalSettings.SleepModeCount++;
 		}
 		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_START ))
 		{
 			prevVolume = App.mGlobalSettings.getVolumeLevel ();
+            App.mGlobalSettings.ReverseActivityCount++;
 			changeVolumeAtReverse();
 		}
 		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH ))

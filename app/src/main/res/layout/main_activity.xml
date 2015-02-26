@@ -44,4 +44,39 @@
         android:layout_alignParentLeft="true"
         android:layout_marginTop="35dp"
         android:checked="false"/>
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_show_volume_on_notification_icon"
+        android:id="@+id/switch_show_volume_on_notification_icon"
+        android:checked="false"
+        android:layout_below="@+id/id_button_sound_Settings"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/switch_show_notification_icon"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_reverse_count"
+        android:id="@+id/tv_reverse_count"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_sleep_mode_count"
+        android:id="@+id/tv_sleep_mode_count"
+        android:layout_above="@+id/tv_reverse_count"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_sleep_mode_last_time"
+        android:id="@+id/tv_sleep_mode_last_time"
+        android:layout_alignBaseline="@+id/tv_sleep_mode_count"
+        android:layout_alignBottom="@+id/tv_sleep_mode_count"
+        android:layout_toRightOf="@+id/tv_reverse_count"/>
 </RelativeLayout>

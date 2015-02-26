@@ -24,6 +24,12 @@ public class GlobalSettings {
 	public int FixedVolumeLevelAtReverse;
 	public int PercentVolumeLevelAtReverse;
 
+    public int ReverseActivityCount;
+    public int SleepModeCount;
+    public long startDate;
+    public long workTime;
+    public long lastSleep;
+
 	public GlobalSettings() {
 		Volume = 3;
 		//Brightness = 7;
@@ -38,7 +44,11 @@ public class GlobalSettings {
 		isPercentVolumeAtReverse = false;
 		FixedVolumeLevelAtReverse = 3;
 		PercentVolumeLevelAtReverse = 30;
-
+        ReverseActivityCount = 0;
+        SleepModeCount = 0;
+        startDate = System.currentTimeMillis();
+        lastSleep = 0;
+        workTime = System.currentTimeMillis() - startDate;
 		try {
 			Volume = getVolumeLevel ();
 			//Brightness = getBrightnessLevel ();
