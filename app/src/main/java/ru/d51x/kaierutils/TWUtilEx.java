@@ -38,7 +38,8 @@ public class TWUtilEx {
 			TWUtilConst.TWUTIL_CONTEXT_SLEEP,                   // 514
 			TWUtilConst.TWUTIL_CONTEXT_REQUEST_SHUTDOWN,        // Shutdown 40720
 			TWUtilConst.TWUTIL_CONTEXT_REVERSE_ACTIVITY,        // reverse activity 40732
-			TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL           // 515
+			TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL,           // 515
+            TWUtilConst.TWUTIL_COMMAND_KEY_PRESS                // 513
 			//TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS              // 258
 	};
 
@@ -97,6 +98,24 @@ public class TWUtilEx {
 //						App.mGlobalSettings.setBrightnessLevel (curBrightness, false);
 //						App.mGlobalSettings.setBrightnessMode (curBrightnessMode, false);
 //						break;
+                    case TWUtilConst.TWUTIL_COMMAND_KEY_PRESS:
+                        if ( message.arg1 == 2) {
+                            switch ( message.arg2) {
+                                case TWUtilConst.TWUTIL_SVC_BUTTON_NEXT:
+                                    SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
+                                                         TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
+                                                         TWUtilConst.TWUTIL_SVC_BUTTON_NEXT);
+                                    break;
+                                case TWUtilConst.TWUTIL_SVC_BUTTON_PREV:
+                                    SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
+                                                         TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
+                                                         TWUtilConst.TWUTIL_SVC_BUTTON_PREV);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        break;
 					default:
 						break;
 				}

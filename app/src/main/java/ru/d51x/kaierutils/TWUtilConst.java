@@ -14,9 +14,11 @@ public class TWUtilConst {
 
 	protected static final String TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED = "com.tw.service.action.VOLUME_CHANGED";
 
+    protected static final String TWUTIL_BROADCAST_ACTION_KEY_PRESSED = "com.tw.service.action.KEY_PRESSED";
+
 	protected static final int TWUTIL_CONTEXT_SLEEP = 514;
 	protected static final int TWUTIL_COMMAND_SLEEP = 514;
-
+    protected static final int TWUTIL_COMMAND_KEY_PRESS = 513;
 	protected static final int TWUTIL_CONTEXT_VOLUME_CONTROL = 515;
 	protected static final int TWUTIL_CONTEXT_BRIGHTNESS = 258;
 
@@ -39,5 +41,8 @@ public class TWUtilConst {
 	protected static final int TWUTIL_CONTEXT_RADIO_CONTROL_1 = 1025;
 	protected static final int TWUTIL_CONTEXT_RADIO_CONTROL_2 = 1028;
 	protected static final int TWUTIL_CONTEXT_RADIO_PROGRAM = 1026;
+
+    protected static final int TWUTIL_SVC_BUTTON_NEXT = 22;
+    protected static final int TWUTIL_SVC_BUTTON_PREV = 23;
 
 }

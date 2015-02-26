@@ -196,13 +196,19 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     }
 
 	@Override
-	protected void onStop() {
-		//Отписываемся от событий сервиса
-        // Возможно, тут падает
-		unregisterReceiver(receiver);
-		super.onStop();
-	}
+//	protected void onStop() {
+//		//Отписываемся от событий сервиса
+//        // Возможно, тут падает
+//		unregisterReceiver(receiver);
+//		super.onStop();
+//	}
 
+    protected void onDestroy() {
+        //Отписываемся от событий сервиса
+        // Возможно, тут падает
+        unregisterReceiver(receiver);
+        super.onDestroy();
+    }
 
     public class NotifyData {
         public int NotifyID;

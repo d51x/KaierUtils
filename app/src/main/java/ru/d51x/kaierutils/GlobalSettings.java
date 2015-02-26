@@ -33,6 +33,7 @@ public class GlobalSettings {
     public boolean pa_isPlaying;
     public boolean pa_isStarted;
 
+    public int powerampResumeDelay = 3000;
 
 	public GlobalSettings() {
 		Volume = 3;
