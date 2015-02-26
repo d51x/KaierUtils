@@ -12,7 +12,7 @@ import android.app.NotificationManager;
 
 public class BackgroundService extends Service {
 
-
+    private MainActivity mainActivity;
 	private TWUtilProcessingThread twUtilProcessingThread;
     private PowerAmpProcessingThread powerAmpProcessingThread;
 
@@ -35,9 +35,15 @@ public class BackgroundService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d ("BackgroundService", "onStartCommand");
-        Notification notification = makeNotification(MainActivity.NOTIFY_ID, "KaierUtils", "", R.drawable.notify_auto);
-		startForeground( MainActivity.NOTIFY_ID, notification);
-		Toast.makeText(getApplicationContext(), "KaierUtils is started as foreground service", Toast.LENGTH_LONG).show();
+//        NotifyData notifyData = new  NotifyData();
+//        notifyData.smallIcon = App.mGlobalSettings.isNotificationIconShow ? R.drawable.notify_auto : 0;
+//        notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
+//        notifyData.number = App.mGlobalSettings.isVolumeShowOnNotificationIcon ? App.mGlobalSettings.getVolumeLevel() : 0;
+//        Notification notification = ShowNotification(notifyData);
+//		startForeground( notifyData.NOTIFY_ID, notification);
+        Notification notification = makeNotification(NotifyData.NOTIFY_ID, NotifyData.NOTIFICATION_TITLE, "", R.drawable.notify_auto);
+        startForeground( NotifyData.NOTIFY_ID, notification);
+		//Toast.makeText(getApplicationContext(), "KaierUtils is started as foreground service", Toast.LENGTH_LONG).show();
 
 		if ((flags & START_FLAG_RETRY) == 0) {
 			// TODO Если это повторный запуск, выполнить какие-то действия.
@@ -105,22 +111,24 @@ public class BackgroundService extends Service {
 		super.onDestroy();
 	}
 
-	public Notification makeNotification(int notifyId, String Title, String Text, int smallIcon) {
+
+    public Notification makeNotification(int notifyId, String Title, String Text, int smallIcon) {
         boolean showicon = Settings.System.getInt(getContentResolver(), "kaierutils_show_notification_icon", 0) == 1;
 
-        Notification.Builder builder = new Notification.Builder(this);
+        Notification.Builder builder = new Notification.Builder(getApplicationContext());
         builder.setContentTitle( Title );
         builder.setAutoCancel(false);
         if ( showicon ) builder.setSmallIcon( smallIcon );
-		Notification notification = builder.build();
+        Notification notification = builder.build();
 
-		notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
-		notification.setLatestEventInfo(this, Title, Text, pendingIntent);
+        notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), 0);
+        notification.setLatestEventInfo(getApplicationContext(), Title, Text, pendingIntent);
 
-		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		notificationManager.notify (notifyId, notification);
-		return notification;
-	}
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify (notifyId, notification);
+        return notification;
+    }
+
 }
 

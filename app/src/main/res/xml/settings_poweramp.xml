@@ -31,7 +31,6 @@
         android:defaultValue="false"
         android:persistent="true"
         android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE"
-        android:enabled="false"
         />
 
 

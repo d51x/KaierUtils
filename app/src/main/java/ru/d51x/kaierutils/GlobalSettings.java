@@ -18,6 +18,10 @@ public class GlobalSettings {
 	public boolean isNeedSoundDecreaseAtWakeUp;
 	public int VolumeLevelAtWakeUp;
 
+
+    public boolean isNotificationIconShow;
+    public boolean isVolumeShowOnNotificationIcon;
+
 	public boolean isNeedSoundDecreaseAtReverse;
 	public boolean isFixedVolumeAtReverse;
 	public boolean isPercentVolumeAtReverse;

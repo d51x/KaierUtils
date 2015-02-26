@@ -6,6 +6,8 @@ import android.os.Message;
 import android.os.Bundle;
 import android.tw.john.TWUtil;
 import android.util.Log;
+import android.widget.Toast;
+
 import java.lang.reflect.Type;
 
 /**
@@ -90,7 +92,7 @@ public class TWUtilEx {
                         curVolume = message.arg1 & Integer.MAX_VALUE;
                         App.mGlobalSettings.setVolumeLevel(curVolume, false);
 						SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED,
-								TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED, curVolume);
+								             TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED, curVolume);
 						break;
 //					case TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS:
 //						curBrightness = message.arg1;
@@ -102,11 +104,15 @@ public class TWUtilEx {
                         if ( message.arg1 == 2) {
                             switch ( message.arg2) {
                                 case TWUtilConst.TWUTIL_SVC_BUTTON_NEXT:
+                                    //Toast.makeText(App.getInstance().getApplicationContext(), "Long press NEXT", Toast.LENGTH_SHORT).show();
+
                                     SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
                                                          TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
                                                          TWUtilConst.TWUTIL_SVC_BUTTON_NEXT);
                                     break;
                                 case TWUtilConst.TWUTIL_SVC_BUTTON_PREV:
+                                    //Toast.makeText(App.getInstance().getApplicationContext(), "Long press PREV", Toast.LENGTH_SHORT).show();
+
                                     SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
                                                          TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
                                                          TWUtilConst.TWUTIL_SVC_BUTTON_PREV);

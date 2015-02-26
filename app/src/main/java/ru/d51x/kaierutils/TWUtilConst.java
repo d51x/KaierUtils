@@ -5,16 +5,16 @@ package ru.d51x.kaierutils;
  */
 public class TWUtilConst {
 
-	protected static final String TWUTIL_BROADCAST_ACTION_WAKE_UP = "com.tw.service.action.WAKEUP";
-	protected static final String TWUTIL_BROADCAST_ACTION_SLEEP = "com.tw.service.action.SLEEP";
-	protected static final String TWUTIL_BROADCAST_ACTION_SHUTDOWN = "com.tw.service.action.REQUEST_SHUTDOWN";
+	protected static final String TWUTIL_BROADCAST_ACTION_WAKE_UP = "ru.d51x.kaierutils.action.WAKEUP";
+	protected static final String TWUTIL_BROADCAST_ACTION_SLEEP = "ru.d51x.kaierutils.action.SLEEP";
+	protected static final String TWUTIL_BROADCAST_ACTION_SHUTDOWN = "ru.d51x.kaierutils.action.REQUEST_SHUTDOWN";
 
-	protected static final String TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_START = "com.tw.service.action.REVERSE_ACTIVITY_START";
-	protected static final String TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH = "com.tw.service.action.REVERSE_ACTIVITY_FINISH";
+	protected static final String TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_START = "ru.d51x.kaierutils.action.REVERSE_ACTIVITY_START";
+	protected static final String TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH = "ru.d51x.kaierutils.action.REVERSE_ACTIVITY_FINISH";
 
-	protected static final String TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED = "com.tw.service.action.VOLUME_CHANGED";
+	protected static final String TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED = "ru.d51x.kaierutils.action.VOLUME_CHANGED";
 
-    protected static final String TWUTIL_BROADCAST_ACTION_KEY_PRESSED = "com.tw.service.action.KEY_PRESSED";
+    protected static final String TWUTIL_BROADCAST_ACTION_KEY_PRESSED = "ru.d51x.kaierutils.action.KEY_PRESSED";
 
 	protected static final int TWUTIL_CONTEXT_SLEEP = 514;
 	protected static final int TWUTIL_COMMAND_SLEEP = 514;

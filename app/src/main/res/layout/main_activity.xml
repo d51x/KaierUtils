@@ -106,4 +106,41 @@
         android:layout_alignBottom="@+id/switch_show_volume_on_notification_icon"
         android:layout_alignParentRight="true"
         android:layout_alignLeft="@+id/id_button_sound_Settings"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Volume Up"
+        android:id="@+id/tst_volume_up"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/btn_poweramp_control"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Volume Down"
+        android:id="@+id/tst_volume_down"
+        android:layout_alignTop="@+id/tst_volume_up"
+        android:layout_toLeftOf="@+id/tst_volume_up"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:id="@+id/tst_svc_next"
+        android:layout_below="@+id/tst_volume_up"
+        android:layout_alignRight="@+id/tst_volume_up"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prev"
+        android:id="@+id/tst_svc_prev"
+        android:layout_below="@+id/tst_volume_up"
+        android:layout_toLeftOf="@+id/tst_svc_next"/>
+
 </RelativeLayout>

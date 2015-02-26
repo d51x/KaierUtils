@@ -9,7 +9,6 @@
     <android:uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
-    <!-- <android:uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
     <android:uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
@@ -52,13 +51,14 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
-                <action android:name="com.tw.service.action.WAKEUP" />
-                <action android:name="com.tw.service.action.SLEEP" />
-                <action android:name="com.tw.service.action.REQUEST_SHUTDOWN" />
-                <action android:name="com.tw.service.action.REVERSE_ACTIVITY_START" />
-                <action android:name="com.tw.service.action.REVERSE_ACTIVITY_FINISH" />
+                <action android:name="ru.d51x.kaierutils.action.WAKEUP" />
+                <action android:name="ru.d51x.kaierutils.action.SLEEP" />
+                <action android:name="ru.d51x.kaierutils.action.REQUEST_SHUTDOWN" />
+                <action android:name="ru.d51x.kaierutils.action.REVERSE_ACTIVITY_START" />
+                <action android:name="ru.d51x.kaierutils.action.REVERSE_ACTIVITY_FINISH" />
                 <action android:name="android.intent.action.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE" />
-                <action android:name="com.tw.service.action.VOLUME_CHANGED" />
+                <action android:name="ru.d51x.kaierutils.action.VOLUME_CHANGED" />
+                <action android:name="ru.d51x.kaierutils.action.KEY_PRESSED" />
             </intent-filter>
         </receiver>
 

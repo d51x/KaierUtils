@@ -71,6 +71,9 @@ public class PowerAmpProcessing {
                         doSleep(isPowerampPlaying);
                     } else if (action.equals(TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP)) {
                         doWakeUp();
+                    } else if (action.equals (Intent.ACTION_BOOT_COMPLETED )) {
+                        doBootUp();
+
                     }
                 }
             }
@@ -79,7 +82,7 @@ public class PowerAmpProcessing {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(PowerampAPI.ACTION_STATUS_CHANGED);
         intentFilter.addAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED);
-        context.registerReceiver(powerampReceiver, new IntentFilter(PowerampAPI.ACTION_STATUS_CHANGED));
+        context.registerReceiver(powerampReceiver, intentFilter);
 
         IntentFilter intentFilter2 = new IntentFilter();
         intentFilter2.addAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_SHUTDOWN);
@@ -100,6 +103,19 @@ public class PowerAmpProcessing {
     private void doWakeUp() {
         if (!App.mGlobalSettings.interactWithPowerAmp) return;
         if (!App.mGlobalSettings.needWatchWakeUpPowerAmp) return;
+        if (isNeedPlayOnWakeUp) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    context.startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND, PowerampAPI.Commands.RESUME)); // ставим на плай
+                }
+            }, App.mGlobalSettings.powerampResumeDelay);
+        }
+    }
+
+    private void doBootUp() {
+        if (!App.mGlobalSettings.interactWithPowerAmp) return;
+        if (!App.mGlobalSettings.needWatchBootUpPowerAmp) return;
         if (isNeedPlayOnWakeUp) {
             handler.postDelayed(new Runnable() {
                 @Override
