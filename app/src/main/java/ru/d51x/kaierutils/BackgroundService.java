@@ -36,15 +36,13 @@ public class BackgroundService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d ("BackgroundService", "onStartCommand");
-//        NotifyData notifyData = new  NotifyData();
-//        notifyData.smallIcon = App.mGlSets.isNotificationIconShow ? R.drawable.notify_auto : 0;
-//        notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-//        notifyData.number = App.mGlSets.isVolumeShowOnNotificationIcon ? App.mGlSets.getVolumeLevel() : 0;
-//        Notification notification = ShowNotification(notifyData);
-//		startForeground( notifyData.NOTIFY_ID, notification);
-        Notification notification = makeNotification(NotifyData.NOTIFY_ID, NotifyData.NOTIFICATION_TITLE, "", R.drawable.notify_auto);
+        NotifyData notifyData = new  NotifyData( getApplicationContext() );
+        notifyData.NotifyID = NotifyData.NOTIFY_ID;
+        notifyData.Title = NotifyData.NOTIFICATION_TITLE;
+        notifyData.smallIcon = App.mGlSets.isNotificationIconShow ? R.drawable.notify_auto : 0;
+        notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
+        Notification notification = notifyData.show();
         startForeground( NotifyData.NOTIFY_ID, notification);
-		//Toast.makeText(getApplicationContext(), "KaierUtils is started as foreground service", Toast.LENGTH_LONG).show();
 
 		if ((flags & START_FLAG_RETRY) == 0) {
 			// TODO Если это повторный запуск, выполнить какие-то действия.
@@ -124,23 +122,23 @@ public class BackgroundService extends Service {
 	}
 
 
-    public Notification makeNotification(int notifyId, String Title, String Text, int smallIcon) {
-        boolean showicon = Settings.System.getInt(getContentResolver(), "kaierutils_show_notification_icon", 0) == 1;
-
-        Notification.Builder builder = new Notification.Builder(getApplicationContext());
-        builder.setContentTitle( Title );
-        builder.setAutoCancel(false);
-        if ( showicon ) builder.setSmallIcon( smallIcon );
-        Notification notification = builder.build();
-
-        notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), 0);
-        notification.setLatestEventInfo(getApplicationContext(), Title, Text, pendingIntent);
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify (notifyId, notification);
-        return notification;
-    }
+//    public Notification makeNotification(int notifyId, String Title, String Text, int smallIcon) {
+//        boolean showicon = Settings.System.getInt(getContentResolver(), "kaierutils_show_notification_icon", 0) == 1;
+//
+//        Notification.Builder builder = new Notification.Builder(getApplicationContext());
+//        builder.setContentTitle( Title );
+//        builder.setAutoCancel(false);
+//        if ( showicon ) builder.setSmallIcon( smallIcon );
+//        Notification notification = builder.build();
+//
+//        notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
+//        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), 0);
+//        notification.setLatestEventInfo(getApplicationContext(), Title, Text, pendingIntent);
+//
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        notificationManager.notify (notifyId, notification);
+//        return notification;
+//    }
 
 }
 

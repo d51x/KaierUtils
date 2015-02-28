@@ -25,8 +25,9 @@ public class NotifyData {
     public int flags;
     public Class ActivityClass;
     public int number;
+    private Context context;
 
-    public NotifyData( ) {
+    public NotifyData(Context context ) {
         NotifyID = NOTIFY_ID;
         smallIcon = R.drawable.notify_auto;
         Title = NOTIFICATION_TITLE;
@@ -35,6 +36,29 @@ public class NotifyData {
         flags =  0;
         ActivityClass = MainActivity.class;
         number = 0;
+        this.context = context;
+    }
+
+    public Notification show() {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.cancel(this.NotifyID);
+        Notification.Builder builder = new Notification.Builder(context);
+        builder.setContentTitle( this.Title );
+        builder.setContentText( this.Text );
+        builder.setAutoCancel(false);
+        //builder.setWhen( App.mGlSets.startDate);
+        if ( this.smallIcon > 0 ) builder.setSmallIcon( this.smallIcon );
+        Notification notification = builder.build();
+        notification.flags |= this.flags;
+        notification.number =  this.number;
+        if ( this.ActivityClass != null) {
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, this.ActivityClass), 0);
+            notification.setLatestEventInfo(context,  this.Title, this.Text, pendingIntent);
+        }
+        notificationManager.notify(this.NotifyID, notification);
+        return notification;
+
     }
 
 }

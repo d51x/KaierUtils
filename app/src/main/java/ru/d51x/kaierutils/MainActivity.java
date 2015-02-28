@@ -38,7 +38,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     public static Handler mHandler;
     private Switch switch_show_notification_icon;
 
-    private Switch switch_show_volume_on_notification_icon;
+    //private Switch switch_show_volume_on_notification_icon;
     private BackgroundService backgroundService;
 
     private TextView tvReverseCount;
@@ -91,10 +91,10 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         switch_show_notification_icon.setChecked(App.mGlSets.isNotificationIconShow);
         switch_show_notification_icon.setOnCheckedChangeListener(this);
 
-        switch_show_volume_on_notification_icon = (Switch) findViewById(R.id.switch_show_volume_on_notification_icon);
-        App.mGlSets.isVolumeShowOnNotificationIcon = Settings.System.getInt(getContentResolver(), NotifyData.OPTION_SHOW_VOLUME_ON_NOTIFICATION_ICON, 0) == 1;
-        switch_show_volume_on_notification_icon.setChecked(App.mGlSets.isVolumeShowOnNotificationIcon);
-        switch_show_volume_on_notification_icon.setOnCheckedChangeListener(this);
+       // switch_show_volume_on_notification_icon = (Switch) findViewById(R.id.switch_show_volume_on_notification_icon);
+       // App.mGlSets.isVolumeShowOnNotificationIcon = Settings.System.getInt(getContentResolver(), NotifyData.OPTION_SHOW_VOLUME_ON_NOTIFICATION_ICON, 0) == 1;
+       // switch_show_volume_on_notification_icon.setChecked(App.mGlSets.isVolumeShowOnNotificationIcon);
+       // switch_show_volume_on_notification_icon.setOnCheckedChangeListener(this);
 
         tvReverseCount = (TextView) findViewById(R.id.tv_reverse_count);
         tvReverseCount.setText( String.format(getString(R.string.text_reverse_count), App.mGlSets.ReverseActivityCount) );
@@ -253,29 +253,15 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         int id = buttonView.getId();
-        NotifyData notifyData = new NotifyData( );
+        NotifyData notifyData = new NotifyData( getApplicationContext() );
         switch (id){
             case R.id.switch_show_notification_icon:
                 Settings.System.putInt(this.getContentResolver(), NotifyData.OPTION_SHOW_NOTIFICATION_ICON, isChecked ? 1 : 0);
                 App.mGlSets.isNotificationIconShow = isChecked;
-
-
-                //notifyData.NotifyID = App.mGlSets.isVolumeShowOnNotificationIcon ? NotifyData.NOTIFY_VOLUME_CHANGED_ID : NotifyData.NOTIFY_ID;
                 notifyData.smallIcon = (App.mGlSets.isNotificationIconShow) ? R.drawable.notify_auto : 0;
                 notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-                notifyData.number = App.mGlSets.isVolumeShowOnNotificationIcon ? App.mGlSets.getVolumeLevel() : 0;
-                ShowNotification(notifyData);
-                break;
-            case R.id.switch_show_volume_on_notification_icon:
-                Settings.System.putInt(this.getContentResolver(), NotifyData.OPTION_SHOW_VOLUME_ON_NOTIFICATION_ICON, isChecked ? 1 : 0);
-                App.mGlSets.isVolumeShowOnNotificationIcon = isChecked;
-
-
-                //notifyData.NotifyID = App.mGlSets.isVolumeShowOnNotificationIcon ? NotifyData.NOTIFY_VOLUME_CHANGED_ID : NotifyData.NOTIFY_ID;
-                notifyData.smallIcon = (App.mGlSets.isNotificationIconShow) ? R.drawable.notify_auto : 0;
-                notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-                notifyData.number = App.mGlSets.isVolumeShowOnNotificationIcon ? App.mGlSets.getVolumeLevel() : 0;
-                ShowNotification(notifyData);
+                notifyData.show();
+                //ShowNotification(notifyData);
                 break;
             default:
                 break;
@@ -294,16 +280,6 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 				int vol = intent.getIntExtra (TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED, 0);
 				tvCurrentVolume.setText (String.format( App.getInstance ().getString (R.string.text_current_level), vol));
 
-                // отобразим изменное значение громкости на иконке уведомления
-                if ( App.mGlSets.isVolumeShowOnNotificationIcon ) {
-                    // возможно, надо не новое уведомление делать, а заменять старое
-                    NotifyData notifyData = new NotifyData( );
-                    //notifyData.NotifyID = isVolumeShowOnNotificationIcon ? NOTIFY_VOLUME_CHANGED_ID : NOTIFY_ID;
-                    notifyData.smallIcon = App.mGlSets.isNotificationIconShow ? R.drawable.notify_auto : 0;
-                    notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-                    notifyData.number = App.mGlSets.isVolumeShowOnNotificationIcon ? vol : 0;
-                    ShowNotification(notifyData);
-                }
 			}
             else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH ) )
             {
@@ -350,26 +326,26 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         super.onDestroy();
     }
 
-    public Notification ShowNotification(NotifyData notifyData){
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        notificationManager.cancel(notifyData.NotifyID);
-        Notification.Builder builder = new Notification.Builder(getApplicationContext());
-        builder.setContentTitle( notifyData.Title );
-        builder.setContentText( notifyData.Text );
-        builder.setAutoCancel(false);
-        builder.setWhen( App.mGlSets.startDate);
-        if ( notifyData.smallIcon > 0 ) builder.setSmallIcon( notifyData.smallIcon );
-        Notification notification = builder.build();
-        notification.flags |= notifyData.flags;
-        notification.number =  notifyData.number;
-        if ( notifyData.ActivityClass != null) {
-            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), notifyData.ActivityClass), 0);
-            notification.setLatestEventInfo(getApplicationContext(),  notifyData.Title, notifyData.Text, pendingIntent);
-        }
-        notificationManager.notify(notifyData.NotifyID, notification);
-        return notification;
-    }
+//    public Notification ShowNotification(NotifyData notifyData){
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//
+//        notificationManager.cancel(notifyData.NotifyID);
+//        Notification.Builder builder = new Notification.Builder(getApplicationContext());
+//        builder.setContentTitle( notifyData.Title );
+//        builder.setContentText( notifyData.Text );
+//        builder.setAutoCancel(false);
+//        builder.setWhen( App.mGlSets.startDate);
+//        if ( notifyData.smallIcon > 0 ) builder.setSmallIcon( notifyData.smallIcon );
+//        Notification notification = builder.build();
+//        notification.flags |= notifyData.flags;
+//        notification.number =  notifyData.number;
+//        if ( notifyData.ActivityClass != null) {
+//            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), notifyData.ActivityClass), 0);
+//            notification.setLatestEventInfo(getApplicationContext(),  notifyData.Title, notifyData.Text, pendingIntent);
+//        }
+//        notificationManager.notify(notifyData.NotifyID, notification);
+//        return notification;
+//    }
 
 }
 

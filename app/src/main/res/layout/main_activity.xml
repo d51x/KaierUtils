@@ -31,9 +31,8 @@
 		android:layout_height="wrap_content"
 		android:text="@string/sound_settings_title"
 		android:id="@+id/id_button_sound_Settings"
-        android:layout_alignBaseline="@+id/switch_show_notification_icon"
-        android:layout_alignBottom="@+id/switch_show_notification_icon"
-        android:layout_alignParentRight="true"/>
+        android:layout_above="@+id/relativeLayout2"
+        android:layout_alignRight="@+id/tvCurrentVolum"/>
 
     <Switch
         android:layout_width="wrap_content"
@@ -54,7 +53,8 @@
         android:layout_below="@+id/id_button_sound_Settings"
         android:layout_alignParentLeft="true"
         android:layout_alignRight="@+id/switch_show_notification_icon"
-        android:enabled="false"/>
+        android:enabled="false"
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -103,9 +103,9 @@
         android:layout_height="wrap_content"
         android:text="@string/text_poweramp_control"
         android:id="@+id/btn_poweramp_control"
-        android:layout_alignBottom="@+id/switch_show_volume_on_notification_icon"
-        android:layout_alignParentRight="true"
-        android:layout_alignLeft="@+id/id_button_sound_Settings"/>
+        android:layout_above="@+id/id_button_sound_Settings"
+        android:layout_alignLeft="@+id/id_button_sound_Settings"
+        android:layout_alignRight="@+id/id_button_sound_Settings"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -165,11 +165,9 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tst_volume_down"
-        android:layout_alignParentLeft="true"
-        android:layout_above="@+id/textView"
-        android:layout_alignRight="@+id/tv_sleep_mode_count"
-        android:id="@+id/linearLayout">
+        android:id="@+id/linearLayout"
+        android:layout_alignBottom="@+id/tst_volume_down"
+        android:layout_alignParentLeft="true">
 
         <TextView
             android:layout_width="wrap_content"
@@ -206,8 +204,9 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tst_volume_down"
-        android:layout_toLeftOf="@+id/tvCurrentVolum">
+        android:id="@+id/relativeLayout2"
+        android:layout_alignTop="@+id/relativeLayout"
+        android:layout_toLeftOf="@+id/id_button_sound_Settings">
 
         <TextView
             android:layout_width="wrap_content"
@@ -247,8 +246,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/relativeLayout"
-        android:layout_alignBottom="@+id/tst_pa_pause"
-        android:layout_alignLeft="@+id/tv_sleep_mode_last_time">
+        android:layout_alignTop="@+id/linearLayout"
+        android:layout_toRightOf="@+id/tv_sleep_mode_count">
 
         <TextView
             android:layout_width="wrap_content"
