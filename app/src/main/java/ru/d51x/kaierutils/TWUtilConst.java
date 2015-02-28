@@ -14,7 +14,7 @@ public class TWUtilConst {
 
 	protected static final String TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED = "ru.d51x.kaierutils.action.VOLUME_CHANGED";
 
-    protected static final String TWUTIL_BROADCAST_ACTION_KEY_PRESSED = "ru.d51x.kaierutils.action.KEY_PRESSED";
+    protected static final String TWUTIL_BROADCAST_ACTION_KEY_PRESSED = "ru.d51x.kaierutils.action.KEY_TW_PRESSED";
 
 	protected static final int TWUTIL_CONTEXT_SLEEP = 514;
 	protected static final int TWUTIL_COMMAND_SLEEP = 514;

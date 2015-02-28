@@ -36,24 +36,24 @@ public class PowerAmpPreferenceActivity extends PreferenceActivity implements On
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if ( key.equals ( "CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE" )) {
-            App.mGlobalSettings.interactWithPowerAmp = sharedPreferences.getBoolean ( key, false);
+            App.mGlSets.interactWithPowerAmp = sharedPreferences.getBoolean ( key, false);
         } else if (key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_WATCH_SLEEP")) {
-            App.mGlobalSettings.needWatchSleepPowerAmp = sharedPreferences.getBoolean ( key, false);
+            App.mGlSets.needWatchSleepPowerAmp = sharedPreferences.getBoolean ( key, false);
         } else if (key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_WATCH_WAKEUP")) {
-            App.mGlobalSettings.needWatchWakeUpPowerAmp = sharedPreferences.getBoolean (key, false);
+            App.mGlSets.needWatchWakeUpPowerAmp = sharedPreferences.getBoolean (key, false);
         } else if (key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_WATCH_BOOTUP")) {
-            App.mGlobalSettings.needWatchBootUpPowerAmp = sharedPreferences.getBoolean (key, false);
+            App.mGlSets.needWatchBootUpPowerAmp = sharedPreferences.getBoolean (key, false);
         }  else if ( key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_NEXT_FOLDER")) {
-            App.mGlobalSettings.pressNextFolderPowerAmp = sharedPreferences.getBoolean (key, false);
+            App.mGlSets.pressNextFolderPowerAmp = sharedPreferences.getBoolean (key, false);
         } else if ( key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_PREV_FOLDER")) {
-            App.mGlobalSettings.pressPrevFolderPowerAmp = sharedPreferences.getBoolean (key, false);
+            App.mGlSets.pressPrevFolderPowerAmp = sharedPreferences.getBoolean (key, false);
         } else if ( key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_START_DELAY")) {
-            App.mGlobalSettings.powerampResumeDelay = sharedPreferences.getInt(key, 3000);
+            App.mGlSets.resumeDelayForPowerAmp = sharedPreferences.getInt(key, 3000);
         }
 //        else if ( key.equals ("CAR_SETTINGS__VOLUME_AT_REVERSE__FIXED_LEVEL")) {
-//            App.mGlobalSettings.FixedVolumeLevelAtReverse = sharedPreferences.getInt(key, 3);
+//            App.mGlSets.FixedVolumeLevelAtReverse = sharedPreferences.getInt(key, 3);
 //        } else if ( key.equals ("CAR_SETTINGS__VOLUME_AT_REVERSE__PERCENTAGE_LEVEL")) {
-//            App.mGlobalSettings.PercentVolumeLevelAtReverse = sharedPreferences.getInt(key, 30);
+//            App.mGlSets.PercentVolumeLevelAtReverse = sharedPreferences.getInt(key, 30);
 //        }
     }
 }

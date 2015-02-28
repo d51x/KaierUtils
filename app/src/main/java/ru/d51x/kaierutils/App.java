@@ -10,8 +10,7 @@ import android.util.Log;
 
 public class App extends Application {
 	static App self;
-
-	public static GlobalSettings mGlobalSettings;
+	public static GlSets mGlSets;
 	public static App getInstance() {
 		return self;
 	}
@@ -21,7 +20,7 @@ public class App extends Application {
 		super.onCreate();
 		Log.d ("App", "onCreate");
 		self = this;
-		mGlobalSettings = new GlobalSettings();
+		mGlSets = new GlSets();
 		this.startService (new Intent (this, BackgroundService.class));
 	}
 

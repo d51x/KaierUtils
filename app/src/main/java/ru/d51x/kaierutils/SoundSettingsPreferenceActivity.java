@@ -35,23 +35,23 @@ public class SoundSettingsPreferenceActivity extends PreferenceActivity implemen
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if ( key.equals ( "CAR_SETTINGS__VOLUME_AT_START_UP__DO_CHANGE" )) {
-			App.mGlobalSettings.isNeedSoundDecreaseAtStartUp = sharedPreferences.getBoolean ( key, false);
+			App.mGlSets.isNeedSoundDecreaseAtStartUp = sharedPreferences.getBoolean ( key, false);
 		} else if (key.equals ("CAR_SETTINGS__VOLUME_AT_START_UP__LEVEL")) {
-			App.mGlobalSettings.VolumeLevelAtStartUp = sharedPreferences.getInt (key, 3);
+			App.mGlSets.VolumeLevelAtStartUp = sharedPreferences.getInt (key, 3);
 		} else if (key.equals ("CAR_SETTINGS__VOLUME_AT_WAKE_UP__DO_CHANGE")) {
-			App.mGlobalSettings.isNeedSoundDecreaseAtWakeUp = sharedPreferences.getBoolean (key, false);
+			App.mGlSets.isNeedSoundDecreaseAtWakeUp = sharedPreferences.getBoolean (key, false);
 		} else if (key.equals ("CAR_SETTINGS__VOLUME_AT_WAKE_UP__LEVEL")) {
-			App.mGlobalSettings.VolumeLevelAtWakeUp = sharedPreferences.getInt (key, 3);
+			App.mGlSets.VolumeLevelAtWakeUp = sharedPreferences.getInt (key, 3);
 		}  else if ( key.equals ("CAR_SETTINGS__VOLUME_AT_REVERSE__DO_CHANGE")) {
-			App.mGlobalSettings.isNeedSoundDecreaseAtReverse = sharedPreferences.getBoolean (key, false);
+			App.mGlSets.isNeedSoundDecreaseAtReverse = sharedPreferences.getBoolean (key, false);
 		} else if ( key.equals ("CAR_SETTINGS__VOLUME_AT_REVERSE__FIXED_LEVEL_AVAILABLE")) {
-			App.mGlobalSettings.isFixedVolumeAtReverse = sharedPreferences.getBoolean (key, false);
+			App.mGlSets.isFixedVolumeAtReverse = sharedPreferences.getBoolean (key, false);
 		} else if ( key.equals ("CAR_SETTINGS__VOLUME_AT_REVERSE__PERCENTAGE_LEVEL_AVAILABLE")) {
-			App.mGlobalSettings.isPercentVolumeAtReverse = sharedPreferences.getBoolean (key, false);
+			App.mGlSets.isPercentVolumeAtReverse = sharedPreferences.getBoolean (key, false);
 		} else if ( key.equals ("CAR_SETTINGS__VOLUME_AT_REVERSE__FIXED_LEVEL")) {
-			App.mGlobalSettings.FixedVolumeLevelAtReverse = sharedPreferences.getInt(key, 3);
+			App.mGlSets.FixedVolumeLevelAtReverse = sharedPreferences.getInt(key, 3);
 		} else if ( key.equals ("CAR_SETTINGS__VOLUME_AT_REVERSE__PERCENTAGE_LEVEL")) {
-			App.mGlobalSettings.PercentVolumeLevelAtReverse = sharedPreferences.getInt(key, 30);
+			App.mGlSets.PercentVolumeLevelAtReverse = sharedPreferences.getInt(key, 30);
 		}
 	}
 

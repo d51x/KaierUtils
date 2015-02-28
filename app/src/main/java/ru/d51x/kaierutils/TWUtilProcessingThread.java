@@ -10,13 +10,11 @@ import android.util.Log;
 public class TWUtilProcessingThread extends Thread {
 
 	private Handler handler;
-	public TWUtilEx tw;
-
-
+	public TWUtilEx twUtil;
 
 	public TWUtilProcessingThread () {
 		super("TWUtilProcessingThread");
-		tw = null;
+		twUtil = null;
 	}
 
 	@Override
@@ -25,9 +23,9 @@ public class TWUtilProcessingThread extends Thread {
 			Log.d ("TWUtilProcessingThread", "run()");
 			Looper.prepare();
 			handler = new Handler();
-			if (( tw == null ) & ( TWUtilEx.isTWUtilAvailable() ) ) {
-				tw = new TWUtilEx();
-				tw.Init ();
+			if (( twUtil == null ) & ( TWUtilEx.isTWUtilAvailable() ) ) {
+				twUtil = new TWUtilEx();
+				twUtil.Init ();
 			}
 			Looper.loop();
 		} catch (Exception e) {
@@ -35,14 +33,14 @@ public class TWUtilProcessingThread extends Thread {
 		}
 	}
 
-	public synchronized void tryStop() {
-		Log.d ("TWUtilProcessingThread", "tryStop()");
+	public synchronized void finish() {
+		Log.d ("TWUtilProcessingThread", "finish()");
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
-				if ( tw != null){
-					tw.Destroy ();
-					tw = null;
+				if ( twUtil != null){
+					twUtil.Destroy();
+					twUtil = null;
 				}
 			Looper.myLooper().quit();
 			}

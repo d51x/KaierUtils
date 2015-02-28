@@ -3,10 +3,8 @@ package ru.d51x.kaierutils;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Bundle;
 import android.tw.john.TWUtil;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.lang.reflect.Type;
 
@@ -90,29 +88,25 @@ public class TWUtilEx {
 					case TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL:
                         if ( isReverseMode ) break;
                         curVolume = message.arg1 & Integer.MAX_VALUE;
-                        App.mGlobalSettings.setVolumeLevel(curVolume, false);
+                        App.mGlSets.setVolumeLevel(curVolume, false);
 						SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED,
 								             TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED, curVolume);
 						break;
 //					case TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS:
 //						curBrightness = message.arg1;
 //						curBrightnessMode = message.arg2;
-//						App.mGlobalSettings.setBrightnessLevel (curBrightness, false);
-//						App.mGlobalSettings.setBrightnessMode (curBrightnessMode, false);
+//						App.mGlSets.setBrightnessLevel (curBrightness, false);
+//						App.mGlSets.setBrightnessMode (curBrightnessMode, false);
 //						break;
                     case TWUtilConst.TWUTIL_COMMAND_KEY_PRESS:
-                        if ( message.arg1 == 2) {
+                        if ( message.arg1 == 2) {   // долгое нажатие
                             switch ( message.arg2) {
                                 case TWUtilConst.TWUTIL_SVC_BUTTON_NEXT:
-                                    //Toast.makeText(App.getInstance().getApplicationContext(), "Long press NEXT", Toast.LENGTH_SHORT).show();
-
                                     SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
                                                          TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
                                                          TWUtilConst.TWUTIL_SVC_BUTTON_NEXT);
                                     break;
                                 case TWUtilConst.TWUTIL_SVC_BUTTON_PREV:
-                                    //Toast.makeText(App.getInstance().getApplicationContext(), "Long press PREV", Toast.LENGTH_SHORT).show();
-
                                     SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
                                                          TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
                                                          TWUtilConst.TWUTIL_SVC_BUTTON_PREV);
@@ -248,12 +242,18 @@ public class TWUtilEx {
                     case 1:
                         rstr = "Create";
                         break;
+                    case 3:
+                        rstr = "Anstar";
+                        break;
                     case 7:
                     case 48:
                         rstr = "Waybo";
                         break;
                     case 6:
                         rstr = "Waybo";
+                        break;
+                    case 22:
+                        rstr = "Infidini";
                         break;
                     default:
                         rstr = String.format("<Unknown> (ID: %d)", res);

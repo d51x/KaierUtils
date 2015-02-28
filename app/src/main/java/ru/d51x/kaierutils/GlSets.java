@@ -6,7 +6,12 @@ import android.preference.PreferenceManager;
 /**
  * Created by Dmitriy on 21.02.2015.
  */
-public class GlobalSettings {
+public class GlSets {
+
+    protected static final String GPS_BROADCAST_ACTION_LOCATION_CHANGED = "ru.d51x.kaierutils.action.LOCATION_CHANGED";
+    protected static final String GPS_BROADCAST_ACTION_FIRST_FIX = "ru.d51x.kaierutils.action.GPS_EVENT_FIRST_FIX";
+    protected static final String GPS_BROADCAST_ACTION_SATELLITE_STATUS = "ru.d51x.kaierutils.action.GPS_EVENT_SATELLITE_STATUS";
+    protected static final String GPS_BROADCAST_ACTION_AGPS_RESET = "ru.d51x.kaierutils.action.GPS_EVENT_AGPS_RESET";
 
 	//public static final boolean IN_EMULATOR = true;
 	private int Volume;
@@ -34,6 +39,7 @@ public class GlobalSettings {
     public long workTime;
     public long lastSleep;
 
+    public boolean isPowerAmpPlaying;
     public boolean interactWithPowerAmp;
     public boolean needWatchSleepPowerAmp;
     public boolean needWatchWakeUpPowerAmp;
@@ -45,9 +51,15 @@ public class GlobalSettings {
     public boolean pa_isPlaying;
     public boolean pa_isStarted;
 
-    public int powerampResumeDelay = 3000;
+    public int resumeDelayForPowerAmp = 3000;
 
-	public GlobalSettings() {
+    public boolean isGpsAvailable;
+    public int gpsSpeed;
+    public boolean isGpsHangs;
+    public long locRequestUpdateTime = 500; // msec
+    public int locRequestMinDistance = 5; // meters
+
+	public GlSets() {
 		Volume = 3;
 		//Brightness = 7;
 		//BrightnessMode = 0;
@@ -67,6 +79,7 @@ public class GlobalSettings {
         lastSleep = 0;
         workTime = System.currentTimeMillis() - startDate;
 
+        isPowerAmpPlaying = false;
         interactWithPowerAmp = false;
         needWatchSleepPowerAmp = false;
         needWatchWakeUpPowerAmp = false;
@@ -98,6 +111,13 @@ public class GlobalSettings {
 			FixedVolumeLevelAtReverse = prefs.getInt("CAR_SETTINGS__VOLUME_AT_REVERSE__FIXED_LEVEL", 3);
 			PercentVolumeLevelAtReverse = prefs.getInt("CAR_SETTINGS__VOLUME_AT_REVERSE__PERCENTAGE_LEVEL", 30);
 
+            interactWithPowerAmp = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE", false);
+            needWatchSleepPowerAmp = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_WATCH_SLEEP", false);
+            needWatchWakeUpPowerAmp = prefs.getBoolean ("CAR_SETTINGS__CONTROL_POWERAMP_WATCH_WAKEUP", false);
+            needWatchBootUpPowerAmp = prefs.getBoolean ("CAR_SETTINGS__CONTROL_POWERAMP_WATCH_BOOTUP", false);
+            pressNextFolderPowerAmp = prefs.getBoolean ("CAR_SETTINGS__CONTROL_POWERAMP_NEXT_FOLDER", false);
+            pressPrevFolderPowerAmp = prefs.getBoolean ("CAR_SETTINGS__CONTROL_POWERAMP_PREV_FOLDER", false);
+            resumeDelayForPowerAmp = prefs.getInt("CAR_SETTINGS__CONTROL_POWERAMP_START_DELAY", 3000);
 		} catch (Exception e) {
 
 		}

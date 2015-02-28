@@ -1,13 +1,8 @@
 package ru.d51x.kaierutils;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import com.maxmpz.poweramp.player.PowerampAPI;
 
 /**
  * Created by Dmitriy on 18.02.2015.
@@ -19,10 +14,7 @@ public class PowerAmpProcessingThread extends Thread {
 
 
 
-	public PowerAmpProcessingThread() {
-		super("PowerAmpProcessingThread");
-
-	}
+	public PowerAmpProcessingThread() {	super("PowerAmpProcessingThread");	}
 
 	@Override
 	public void run() {
@@ -30,38 +22,27 @@ public class PowerAmpProcessingThread extends Thread {
 			Log.d ("PowerAmpProcessingThread", "run()");
 			Looper.prepare();
 			handler = new Handler();
-            up();
+            if (powerAmpProcessing!=null) return;
+            powerAmpProcessing = new PowerAmpProcessing(App.getInstance());
 			Looper.loop();
 		} catch (Exception e) {
 			Log.d ("PowerAmpProcessingThread", "ERROR: run() failed");
 		}
 	}
 
-	public synchronized void tryStop() {
-		Log.d ("PowerAmpProcessingThread", "tryStop()");
+	public synchronized void finish() {
+		Log.d ("PowerAmpProcessingThread", "finish()");
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
-            down();
+                if (powerAmpProcessing!=null){
+                    powerAmpProcessing.Destroy();
+                    powerAmpProcessing = null;
+                }
 			Looper.myLooper().quit();
 			}
 		});
 	}
-
-    private synchronized void up(){
-        if (powerAmpProcessing!=null)
-            return;
-        powerAmpProcessing = new PowerAmpProcessing(App.getInstance());
-
-    }
-    private synchronized void down(){
-        if (powerAmpProcessing!=null){
-            powerAmpProcessing.down();
-            powerAmpProcessing = null;
-        }
-    }
-
-
 }
 
 

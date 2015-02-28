@@ -59,5 +59,16 @@
     <string name="poweramp_start_delay_title">Задержка включения воспроизведения</string>
     <string name="poweramp_start_delay_summary">PowerAmp будет запущен с задержкой после просыпания или включения (через %1$d мсек)</string>
     <string name="poweramp_start_delay_text">Укажите значение (мсек)</string>
+    <string name="text_gps_info_title">GPS информация</string>
+    <string name="text_satellites_total">всего спутников %1$d</string>
+    <string name="text_satellites_good">С хорошим сигналом %1$d</string>
+    <string name="text_gps_accuracy">Точность %1$s</string>
+    <string name="text_gps_altitude">Высота над ур.моря %1$s</string>
+    <string name="text_gps_speed_title">Скорость:</string>
+    <string name="text_gps_speed_value">%1$s км/ч</string>
+    <string name="text_gps_coordinates">Координаты:</string>
+    <string name="text_gps_latitude">Широта: %1$s</string>
+    <string name="text_gps_longitude">Долгота: %1$s</string>
+    <string name="btn_agps_reset">Сброс AGPS</string>
 
 </resources>

@@ -12,13 +12,14 @@ import android.app.NotificationManager;
 
 public class BackgroundService extends Service {
 
-    private MainActivity mainActivity;
 	private TWUtilProcessingThread twUtilProcessingThread;
     private PowerAmpProcessingThread powerAmpProcessingThread;
+    private GpsProcessingThread gpsProcessingThread;
 
 	public BackgroundService () {
-		//super("TWUtilService");
 		twUtilProcessingThread = null;
+        powerAmpProcessingThread = null;
+        gpsProcessingThread = null;
 	}
 
 	@Override
@@ -36,9 +37,9 @@ public class BackgroundService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d ("BackgroundService", "onStartCommand");
 //        NotifyData notifyData = new  NotifyData();
-//        notifyData.smallIcon = App.mGlobalSettings.isNotificationIconShow ? R.drawable.notify_auto : 0;
+//        notifyData.smallIcon = App.mGlSets.isNotificationIconShow ? R.drawable.notify_auto : 0;
 //        notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-//        notifyData.number = App.mGlobalSettings.isVolumeShowOnNotificationIcon ? App.mGlobalSettings.getVolumeLevel() : 0;
+//        notifyData.number = App.mGlSets.isVolumeShowOnNotificationIcon ? App.mGlSets.getVolumeLevel() : 0;
 //        Notification notification = ShowNotification(notifyData);
 //		startForeground( notifyData.NOTIFY_ID, notification);
         Notification notification = makeNotification(NotifyData.NOTIFY_ID, NotifyData.NOTIFICATION_TITLE, "", R.drawable.notify_auto);
@@ -54,14 +55,10 @@ public class BackgroundService extends Service {
 			Log.d ("BackgroundService", "First attempt ");
 		}
 
-		// starting TWUtilProcessingThread
 		startTWUtilProcessingThread();
-
-		// starting PowerAmpProcessingThread
 		startPowerAmpProcessingThread();
-
-		// starting RadioProcessingThread
 		startRadioProcessingThread();
+        startGpsProcessingThread();
 
         return Service.START_STICKY;
 	}
@@ -76,7 +73,7 @@ public class BackgroundService extends Service {
 	private synchronized void stopTWUtilProcessingThread(){
 		Log.d ("BackgroundService", "stopTWUtilProcessingThread");
 		if ( twUtilProcessingThread == null) return;
-		twUtilProcessingThread.tryStop();
+		twUtilProcessingThread.finish();
 		twUtilProcessingThread = null;
 	}
 
@@ -90,7 +87,7 @@ public class BackgroundService extends Service {
 	private synchronized void stopPowerAmpProcessingThread(){
         Log.d ("BackgroundService", "stopPowerAmpProcessingThread");
         if ( powerAmpProcessingThread == null) return;
-        powerAmpProcessingThread.tryStop();
+        powerAmpProcessingThread.finish();
         powerAmpProcessingThread = null;
 	}
 
@@ -100,11 +97,26 @@ public class BackgroundService extends Service {
 	private synchronized void stopRadioProcessingThread(){
 	}
 
+    private synchronized void startGpsProcessingThread(){
+        Log.d ("BackgroundService", "startGpsProcessingThread");
+        if ( gpsProcessingThread != null ) return;
+        gpsProcessingThread = new GpsProcessingThread ();
+        gpsProcessingThread.start();
+    }
+
+    private synchronized void stopGpsProcessingThread(){
+        Log.d ("BackgroundService", "stopGpsProcessingThread");
+        if ( gpsProcessingThread == null) return;
+        gpsProcessingThread.finish();
+        gpsProcessingThread = null;
+    }
+
 	@Override
 	public void onDestroy() {
 		Toast.makeText(getApplicationContext(), "KaierUtils is stopped", Toast.LENGTH_LONG).show();
 		Log.d ("BackgroundService", "onDestroy");
 		stopForeground(true);
+        stopGpsProcessingThread();
 		stopRadioProcessingThread();
 		stopPowerAmpProcessingThread();
 		stopTWUtilProcessingThread();
