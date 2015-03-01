@@ -60,15 +60,23 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
     }
 
     public void onGpsStatusChanged(int event) {
+        Intent intent = new Intent();
         switch (event) {
             case GpsStatus.GPS_EVENT_STARTED:   // 1
-
+                intent.setAction( GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS );
+                intent.putExtra("gps_event", GpsStatus.GPS_EVENT_STARTED);
+                context.sendBroadcast(intent);
                 break;
             case GpsStatus.GPS_EVENT_FIRST_FIX: // 3
                 //Event sent when the GPS system has received its first fix since starting.
+                intent.setAction( GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS );
+                intent.putExtra("gps_event", GpsStatus.GPS_EVENT_FIRST_FIX);
+                context.sendBroadcast(intent);
                 break;
             case GpsStatus.GPS_EVENT_STOPPED:   // 2
-
+                intent.setAction( GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS );
+                intent.putExtra("gps_event", GpsStatus.GPS_EVENT_STOPPED);
+                context.sendBroadcast(intent);
                 break;
             case GpsStatus.GPS_EVENT_SATELLITE_STATUS: // 4
                 // инфа о спутниках
@@ -87,7 +95,6 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
                     }
                 }
 
-                Intent intent = new Intent();
                 intent.setAction( GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS );
                 intent.putExtra("SatellitesTotal", cntSats);
                 intent.putExtra("SatellitesGoodQATotal", goodSatellitesCount);
@@ -164,8 +171,6 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         float Accuracy = location.getAccuracy();    // точность в метрах
         float SpeedMSec = location.getSpeed();  // скорость м/с
         float SpeedKmH = SpeedMSec * 3600 / 1000;
-        //getAltitude – высота над уровнем моря в метрах
-        //getSpeed – скорость движения в м/с
         //getBearing – насколько я понял, это угол, на который текущая траектория движения отклоняется от траектории на север. Кто точно знает, напишите, плз, на форуме!
         // String.format(
         // "Coordinates: lat = %1$.4f, lon = %2$.4f, time = %3$tF %3$tT",
@@ -185,8 +190,8 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
         Intent intent = new Intent();
         intent.setAction( GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED );
-        intent.putExtra("Latitude", String.format("%1$.6f", Latitude));
-        intent.putExtra("Longitude", String.format("%1$.6f", Longitude));
+        intent.putExtra("Latitude", Latitude);
+        intent.putExtra("Longitude", Longitude);
         intent.putExtra("Altitude", String.format("%1$.2f", Altitude));
         intent.putExtra("Accuracy", String.format("%1$.0f", Accuracy));
         intent.putExtra("Speed", String.format("%1$.1f", SpeedKmH));

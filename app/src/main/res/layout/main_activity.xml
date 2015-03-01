@@ -8,271 +8,361 @@
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 tools:context=".SettingsActivity">
 
-    <TextView
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/text_device_name"
-        android:id="@+id/txtDeviceName"
-        android:textSize="20dp"
-        android:textIsSelectable="false"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvCurrentVolum"
-        android:textSize="20dp"
-        android:textIsSelectable="false"
-        android:text="@string/text_current_level"
-        android:layout_above="@+id/switch_show_notification_icon"
-        android:layout_alignParentRight="true"/>
-
-    <Button
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/sound_settings_title"
-		android:id="@+id/id_button_sound_Settings"
-        android:layout_above="@+id/relativeLayout2"
-        android:layout_alignRight="@+id/tvCurrentVolum"/>
-
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_show_notification_icon"
-        android:id="@+id/switch_show_notification_icon"
+        android:layout_marginLeft="28dp"
+        android:id="@+id/frameLayout"
         android:layout_below="@+id/txtDeviceName"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="35dp"
-        android:checked="false"/>
+        android:layout_alignParentLeft="true">
 
-    <Switch
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:id="@+id/imageView2"
+                android:src="@drawable/speed"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/text_gps_speed_value"
+                android:id="@+id/text_gps_speed_value"
+                android:textSize="40dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:textStyle="bold"
+                android:layout_below="@+id/switch_show_notification_icon"
+                android:layout_alignLeft="@+id/frameLayout"/>
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/text_show_volume_on_notification_icon"
-        android:id="@+id/switch_show_volume_on_notification_icon"
-        android:checked="false"
-        android:layout_below="@+id/id_button_sound_Settings"
-        android:layout_alignParentLeft="true"
-        android:layout_alignRight="@+id/switch_show_notification_icon"
-        android:enabled="false"
-        android:visibility="gone"/>
+        android:layout_below="@+id/frameLayout"
+        android:layout_alignLeft="@+id/frameLayout"
+        android:layout_alignRight="@+id/frameLayout"
+        android:id="@+id/frameLayout4">
 
-    <TextView
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="113dp"
+            android:layout_height="fill_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/ivVolumeLevel"
+                android:src="@drawable/volume_mute"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/tvCurrentVolum"
+                android:textSize="40dp"
+                android:textIsSelectable="false"
+                android:text="0"
+                android:layout_above="@+id/switch_show_notification_icon"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:paddingLeft="10dp"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/text_reverse_count"
-        android:id="@+id/tv_reverse_count"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_sleep_mode_count"
-        android:id="@+id/tv_sleep_mode_count"
-        android:layout_above="@+id/tv_reverse_count"
-        android:layout_alignParentLeft="true"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_sleep_mode_last_time"
-        android:id="@+id/tv_sleep_mode_last_time"
-        android:layout_alignBaseline="@+id/tv_sleep_mode_count"
-        android:layout_alignBottom="@+id/tv_sleep_mode_count"
-        android:layout_toRightOf="@+id/tv_reverse_count"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/text_statistic_title"
-        android:id="@+id/textView"
-        android:layout_above="@+id/tv_working_start"
-        android:layout_alignParentLeft="true"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_working_start"
-        android:id="@+id/tv_working_start"
-        android:layout_above="@+id/tv_sleep_mode_count"
-        android:layout_alignParentLeft="true"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_poweramp_control"
-        android:id="@+id/btn_poweramp_control"
-        android:layout_above="@+id/id_button_sound_Settings"
-        android:layout_alignLeft="@+id/id_button_sound_Settings"
-        android:layout_alignRight="@+id/id_button_sound_Settings"/>
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Volume Up"
-        android:id="@+id/tst_volume_up"
+        android:id="@+id/frameLayout3"
         android:layout_centerVertical="true"
-        android:layout_alignRight="@+id/btn_poweramp_control"/>
+        android:layout_alignParentLeft="true">
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout"
+            android:layout_below="@+id/id_button_sound_Settings"
+            android:layout_alignParentLeft="true">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/text_gps_info_title"
+                android:id="@+id/text_gps_info_title"
+                android:paddingBottom="5dp"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="252dp"
+                android:layout_height="fill_parent"
+                android:paddingBottom="5dp">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="97dp"
+                    android:layout_height="fill_parent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/imageView3"
+                        android:src="@drawable/satellite"
+                        android:baselineAlignBottom="true"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="10"
+                        android:id="@+id/text_satellites_total"
+                        android:textSize="28dp"
+                        android:paddingLeft="10dp"
+                        android:gravity="center_vertical"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="92dp"
+                    android:layout_height="fill_parent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/imageView4"
+                        android:src="@drawable/satellite_good"
+                        android:baselineAlignBottom="true"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="2"
+                        android:id="@+id/text_satellites_good"
+                        android:textSize="28dp"
+                        android:paddingLeft="10dp"
+                        android:gravity="center_vertical"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="388dp"
+                android:layout_height="wrap_content"
+                android:weightSum="1"
+                android:paddingBottom="5dp">
+
+                <ImageView
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:id="@+id/ivGPSStatus"
+                    android:src="@drawable/gps_disconnected"
+                    android:baselineAlignBottom="false"/>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:gravity="center_vertical|fill_vertical"
+                    android:baselineAligned="true"
+                    android:layout_weight="0.42"
+                    android:paddingLeft="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:id="@+id/text_gps_latitude"
+                        android:gravity="center_vertical"
+                        android:textSize="20dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:id="@+id/text_gps_longitude"
+                        android:textSize="20dp"
+                        android:gravity="center_vertical"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_gps_altitude"
+                android:id="@+id/text_gps_altitude"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_gps_accuracy"
+                android:id="@+id/text_gps_accuracy"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Volume Down"
-        android:id="@+id/tst_volume_down"
-        android:layout_alignTop="@+id/tst_volume_up"
-        android:layout_toLeftOf="@+id/tst_volume_up"/>
+        android:id="@+id/frameLayout2"
+        android:layout_alignBottom="@+id/frameLayout5"
+        android:layout_alignParentLeft="true">
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Next"
-        android:id="@+id/tst_svc_next"
-        android:layout_below="@+id/tst_volume_up"
-        android:layout_alignRight="@+id/tst_volume_up"/>
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="90dp"
+            android:layout_gravity="left|bottom">
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Prev"
-        android:id="@+id/tst_svc_prev"
-        android:layout_below="@+id/tst_volume_up"
-        android:layout_toLeftOf="@+id/tst_svc_next"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/text_statistic_title"
+                android:id="@+id/textView"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"/>
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Play"
-        android:id="@+id/tst_pa_play"
-        android:layout_below="@+id/tst_svc_next"
-        android:layout_alignParentRight="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_working_start"
+                android:id="@+id/tv_working_start"
+                android:layout_below="@+id/textView"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="0dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="21dp"/>
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Pause"
-        android:id="@+id/tst_pa_pause"
-        android:layout_below="@+id/tst_svc_prev"
-        android:layout_toLeftOf="@+id/tst_pa_play"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_sleep_mode_last_time"
+                android:id="@+id/tv_sleep_mode_last_time"
+                android:layout_gravity="center_horizontal"
+                android:layout_alignTop="@+id/tv_sleep_mode_count"
+                android:layout_toRightOf="@+id/tv_reverse_count"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_sleep_mode_count"
+                android:id="@+id/tv_sleep_mode_count"
+                android:layout_below="@+id/tv_working_start"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="0dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="49dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_reverse_count"
+                android:id="@+id/tv_reverse_count"
+                android:layout_below="@+id/tv_sleep_mode_count"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="0dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="63dp"/>
+
+        </RelativeLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout"
-        android:layout_alignBottom="@+id/tst_volume_down"
-        android:layout_alignParentLeft="true">
+        android:id="@+id/linearLayout2"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/text_gps_info_title"
-            android:id="@+id/text_gps_info_title"/>
+            android:text="@string/text_device_name"
+            android:id="@+id/txtDeviceName"
+            android:textSize="20dp"
+            android:textIsSelectable="false"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="right"/>
 
-        <TextView
+        <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/text_satellites_total"
-            android:id="@+id/text_satellites_total"/>
+            android:text="@string/text_show_notification_icon"
+            android:id="@+id/switch_show_notification_icon"
+            android:checked="false"
+            android:layout_below="@+id/txtDeviceName"
+            android:layout_alignRight="@+id/id_button_sound_Settings"
+            android:gravity="center_vertical"
+            android:layout_gravity="right"/>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <Button
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/text_satellites_good"
-            android:id="@+id/text_satellites_good"/>
+            android:text="@string/sound_settings_title"
+            android:id="@+id/id_button_sound_Settings"
+            android:layout_below="@+id/frameLayout4"
+            android:layout_alignRight="@+id/tst_volume_up"
+            android:layout_marginTop="34dp"
+            android:layout_gravity="right"/>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <Button
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/text_gps_accuracy"
-            android:id="@+id/text_gps_accuracy"/>
+            android:text="@string/title_activity_power_amp_preference"
+            android:id="@+id/id_button_poweramp_control"
+            android:layout_gravity="right"/>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/text_gps_altitude"
-            android:id="@+id/text_gps_altitude"/>
+            android:text="@string/btn_agps_reset"
+            android:id="@+id/btn_agps_reset"
+            android:layout_alignBottom="@+id/frameLayout3"
+            android:layout_alignLeft="@+id/tst_volume_up"
+            android:layout_gravity="right"/>
     </LinearLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/relativeLayout2"
-        android:layout_alignTop="@+id/relativeLayout"
-        android:layout_toLeftOf="@+id/id_button_sound_Settings">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/frameLayout5">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/text_gps_speed_title"
-            android:id="@+id/text_gps_speed_title"
-            android:gravity="center_vertical"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/text_gps_speed_value"
-            android:id="@+id/text_gps_speed_value"
-            android:textSize="40dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:textStyle="bold"
-            android:layout_below="@+id/text_gps_speed_title"
-            android:layout_alignParentLeft="true"/>
+            android:text="Volume Up"
+            android:id="@+id/tst_volume_up"
+            android:layout_above="@+id/tst_volume_down"
+            android:layout_alignRight="@+id/tst_volume_down"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="103dp"/>
 
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_agps_reset"
-            android:id="@+id/btn_agps_reset"
-            android:layout_below="@+id/text_gps_speed_value"
-            android:layout_centerHorizontal="true"
-            />
-    </RelativeLayout>
+            android:text="Volume Down"
+            android:id="@+id/tst_volume_down"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="left|center_vertical"/>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/relativeLayout"
-        android:layout_alignTop="@+id/linearLayout"
-        android:layout_toRightOf="@+id/tv_sleep_mode_count">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/text_gps_coordinates"
-            android:id="@+id/text_gps_coordinates"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_gps_latitude"
-            android:id="@+id/text_gps_latitude"
-            android:layout_below="@+id/text_gps_coordinates"
-            android:layout_alignParentLeft="true"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_gps_longitude"
-            android:id="@+id/text_gps_longitude"
-            android:layout_below="@+id/text_gps_latitude"
-            android:layout_alignParentLeft="true"/>
-    </RelativeLayout>
+    </FrameLayout>
 
 </RelativeLayout>

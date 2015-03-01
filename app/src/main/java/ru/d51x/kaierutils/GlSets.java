@@ -10,6 +10,7 @@ public class GlSets {
 
     protected static final String GPS_BROADCAST_ACTION_LOCATION_CHANGED = "ru.d51x.kaierutils.action.LOCATION_CHANGED";
     protected static final String GPS_BROADCAST_ACTION_FIRST_FIX = "ru.d51x.kaierutils.action.GPS_EVENT_FIRST_FIX";
+    protected static final String GPS_BROADCAST_ACTION_EVENT_STATUS = "ru.d51x.kaierutils.action.GPS_STATUS";
     protected static final String GPS_BROADCAST_ACTION_SATELLITE_STATUS = "ru.d51x.kaierutils.action.GPS_EVENT_SATELLITE_STATUS";
     protected static final String GPS_BROADCAST_ACTION_AGPS_RESET = "ru.d51x.kaierutils.action.GPS_EVENT_AGPS_RESET";
 
@@ -56,8 +57,8 @@ public class GlSets {
     public boolean isGpsAvailable;
     public int gpsSpeed;
     public boolean isGpsHangs;
-    public long locRequestUpdateTime = 500; // msec
-    public int locRequestMinDistance = 5; // meters
+    public long locRequestUpdateTime = 0; // msec
+    public int locRequestMinDistance = 0; // meters
 
 	public GlSets() {
 		Volume = 3;

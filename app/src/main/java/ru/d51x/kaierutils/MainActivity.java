@@ -2,26 +2,28 @@ package ru.d51x.kaierutils;
 
 import android.app.Activity;
 import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.GpsStatus;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
 import android.view.View;
 import android.provider.Settings;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
 
 import com.maxmpz.poweramp.player.PowerampAPI;
-
-import org.w3c.dom.Text;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -32,14 +34,10 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
 
 	private Button btnSoundSettings;
-    private Button btnPowerAmpControl;
+
     private TextView tvDeviceName;
     private TextView tvCurrentVolume;
-    public static Handler mHandler;
     private Switch switch_show_notification_icon;
-
-    //private Switch switch_show_volume_on_notification_icon;
-    private BackgroundService backgroundService;
 
     private TextView tvReverseCount;
     private TextView tvSleepModeCount;
@@ -48,13 +46,10 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
     private Button btnTestVolumeUp;
     private Button btnTestVolumeDown;
-    private Button btnTestPressNext;
-    private Button btnTestPressPrev;
-    private Button btnTestPlay;
-    private Button btnTestPause;
 
     private TextView tvGPSSatellitesTotal;
     private TextView tvGPSSatellitesGoodQACount;
+
     private TextView tvGPSAccuracy;
     private TextView tvGPSAltitude;
     private TextView tvGPSLatitude;
@@ -62,39 +57,40 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private TextView tvGPSSpeed;
 
     private Button btnAGPSReset;
+    private Button btnPowerAmpControl;
 
-	public TextView getTextViewByID(int id) {
-
-			return (TextView) findViewById(id);
-	}
+    private ImageView ivGPSStatus;
+    private ImageView ivVolumeLevel;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate (savedInstanceState);
+
+        /*
+        // Убираем заголовок
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        // Убираем панель уведомлений
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        * */
 		setContentView (R.layout.main_activity);
 		Log.d ("MainActivity", "onCreate");
 		startService(new Intent(this, BackgroundService.class));
 		Toast.makeText (this, "Service started", 0).show();
 
 		btnSoundSettings = (Button) findViewById (R.id.id_button_sound_Settings);
-        btnPowerAmpControl = (Button) findViewById(R.id.btn_poweramp_control);
 
         tvDeviceName = (TextView) findViewById(R.id.txtDeviceName);
         String string_device_name = String.format(getString(R.string.text_device_name), TWUtilEx.GetDeviceID());
         tvDeviceName.setText( string_device_name );
 
         tvCurrentVolume = (TextView) findViewById(R.id.tvCurrentVolum);
-        tvCurrentVolume.setText( String.format(getString(R.string.text_current_level), App.mGlSets.getVolumeLevel()) );
+        tvCurrentVolume.setText(Integer.toString(App.mGlSets.getVolumeLevel()) );
 
         switch_show_notification_icon = (Switch) findViewById(R.id.switch_show_notification_icon);
         App.mGlSets.isNotificationIconShow = Settings.System.getInt(getContentResolver(), NotifyData.OPTION_SHOW_NOTIFICATION_ICON, 0) == 1;
         switch_show_notification_icon.setChecked(App.mGlSets.isNotificationIconShow);
         switch_show_notification_icon.setOnCheckedChangeListener(this);
-
-       // switch_show_volume_on_notification_icon = (Switch) findViewById(R.id.switch_show_volume_on_notification_icon);
-       // App.mGlSets.isVolumeShowOnNotificationIcon = Settings.System.getInt(getContentResolver(), NotifyData.OPTION_SHOW_VOLUME_ON_NOTIFICATION_ICON, 0) == 1;
-       // switch_show_volume_on_notification_icon.setChecked(App.mGlSets.isVolumeShowOnNotificationIcon);
-       // switch_show_volume_on_notification_icon.setOnCheckedChangeListener(this);
 
         tvReverseCount = (TextView) findViewById(R.id.tv_reverse_count);
         tvReverseCount.setText( String.format(getString(R.string.text_reverse_count), App.mGlSets.ReverseActivityCount) );
@@ -119,41 +115,36 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
         btnTestVolumeUp = (Button) findViewById(R.id.tst_volume_up);
         btnTestVolumeDown = (Button) findViewById(R.id.tst_volume_down);
-        btnTestPressNext = (Button) findViewById(R.id.tst_svc_next);
-        btnTestPressPrev = (Button) findViewById(R.id.tst_svc_prev);
-        btnTestPlay = (Button) findViewById(R.id.tst_pa_play);
-        btnTestPause = (Button) findViewById(R.id.tst_pa_pause);
 
         tvGPSSatellitesTotal = (TextView) findViewById(R.id.text_satellites_total);
         tvGPSSatellitesGoodQACount = (TextView) findViewById(R.id.text_satellites_good);
-        tvGPSSatellitesTotal.setText(String.format(getString(R.string.text_satellites_total), 0));
-        tvGPSSatellitesGoodQACount.setText( String.format(getString(R.string.text_satellites_good), 0) );
+        tvGPSSatellitesTotal.setText( "0");
+        tvGPSSatellitesGoodQACount.setText( "0" );
 
         tvGPSAccuracy = (TextView) findViewById(R.id.text_gps_accuracy);
-        tvGPSAccuracy.setText( String.format(getString(R.string.text_gps_accuracy), "") );
+        tvGPSAccuracy.setText( String.format(getString(R.string.text_gps_accuracy), "0") );
         tvGPSAltitude = (TextView) findViewById(R.id.text_gps_altitude);
-        tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), "") );
+        tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), "0") );
         tvGPSLatitude = (TextView) findViewById(R.id.text_gps_latitude);
-        tvGPSLatitude.setText( String.format(getString(R.string.text_gps_latitude), "") );
+        tvGPSLatitude.setText( "0" );
         tvGPSLongitude = (TextView) findViewById(R.id.text_gps_longitude);
-        tvGPSLongitude.setText( String.format(getString(R.string.text_gps_longitude), "") );
+        tvGPSLongitude.setText( "0" );
         tvGPSSpeed = (TextView) findViewById(R.id.text_gps_speed_value);
-        tvGPSSpeed.setText( String.format(getString(R.string.text_gps_speed_value), "") );
+        tvGPSSpeed.setText( String.format(getString(R.string.text_gps_speed_value), "0") );
 
+        ivGPSStatus = (ImageView) findViewById(R.id.ivGPSStatus);
+        ivGPSStatus.setImageResource(R.drawable.gps_disconnected);
+
+        ivVolumeLevel = (ImageView) findViewById(R.id.ivVolumeLevel);
+        setVolumeIcon(ivVolumeLevel, App.mGlSets.getVolumeLevel());
+
+        btnPowerAmpControl = (Button) findViewById(R.id.id_button_poweramp_control);
 
         this.btnSoundSettings.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) // клик на кнопку
 			{
 
-				try {
-					Intent it = new Intent();
-					//Intent it = new Intent(this, SoundSettingsPreferenceActivity.class);
-					it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.SoundSettingsPreferenceActivity");
-					//it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-					startActivity(it);
-				} catch (Exception e) {
-				}
+                show_sound_settings();
 
 			}
 		});
@@ -162,15 +153,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             public void onClick(View v) // клик на кнопку
             {
 
-                try {
-                    Intent it = new Intent();
-                    //Intent it = new Intent(this, SoundSettingsPreferenceActivity.class);
-                    it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.PowerAmpPreferenceActivity");
-                    //it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivity(it);
-                } catch (Exception e) {
-                }
+                show_poweramp_control();
 
             }
         });
@@ -208,30 +191,6 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 }
             }
         });
-        this.btnTestPressNext.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) // клик на кнопку
-            {
-                getApplicationContext().startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND, PowerampAPI.Commands.NEXT_IN_CAT));
-            }
-        });
-        this.btnTestPressPrev.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) // клик на кнопку
-            {
-                getApplicationContext().startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND, PowerampAPI.Commands.PREVIOUS_IN_CAT));
-            }
-        });
-        this.btnTestPlay.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) // клик на кнопку
-            {
-                getApplicationContext().startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND, PowerampAPI.Commands.TOGGLE_PLAY_PAUSE));
-            }
-        });
-        this.btnTestPause.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) // клик на кнопку
-            {
-                getApplicationContext().startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND, PowerampAPI.Commands.PAUSE));
-            }
-        });
 
         btnAGPSReset = (Button) findViewById(R.id.btn_agps_reset);
         this.btnAGPSReset.setOnClickListener(new Button.OnClickListener() {
@@ -248,6 +207,8 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED));
+        registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_FIRST_FIX));
+        registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS));
 	}
 
     @Override
@@ -261,7 +222,6 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 notifyData.smallIcon = (App.mGlSets.isNotificationIconShow) ? R.drawable.notify_auto : 0;
                 notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
                 notifyData.show();
-                //ShowNotification(notifyData);
                 break;
             default:
                 break;
@@ -278,8 +238,8 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 			if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED ))
 			{
 				int vol = intent.getIntExtra (TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED, 0);
-				tvCurrentVolume.setText (String.format( App.getInstance ().getString (R.string.text_current_level), vol));
-
+				tvCurrentVolume.setText (String.format( Integer.toString(vol)));
+                setVolumeIcon(ivVolumeLevel, vol);
 			}
             else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH ) )
             {
@@ -306,14 +266,52 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             {
                 int cntSats = intent.getIntExtra ("SatellitesTotal", 0);
                 int goodSatellitesCount = intent.getIntExtra( "SatellitesGoodQATotal", 0 );
-                tvGPSSatellitesTotal.setText( String.format(getString(R.string.text_satellites_total), cntSats) );
-                tvGPSSatellitesGoodQACount.setText( String.format(getString(R.string.text_satellites_good), goodSatellitesCount) );
+                tvGPSSatellitesTotal.setText( Integer.toString(cntSats) );
+                tvGPSSatellitesGoodQACount.setText( Integer.toString(goodSatellitesCount) );
+            }
+            else if (action.equals(GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS))
+            {
+                int status = intent.getIntExtra("gps_event", 0);
+                switch ( status ) {
+                    case GpsStatus.GPS_EVENT_STARTED:
+                        ivGPSStatus.setImageResource(R.drawable.gps_searching);  // запуск таймера, мигаем
+                        break;
+                    case GpsStatus.GPS_EVENT_STOPPED:
+                        ivGPSStatus.setImageResource(R.drawable.gps_disconnected);
+                        break;
+                    case GpsStatus.GPS_EVENT_FIRST_FIX:
+                        ivGPSStatus.setImageResource(R.drawable.gps_connected);
+                        break;
+                    default:
+                        ivGPSStatus.setImageResource(R.drawable.gps_disconnected);
+                        break;
+                }
+
+            }
+            else if (action.equals(GlSets.GPS_BROADCAST_ACTION_FIRST_FIX))
+            {
+
             }
             else if (action.equals(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED)) {
+                double latitude = intent.getDoubleExtra("Latitude", 0);
+                if ( latitude < 0 ) {
+                    //S - south latitude
+                    tvGPSLatitude.setText( String.format("S %1$.6f", latitude*(-1)) );
+                } else {
+                    //N - north latitude
+                    tvGPSLatitude.setText( String.format("N %1$.6f", latitude) );
+                }
+
+                double longitude = intent.getDoubleExtra("Longitude", 0);
+                if ( longitude < 0 ) {
+                    //W - west longitude
+                    tvGPSLongitude.setText( String.format("W %1$.6f", longitude*(-1)) );
+                } else {
+                    //E - east longitude
+                    tvGPSLongitude.setText( String.format("E %1$.6f", longitude) );
+                }
                 tvGPSAccuracy.setText( String.format(getString(R.string.text_gps_accuracy), intent.getStringExtra("Accuracy")) );
                 tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), intent.getStringExtra("Altitude")) );
-                tvGPSLatitude.setText( String.format(getString(R.string.text_gps_latitude), intent.getStringExtra("Latitude")) );
-                tvGPSLongitude.setText( String.format(getString(R.string.text_gps_longitude), intent.getStringExtra("Longitude")) );
                 tvGPSSpeed.setText( String.format(getString(R.string.text_gps_speed_value), intent.getStringExtra("Speed")) );
             }
 		}
@@ -326,27 +324,65 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         super.onDestroy();
     }
 
-//    public Notification ShowNotification(NotifyData notifyData){
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//
-//        notificationManager.cancel(notifyData.NotifyID);
-//        Notification.Builder builder = new Notification.Builder(getApplicationContext());
-//        builder.setContentTitle( notifyData.Title );
-//        builder.setContentText( notifyData.Text );
-//        builder.setAutoCancel(false);
-//        builder.setWhen( App.mGlSets.startDate);
-//        if ( notifyData.smallIcon > 0 ) builder.setSmallIcon( notifyData.smallIcon );
-//        Notification notification = builder.build();
-//        notification.flags |= notifyData.flags;
-//        notification.number =  notifyData.number;
-//        if ( notifyData.ActivityClass != null) {
-//            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), notifyData.ActivityClass), 0);
-//            notification.setLatestEventInfo(getApplicationContext(),  notifyData.Title, notifyData.Text, pendingIntent);
-//        }
-//        notificationManager.notify(notifyData.NotifyID, notification);
-//        return notification;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        // Операции для выбранного пункта меню
+        switch (item.getItemId())
+        {
+            case R.id.menu_sound_settings:
+                show_sound_settings();
+                return true;
+            case R.id.menu_poweramp_control:
+                show_poweramp_control();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void show_sound_settings() {
+        try {
+            Intent it = new Intent();
+            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.SoundSettingsPreferenceActivity");
+            //it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(it);
+        } catch (Exception e) {
+        }
+    }
+
+    private void show_poweramp_control() {
+        try {
+            Intent it = new Intent();
+            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.PowerAmpPreferenceActivity");
+            //it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(it);
+        } catch (Exception e) {
+        }
+    }
+
+    private void setVolumeIcon(ImageView iv, int vol) {
+        if ( vol < 1 ) {
+            iv.setImageResource(R.drawable.volume_mute);
+        } else if ( vol <= 5 ) {
+            iv.setImageResource(R.drawable.volume_low);
+        } else if (vol <= 10 ) {
+            iv.setImageResource(R.drawable.volume_medium);
+        } else {
+            iv.setImageResource(R.drawable.volume_high);
+        }
+
+    }
 }
 
 

@@ -2,9 +2,11 @@
 <resources>
 
     <string name="app_name">KaierUtils</string>
-    <string name="hello_world">Hello world!</string>
+
     <string name="action_settings">Settings</string>
     <string name="title_settings_activity">Настройки громкости</string>
+    <string name="title_poweramp_activity">Управление PowerAmp</string>
+
     <string name="change_volume_at_startup_category">Громкость при включении устройства</string>
     <string name="change_volume_at_startup_title">Изменение громкости при запуске</string>
     <string name="change_volume_at_startup_summary">Установка уровня громкости на заданную величину при запуске усройства</string>
@@ -34,15 +36,14 @@
     <string name="percent_volume_level_at_startup_dialog">Введите процент уменьшения</string>
     <string name="sound_settings_title">Дополнительные настройки звука</string>
     <string name="text_device_name">Ваше устройство %1$s</string>
-    <string name="text_current_level">Текущая громкость %1$d</string>
-    <string name="text_show_notification_icon">Отображать иконку в статусбаре</string>
-    <string name="text_show_volume_on_notification_icon">Отображение текущего уровня громкости на иконки уведомления</string>
+
+    <string name="text_show_notification_icon">Иконка в статусбаре</string>
+
     <string name="text_reverse_count">Задний ход включался %1$d раз(а)</string>
     <string name="text_sleep_mode_count">SleepMode сработал %1$d раз(а)</string>
     <string name="text_sleep_mode_last_time">последний раз в %1$s</string>
     <string name="text_statistic_title">Статистика с момента включения:</string>
     <string name="text_working_start">Работает с %1$s</string>
-    <string name="text_poweramp_control">Управление PowerAMP</string>
 
     <string name="title_activity_power_amp_preference">Управление PowerAmp</string>
     <string name="poweramp_interaction_title">Взимодействовать с PowerAmp</string>
@@ -60,15 +61,15 @@
     <string name="poweramp_start_delay_summary">PowerAmp будет запущен с задержкой после просыпания или включения (через %1$d мсек)</string>
     <string name="poweramp_start_delay_text">Укажите значение (мсек)</string>
     <string name="text_gps_info_title">GPS информация</string>
-    <string name="text_satellites_total">всего спутников %1$d</string>
-    <string name="text_satellites_good">С хорошим сигналом %1$d</string>
-    <string name="text_gps_accuracy">Точность %1$s</string>
-    <string name="text_gps_altitude">Высота над ур.моря %1$s</string>
-    <string name="text_gps_speed_title">Скорость:</string>
+
+    <string name="text_gps_altitude">Высота: %1$s м</string>
+    <string name="text_gps_accuracy">Точность: %1$s м</string>
     <string name="text_gps_speed_value">%1$s км/ч</string>
-    <string name="text_gps_coordinates">Координаты:</string>
-    <string name="text_gps_latitude">Широта: %1$s</string>
-    <string name="text_gps_longitude">Долгота: %1$s</string>
+
     <string name="btn_agps_reset">Сброс AGPS</string>
+
+
+    <string name="menu_sound_settings">Дополнительные настройки звука</string>
+    <string name="text_poweramp_control">Управление PowerAmp</string>
 
 </resources>
