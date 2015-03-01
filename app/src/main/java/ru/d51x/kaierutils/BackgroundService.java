@@ -121,24 +121,5 @@ public class BackgroundService extends Service {
 		super.onDestroy();
 	}
 
-
-//    public Notification makeNotification(int notifyId, String Title, String Text, int smallIcon) {
-//        boolean showicon = Settings.System.getInt(getContentResolver(), "kaierutils_show_notification_icon", 0) == 1;
-//
-//        Notification.Builder builder = new Notification.Builder(getApplicationContext());
-//        builder.setContentTitle( Title );
-//        builder.setAutoCancel(false);
-//        if ( showicon ) builder.setSmallIcon( smallIcon );
-//        Notification notification = builder.build();
-//
-//        notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-//        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), 0);
-//        notification.setLatestEventInfo(getApplicationContext(), Title, Text, pendingIntent);
-//
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//        notificationManager.notify (notifyId, notification);
-//        return notification;
-//    }
-
 }
 

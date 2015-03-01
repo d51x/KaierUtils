@@ -54,9 +54,11 @@ public class GlSets {
 
     public int resumeDelayForPowerAmp = 3000;
 
-    public boolean isGpsAvailable;
-    public int gpsSpeed;
+
+    public float gpsSpeed = 0;
     public boolean isGpsHangs;
+    public boolean isFirstRunGPS = false;
+    public boolean isFirstFixGPS = false;
     public long locRequestUpdateTime = 0; // msec
     public int locRequestMinDistance = 0; // meters
 

@@ -365,4 +365,15 @@
 
     </FrameLayout>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivGPSHangs"
+        android:layout_toRightOf="@+id/frameLayout4"
+        android:layout_marginLeft="40dp"
+        android:src="@drawable/gps_disconnected_filled"
+        android:layout_above="@+id/frameLayout3"
+        android:layout_alignRight="@+id/frameLayout3"
+        android:layout_below="@+id/frameLayout4"/>
+
 </RelativeLayout>

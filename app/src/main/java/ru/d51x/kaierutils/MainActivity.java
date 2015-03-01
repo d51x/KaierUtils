@@ -61,6 +61,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
     private ImageView ivGPSStatus;
     private ImageView ivVolumeLevel;
+    private ImageView ivGPSHangs;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -138,6 +139,9 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         ivVolumeLevel = (ImageView) findViewById(R.id.ivVolumeLevel);
         setVolumeIcon(ivVolumeLevel, App.mGlSets.getVolumeLevel());
 
+        ivGPSHangs = (ImageView) findViewById(R.id.ivGPSHangs);
+        ivGPSHangs.setImageResource(R.drawable.gps_disconnected_filled);
+
         btnPowerAmpControl = (Button) findViewById(R.id.id_button_poweramp_control);
 
         this.btnSoundSettings.setOnClickListener(new Button.OnClickListener() {
@@ -209,6 +213,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_FIRST_FIX));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS));
+        registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET));
 	}
 
     @Override
@@ -290,7 +295,10 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             }
             else if (action.equals(GlSets.GPS_BROADCAST_ACTION_FIRST_FIX))
             {
-
+                ivGPSHangs.setImageResource(R.drawable.gps_connected_filled);
+            }
+            else if (action.equals(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET)) {
+                ivGPSHangs.setImageResource(R.drawable.gps_disconnected_filled);
             }
             else if (action.equals(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED)) {
                 double latitude = intent.getDoubleExtra("Latitude", 0);

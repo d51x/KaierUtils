@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.location.GpsStatus;
 import android.location.GpsSatellite;
 import android.widget.Toast;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
@@ -20,6 +22,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
     private static final int min_good_sats = 3;
     private static final int delayTimer = 40;
 
+    private static final int MINUTES_TWO = 1000 * 120;
     private BroadcastReceiver gpsReceiver;
     private Context context;
     private Handler mHandler;
@@ -31,7 +34,13 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
     private Location lastLocation = null;
 
     private int goodSatellitesCount = 0;
+    private Timer mTimer;
+    private Thread monThread;
+    private int gpsevent = 0;
+    private int pausedelay;
+    private int timer, gpstime;
 
+    private FirstRunTimerTask firstRunTimerTask;
 
     public GpsProcessing(Context context) {
         Log.d("GpsProcessing", "GpsProcessing");
@@ -57,23 +66,38 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         mLocationManager.addGpsStatusListener(this);
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, App.mGlSets.locRequestUpdateTime, App.mGlSets.locRequestMinDistance, this);
 
+        // запуск первого таймера, задержка в 2 минуты после старта для стабилизации спутников
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
+        mTimer = new Timer();
+
+        firstRunTimerTask = new FirstRunTimerTask();
+        mTimer.schedule(firstRunTimerTask, MINUTES_TWO);
+
+        gpstime = 0;
+        timer = 0;
     }
 
     public void onGpsStatusChanged(int event) {
         Intent intent = new Intent();
+        gpsevent = 0;
         switch (event) {
             case GpsStatus.GPS_EVENT_STARTED:   // 1
+                App.mGlSets.isFirstFixGPS = false;
                 intent.setAction( GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS );
                 intent.putExtra("gps_event", GpsStatus.GPS_EVENT_STARTED);
                 context.sendBroadcast(intent);
                 break;
             case GpsStatus.GPS_EVENT_FIRST_FIX: // 3
                 //Event sent when the GPS system has received its first fix since starting.
+                App.mGlSets.isFirstFixGPS = true;
                 intent.setAction( GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS );
                 intent.putExtra("gps_event", GpsStatus.GPS_EVENT_FIRST_FIX);
                 context.sendBroadcast(intent);
                 break;
             case GpsStatus.GPS_EVENT_STOPPED:   // 2
+                App.mGlSets.isFirstFixGPS = false;
                 intent.setAction( GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS );
                 intent.putExtra("gps_event", GpsStatus.GPS_EVENT_STOPPED);
                 context.sendBroadcast(intent);
@@ -83,8 +107,9 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
                 goodSatellitesCount = 0;
                 GpsStatus status = mLocationManager.getGpsStatus(null);
                 Iterable<GpsSatellite> itSatellites = status.getSatellites();
-                int cntSats = status.getMaxSatellites();
+                int cntSats = 0;
                 for (GpsSatellite it : itSatellites) {
+                    cntSats++;
                     /*
                     SNR is mapped to signal strength [0,1,4-9] COMMENT
                     SNR: >500 >100 >50 >10 >5 >0 bad n/a COMMENT
@@ -100,11 +125,21 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
                 intent.putExtra("SatellitesGoodQATotal", goodSatellitesCount);
                 context.sendBroadcast(intent);
 
-                if ( (goodSatellitesCount > 0) && (goodSatellitesCount < min_good_sats) && ((2-1) > delayTimer)) {
-                   // clear a-gps
-                   // gpstime = timer;
-                   // pausedelay = 60;
-                    // resetAGPS();
+                if ( (cntSats > 0) && (goodSatellitesCount >= min_good_sats) &&
+                        App.mGlSets.isFirstRunGPS && App.mGlSets.isFirstFixGPS )
+                {
+                    gpstime = timer;
+                }
+
+               if ( (cntSats > 0) && (goodSatellitesCount < min_good_sats) && ((timer - gpstime) > delayTimer) &&
+                       App.mGlSets.isFirstRunGPS && App.mGlSets.isFirstFixGPS)
+                {
+                  // 40 сек подождать, вдруг появятся спутники, инчае...
+                   gpstime = timer;
+                   pausedelay = 60;
+                    intent.setAction( GlSets.GPS_BROADCAST_ACTION_AGPS_RESET );
+                    context.sendBroadcast(intent);
+                  // 60 сек подождать до начала следующего мониторинга, чтобы опять не делался сброс
                 }
                 break;
             default:
@@ -161,16 +196,22 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         context.unregisterReceiver(gpsReceiver);
         mLocationManager.removeUpdates(this);
         mLocationManager.removeGpsStatusListener(this);
+
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
+
     }
 
     private void processLocation(Location location) {
 
-        double Latitude = location.getLatitude();  // широта
-        double Longitude = location.getLongitude();  // долгота
-        double Altitude = location.getAltitude();   // высота на уровнем моря
-        float Accuracy = location.getAccuracy();    // точность в метрах
-        float SpeedMSec = location.getSpeed();  // скорость м/с
-        float SpeedKmH = SpeedMSec * 3600 / 1000;
+        double Latitude = location.getLatitude();
+        double Longitude = location.getLongitude();
+        double Altitude = location.getAltitude();
+        float Accuracy = location.getAccuracy();
+        float Speed = location.getSpeed() * 3600 / 1000;
+        App.mGlSets.gpsSpeed = Speed;
         //getBearing – насколько я понял, это угол, на который текущая траектория движения отклоняется от траектории на север. Кто точно знает, напишите, плз, на форуме!
         // String.format(
         // "Coordinates: lat = %1$.4f, lon = %2$.4f, time = %3$tF %3$tT",
@@ -194,7 +235,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         intent.putExtra("Longitude", Longitude);
         intent.putExtra("Altitude", String.format("%1$.2f", Altitude));
         intent.putExtra("Accuracy", String.format("%1$.0f", Accuracy));
-        intent.putExtra("Speed", String.format("%1$.1f", SpeedKmH));
+        intent.putExtra("Speed", String.format("%1$.1f", Speed));
         context.sendBroadcast(intent);
     }
 
@@ -204,5 +245,38 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         mLocationManager.sendExtraCommand("gps", "force_xtra_injection", bundle);
         mLocationManager.sendExtraCommand("gps", "force_time_injection", bundle);
         Toast.makeText(context, "GPS завис\nAGPS данные были обнулены", Toast.LENGTH_LONG).show();
+        App.mGlSets.isFirstFixGPS = false;
+    }
+
+    class FirstRunTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            App.mGlSets.isFirstRunGPS = true;
+            // надо запустить новый таймер или новый поток, чтобы каждую секунду срабатывал
+            pausedelay = 60;
+            monThread = new Thread(new Runnable() {
+                public void run() {
+                    while (true) {
+                        if ( gpsevent > 10 ) {
+                            pausedelay = 1;
+                        } else {
+                            gpsevent++;
+                        }
+                        if ( pausedelay == 0) {
+                            timer++;
+                        }
+                        if ( pausedelay > 0) {
+                            pausedelay--;
+                        }
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+            monThread.start();
+        }
     }
 }
