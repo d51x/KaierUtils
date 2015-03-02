@@ -82,7 +82,8 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private Button btnDynamicSound;
     private ImageView ivSpeedChange;
     private ImageView ivSpeedChange2;
-
+    private TextView tvOBD_RPM;
+    private TextView tvOBD_Speed;
     private Button btnOBD2;
 
 	@Override
@@ -173,6 +174,8 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         btnDynamicSound = (Button) findViewById(R.id.id_button_dynamic_sound_settings);
         btnOBD2 = (Button) findViewById(R.id.id_button_obd2_settings);
 
+        tvOBD_RPM = (TextView) findViewById(R.id.text_obd_rpm);
+        tvOBD_Speed = (TextView) findViewById(R.id.text_obd_speed);
         this.btnSoundSettings.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) // клик на кнопку
 			{
@@ -547,6 +550,12 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                     // TODO handle commands result
                     Log.d("MainActivity", "RPM: " + engineRpmCommand.getFormattedResult());
                     Log.d("MainActivity", "Speed: " + speedCommand.getFormattedResult());
+                    try {
+                        tvOBD_RPM.setText( engineRpmCommand.getFormattedResult() );
+                        tvOBD_Speed.setText( speedCommand.getFormattedResult() );
+                    } catch (Exception e3) {
+
+                    }
                 }
 
             } catch (Exception e2) {

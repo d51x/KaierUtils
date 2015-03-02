@@ -285,7 +285,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/frameLayout3"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:id="@+id/linearLayout3">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -363,5 +364,21 @@
 
         </RelativeLayout>
     </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/text_obd_rpm"
+        android:layout_above="@+id/frameLayout3"
+        android:layout_alignRight="@+id/linearLayout3"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/text_obd_speed"
+        android:layout_alignTop="@+id/frameLayout3"
+        android:layout_toLeftOf="@+id/linearLayout2"/>
 
 </RelativeLayout>
