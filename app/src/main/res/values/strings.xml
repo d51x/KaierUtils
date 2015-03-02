@@ -65,13 +65,11 @@
 
     <string name="text_gps_altitude">Высота: %1$s м</string>
     <string name="text_gps_accuracy">Точность: %1$s м</string>
-    <string name="text_gps_speed_value">%1$s км/ч</string>
+    <string name="text_gps_speed_value">%1$d</string>
 
     <string name="btn_agps_reset">Сброс AGPS</string>
 
 
-    <string name="menu_sound_settings">Дополнительные настройки звука</string>
-    <string name="text_poweramp_control">Управление PowerAmp</string>
     <string name="text_gps_hangs">завис\n %1$d раз(а)</string>
     <string name="text_dynamic_sound_settings">Динамическое управление громкостью</string>
 

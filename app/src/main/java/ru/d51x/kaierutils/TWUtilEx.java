@@ -1,10 +1,13 @@
 package ru.d51x.kaierutils;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.tw.john.TWUtil;
 import android.util.Log;
+
+import com.maxmpz.poweramp.player.PowerampAPI;
 
 import java.lang.reflect.Type;
 
@@ -12,6 +15,8 @@ import java.lang.reflect.Type;
  * Created by Dmitriy on 18.02.2015.
  */
 public class TWUtilEx {
+	private Context context;
+	private Handler mHandler;
 
 	public static boolean isTWUtilAvailable() {
 		try {
@@ -39,15 +44,20 @@ public class TWUtilEx {
 			TWUtilConst.TWUTIL_CONTEXT_REQUEST_SHUTDOWN,        // Shutdown 40720
 			TWUtilConst.TWUTIL_CONTEXT_REVERSE_ACTIVITY,        // reverse activity 40732
 			TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL,           // 515
-            TWUtilConst.TWUTIL_COMMAND_KEY_PRESS                // 513
+            TWUtilConst.TWUTIL_COMMAND_KEY_PRESS,                // 513
 			//TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS              // 258
+			(short) TWUtilConst.TWUTIL_CONTEXT_PRESS_BUTTON_3                       // 33281 - запуск стандартных приложений
 	};
 
 	protected boolean isTWUtilOpened;
 	private Handler mTWUtilHandler;
 
 
-	public TWUtilEx() {
+	public TWUtilEx(Context context) {
+
+		this.context = context;
+		mHandler = new Handler();
+
 		mTWUtil = null;
 		this.mTWUtilHandler = null;
 		isTWUtilOpened = false;
@@ -116,6 +126,26 @@ public class TWUtilEx {
                             }
                         }
                         break;
+                    case TWUtilConst.TWUTIL_CONTEXT_PRESS_BUTTON_3:
+	                    if ( message.arg1 == 1) {
+		                    switch (message.arg2) {
+			                    case TWUtilConst.TWUTIL_CODE_RADIO:             // = 33;
+			                    case TWUtilConst.TWUTIL_CODE_IPOD:              // = 35;
+			                    case TWUtilConst.TWUTIL_CODE_DVD:               // = 36;
+			                    case TWUtilConst.TWUTIL_CODE_TV:                // = 39;
+			                    case TWUtilConst.TWUTIL_CODE_AUX:               // = 40;
+			                    case TWUtilConst.TWUTIL_CODE_VIDEO:             // = 44;
+			                    case TWUtilConst.TWUTIL_CODE_PHONE:             // = 47;
+				                    setPowerAmpPaused();
+				                    break;
+			                    case TWUtilConst.TWUTIL_CODE_MUSIC:             // = 41;
+				                    setPowerAmpPlayed();
+				                    break;
+			                    default:
+				                    break;
+		                    }
+	                    }
+	                    break;
 					default:
 						break;
 				}
@@ -265,4 +295,19 @@ public class TWUtilEx {
 			}
 		} else { return "<Unknown>"; }
 	}
+
+	private void setPowerAmpPaused() {
+		context.startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
+	                                                                              PowerampAPI.Commands.PAUSE));
+	}
+	private void setPowerAmpPlayed() {
+		mHandler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				context.startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
+						PowerampAPI.Commands.RESUME));
+			}
+		}, 500);
+	}
+
 }

@@ -56,8 +56,8 @@ public class GlSets {
     public int resumeDelayForPowerAmp = 3000;
 
 
-    public float gpsSpeed = 0;
-    public float gpsPrevSpeed = 0;
+    public int gpsSpeed = 0;
+    public int gpsPrevSpeed = 0;
     public int gpsSpeedGrow = 0;
 
     public boolean isGpsHangs;

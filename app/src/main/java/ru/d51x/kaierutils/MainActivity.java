@@ -19,6 +19,8 @@ import android.widget.Toast;
 import android.widget.Button;
 import android.view.View;
 import android.provider.Settings;
+
+import android.view.Window;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -52,8 +54,6 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
 
 
-	private Button btnSoundSettings;
-
     private TextView tvDeviceName;
     private TextView tvCurrentVolume;
     private Switch switch_show_notification_icon;
@@ -73,36 +73,33 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private TextView tvGPSSpeed;
 
     private Button btnAGPSReset;
-    private Button btnPowerAmpControl;
 
     private ImageView ivGPSStatus;
     private ImageView ivVolumeLevel;
     private ImageView ivGPSHangs;
     private TextView tvGPSHangs;
-    private Button btnDynamicSound;
     private ImageView ivSpeedChange;
     private ImageView ivSpeedChange2;
     private TextView tvOBD_RPM;
     private TextView tvOBD_Speed;
-    private Button btnOBD2;
+
+	private Button btnSpeedUp, btnSpeedDown;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate (savedInstanceState);
 
-        /*
+
         // Убираем заголовок
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // Убираем панель уведомлений
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        * */
+        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		setContentView (R.layout.main_activity);
 		Log.d ("MainActivity", "onCreate");
 		startService(new Intent(this, BackgroundService.class));
 		Toast.makeText (this, "Service started", 0).show();
-
-		btnSoundSettings = (Button) findViewById (R.id.id_button_sound_Settings);
 
         tvDeviceName = (TextView) findViewById(R.id.txtDeviceName);
         String string_device_name = String.format(getString(R.string.text_device_name), TWUtilEx.GetDeviceID());
@@ -151,7 +148,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         tvGPSLongitude = (TextView) findViewById(R.id.text_gps_longitude);
         tvGPSLongitude.setText( "0" );
         tvGPSSpeed = (TextView) findViewById(R.id.text_gps_speed_value);
-        tvGPSSpeed.setText( String.format(getString(R.string.text_gps_speed_value), "0") );
+        tvGPSSpeed.setText( String.format(getString(R.string.text_gps_speed_value), 0) );
 
         ivGPSStatus = (ImageView) findViewById(R.id.ivGPSStatus);
         ivGPSStatus.setImageResource(R.drawable.gps_disconnected);
@@ -170,30 +167,11 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         tvGPSHangs = (TextView) findViewById(R.id.tvGPSHangs);
         tvGPSHangs.setText(String.format(getString(R.string.text_gps_hangs), 0));
 
-        btnPowerAmpControl = (Button) findViewById(R.id.id_button_poweramp_control);
-        btnDynamicSound = (Button) findViewById(R.id.id_button_dynamic_sound_settings);
-        btnOBD2 = (Button) findViewById(R.id.id_button_obd2_settings);
-
         tvOBD_RPM = (TextView) findViewById(R.id.text_obd_rpm);
         tvOBD_Speed = (TextView) findViewById(R.id.text_obd_speed);
-        this.btnSoundSettings.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) // клик на кнопку
-			{
 
-                show_sound_settings();
-
-			}
-		});
-
-        this.btnPowerAmpControl.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) // клик на кнопку
-            {
-
-                show_poweramp_control();
-
-            }
-        });
-
+		btnSpeedUp = (Button) findViewById (R.id.btnSpeedUp);
+		btnSpeedDown = (Button) findViewById (R.id.btnSpeedDown);
 
         btnAGPSReset = (Button) findViewById(R.id.btn_agps_reset);
         this.btnAGPSReset.setOnClickListener(new Button.OnClickListener() {
@@ -205,20 +183,38 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             }
         });
 
-        this.btnDynamicSound.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) // клик на кнопку
-            {
-               // DynamicSoundSettingsActivity
-                show_dynamic_sound_settings();
-            }
-        });
+		this.btnSpeedUp.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) // клик на кнопку
+			{
+				App.mGlSets.gpsSpeed = App.mGlSets.gpsSpeed + (int)Math.random()*5+1;
+				App.mGlSets.gpsSpeedGrow = 1;
+				Intent intent2 = new Intent();
+				intent2.setAction(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED);
 
-        this.btnOBD2.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) // клик на кнопку
-            {
-                show_avalaible_BT_devices( MainActivity.this );
-            }
-        });
+				intent2.putExtra("Speed", App.mGlSets.gpsSpeed);
+				intent2.putExtra("SpeedGrow", App.mGlSets.gpsSpeedGrow);
+				sendBroadcast(intent2);
+
+				intent2.setAction(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED);
+				sendBroadcast(intent2);
+			}
+		});
+
+		this.btnSpeedDown.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) // клик на кнопку
+			{
+				App.mGlSets.gpsSpeed = App.mGlSets.gpsSpeed - (int)Math.random()*5+1;
+				App.mGlSets.gpsSpeedGrow = -1;
+				Intent intent2 = new Intent();
+				intent2.setAction(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED);
+				intent2.putExtra("Speed", App.mGlSets.gpsSpeed);
+				intent2.putExtra("SpeedGrow", App.mGlSets.gpsSpeedGrow);
+				sendBroadcast(intent2);
+
+				intent2.setAction(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED);
+				sendBroadcast(intent2);
+			}
+		});
 
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED));
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH));
@@ -329,10 +325,11 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             }
             else if (action.equals(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET)) {
                 ivGPSHangs.setImageResource(R.drawable.gps_disconnected_filled);
+				findViewById (R.id.linearLayout3).setVisibility (View.VISIBLE);
                 tvGPSHangs.setText(String.format(getString(R.string.text_gps_hangs), App.mGlSets.cntGpsHangs));
             }
             else if (action.equals(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED)) {
-                float speed = intent.getFloatExtra("Speed", 0);
+                int speed = intent.getIntExtra("Speed", 0);
                 int grow = intent.getIntExtra("SpeedGrow", 0);
                 processDynamicVoume(speed, grow);
             }
@@ -356,7 +353,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 }
                 tvGPSAccuracy.setText( String.format(getString(R.string.text_gps_accuracy), intent.getStringExtra("Accuracy")) );
                 tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), intent.getStringExtra("Altitude")) );
-                tvGPSSpeed.setText( String.format(getString(R.string.text_gps_speed_value), intent.getStringExtra("Speed")) );
+                tvGPSSpeed.setText( String.format(getString(R.string.text_gps_speed_value), intent.getIntExtra("Speed", 0)) );
 
                 if ( !App.mGlSets.dsc_isAvailable ) {
                     ivSpeedChange.setVisibility(View.INVISIBLE);
@@ -394,6 +391,12 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             case R.id.menu_poweramp_control:
                 show_poweramp_control();
                 return true;
+	        case R.id.menu_dynamic_sound_control:
+		        show_dynamic_sound_settings();
+		        return true;
+	        case R.id.menu_odb2_settings:
+		        show_avalaible_BT_devices( MainActivity.this );
+		        return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -445,9 +448,9 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
     }
 
-    private void  processDynamicVoume(float speed, int grow) {
+    private void  processDynamicVoume(int speed, int grow) {
         if ( !App.mGlSets.dsc_isAvailable) return;
-        int  t = Math.round((Math.abs(speed - App.mGlSets.dsc_FirstSpeed))) / App.mGlSets.dsc_StepSpeed;
+        int  t = Math.abs(speed - App.mGlSets.dsc_FirstSpeed) / App.mGlSets.dsc_StepSpeed;
         switch ( grow ){
             case -1:
                 ivSpeedChange.setImageResource(R.drawable.speed_down);
@@ -533,6 +536,8 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             BluetoothSocket socket = device.createInsecureRfcommSocketToServiceRecord(uuid);
 
             socket.connect();
+
+	        findViewById (R.id.frameLayout5).setVisibility ( View.VISIBLE);
             try {
                 new EchoOffObdCommand().run(socket.getInputStream(), socket.getOutputStream());
                 new LineFeedOffObdCommand().run(socket.getInputStream(), socket.getOutputStream());

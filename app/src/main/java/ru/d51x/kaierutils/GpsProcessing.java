@@ -211,7 +211,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         double Longitude = location.getLongitude();
         double Altitude = location.getAltitude();
         float Accuracy = location.getAccuracy();
-        float Speed = location.getSpeed() * 3600 / 1000;
+        int Speed = Math.round(location.getSpeed() * 3600 / 1000);
 
 
         //getBearing – насколько я понял, это угол, на который текущая траектория движения отклоняется от траектории на север. Кто точно знает, напишите, плз, на форуме!
@@ -237,7 +237,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         intent.putExtra("Longitude", Longitude);
         intent.putExtra("Altitude", String.format("%1$.2f", Altitude));
         intent.putExtra("Accuracy", String.format("%1$.0f", Accuracy));
-        intent.putExtra("Speed", String.format("%1$.1f", Speed));
+        intent.putExtra("Speed", Speed);
         context.sendBroadcast(intent);
 
 
@@ -245,7 +245,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
 
         if ( App.mGlSets.dsc_isAvailable) {
-            int  t = Math.round((Math.abs(Speed - App.mGlSets.dsc_FirstSpeed))) / App.mGlSets.dsc_StepSpeed;
+            int  t = Math.abs(Speed - App.mGlSets.dsc_FirstSpeed) / App.mGlSets.dsc_StepSpeed;
             App.mGlSets.gpsSpeed = Speed;
 
             if (App.mGlSets.gpsPrevSpeed > Speed) {

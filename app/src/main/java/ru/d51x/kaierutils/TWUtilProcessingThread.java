@@ -24,7 +24,7 @@ public class TWUtilProcessingThread extends Thread {
 			Looper.prepare();
 			handler = new Handler();
 			if (( twUtil == null ) & ( TWUtilEx.isTWUtilAvailable() ) ) {
-				twUtil = new TWUtilEx();
+				twUtil = new TWUtilEx(App.getInstance());
 				twUtil.Init ();
 			}
 			Looper.loop();

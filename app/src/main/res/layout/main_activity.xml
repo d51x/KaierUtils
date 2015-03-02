@@ -11,7 +11,6 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="28dp"
         android:id="@+id/frameLayout"
         android:layout_below="@+id/txtDeviceName"
         android:layout_alignParentLeft="true">
@@ -21,7 +20,12 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
-            <ImageView
+	        <ImageView
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:id="@+id/ivSpeedChange"
+	            android:paddingLeft="20dp"/>
+	        <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:id="@+id/imageView2"
@@ -39,13 +43,13 @@
                 android:textStyle="bold"
                 />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/ivSpeedChange"
-                android:paddingLeft="20dp"/>
-
-            <ImageView
+	        <TextView
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:text="км/ч"
+		        android:id="@+id/textView2" android:gravity="bottom|center_horizontal"
+		        android:textSize="30sp" android:paddingLeft="4dp"/>
+	        <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/ivSpeedChange2"
@@ -60,7 +64,7 @@
         android:layout_below="@+id/frameLayout"
         android:layout_alignLeft="@+id/frameLayout"
         android:layout_alignRight="@+id/frameLayout"
-        android:id="@+id/frameLayout4">
+        android:id="@+id/frameLayout4" android:paddingLeft="26dp">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -244,36 +248,9 @@
             android:gravity="center_vertical"
             />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/sound_settings_title"
-            android:id="@+id/id_button_sound_Settings"
-            android:layout_marginTop="34dp"
-            />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/title_activity_power_amp_preference"
-            android:id="@+id/id_button_poweramp_control"
-            android:layout_gravity="right"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_dynamic_sound_settings"
-            android:id="@+id/id_button_dynamic_sound_settings"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/text_obd2_settings"
-            android:id="@+id/id_button_obd2_settings"/>
-
-        <Button
+	    <Button
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_agps_reset"
             android:id="@+id/btn_agps_reset"
@@ -286,7 +263,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/frameLayout3"
         android:layout_centerHorizontal="true"
-        android:id="@+id/linearLayout3">
+        android:id="@+id/linearLayout3" android:visibility="invisible">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -365,20 +342,39 @@
         </RelativeLayout>
     </FrameLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/text_obd_rpm"
-        android:layout_above="@+id/frameLayout3"
-        android:layout_alignRight="@+id/linearLayout3"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/text_obd_speed"
-        android:layout_alignTop="@+id/frameLayout3"
-        android:layout_toLeftOf="@+id/linearLayout2"/>
+	<FrameLayout
+		android:layout_width="100dp"
+		android:layout_height="60dp"
+		android:layout_alignParentBottom="true" android:layout_toLeftOf="@+id/linearLayout2"
+		android:id="@+id/frameLayout5" android:visibility="invisible">
+		<TextView
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="New Text"
+	        android:id="@+id/text_obd_rpm"
+	        android:layout_above="@+id/frameLayout3"
+	        android:layout_alignRight="@+id/linearLayout3" android:layout_gravity="bottom"/>
+		<TextView
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="New Text"
+	        android:id="@+id/text_obd_speed"
+	        android:layout_alignTop="@+id/frameLayout3"
+	        android:layout_toLeftOf="@+id/linearLayout2" android:layout_gravity="top"/>
+	</FrameLayout>
+	<FrameLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true" android:layout_alignRight="@+id/linearLayout2"
+		android:layout_alignTop="@+id/frameLayout2" android:visibility="invisible">
+		<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Speed Up"
+			android:id="@+id/btnSpeedUp" android:layout_gravity="right|bottom"/>
+		<Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+		        android:text="Speed Down" android:id="@+id/btnSpeedDown"
+		        android:layout_gravity="top|center_vertical|right"/>
+	</FrameLayout>
 
 </RelativeLayout>

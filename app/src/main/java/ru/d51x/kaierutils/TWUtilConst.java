@@ -16,6 +16,26 @@ public class TWUtilConst {
 
     protected static final String TWUTIL_BROADCAST_ACTION_KEY_PRESSED = "ru.d51x.kaierutils.action.KEY_TW_PRESSED";
 
+
+	protected static final int TWUTIL_CODE_NAVI = 32;
+
+	protected static final int TWUTIL_CODE_RADIO = 33;
+	protected static final int TWUTIL_CODE_IPOD = 35;
+	protected static final int TWUTIL_CODE_DVD = 36;
+	protected static final int TWUTIL_CODE_TV = 39;
+	protected static final int TWUTIL_CODE_AUX = 40;
+	protected static final int TWUTIL_CODE_MUSIC = 41;
+	protected static final int TWUTIL_CODE_VIDEO = 44;
+	protected static final int TWUTIL_CODE_PHONE = 47;
+
+
+
+
+
+
+
+
+
 	protected static final int TWUTIL_CONTEXT_SLEEP = 514;
 	protected static final int TWUTIL_COMMAND_SLEEP = 514;
     protected static final int TWUTIL_COMMAND_KEY_PRESS = 513;
