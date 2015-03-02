@@ -63,6 +63,7 @@ public class GlSets {
     public int gpsPrevSpeed = 0;
     public int gpsSpeedGrow = 0;
 
+	public float totalDistance = 0;
     public boolean isGpsHangs;
     public int cntGpsHangs = 0;
     public boolean isFirstRunGPS = false;

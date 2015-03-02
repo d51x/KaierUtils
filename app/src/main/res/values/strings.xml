@@ -91,4 +91,5 @@
     <string name="dsc_delta_to_change_dialogtitle">Выберите дельту скорости</string>
     <string name="text_obd2_settings">OBD 2</string>
 	<string name="text_switch_color_speed">Цветная скорость</string>
+	<string name="text_gps_distance">%1$s</string>
 </resources>

@@ -30,6 +30,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
     private LocationManager mLocationManager;
     private Location gpsLocation = null;
 
+    private Location prevLocation = null;
     private Location firstLocation = null;
     private Location lastLocation = null;
 
@@ -231,6 +232,12 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
         //location.distanceTo(prevLocation)
 
+	    try {
+		    App.mGlSets.totalDistance += location.distanceTo ( prevLocation );
+	    } catch (Exception e) {
+
+	    }
+
         Intent intent = new Intent();
         intent.setAction( GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED );
         intent.putExtra("Latitude", Latitude);
@@ -263,6 +270,10 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
             intent2.putExtra("SpeedGrow", App.mGlSets.gpsSpeedGrow);
             context.sendBroadcast(intent2);
         }
+
+
+	    prevLocation = location;
+
     }
 
     private void resetAGPS() {

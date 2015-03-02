@@ -64,6 +64,9 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private TextView tvSleepModeLastTime;
     private TextView tvWorkingStart;
 
+	private TextView tvGPSDistance;
+	private ImageView ivGPSDistance;
+
     private TextView tvGPSSatellitesTotal;
     private TextView tvGPSSatellitesGoodQACount;
 
@@ -155,6 +158,10 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         tvGPSLongitude.setText( "0" );
         tvGPSSpeed = (TextView) findViewById(R.id.text_gps_speed_value);
         tvGPSSpeed.setText( String.format(getString(R.string.text_gps_speed_value), 0) );
+
+
+		tvGPSDistance = (TextView) findViewById(R.id.tvGPSDistance);
+		tvGPSDistance.setText( String.format(getString(R.string.text_gps_distance), "0") );
 
         ivGPSStatus = (ImageView) findViewById(R.id.ivGPSStatus);
         ivGPSStatus.setImageResource(R.drawable.gps_disconnected);
@@ -374,6 +381,9 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                     ivSpeedChange2.setVisibility(View.INVISIBLE);
 
                 }
+
+				tvGPSDistance.setText (String.format("%1$.1f км", App.mGlSets.totalDistance / 1000));
+
             }
 		}
 	};
