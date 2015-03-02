@@ -18,7 +18,7 @@ import java.util.TimerTask;
 
 public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
-    private static final int signal_quality = 5;
+    public static final int signal_quality = 5;
     private static final int min_good_sats = 3;
     private static final int delayTimer = 40;
 
@@ -137,8 +137,9 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
                   // 40 сек подождать, вдруг появятся спутники, инчае...
                    gpstime = timer;
                    pausedelay = 60;
-                    intent.setAction( GlSets.GPS_BROADCAST_ACTION_AGPS_RESET );
-                    context.sendBroadcast(intent);
+                   App.mGlSets.cntGpsHangs++;
+                   intent.setAction( GlSets.GPS_BROADCAST_ACTION_AGPS_RESET );
+                   context.sendBroadcast(intent);
                   // 60 сек подождать до начала следующего мониторинга, чтобы опять не делался сброс
                 }
                 break;
@@ -211,7 +212,8 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         double Altitude = location.getAltitude();
         float Accuracy = location.getAccuracy();
         float Speed = location.getSpeed() * 3600 / 1000;
-        App.mGlSets.gpsSpeed = Speed;
+
+
         //getBearing – насколько я понял, это угол, на который текущая траектория движения отклоняется от траектории на север. Кто точно знает, напишите, плз, на форуме!
         // String.format(
         // "Coordinates: lat = %1$.4f, lon = %2$.4f, time = %3$tF %3$tT",
@@ -237,6 +239,26 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         intent.putExtra("Accuracy", String.format("%1$.0f", Accuracy));
         intent.putExtra("Speed", String.format("%1$.1f", Speed));
         context.sendBroadcast(intent);
+
+
+        if ( App.mGlSets.dsc_isAvailable) {
+            App.mGlSets.gpsSpeed = Speed;
+
+            if (App.mGlSets.gpsPrevSpeed > Speed) {
+                App.mGlSets.gpsSpeedGrow = -1;
+            } else if (App.mGlSets.gpsPrevSpeed < Speed) {
+                App.mGlSets.gpsSpeedGrow = 1;
+            } else {
+                App.mGlSets.gpsSpeedGrow = 0;
+            }
+
+
+            Intent intent2 = new Intent();
+            intent2.setAction(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED);
+            intent2.putExtra("Speed", Speed);
+            intent2.putExtra("SpeedGrow", App.mGlSets.gpsSpeedGrow);
+            context.sendBroadcast(intent2);
+        }
     }
 
     private void resetAGPS() {

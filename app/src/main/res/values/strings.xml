@@ -4,8 +4,9 @@
     <string name="app_name">KaierUtils</string>
 
     <string name="action_settings">Settings</string>
-    <string name="title_settings_activity">Настройки громкости</string>
-    <string name="title_poweramp_activity">Управление PowerAmp</string>
+    <string name="title_settings_activity">Дополнительные настройки громкости</string>
+    <string name="title_activity_poweramp_settings">Управление PowerAmp</string>
+    <string name="title_activity_dynamic_sound_settings">Динамическое изменение громкости</string>
 
     <string name="change_volume_at_startup_category">Громкость при включении устройства</string>
     <string name="change_volume_at_startup_title">Изменение громкости при запуске</string>
@@ -71,5 +72,23 @@
 
     <string name="menu_sound_settings">Дополнительные настройки звука</string>
     <string name="text_poweramp_control">Управление PowerAmp</string>
+    <string name="text_gps_hangs">завис\n %1$d раз(а)</string>
+    <string name="text_dynamic_sound_settings">Динамическое управление громкостью</string>
 
+    <string name="dsc_available">Включить динамическое изменение громкости</string>
+    <string name="dsc_firstspeed_title">Минимальная скорость</string>
+    <string name="dsc_firstspeed_summary">Значение минимальной скорости, при которой динамически начнет изменяться громкость (текущее значение %1$d)</string>
+    <string name="dsc_firstspeed_dialogtitle">Выберите минимальную скорость</string>
+    <string name="dsc_stepspeed_title">Шаг изменения скорости</string>
+    <string name="dsc_stepspeed_summary">Шаг изменения скорости, при котором срабатывает динамическое изменение громкости (текущее значение %1$d)</string>
+    <string name="dsc_stepspeed_dialogtitle">Выберите интервал скорости</string>
+    <string name="dsc_stepvolume_title">Шаг изменения громкости</string>
+    <string name="dsc_stepvolume_summary">Шаг изменения громкости, на который измениться громкость (текущее значение %1$d)</string>
+    <string name="dsc_stepvolume_dialogtitle">Выберите шаг громкости</string>
+    <string name="dsc_time_to_change_title">Время срабатывания (сек)</string>
+    <string name="dsc_time_to_change_summary">Время, через которое сработает изменение громкости, если скорость вышла из интервала погрешности (текущее значение %1$d)</string>
+    <string name="dsc_time_to_change_dialogtitle">Выберите время срабатывания</string>
+    <string name="dsc_delta_to_change_title">Дельта срабатывания (км/ч)</string>
+    <string name="dsc_delta_to_change_summary">Дельта скорости, внутри которой не сработает изменение громкости (текущее значение %1$d)</string>
+    <string name="dsc_delta_to_change_dialogtitle">Выберите дельту скорости</string>
 </resources>

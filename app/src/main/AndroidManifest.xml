@@ -32,9 +32,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTop"
-
-            >
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -75,13 +73,17 @@
         </activity>
         <activity
             android:name=".PowerAmpPreferenceActivity"
-            android:label="@string/title_poweramp_activity" >
+            android:label="@string/title_activity_poweramp_settings" >
             <intent-filter>
                 <action android:name="android.intent.action.PowerAmpSettings" />
 
                 <category android:name="android.intent.category.PREFERENCE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".DynamicSoundSettingsActivity"
+            android:label="@string/title_activity_dynamic_sound_settings" >
         </activity>
     </application>
 

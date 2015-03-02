@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.location.GpsStatus;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,9 +45,6 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private TextView tvSleepModeLastTime;
     private TextView tvWorkingStart;
 
-    private Button btnTestVolumeUp;
-    private Button btnTestVolumeDown;
-
     private TextView tvGPSSatellitesTotal;
     private TextView tvGPSSatellitesGoodQACount;
 
@@ -62,6 +60,9 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private ImageView ivGPSStatus;
     private ImageView ivVolumeLevel;
     private ImageView ivGPSHangs;
+    private TextView tvGPSHangs;
+    private Button btnDynamicSound;
+    private ImageView ivSpeedChange;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -111,11 +112,8 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
         tvWorkingStart = (TextView) findViewById(R.id.tv_working_start);
         Date date = new Date( App.mGlSets.startDate );
-        SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy  hh:mm");
+        SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
         tvWorkingStart.setText( String.format(getString(R.string.text_working_start), ft.format(date)) );
-
-        btnTestVolumeUp = (Button) findViewById(R.id.tst_volume_up);
-        btnTestVolumeDown = (Button) findViewById(R.id.tst_volume_down);
 
         tvGPSSatellitesTotal = (TextView) findViewById(R.id.text_satellites_total);
         tvGPSSatellitesGoodQACount = (TextView) findViewById(R.id.text_satellites_good);
@@ -142,7 +140,14 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         ivGPSHangs = (ImageView) findViewById(R.id.ivGPSHangs);
         ivGPSHangs.setImageResource(R.drawable.gps_disconnected_filled);
 
+        ivSpeedChange = (ImageView) findViewById(R.id.ivSpeedChange);
+        ivSpeedChange.setVisibility(View.INVISIBLE);
+
+        tvGPSHangs = (TextView) findViewById(R.id.tvGPSHangs);
+        tvGPSHangs.setText(String.format(getString(R.string.text_gps_hangs), 0));
+
         btnPowerAmpControl = (Button) findViewById(R.id.id_button_poweramp_control);
+        btnDynamicSound = (Button) findViewById(R.id.id_button_dynamic_sound_settings);
 
         this.btnSoundSettings.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) // клик на кнопку
@@ -162,39 +167,6 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             }
         });
 
-        this.btnTestVolumeUp.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) // клик на кнопку
-            {
-                try {
-                    Intent intent = new Intent();
-                    intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                    int vol = App.mGlSets.getVolumeLevel();
-                    vol++;
-                    App.mGlSets.setVolumeLevel(vol, false);
-                    intent.putExtra(TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED, vol);
-                    intent.setAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED);
-                    sendBroadcast(intent);
-                } catch (Exception e) {
-                }
-
-            }
-        });
-        this.btnTestVolumeDown.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) // клик на кнопку
-            {
-                try {
-                    Intent intent = new Intent();
-                    intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                    int vol = App.mGlSets.getVolumeLevel();
-                    vol--;
-                    App.mGlSets.setVolumeLevel(vol, false);
-                    intent.putExtra(TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED, vol);
-                    intent.setAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED);
-                    sendBroadcast(intent);
-                } catch (Exception e) {
-                }
-            }
-        });
 
         btnAGPSReset = (Button) findViewById(R.id.btn_agps_reset);
         this.btnAGPSReset.setOnClickListener(new Button.OnClickListener() {
@@ -206,11 +178,20 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             }
         });
 
+        this.btnDynamicSound.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) // клик на кнопку
+            {
+               // DynamicSoundSettingsActivity
+                show_dynamic_sound_settings();
+            }
+        });
+
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED));
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH));
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED));
+        registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_FIRST_FIX));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET));
@@ -251,10 +232,12 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 tvReverseCount.setText( String.format(getString(R.string.text_reverse_count),
                                                       App.mGlSets.ReverseActivityCount) );
             }
-            else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP ) )
+            else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP ) )
             {
                 tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count),
-                                                        App.mGlSets.SleepModeCount) );
+                        App.mGlSets.SleepModeCount) );
+                tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count),
+                        App.mGlSets.SleepModeCount) );
                 if ( App.mGlSets.lastSleep == 0)
                 {
                     tvSleepModeLastTime.setVisibility( View.INVISIBLE );
@@ -262,10 +245,14 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 else
                 {
                     Date date = new Date( App.mGlSets.lastSleep );
-                    SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy  HH:mm", Locale.US);
+                    SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
                     tvSleepModeLastTime.setText( String.format("%s", ft.format(date)) );
                     tvSleepModeLastTime.setVisibility( View.VISIBLE );
                 }
+            }
+            else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP ) )
+            {
+
             }
             else if (action.equals(GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS))
             {
@@ -273,6 +260,15 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 int goodSatellitesCount = intent.getIntExtra( "SatellitesGoodQATotal", 0 );
                 tvGPSSatellitesTotal.setText( Integer.toString(cntSats) );
                 tvGPSSatellitesGoodQACount.setText( Integer.toString(goodSatellitesCount) );
+
+                if ( goodSatellitesCount  <  2 ) {
+                    tvGPSSatellitesGoodQACount.setTextColor(Color.RED);
+                } else if ( goodSatellitesCount < GpsProcessing.signal_quality ) {
+                    tvGPSSatellitesGoodQACount.setTextColor(Color.YELLOW);
+                } else {
+                    tvGPSSatellitesGoodQACount.setTextColor(Color.GREEN);
+                }
+
             }
             else if (action.equals(GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS))
             {
@@ -299,6 +295,12 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             }
             else if (action.equals(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET)) {
                 ivGPSHangs.setImageResource(R.drawable.gps_disconnected_filled);
+                tvGPSHangs.setText(String.format(getString(R.string.text_gps_hangs), App.mGlSets.cntGpsHangs));
+            }
+            else if (action.equals(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED)) {
+                double speed = intent.getDoubleExtra("Speed", 0);
+                int grow = intent.getIntExtra("SpeedGrow", 0);
+                processDynamicVoume(speed, grow);
             }
             else if (action.equals(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED)) {
                 double latitude = intent.getDoubleExtra("Latitude", 0);
@@ -321,6 +323,8 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 tvGPSAccuracy.setText( String.format(getString(R.string.text_gps_accuracy), intent.getStringExtra("Accuracy")) );
                 tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), intent.getStringExtra("Altitude")) );
                 tvGPSSpeed.setText( String.format(getString(R.string.text_gps_speed_value), intent.getStringExtra("Speed")) );
+
+                if ( !App.mGlSets.dsc_isAvailable ) ivSpeedChange.setVisibility(View.INVISIBLE);
             }
 		}
 	};
@@ -379,6 +383,17 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         }
     }
 
+    private void show_dynamic_sound_settings() {
+        try {
+            Intent it = new Intent();
+            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.DynamicSoundSettingsActivity");
+            //it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(it);
+        } catch (Exception e) {
+        }
+    }
+
     private void setVolumeIcon(ImageView iv, int vol) {
         if ( vol < 1 ) {
             iv.setImageResource(R.drawable.volume_mute);
@@ -390,6 +405,24 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             iv.setImageResource(R.drawable.volume_high);
         }
 
+    }
+
+    private void  processDynamicVoume(double speed, int grow) {
+        if ( !App.mGlSets.dsc_isAvailable) return;
+        switch ( grow ){
+            case -1:
+                ivSpeedChange.setImageResource(R.drawable.speed_down);
+                ivSpeedChange.setVisibility(View.VISIBLE);
+                break;
+            case 1:
+                ivSpeedChange.setImageResource(R.drawable.speed_up);
+                ivSpeedChange.setVisibility(View.VISIBLE);
+                break;
+            default:
+                ivSpeedChange.setVisibility(View.INVISIBLE);
+                break;
+        }
+        App.mGlSets.gpsPrevSpeed = speed;
     }
 }
 

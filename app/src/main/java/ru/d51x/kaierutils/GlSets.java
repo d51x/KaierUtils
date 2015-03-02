@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 public class GlSets {
 
     protected static final String GPS_BROADCAST_ACTION_LOCATION_CHANGED = "ru.d51x.kaierutils.action.LOCATION_CHANGED";
+    protected static final String GPS_BROADCAST_ACTION_SPEED_CHANGED = "ru.d51x.kaierutils.action.SPEED_CHANGED";
     protected static final String GPS_BROADCAST_ACTION_FIRST_FIX = "ru.d51x.kaierutils.action.GPS_EVENT_FIRST_FIX";
     protected static final String GPS_BROADCAST_ACTION_EVENT_STATUS = "ru.d51x.kaierutils.action.GPS_STATUS";
     protected static final String GPS_BROADCAST_ACTION_SATELLITE_STATUS = "ru.d51x.kaierutils.action.GPS_EVENT_SATELLITE_STATUS";
@@ -55,12 +56,25 @@ public class GlSets {
     public int resumeDelayForPowerAmp = 3000;
 
 
-    public float gpsSpeed = 0;
+    public double gpsSpeed = 0;
+    public double gpsPrevSpeed = 0;
+    public int gpsSpeedGrow = 0;
+
     public boolean isGpsHangs;
+    public int cntGpsHangs = 0;
     public boolean isFirstRunGPS = false;
     public boolean isFirstFixGPS = false;
     public long locRequestUpdateTime = 0; // msec
     public int locRequestMinDistance = 0; // meters
+
+
+    // --- dynamic sound control
+    public boolean dsc_isAvailable = false;
+    public int dsc_FirstSpeed = 40;    // отсюда начинаем увеличивать громкость
+    public int dsc_StepSpeed = 20;     // шаг скорости
+    public int dsc_StepVolume = 1;    // шаг изменения громкости
+    public int dsc_TimeToChange = 10;   // время в секундах, при котором не меняем громкость, если скорость упала, ниже порога или возросла выше и при этом не менялась
+    public int dsc_DeltaToChange = 5;  // дельта изменения скорости, внутри которой не сработает изменение громкости
 
 	public GlSets() {
 		Volume = 3;
@@ -121,6 +135,15 @@ public class GlSets {
             pressNextFolderPowerAmp = prefs.getBoolean ("CAR_SETTINGS__CONTROL_POWERAMP_NEXT_FOLDER", false);
             pressPrevFolderPowerAmp = prefs.getBoolean ("CAR_SETTINGS__CONTROL_POWERAMP_PREV_FOLDER", false);
             resumeDelayForPowerAmp = prefs.getInt("CAR_SETTINGS__CONTROL_POWERAMP_START_DELAY", 3000);
+
+
+            dsc_isAvailable = prefs.getBoolean("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DO_CHAGE", false);
+            dsc_FirstSpeed = prefs.getInt("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__FIRST_SPEED", 40);
+            dsc_StepSpeed = prefs.getInt("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__STEP_SPEED", 20);
+            dsc_StepVolume = prefs.getInt("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__STEP_VOLUME", 1);
+            dsc_TimeToChange = prefs.getInt("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__TIME_TO_CHANGE", 10);
+            dsc_DeltaToChange = prefs.getInt("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DELTA_TO_CHANGE", 5);
+
 		} catch (Exception e) {
 
 		}

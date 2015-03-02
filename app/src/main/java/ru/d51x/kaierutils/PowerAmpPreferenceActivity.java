@@ -10,13 +10,13 @@ import android.preference.PreferenceManager;
 
 public class PowerAmpPreferenceActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
-    //private static final boolean ALWAYS_SIMPLE_PREFS = false;
+    private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.settings_poweramp);
+   @Override
+    protected void onCreate (Bundle savedInstanceState) {
+        super.onCreate (savedInstanceState);
+        addPreferencesFromResource (R.xml.settings_poweramp);
 
         Context context = getApplicationContext();
         SharedPreferences prefs =

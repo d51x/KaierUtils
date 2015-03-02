@@ -1,0 +1,73 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:seekbar="http://schemas.android.com/apk/res/ru.d51x.kaierutils"
+	>
+
+	    <CheckBoxPreference
+	        android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DO_CHAGE"
+	        android:title="@string/dsc_available"
+	        android:defaultValue="false"
+		    android:persistent="true" />
+
+		<ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__FIRST_SPEED"
+		                                                     android:title="@string/dsc_firstspeed_title"
+		                                                     android:summary="@string/dsc_firstspeed_summary"
+		                                                     android:dialogTitle="@string/dsc_firstspeed_dialogtitle"
+		                                                     android:defaultValue="40"
+		                                                     android:text="@string/volume_level_at_startup_summary"
+		                                                     seekbar:maxValue="100"
+		                                                     seekbar:minValue="10"
+		                                                     android:dependency="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DO_CHAGE"
+		                                                     android:persistent="true"
+
+			/>
+		<ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__STEP_SPEED"
+		                                                     android:title="@string/dsc_stepspeed_title"
+		                                                     android:summary="@string/dsc_stepspeed_summary"
+		                                                     android:dialogTitle="@string/dsc_stepspeed_dialogtitle"
+		                                                     android:defaultValue="20"
+		                                                     android:text="@string/volume_level_at_startup_summary"
+		                                                     seekbar:maxValue="40"
+		                                                     seekbar:minValue="10"
+		                                                     android:dependency="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DO_CHAGE"
+		                                                     android:persistent="true"
+
+			/>
+        <ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__STEP_VOLUME"
+		                                                     android:title="@string/dsc_stepvolume_title"
+		                                                     android:summary="@string/dsc_stepvolume_summary"
+		                                                     android:dialogTitle="@string/dsc_stepvolume_dialogtitle"
+		                                                     android:defaultValue="1"
+		                                                     android:text="@string/volume_level_at_startup_summary"
+		                                                     seekbar:maxValue="4"
+		                                                     seekbar:minValue="1"
+		                                                     android:dependency="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DO_CHAGE"
+		                                                     android:persistent="true"
+
+			/>
+        <ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__TIME_TO_CHANGE"
+		                                                     android:title="@string/dsc_time_to_change_title"
+		                                                     android:summary="@string/dsc_time_to_change_summary"
+		                                                     android:dialogTitle="@string/dsc_time_to_change_dialogtitle"
+		                                                     android:defaultValue="10"
+		                                                     android:text="@string/volume_level_at_startup_summary"
+		                                                     seekbar:maxValue="60"
+		                                                     seekbar:minValue="0"
+		                                                     android:dependency="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DO_CHAGE"
+		                                                     android:persistent="true"
+
+			/>
+
+    <ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DELTA_TO_CHANGE"
+                                          android:title="@string/dsc_delta_to_change_title"
+                                          android:summary="@string/dsc_delta_to_change_summary"
+                                          android:dialogTitle="@string/dsc_delta_to_change_dialogtitle"
+                                          android:defaultValue="5"
+                                          android:text="@string/volume_level_at_startup_summary"
+                                          seekbar:maxValue="10"
+                                          seekbar:minValue="0"
+                                          android:dependency="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DO_CHAGE"
+                                          android:persistent="true"
+
+        />
+
+</PreferenceScreen>
