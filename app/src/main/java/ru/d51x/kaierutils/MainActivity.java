@@ -22,13 +22,31 @@ import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 
 
-import com.maxmpz.poweramp.player.PowerampAPI;
+import 	android.widget.ArrayAdapter;
 
+import android.content.DialogInterface;
+
+import java.io.IOException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.ArrayList;
+
+import java.util.Set;
+import java.util.UUID;
+
+import com.maxmpz.poweramp.player.PowerampAPI;
+import pt.lighthouselabs.obd.commands.protocol.*;
+import pt.lighthouselabs.obd.commands.ObdCommand;
+import pt.lighthouselabs.obd.commands.engine.*;
+import pt.lighthouselabs.obd.commands.SpeedObdCommand;
+import pt.lighthouselabs.obd.enums.ObdProtocols;
 
 public class MainActivity extends Activity implements CompoundButton.OnCheckedChangeListener{
 
@@ -63,6 +81,9 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private TextView tvGPSHangs;
     private Button btnDynamicSound;
     private ImageView ivSpeedChange;
+    private ImageView ivSpeedChange2;
+
+    private Button btnOBD2;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -141,13 +162,16 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         ivGPSHangs.setImageResource(R.drawable.gps_disconnected_filled);
 
         ivSpeedChange = (ImageView) findViewById(R.id.ivSpeedChange);
+        ivSpeedChange2 = (ImageView) findViewById(R.id.ivSpeedChange2);
         ivSpeedChange.setVisibility(View.INVISIBLE);
+        ivSpeedChange2.setVisibility(View.INVISIBLE);
 
         tvGPSHangs = (TextView) findViewById(R.id.tvGPSHangs);
         tvGPSHangs.setText(String.format(getString(R.string.text_gps_hangs), 0));
 
         btnPowerAmpControl = (Button) findViewById(R.id.id_button_poweramp_control);
         btnDynamicSound = (Button) findViewById(R.id.id_button_dynamic_sound_settings);
+        btnOBD2 = (Button) findViewById(R.id.id_button_obd2_settings);
 
         this.btnSoundSettings.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) // клик на кнопку
@@ -183,6 +207,13 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             {
                // DynamicSoundSettingsActivity
                 show_dynamic_sound_settings();
+            }
+        });
+
+        this.btnOBD2.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) // клик на кнопку
+            {
+                show_avalaible_BT_devices( MainActivity.this );
             }
         });
 
@@ -298,7 +329,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 tvGPSHangs.setText(String.format(getString(R.string.text_gps_hangs), App.mGlSets.cntGpsHangs));
             }
             else if (action.equals(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED)) {
-                double speed = intent.getDoubleExtra("Speed", 0);
+                float speed = intent.getFloatExtra("Speed", 0);
                 int grow = intent.getIntExtra("SpeedGrow", 0);
                 processDynamicVoume(speed, grow);
             }
@@ -324,7 +355,11 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), intent.getStringExtra("Altitude")) );
                 tvGPSSpeed.setText( String.format(getString(R.string.text_gps_speed_value), intent.getStringExtra("Speed")) );
 
-                if ( !App.mGlSets.dsc_isAvailable ) ivSpeedChange.setVisibility(View.INVISIBLE);
+                if ( !App.mGlSets.dsc_isAvailable ) {
+                    ivSpeedChange.setVisibility(View.INVISIBLE);
+                    ivSpeedChange2.setVisibility(View.INVISIBLE);
+
+                }
             }
 		}
 	};
@@ -407,22 +442,119 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
     }
 
-    private void  processDynamicVoume(double speed, int grow) {
+    private void  processDynamicVoume(float speed, int grow) {
         if ( !App.mGlSets.dsc_isAvailable) return;
+        int  t = Math.round((Math.abs(speed - App.mGlSets.dsc_FirstSpeed))) / App.mGlSets.dsc_StepSpeed;
         switch ( grow ){
             case -1:
                 ivSpeedChange.setImageResource(R.drawable.speed_down);
                 ivSpeedChange.setVisibility(View.VISIBLE);
+
+
+                if ( Math.abs( speed - (App.mGlSets.dsc_FirstSpeed + t*App.mGlSets.dsc_StepSpeed) ) > App.mGlSets.dsc_DeltaToChange  ) {
+                    ivSpeedChange2.setImageResource(R.drawable.speed_down_2);
+                    ivSpeedChange2.setVisibility(View.VISIBLE);
+                } else {
+
+                }
                 break;
             case 1:
                 ivSpeedChange.setImageResource(R.drawable.speed_up);
                 ivSpeedChange.setVisibility(View.VISIBLE);
+
+                if ( Math.abs( speed - (App.mGlSets.dsc_FirstSpeed + t*App.mGlSets.dsc_StepSpeed) ) > App.mGlSets.dsc_DeltaToChange  ) {
+                    ivSpeedChange2.setImageResource(R.drawable.speed_up_2);
+                    ivSpeedChange2.setVisibility(View.VISIBLE);
+                } else {
+
+                }
+
+
                 break;
             default:
                 ivSpeedChange.setVisibility(View.INVISIBLE);
+                ivSpeedChange2.setVisibility(View.INVISIBLE);
+
                 break;
         }
         App.mGlSets.gpsPrevSpeed = speed;
+    }
+
+    private void show_avalaible_BT_devices( Context context) {
+
+        // выбрать Bluetoth OBD2
+        ArrayList<String> deviceStrs = new ArrayList<String>();
+        final ArrayList<String> devices = new ArrayList<String>();
+
+        BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+        Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
+        if (pairedDevices.size() > 0)
+        {
+            for (BluetoothDevice device : pairedDevices)
+            {
+                deviceStrs.add(device.getName() + "\n" + device.getAddress());
+                devices.add(device.getAddress());
+            }
+        }
+
+// show list
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_singlechoice,
+                deviceStrs.toArray(new String[deviceStrs.size()]));
+
+        alertDialog.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                dialog.dismiss();
+                int position = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                String deviceAddress = devices.get(position);
+                // TODO save deviceAddress
+                App.mGlSets.BT_deviceAddress = deviceAddress;
+            }
+        });
+
+        alertDialog.setTitle("Choose Bluetooth device");
+        alertDialog.show();
+
+        if ( App.mGlSets.BT_deviceAddress != "unknown" ) BT_connect(App.mGlSets.BT_deviceAddress);
+    }
+
+    private void BT_connect(String deviceAddress) {
+        BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothDevice device = btAdapter.getRemoteDevice(deviceAddress);
+        UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+        try {
+            BluetoothSocket socket = device.createInsecureRfcommSocketToServiceRecord(uuid);
+
+            socket.connect();
+            try {
+                new EchoOffObdCommand().run(socket.getInputStream(), socket.getOutputStream());
+                new LineFeedOffObdCommand().run(socket.getInputStream(), socket.getOutputStream());
+                new TimeoutObdCommand(0).run(socket.getInputStream(), socket.getOutputStream());
+                new SelectProtocolObdCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
+                //new AmbientAirTemperatureObdCommand().run(socket.getInputStream(), socket.getOutputStream());
+
+
+                EngineRPMObdCommand engineRpmCommand = new EngineRPMObdCommand();
+                SpeedObdCommand speedCommand = new SpeedObdCommand();
+                while (!Thread.currentThread().isInterrupted())
+                {
+                    engineRpmCommand.run(socket.getInputStream(), socket.getOutputStream());
+                    speedCommand.run(socket.getInputStream(), socket.getOutputStream());
+                    // TODO handle commands result
+                    Log.d("MainActivity", "RPM: " + engineRpmCommand.getFormattedResult());
+                    Log.d("MainActivity", "Speed: " + speedCommand.getFormattedResult());
+                }
+
+            } catch (Exception e2) {
+
+            }
+        } catch (IOException e) {
+
+        }
     }
 }
 

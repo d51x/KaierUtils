@@ -44,6 +44,12 @@
                 android:layout_height="match_parent"
                 android:id="@+id/ivSpeedChange"
                 android:paddingLeft="20dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/ivSpeedChange2"
+                android:paddingLeft="20dp"/>
         </LinearLayout>
 
     </FrameLayout>
@@ -258,6 +264,12 @@
             android:layout_height="wrap_content"
             android:text="@string/text_dynamic_sound_settings"
             android:id="@+id/id_button_dynamic_sound_settings"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_obd2_settings"
+            android:id="@+id/id_button_obd2_settings"/>
 
         <Button
             style="?android:attr/buttonStyleSmall"

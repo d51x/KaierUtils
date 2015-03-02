@@ -56,8 +56,8 @@ public class GlSets {
     public int resumeDelayForPowerAmp = 3000;
 
 
-    public double gpsSpeed = 0;
-    public double gpsPrevSpeed = 0;
+    public float gpsSpeed = 0;
+    public float gpsPrevSpeed = 0;
     public int gpsSpeedGrow = 0;
 
     public boolean isGpsHangs;
@@ -67,6 +67,7 @@ public class GlSets {
     public long locRequestUpdateTime = 0; // msec
     public int locRequestMinDistance = 0; // meters
 
+    String BT_deviceAddress = "unknown";
 
     // --- dynamic sound control
     public boolean dsc_isAvailable = false;

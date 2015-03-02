@@ -241,13 +241,17 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         context.sendBroadcast(intent);
 
 
+
+
+
         if ( App.mGlSets.dsc_isAvailable) {
+            int  t = Math.round((Math.abs(Speed - App.mGlSets.dsc_FirstSpeed))) / App.mGlSets.dsc_StepSpeed;
             App.mGlSets.gpsSpeed = Speed;
 
             if (App.mGlSets.gpsPrevSpeed > Speed) {
-                App.mGlSets.gpsSpeedGrow = -1;
+                App.mGlSets.gpsSpeedGrow = -1;  // скорость уменьшилась
             } else if (App.mGlSets.gpsPrevSpeed < Speed) {
-                App.mGlSets.gpsSpeedGrow = 1;
+                App.mGlSets.gpsSpeedGrow = 1;   // скорость увеличилась
             } else {
                 App.mGlSets.gpsSpeedGrow = 0;
             }
