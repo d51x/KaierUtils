@@ -57,6 +57,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private TextView tvDeviceName;
     private TextView tvCurrentVolume;
     private Switch switch_show_notification_icon;
+    private Switch switch_color_speed;
 
     private TextView tvReverseCount;
     private TextView tvSleepModeCount;
@@ -112,6 +113,11 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         App.mGlSets.isNotificationIconShow = Settings.System.getInt(getContentResolver(), NotifyData.OPTION_SHOW_NOTIFICATION_ICON, 0) == 1;
         switch_show_notification_icon.setChecked(App.mGlSets.isNotificationIconShow);
         switch_show_notification_icon.setOnCheckedChangeListener(this);
+
+        switch_color_speed = (Switch) findViewById(R.id.switch_color_speed);
+        App.mGlSets.isColorSpeed = Settings.System.getInt(getContentResolver(), App.mGlSets.GLOBAL_SETTINGS_COLOR_SPEED, 0) == 1;
+		switch_color_speed.setChecked(App.mGlSets.isColorSpeed);
+		switch_color_speed.setOnCheckedChangeListener(this);
 
         tvReverseCount = (TextView) findViewById(R.id.tv_reverse_count);
         tvReverseCount.setText( String.format(getString(R.string.text_reverse_count), App.mGlSets.ReverseActivityCount) );
@@ -239,6 +245,10 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
                 notifyData.show();
                 break;
+	        case R.id.switch_color_speed:
+		        Settings.System.putInt(this.getContentResolver(), App.mGlSets.GLOBAL_SETTINGS_COLOR_SPEED, isChecked ? 1 : 0);
+		        App.mGlSets.isColorSpeed = isChecked;
+		        break;
             default:
                 break;
         }
@@ -353,7 +363,11 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 }
                 tvGPSAccuracy.setText( String.format(getString(R.string.text_gps_accuracy), intent.getStringExtra("Accuracy")) );
                 tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), intent.getStringExtra("Altitude")) );
-                tvGPSSpeed.setText( String.format(getString(R.string.text_gps_speed_value), intent.getIntExtra("Speed", 0)) );
+
+				int speed = intent.getIntExtra("Speed", 0);
+				tvGPSSpeed.setText( String.format(getString(R.string.text_gps_speed_value), speed) );
+
+				color_speed(tvGPSSpeed, speed);
 
                 if ( !App.mGlSets.dsc_isAvailable ) {
                     ivSpeedChange.setVisibility(View.INVISIBLE);
@@ -570,6 +584,20 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
         }
     }
+
+	private void color_speed(TextView tv, int speed) {
+		if ( App.mGlSets.isColorSpeed ) {
+			if ( speed < 10 ) tv.setTextColor( Color.WHITE);
+			else if ( speed < 40 ) tv.setTextColor( Color.rgb(0,255,255));
+			else if ( speed < 60 ) tv.setTextColor( Color.rgb(0,255,144));
+			else if ( speed < 80 ) tv.setTextColor( Color.rgb(182,255,0));
+			else if ( speed < 100 ) tv.setTextColor( Color.rgb(255,216,0));
+			else if ( speed < 120 ) tv.setTextColor( Color.rgb(155,106,0));
+			else tv.setTextColor( Color.rgb(255,0,0));
+		}
+	}
+
+
 }
 
 

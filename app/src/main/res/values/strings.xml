@@ -90,4 +90,5 @@
     <string name="dsc_delta_to_change_summary">Дельта скорости, внутри которой не сработает изменение громкости (текущее значение %1$d)</string>
     <string name="dsc_delta_to_change_dialogtitle">Выберите дельту скорости</string>
     <string name="text_obd2_settings">OBD 2</string>
+	<string name="text_switch_color_speed">Цветная скорость</string>
 </resources>

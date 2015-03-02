@@ -15,6 +15,7 @@ public class GlSets {
     protected static final String GPS_BROADCAST_ACTION_SATELLITE_STATUS = "ru.d51x.kaierutils.action.GPS_EVENT_SATELLITE_STATUS";
     protected static final String GPS_BROADCAST_ACTION_AGPS_RESET = "ru.d51x.kaierutils.action.GPS_EVENT_AGPS_RESET";
 
+	public static final String GLOBAL_SETTINGS_COLOR_SPEED = "kaierutils_show_color_speed";
 	//public static final boolean IN_EMULATOR = true;
 	private int Volume;
 	//private int Brightness;
@@ -28,6 +29,8 @@ public class GlSets {
 
     public boolean isNotificationIconShow;
     public boolean isVolumeShowOnNotificationIcon;
+	public boolean isColorSpeed = false;
+
 
 	public boolean isNeedSoundDecreaseAtReverse;
 	public boolean isFixedVolumeAtReverse;
