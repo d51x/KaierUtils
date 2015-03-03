@@ -233,7 +233,8 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         //location.distanceTo(prevLocation)
 
 	    try {
-		    App.mGlSets.totalDistance += location.distanceTo ( prevLocation );
+		    if ( App.mGlSets.isFirstFixGPS )
+                   App.mGlSets.totalDistance += location.distanceTo ( prevLocation );
 	    } catch (Exception e) {
 
 	    }

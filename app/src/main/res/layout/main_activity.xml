@@ -8,16 +8,19 @@
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 tools:context=".SettingsActivity">
 
-    <FrameLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/frameLayout"
-        android:layout_alignParentLeft="true">
+        android:id="@+id/layout_general_info"
+        android:layout_alignParentLeft="true"
+        >
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/layout_gps_speed">
 
 	        <ImageView
 	            android:layout_width="wrap_content"
@@ -55,20 +58,12 @@
                 android:paddingLeft="20dp"/>
         </LinearLayout>
 
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/frameLayout"
-        android:layout_alignLeft="@+id/frameLayout"
-        android:layout_alignRight="@+id/frameLayout"
-        android:id="@+id/frameLayout4" android:paddingLeft="26dp">
-
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="113dp"
-            android:layout_height="fill_parent">
+            android:layout_width="127dp"
+            android:layout_height="fill_parent"
+            android:id="@+id/layout_volume_level"
+            android:paddingLeft="26dp">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -87,167 +82,167 @@
                 android:textStyle="bold"
                 android:paddingLeft="10dp"/>
         </LinearLayout>
-    </FrameLayout>
-
-	<FrameLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:paddingLeft="26dp" android:layout_below="@+id/frameLayout4"
-		android:layout_alignParentLeft="true"
-		android:layout_alignLeft="@+id/frameLayout4">
-		<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent">
-			<ImageView
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"
-				android:id="@+id/ivGPSDistance" android:src="@drawable/waypoint"/>
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"
-				android:id="@+id/tvGPSDistance" android:text="@string/text_gps_distance"
-				android:textSize="40sp" android:paddingLeft="10dp"
-				android:gravity="center_vertical"/>
-		</LinearLayout>
-	</FrameLayout>
-	<FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/frameLayout3"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true">
 
         <LinearLayout
-            android:orientation="vertical"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+android:id="@+id/layout_waypoints"
+android:paddingLeft="26dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/ivGPSDistance" android:src="@drawable/waypoint"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/tvGPSDistance" android:text="@string/text_gps_distance"
+                android:textSize="30sp" android:paddingLeft="10dp"
+                android:gravity="center_vertical"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_gps_info"
+        android:layout_alignTop="@+id/layout_general_options"
+        android:layout_centerHorizontal="true">
+
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/linearLayout"
-            >
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/text_gps_info_title"
+            android:id="@+id/text_gps_info_title"
+            android:paddingBottom="5dp"/>
 
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/text_gps_info_title"
-                android:id="@+id/text_gps_info_title"
-                android:paddingBottom="5dp"/>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="252dp"
-                android:layout_height="fill_parent"
-                android:paddingBottom="5dp">
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="97dp"
-                    android:layout_height="fill_parent">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:id="@+id/imageView3"
-                        android:src="@drawable/satellite"
-                        android:baselineAlignBottom="true"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="10"
-                        android:id="@+id/text_satellites_total"
-                        android:textSize="28dp"
-                        android:paddingLeft="10dp"
-                        android:gravity="center_vertical"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="92dp"
-                    android:layout_height="fill_parent">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:id="@+id/imageView4"
-                        android:src="@drawable/satellite_good"
-                        android:baselineAlignBottom="true"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="2"
-                        android:id="@+id/text_satellites_good"
-                        android:textSize="28dp"
-                        android:paddingLeft="10dp"
-                        android:gravity="center_vertical"/>
-                </LinearLayout>
-            </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="252dp"
+            android:layout_height="fill_parent"
+            android:paddingBottom="5dp"
+            android:id="@+id/layout_satellites">
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="388dp"
-                android:layout_height="wrap_content"
-                android:weightSum="1"
-                android:paddingBottom="5dp">
+                android:layout_width="97dp"
+                android:layout_height="fill_parent">
 
                 <ImageView
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
-                    android:id="@+id/ivGPSStatus"
-                    android:src="@drawable/gps_disconnected"
-                    android:baselineAlignBottom="false"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imageView3"
+                    android:src="@drawable/satellite"
+                    android:baselineAlignBottom="true"/>
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:gravity="center_vertical|fill_vertical"
-                    android:baselineAligned="true"
-                    android:layout_weight="0.42"
-                    android:paddingLeft="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:id="@+id/text_gps_latitude"
-                        android:gravity="center_vertical"
-                        android:textSize="20sp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:id="@+id/text_gps_longitude"
-                        android:textSize="20sp"
-                        android:gravity="center_vertical"/>
-                </LinearLayout>
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="10"
+                    android:id="@+id/text_satellites_total"
+                    android:textSize="28dp"
+                    android:paddingLeft="10dp"
+                    android:gravity="center_vertical"/>
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_gps_altitude"
-                android:id="@+id/text_gps_altitude"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="92dp"
+                android:layout_height="fill_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_gps_accuracy"
-                android:id="@+id/text_gps_accuracy"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imageView4"
+                    android:src="@drawable/satellite_good"
+                    android:baselineAlignBottom="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="2"
+                    android:id="@+id/text_satellites_good"
+                    android:textSize="28dp"
+                    android:paddingLeft="10dp"
+                    android:gravity="center_vertical"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="388dp"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:paddingBottom="5dp"
+            android:id="@+id/layout_coordinates">
+
+            <ImageView
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:id="@+id/ivGPSStatus"
+                android:src="@drawable/gps_disconnected"
+                android:baselineAlignBottom="false"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:gravity="center_vertical|fill_vertical"
+                android:baselineAligned="true"
+                android:layout_weight="0.42"
+                android:paddingLeft="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:id="@+id/text_gps_latitude"
+                    android:gravity="center_vertical"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:id="@+id/text_gps_longitude"
+                    android:textSize="20sp"
+                    android:gravity="center_vertical"/>
+            </LinearLayout>
 
         </LinearLayout>
 
-    </FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_gps_altitude"
+            android:id="@+id/text_gps_altitude"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_gps_accuracy"
+            android:id="@+id/text_gps_accuracy"/>
+
+        <Button
+    style="?android:attr/buttonStyleSmall"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/btn_agps_reset"
+    android:id="@+id/btn_agps_reset"
+    android:layout_gravity="right"
+    android:layout_below="@+id/layout_general_info"
+    android:layout_alignRight="@+id/layout_gps_info"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout2"
+        android:id="@+id/layout_general_options"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true">
 
@@ -269,43 +264,6 @@
             android:gravity="center_vertical"
             />
 
-	    <Switch
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/text_switch_color_speed"
-		    android:id="@+id/switch_color_speed" android:layout_gravity="right"
-		    android:checked="false"/>
-	    <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_agps_reset"
-            android:id="@+id/btn_agps_reset"
-            android:layout_gravity="right"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/frameLayout3"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/linearLayout3" android:visibility="invisible">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ivGPSHangs"
-            android:src="@drawable/gps_disconnected_filled"
-            android:layout_below="@+id/frameLayout3"
-            android:layout_toRightOf="@+id/frameLayout2"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/text_gps_hangs"
-            android:id="@+id/tvGPSHangs"/>
-
     </LinearLayout>
 
     <FrameLayout
@@ -318,8 +276,9 @@
         <RelativeLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="90dp"
-            android:layout_gravity="left|bottom">
+            android:layout_height="111dp"
+            android:layout_gravity="left|bottom"
+            android:id="@+id/layout_statistics">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -327,7 +286,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/text_statistic_title"
                 android:id="@+id/textView"
-                android:layout_alignParentTop="true"
+                android:layout_above="@+id/tv_working_start"
                 android:layout_alignParentLeft="true"/>
 
             <TextView
@@ -335,11 +294,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/text_working_start"
                 android:id="@+id/tv_working_start"
-                android:layout_below="@+id/textView"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="0dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="21dp"/>
+                android:layout_above="@+id/tv_sleep_mode_count"
+                android:layout_alignParentLeft="true"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -347,15 +303,15 @@
                 android:text="@string/text_sleep_mode_last_time"
                 android:id="@+id/tv_sleep_mode_last_time"
                 android:layout_gravity="center_horizontal"
-                android:layout_alignTop="@+id/tv_sleep_mode_count"
-                android:layout_toRightOf="@+id/tv_reverse_count"/>
+                android:layout_above="@+id/tv_reverse_count"
+                android:layout_alignRight="@+id/textView"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_sleep_mode_count"
                 android:id="@+id/tv_sleep_mode_count"
-                android:layout_centerVertical="true"
+                android:layout_above="@+id/tv_reverse_count"
                 android:layout_alignParentLeft="true"/>
 
             <TextView
@@ -363,7 +319,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/text_reverse_count"
                 android:id="@+id/tv_reverse_count"
-                android:layout_below="@+id/tv_sleep_mode_last_time"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"/>
 
         </RelativeLayout>
@@ -372,8 +328,8 @@
 	<FrameLayout
 		android:layout_width="100dp"
 		android:layout_height="60dp"
-		android:layout_alignParentBottom="true" android:layout_toLeftOf="@+id/linearLayout2"
-		android:id="@+id/frameLayout5" android:visibility="invisible">
+		android:layout_alignParentBottom="true" android:layout_toLeftOf="@+id/layout_general_options"
+		android:id="@+id/layout_obd2" android:visibility="invisible">
 		<TextView
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
@@ -390,8 +346,9 @@
 	<FrameLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true" android:layout_alignRight="@+id/linearLayout2"
-		android:layout_alignTop="@+id/frameLayout2" android:visibility="invisible">
+		android:layout_alignParentBottom="true" android:layout_alignRight="@+id/layout_general_options"
+		android:layout_alignTop="@+id/frameLayout2" android:visibility="invisible"
+        android:id="@+id/layout_test">
 		<Button
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -400,6 +357,31 @@
 		<Button android:layout_width="wrap_content" android:layout_height="wrap_content"
 		        android:text="Speed Down" android:id="@+id/btnSpeedDown"
 		        android:layout_gravity="top|center_vertical|right"/>
-	</FrameLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/frameLayout3"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/linearLayout3" android:visibility="invisible"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivGPSHangs"
+                android:src="@drawable/gps_disconnected_filled"
+                android:layout_below="@+id/frameLayout3"
+                android:layout_toRightOf="@+id/frameLayout2"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/text_gps_hangs"
+                android:id="@+id/tvGPSHangs"/>
+
+        </LinearLayout>
+    </FrameLayout>
 
 </RelativeLayout>

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,14 +51,12 @@ import pt.lighthouselabs.obd.commands.engine.*;
 import pt.lighthouselabs.obd.commands.SpeedObdCommand;
 import pt.lighthouselabs.obd.enums.ObdProtocols;
 
-public class MainActivity extends Activity implements CompoundButton.OnCheckedChangeListener{
-
-
+public class MainActivity extends Activity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
     private TextView tvDeviceName;
     private TextView tvCurrentVolume;
     private Switch switch_show_notification_icon;
-    private Switch switch_color_speed;
+    private LinearLayout layout_gps_speed;
 
     private TextView tvReverseCount;
     private TextView tvSleepModeCount;
@@ -117,10 +116,9 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         switch_show_notification_icon.setChecked(App.mGlSets.isNotificationIconShow);
         switch_show_notification_icon.setOnCheckedChangeListener(this);
 
-        switch_color_speed = (Switch) findViewById(R.id.switch_color_speed);
         App.mGlSets.isColorSpeed = Settings.System.getInt(getContentResolver(), App.mGlSets.GLOBAL_SETTINGS_COLOR_SPEED, 0) == 1;
-		switch_color_speed.setChecked(App.mGlSets.isColorSpeed);
-		switch_color_speed.setOnCheckedChangeListener(this);
+        layout_gps_speed = (LinearLayout) findViewById(R.id.layout_gps_speed);
+        layout_gps_speed.setOnClickListener(this);
 
         tvReverseCount = (TextView) findViewById(R.id.tv_reverse_count);
         tvReverseCount.setText( String.format(getString(R.string.text_reverse_count), App.mGlSets.ReverseActivityCount) );
@@ -158,7 +156,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         tvGPSLongitude.setText( "0" );
         tvGPSSpeed = (TextView) findViewById(R.id.text_gps_speed_value);
         tvGPSSpeed.setText( String.format(getString(R.string.text_gps_speed_value), 0) );
-
+        //tvGPSSpeed.setOnClickListener(this);
 
 		tvGPSDistance = (TextView) findViewById(R.id.tvGPSDistance);
 		tvGPSDistance.setText( String.format(getString(R.string.text_gps_distance), "0") );
@@ -184,50 +182,15 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         tvOBD_Speed = (TextView) findViewById(R.id.text_obd_speed);
 
 		btnSpeedUp = (Button) findViewById (R.id.btnSpeedUp);
+        btnSpeedUp.setOnClickListener(this);
+
 		btnSpeedDown = (Button) findViewById (R.id.btnSpeedDown);
+        btnSpeedDown.setOnClickListener(this);
 
         btnAGPSReset = (Button) findViewById(R.id.btn_agps_reset);
-        this.btnAGPSReset.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) // клик на кнопку
-            {
-                Intent intent = new Intent();
-                intent.setAction( GlSets.GPS_BROADCAST_ACTION_AGPS_RESET );
-                sendBroadcast(intent);
-            }
-        });
+        btnAGPSReset.setOnClickListener(this);
 
-		this.btnSpeedUp.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) // клик на кнопку
-			{
-				App.mGlSets.gpsSpeed = App.mGlSets.gpsSpeed + (int)Math.random()*5+1;
-				App.mGlSets.gpsSpeedGrow = 1;
-				Intent intent2 = new Intent();
-				intent2.setAction(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED);
 
-				intent2.putExtra("Speed", App.mGlSets.gpsSpeed);
-				intent2.putExtra("SpeedGrow", App.mGlSets.gpsSpeedGrow);
-				sendBroadcast(intent2);
-
-				intent2.setAction(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED);
-				sendBroadcast(intent2);
-			}
-		});
-
-		this.btnSpeedDown.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) // клик на кнопку
-			{
-				App.mGlSets.gpsSpeed = App.mGlSets.gpsSpeed - (int)Math.random()*5+1;
-				App.mGlSets.gpsSpeedGrow = -1;
-				Intent intent2 = new Intent();
-				intent2.setAction(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED);
-				intent2.putExtra("Speed", App.mGlSets.gpsSpeed);
-				intent2.putExtra("SpeedGrow", App.mGlSets.gpsSpeedGrow);
-				sendBroadcast(intent2);
-
-				intent2.setAction(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED);
-				sendBroadcast(intent2);
-			}
-		});
 
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED));
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH));
@@ -239,6 +202,30 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET));
 	}
+
+
+    // анализируем, какая кнопка была нажата. Всего один метод для всех кнопок
+    @Override
+    public void onClick(View v){
+        switch (v.getId()) {
+            case R.id.btnSpeedUp:
+                break;
+            case R.id.btnSpeedDown:
+                break;
+            case R.id.btn_agps_reset:
+                Intent intent = new Intent();
+                intent.setAction( GlSets.GPS_BROADCAST_ACTION_AGPS_RESET );
+                sendBroadcast(intent);
+                break;
+            case R.id.layout_gps_speed:
+                color_speed(tvGPSSpeed, App.mGlSets.gpsSpeed);
+                App.mGlSets.isColorSpeed = ! App.mGlSets.isColorSpeed;
+                Settings.System.putInt(this.getContentResolver(), App.mGlSets.GLOBAL_SETTINGS_COLOR_SPEED, App.mGlSets.isColorSpeed ? 1 : 0);
+                break;
+            default:
+                break;
+        }
+    }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -252,10 +239,6 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
                 notifyData.show();
                 break;
-	        case R.id.switch_color_speed:
-		        Settings.System.putInt(this.getContentResolver(), App.mGlSets.GLOBAL_SETTINGS_COLOR_SPEED, isChecked ? 1 : 0);
-		        App.mGlSets.isColorSpeed = isChecked;
-		        break;
             default:
                 break;
         }
@@ -382,7 +365,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
                 }
 
-				tvGPSDistance.setText (String.format("%1$.1f км", App.mGlSets.totalDistance / 1000));
+                tvGPSDistance.setText (String.format("%1$.1f км", App.mGlSets.totalDistance / 1000));
 
             }
 		}
@@ -561,7 +544,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
             socket.connect();
 
-	        findViewById (R.id.frameLayout5).setVisibility ( View.VISIBLE);
+	        findViewById (R.id.layout_obd2).setVisibility ( View.VISIBLE);
             try {
                 new EchoOffObdCommand().run(socket.getInputStream(), socket.getOutputStream());
                 new LineFeedOffObdCommand().run(socket.getInputStream(), socket.getOutputStream());
@@ -597,14 +580,16 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
 	private void color_speed(TextView tv, int speed) {
 		if ( App.mGlSets.isColorSpeed ) {
-			if ( speed < 10 ) tv.setTextColor( Color.WHITE);
+			if ( speed < 10 ) tv.setTextColor( Color.LTGRAY);
 			else if ( speed < 40 ) tv.setTextColor( Color.rgb(0,255,255));
 			else if ( speed < 60 ) tv.setTextColor( Color.rgb(0,255,144));
 			else if ( speed < 80 ) tv.setTextColor( Color.rgb(182,255,0));
 			else if ( speed < 100 ) tv.setTextColor( Color.rgb(255,216,0));
 			else if ( speed < 120 ) tv.setTextColor( Color.rgb(155,106,0));
 			else tv.setTextColor( Color.rgb(255,0,0));
-		}
+		} else {
+            tv.setTextColor( Color.LTGRAY);
+        }
 	}
 
 

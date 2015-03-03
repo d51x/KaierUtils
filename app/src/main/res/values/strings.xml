@@ -36,9 +36,9 @@
     <string name="percent_volume_level_at_startup_summary">Текущее значение %1$d </string>
     <string name="percent_volume_level_at_startup_dialog">Введите процент уменьшения</string>
     <string name="sound_settings_title">Дополнительные настройки звука</string>
-    <string name="text_device_name">Ваше устройство %1$s</string>
+    <string name="text_device_name">Устройство %1$s</string>
 
-    <string name="text_show_notification_icon">Иконка в статусбаре</string>
+    <string name="text_show_notification_icon">Иконка статуса</string>
 
     <string name="text_reverse_count">Задний ход включался %1$d раз(а)</string>
     <string name="text_sleep_mode_count">SleepMode сработал %1$d раз(а)</string>
@@ -90,6 +90,5 @@
     <string name="dsc_delta_to_change_summary">Дельта скорости, внутри которой не сработает изменение громкости (текущее значение %1$d)</string>
     <string name="dsc_delta_to_change_dialogtitle">Выберите дельту скорости</string>
     <string name="text_obd2_settings">OBD 2</string>
-	<string name="text_switch_color_speed">Цветная скорость</string>
 	<string name="text_gps_distance">%1$s</string>
 </resources>
