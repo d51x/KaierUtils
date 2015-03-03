@@ -91,14 +91,23 @@ android:id="@+id/layout_waypoints"
 android:paddingLeft="26dp">
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/ivGPSDistance" android:src="@drawable/waypoint"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/tvGPSDistance" android:text="@string/text_gps_distance"
-                android:textSize="30sp" android:paddingLeft="10dp"
+                android:textSize="40sp" android:paddingLeft="10dp"
                 android:gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="км"
+                android:id="@+id/textView3"
+                android:gravity="bottom|center_horizontal"
+                android:textSize="20sp"
+                android:paddingLeft="4dp"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -107,8 +116,8 @@ android:paddingLeft="26dp">
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:id="@+id/layout_gps_info"
-        android:layout_alignTop="@+id/layout_general_options"
-        android:layout_centerHorizontal="true">
+        android:layout_alignTop="@+id/layout_general_info"
+        android:layout_alignParentRight="true">
 
 
         <TextView
@@ -243,8 +252,8 @@ android:paddingLeft="26dp">
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/layout_general_options"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true">
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/layout_gps_info">
 
         <TextView
             android:layout_width="wrap_content"
@@ -328,8 +337,10 @@ android:paddingLeft="26dp">
 	<FrameLayout
 		android:layout_width="100dp"
 		android:layout_height="60dp"
-		android:layout_alignParentBottom="true" android:layout_toLeftOf="@+id/layout_general_options"
-		android:id="@+id/layout_obd2" android:visibility="invisible">
+        android:id="@+id/layout_obd2" android:visibility="invisible"
+        android:layout_below="@+id/layout_gps_info"
+        android:layout_alignRight="@+id/layout_general_info"
+        android:layout_marginRight="28dp">
 		<TextView
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
@@ -346,9 +357,10 @@ android:paddingLeft="26dp">
 	<FrameLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true" android:layout_alignRight="@+id/layout_general_options"
-		android:layout_alignTop="@+id/frameLayout2" android:visibility="invisible"
-        android:id="@+id/layout_test">
+        android:visibility="invisible"
+        android:id="@+id/layout_test"
+        android:layout_above="@+id/frameLayout2"
+        android:layout_toRightOf="@+id/layout_general_info">
 		<Button
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

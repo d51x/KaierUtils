@@ -159,7 +159,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         //tvGPSSpeed.setOnClickListener(this);
 
 		tvGPSDistance = (TextView) findViewById(R.id.tvGPSDistance);
-		tvGPSDistance.setText( String.format(getString(R.string.text_gps_distance), "0") );
+		tvGPSDistance.setText( String.format(getString(R.string.text_gps_distance), (float)0) );
 
         ivGPSStatus = (ImageView) findViewById(R.id.ivGPSStatus);
         ivGPSStatus.setImageResource(R.drawable.gps_disconnected);
@@ -365,7 +365,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
                 }
 
-                tvGPSDistance.setText (String.format("%1$.1f км", App.mGlSets.totalDistance / 1000));
+                tvGPSDistance.setText (  String.format(getString(R.string.text_gps_distance), App.mGlSets.totalDistance / 1000) );
 
             }
 		}
