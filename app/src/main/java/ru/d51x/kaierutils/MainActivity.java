@@ -195,6 +195,9 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED));
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH));
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP));
+        registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_TITLE_CHANGED));
+
+
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED));
@@ -367,6 +370,10 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
                 tvGPSDistance.setText (  String.format(getString(R.string.text_gps_distance), App.mGlSets.totalDistance / 1000) );
 
+            } else if ( action.equals( TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_TITLE_CHANGED)) {
+                String title = intent.getStringExtra("radio_title");
+                //Toast.makeText (App.getInstance(), title, 1).show();
+                Toast.makeText (context, title, 1).show();
             }
 		}
 	};

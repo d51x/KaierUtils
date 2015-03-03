@@ -46,7 +46,8 @@ public class TWUtilEx {
 			TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL,           // 515
             TWUtilConst.TWUTIL_COMMAND_KEY_PRESS,                // 513
 			//TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS              // 258
-			(short) TWUtilConst.TWUTIL_CONTEXT_PRESS_BUTTON_3                       // 33281 - запуск стандартных приложений
+			(short) TWUtilConst.TWUTIL_CONTEXT_PRESS_BUTTON_3,                       // 33281 - запуск стандартных приложений
+            TWUtilConst.TWUTIL_CONTEXT_RADIO_CHANNEL_TITLE
 	};
 
 	protected boolean isTWUtilOpened;
@@ -146,6 +147,12 @@ public class TWUtilEx {
 		                    }
 	                    }
 	                    break;
+                    case TWUtilConst.TWUTIL_CONTEXT_RADIO_CHANNEL_TITLE:    // 1029
+                        String title = (String) message.obj;
+                        SendBroadcastAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_TITLE_CHANGED,
+                                            "radio_title",
+                                title);
+                        break;
 					default:
 						break;
 				}
@@ -196,6 +203,17 @@ public class TWUtilEx {
 		intent.setAction(action);
 		App.getInstance ().sendBroadcast(intent);
 	}
+
+    private void SendBroadcastAction(String action, String key, String value) {
+        Log.d ("TWUtilEx", "SendBroadcastAction ");
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        if ( key != null ) {
+            intent.putExtra(key, value);
+        }
+        intent.setAction(action);
+        App.getInstance ().sendBroadcast(intent);
+    }
 
 	public static int getVolumeLevel () { return curVolume; 	}
 //	public static int getBrightnessLevel () { return curBrightness; 	}
