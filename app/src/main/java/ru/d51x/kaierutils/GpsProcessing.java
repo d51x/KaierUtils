@@ -15,6 +15,8 @@ import android.location.GpsSatellite;
 import android.widget.Toast;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TimeZone;
+import java.util.SimpleTimeZone;
 
 public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
@@ -94,6 +96,9 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
                 //Event sent when the GPS system has received its first fix since starting.
                 // србатывает только один раз после включения GPS?
                 App.mGlSets.isFirstFixGPS = true;
+                //App.mGlSets.gpsTimeAtWay = mLocationManager.getGpsStatus(null).getTimeToFirstFix();
+                App.mGlSets.gpsFirstTimeAtWay = System.currentTimeMillis();
+
                 intent.setAction( GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS );
                 intent.putExtra("gps_event", GpsStatus.GPS_EVENT_FIRST_FIX);
                 context.sendBroadcast(intent);
@@ -254,6 +259,11 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
 	    }
 
+        if ( App.mGlSets.gpsFirstTimeAtWay > 0) App.mGlSets.gpsTimeAtWay = System.currentTimeMillis() - App.mGlSets.gpsFirstTimeAtWay;
+        int offset = TimeZone.getDefault().getOffset(0L);
+        App.mGlSets.gpsTimeAtWay = App.mGlSets.gpsTimeAtWay - offset;
+
+
         Intent intent = new Intent();
         intent.setAction( GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED );
         intent.putExtra("Latitude", Latitude);
@@ -261,6 +271,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         intent.putExtra("Altitude", String.format("%1$.2f", Altitude));
         intent.putExtra("Accuracy", String.format("%1$.0f", Accuracy));
         intent.putExtra("Speed", Speed);
+        intent.putExtra("Time", App.mGlSets.gpsTimeAtWay);
         context.sendBroadcast(intent);
 
 

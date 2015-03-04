@@ -30,8 +30,8 @@
 	        <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:id="@+id/imageView2"
-                android:src="@drawable/speed"/>
+                android:id="@+id/ivSpeed"
+                android:src="@drawable/speedo_1"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -94,7 +94,7 @@ android:longClickable="true">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/ivGPSDistance" android:src="@drawable/waypoint"
-                android:paddingLeft="26dp"/>
+                android:layout_marginLeft="26dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -111,6 +111,31 @@ android:longClickable="true">
                 android:gravity="bottom|center_horizontal"
                 android:textSize="20sp"
                 android:paddingLeft="4dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/layout_tracktime"
+            android:longClickable="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivTrackTime"
+                android:layout_marginLeft="26dp"
+                android:src="@drawable/track_time"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_gps_track_time"
+                android:id="@+id/tvTrackTime"
+                android:layout_above="@+id/layout_test"
+                android:layout_toLeftOf="@+id/layout_obd2"
+                android:paddingLeft="10dp"
+                android:textSize="40sp"/>
         </LinearLayout>
     </LinearLayout>
 

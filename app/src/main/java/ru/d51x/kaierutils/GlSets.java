@@ -63,6 +63,11 @@ public class GlSets {
     public int gpsPrevSpeed = 0;
     public int gpsSpeedGrow = 0;
 
+    public long gpsTimeAtWay = 0;
+    public long gpsFirstTimeAtWay = 0;
+    public int gpsAverageSpeed = 0;
+    public int gpsAverageSpeedWithoutStops = 0;
+
 	public float totalDistance = 0;
     public boolean isGpsHangs = false;
     public int cntGpsHangs = 0;

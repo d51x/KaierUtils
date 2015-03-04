@@ -53,13 +53,14 @@ import pt.lighthouselabs.obd.commands.SpeedObdCommand;
 import pt.lighthouselabs.obd.enums.ObdProtocols;
 
 public class MainActivity extends Activity implements CompoundButton.OnCheckedChangeListener,
-                                                      View.OnClickListener  {
+                                                      View.OnClickListener, OnLongClickListener  {
 
     private TextView tvDeviceName;
     private TextView tvCurrentVolume;
     private Switch switch_show_notification_icon;
     private LinearLayout layout_gps_speed;
     private LinearLayout layout_waypoints;
+    private LinearLayout layout_tracktime;
 
     private TextView tvReverseCount;
     private TextView tvSleepModeCount;
@@ -77,6 +78,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private TextView tvGPSLatitude;
     private TextView tvGPSLongitude;
     private TextView tvGPSSpeed;
+    private TextView tvTrackTime;
 
     private Button btnAGPSReset;
 
@@ -84,6 +86,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private ImageView ivVolumeLevel;
     private ImageView ivGPSHangs;
     private TextView tvGPSHangs;
+    private ImageView ivSpeed;
     private ImageView ivSpeedChange;
     private ImageView ivSpeedChange2;
     private TextView tvOBD_RPM;
@@ -123,7 +126,8 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         layout_gps_speed = (LinearLayout) findViewById(R.id.layout_gps_speed);
         layout_gps_speed.setOnClickListener(this);
 
-
+        layout_tracktime = (LinearLayout) findViewById(R.id.layout_tracktime);
+        layout_tracktime.setOnLongClickListener(this);
 
         tvReverseCount = (TextView) findViewById(R.id.tv_reverse_count);
         tvReverseCount.setText( String.format(getString(R.string.text_reverse_count), App.mGlSets.ReverseActivityCount) );
@@ -163,23 +167,14 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         tvGPSSpeed.setText( "---" );
         //tvGPSSpeed.setOnClickListener(this);
 
+        tvTrackTime = (TextView) findViewById(R.id.tvTrackTime);
+        tvTrackTime.setText( getString(R.string.text_gps_track_time_null));
+
+
 		tvGPSDistance = (TextView) findViewById(R.id.tvGPSDistance);
 		tvGPSDistance.setText( "----.-" );
         layout_waypoints = (LinearLayout) findViewById(R.id.layout_waypoints);
-        layout_waypoints.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                switch (v.getId()) {
-                    case R.id.layout_waypoints:
-                        App.mGlSets.totalDistance = 0;
-                        tvGPSDistance.setText( "----.-" );
-                        break;
-                    default:
-                        break;
-                }
-                return true;
-            }
-        });
+        layout_waypoints.setOnLongClickListener(this);
 
         ivGPSStatus = (ImageView) findViewById(R.id.ivGPSStatus);
         ivGPSStatus.setImageResource(R.drawable.gps_disconnected);
@@ -190,6 +185,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         ivGPSHangs = (ImageView) findViewById(R.id.ivGPSHangs);
         ivGPSHangs.setImageResource(R.drawable.gps_disconnected_filled);
 
+        ivSpeed = (ImageView) findViewById(R.id.ivSpeed);
         ivSpeedChange = (ImageView) findViewById(R.id.ivSpeedChange);
         ivSpeedChange2 = (ImageView) findViewById(R.id.ivSpeedChange2);
         ivSpeedChange.setVisibility(View.INVISIBLE);
@@ -225,6 +221,24 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET));
 	}
+
+    @Override
+        public boolean onLongClick(View v) {
+            switch (v.getId()) {
+                case R.id.layout_waypoints:
+                    App.mGlSets.totalDistance = 0;
+                    tvGPSDistance.setText( "----.-" );
+                    return true;
+                case R.id.layout_tracktime:
+                    App.mGlSets.gpsTimeAtWay = 0;
+                    App.mGlSets.gpsFirstTimeAtWay = System.currentTimeMillis();
+                    tvTrackTime.setText( getString(R.string.text_gps_track_time_null));
+                    return true;
+                default:
+                    return false;
+            }
+
+        }
 
 
     // анализируем, какая кнопка была нажата. Всего один метод для всех кнопок
@@ -383,6 +397,11 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), intent.getStringExtra("Altitude")).replace(",", ".") );
 
 				int speed = intent.getIntExtra("Speed", 0);
+                if ( speed > 80) {
+                    ivSpeed.setImageResource(R.drawable.speedo_2);
+                } else {
+                    ivSpeed.setImageResource(R.drawable.speedo_1);
+                }
 				tvGPSSpeed.setText( speed > 0 ? String.format(getString(R.string.text_gps_speed_value), speed) : "---" );
 
 				color_speed(tvGPSSpeed, speed);
@@ -396,6 +415,17 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
                 tvGPSDistance.setText (  dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-" );
 
+                // time
+                long tm = intent.getLongExtra("Time", 0);
+                //if ( tm > 0 ) {
+                    Date date = new Date( tm );
+                    SimpleDateFormat ft = new SimpleDateFormat (getString(R.string.text_gps_track_time_format), Locale.getDefault());
+                    String stime = ft.format(date);
+                    tvTrackTime.setText( stime );
+
+                //} else {
+                //    tvTrackTime.setText( getString(R.string.text_gps_track_time_null));
+                //}
             } else if ( action.equals( TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_TITLE_CHANGED)) {
                 String title = intent.getStringExtra("radio_title");
                 //Toast.makeText (App.getInstance(), title, 1).show();

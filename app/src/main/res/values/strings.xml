@@ -66,6 +66,10 @@
     <string name="text_gps_altitude">Высота: %1$s м</string>
     <string name="text_gps_accuracy">Точность: %1$s м</string>
     <string name="text_gps_speed_value">%1$d</string>
+    <string name="text_gps_track_time">%1$s</string>
+
+    <string name="text_gps_track_time_null">--:--</string>
+    <string name="text_gps_track_time_format">HH:mm:ss</string>
 
     <string name="btn_agps_reset">Сброс AGPS</string>
 
