@@ -18,7 +18,7 @@
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:id="@+id/layout_gps_speed">
 
@@ -60,16 +60,17 @@
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="127dp"
+            android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:id="@+id/layout_volume_level"
-            android:paddingLeft="26dp">
+            >
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/ivVolumeLevel"
-                android:src="@drawable/volume_mute"/>
+                android:src="@drawable/volume_mute"
+                android:layout_marginLeft="26dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -88,17 +89,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 android:id="@+id/layout_waypoints"
-android:paddingLeft="26dp">
+android:longClickable="true">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/ivGPSDistance" android:src="@drawable/waypoint"/>
+                android:id="@+id/ivGPSDistance" android:src="@drawable/waypoint"
+                android:paddingLeft="26dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/tvGPSDistance" android:text="@string/text_gps_distance"
                 android:textSize="40sp" android:paddingLeft="10dp"
-                android:gravity="center_vertical"/>
+                android:gravity="center_vertical"
+                android:longClickable="false"/>
 
             <TextView
                 android:layout_width="wrap_content"

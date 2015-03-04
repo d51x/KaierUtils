@@ -64,9 +64,9 @@ public class GlSets {
     public int gpsSpeedGrow = 0;
 
 	public float totalDistance = 0;
-    public boolean isGpsHangs;
+    public boolean isGpsHangs = false;
     public int cntGpsHangs = 0;
-    public boolean isFirstRunGPS = false;
+    //public boolean isFirstRunGPS = false;
     public boolean isFirstFixGPS = false;
     public long locRequestUpdateTime = 0; // msec
     public int locRequestMinDistance = 0; // meters

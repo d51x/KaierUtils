@@ -84,26 +84,27 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         Intent intent = new Intent();
         gpsevent = 0;
         switch (event) {
-            case GpsStatus.GPS_EVENT_STARTED:   // 1
+            case GpsStatus.GPS_EVENT_STARTED:   // 1   когда система gps запускается
                 App.mGlSets.isFirstFixGPS = false;
                 intent.setAction( GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS );
                 intent.putExtra("gps_event", GpsStatus.GPS_EVENT_STARTED);
                 context.sendBroadcast(intent);
                 break;
-            case GpsStatus.GPS_EVENT_FIRST_FIX: // 3
+            case GpsStatus.GPS_EVENT_FIRST_FIX: // 3        когда система gps получает первое положение после запуска
                 //Event sent when the GPS system has received its first fix since starting.
+                // србатывает только один раз после включения GPS?
                 App.mGlSets.isFirstFixGPS = true;
                 intent.setAction( GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS );
                 intent.putExtra("gps_event", GpsStatus.GPS_EVENT_FIRST_FIX);
                 context.sendBroadcast(intent);
                 break;
-            case GpsStatus.GPS_EVENT_STOPPED:   // 2
+            case GpsStatus.GPS_EVENT_STOPPED:   // 2  когда система gps останавливается
                 App.mGlSets.isFirstFixGPS = false;
                 intent.setAction( GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS );
                 intent.putExtra("gps_event", GpsStatus.GPS_EVENT_STOPPED);
                 context.sendBroadcast(intent);
                 break;
-            case GpsStatus.GPS_EVENT_SATELLITE_STATUS: // 4
+            case GpsStatus.GPS_EVENT_SATELLITE_STATUS: // 4  скорее всего инфа не приходит, если мы сделали сброс agps в течение времени, когда происходит инициализация
                 // инфа о спутниках
                 goodSatellitesCount = 0;
                 GpsStatus status = mLocationManager.getGpsStatus(null);
@@ -127,14 +128,22 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
                 context.sendBroadcast(intent);
 
                 if ( (cntSats > 0) && (goodSatellitesCount >= min_good_sats) &&
-                        App.mGlSets.isFirstRunGPS && App.mGlSets.isFirstFixGPS )
+                        /*App.mGlSets.isFirstRunGPS &&*/ App.mGlSets.isFirstFixGPS &&
+                        !App.mGlSets.isGpsHangs)
                 {
                     gpstime = timer;
                 }
 
                if ( (cntSats > 0) && (goodSatellitesCount < min_good_sats) && ((timer - gpstime) > delayTimer) &&
-                       App.mGlSets.isFirstRunGPS && App.mGlSets.isFirstFixGPS)
+                      /* App.mGlSets.isFirstRunGPS &&*/ App.mGlSets.isFirstFixGPS &&
+                       !App.mGlSets.isGpsHangs)
                 {
+
+                    /* еще вариант определения зависания
+                    I have also written a simple utility which uses the GpsStatus Listener to display
+                    whether or not the almanac and the ephemerides have been saved for each satellite.
+                    It's called "GPS Check" and is available on GP.
+                    * */
                   // 40 сек подождать, вдруг появятся спутники, инчае...
                    gpstime = timer;
                    pausedelay = 60;
@@ -214,6 +223,8 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         float Accuracy = location.getAccuracy();
         int Speed = Math.round(location.getSpeed() * 3600 / 1000);
 
+        // возможно здесь, после сброса agps и когда спутники найдутся, то сработает onLocationChange, пока ищутся спутники, onLocationChange скорее всего не сработает
+        App.mGlSets.isGpsHangs = false;
 
         //getBearing – насколько я понял, это угол, на который текущая траектория движения отклоняется от траектории на север. Кто точно знает, напишите, плз, на форуме!
         // String.format(
@@ -232,9 +243,13 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
         //location.distanceTo(prevLocation)
 
+        // подсчет дистанции, reset AGPS сбрасывает isFirstFixGPS
 	    try {
-		    if ( App.mGlSets.isFirstFixGPS )
+		    if ( App.mGlSets.isFirstFixGPS ) // если не было первого фикса, то нельзя считать дистанцию, иначе от гринвича так насчитает
+
                    App.mGlSets.totalDistance += location.distanceTo ( prevLocation );
+            // что происходит с prevLocation при зависании gps до момента первого получения спутников,
+            // надо тестировать вживую руками делая сброс agps
 	    } catch (Exception e) {
 
 	    }
@@ -252,25 +267,25 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
 
 
-        if ( App.mGlSets.dsc_isAvailable) {
-            int  t = Math.abs(Speed - App.mGlSets.dsc_FirstSpeed) / App.mGlSets.dsc_StepSpeed;
-            App.mGlSets.gpsSpeed = Speed;
+            if (App.mGlSets.dsc_isAvailable) {
+                int t = Math.abs(Speed - App.mGlSets.dsc_FirstSpeed) / App.mGlSets.dsc_StepSpeed;
+                App.mGlSets.gpsSpeed = Speed;
 
-            if (App.mGlSets.gpsPrevSpeed > Speed) {
-                App.mGlSets.gpsSpeedGrow = -1;  // скорость уменьшилась
-            } else if (App.mGlSets.gpsPrevSpeed < Speed) {
-                App.mGlSets.gpsSpeedGrow = 1;   // скорость увеличилась
-            } else {
-                App.mGlSets.gpsSpeedGrow = 0;
+                if (App.mGlSets.gpsPrevSpeed > Speed) {
+                    App.mGlSets.gpsSpeedGrow = -1;  // скорость уменьшилась
+                } else if (App.mGlSets.gpsPrevSpeed < Speed) {
+                    App.mGlSets.gpsSpeedGrow = 1;   // скорость увеличилась
+                } else {
+                    App.mGlSets.gpsSpeedGrow = 0;
+                }
+
+
+                Intent intent2 = new Intent();
+                intent2.setAction(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED);
+                intent2.putExtra("Speed", Speed);
+                intent2.putExtra("SpeedGrow", App.mGlSets.gpsSpeedGrow);
+                context.sendBroadcast(intent2);
             }
-
-
-            Intent intent2 = new Intent();
-            intent2.setAction(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED);
-            intent2.putExtra("Speed", Speed);
-            intent2.putExtra("SpeedGrow", App.mGlSets.gpsSpeedGrow);
-            context.sendBroadcast(intent2);
-        }
 
 
 	    prevLocation = location;
@@ -283,13 +298,13 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         mLocationManager.sendExtraCommand("gps", "force_xtra_injection", bundle);
         mLocationManager.sendExtraCommand("gps", "force_time_injection", bundle);
         Toast.makeText(context, "GPS завис\nAGPS данные были обнулены", Toast.LENGTH_LONG).show();
-        App.mGlSets.isFirstFixGPS = false;
+        App.mGlSets.isGpsHangs = true;
     }
 
     class FirstRunTimerTask extends TimerTask {
         @Override
         public void run() {
-            App.mGlSets.isFirstRunGPS = true;
+            //App.mGlSets.isFirstRunGPS = true;  // а  нафига это, если есть isFirstFix
             // надо запустить новый таймер или новый поток, чтобы каждую секунду срабатывал
             pausedelay = 60;
             monThread = new Thread(new Runnable() {

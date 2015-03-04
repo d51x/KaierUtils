@@ -122,27 +122,29 @@ public class TWUtilEx {
                                                          TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
                                                          TWUtilConst.TWUTIL_SVC_BUTTON_PREV);
                                     break;
-                                default:
-                                    break;
-                            }
-                        } else if ( message.arg1 == 1) {
-                            switch ( message.arg2 ) {
-                                case TWUtilConst.TWUTIL_CODE_MUSIC:             // = 41;
-                                    setPowerAmpPlayed();
-                                    break;
-                                case TWUtilConst.TWUTIL_CODE_RADIO:             // = 33;
-                                case TWUtilConst.TWUTIL_CODE_IPOD:              // = 35;
-                                case TWUtilConst.TWUTIL_CODE_DVD:               // = 36;
-                                case TWUtilConst.TWUTIL_CODE_TV:                // = 39;
-                                case TWUtilConst.TWUTIL_CODE_AUX:               // = 40;
-                                case TWUtilConst.TWUTIL_CODE_VIDEO:             // = 44;
-                                case TWUtilConst.TWUTIL_CODE_PHONE:             // = 47;
-                                    setPowerAmpPaused();
-                                    break;
+
                                 default:
                                     break;
                             }
                         }
+
+                        switch ( message.arg2 ) {
+                            case TWUtilConst.TWUTIL_CODE_MUSIC:             // = 41;
+                                setPowerAmpPlayed();
+                                break;
+                            case TWUtilConst.TWUTIL_CODE_RADIO:             // = 33;
+                            case TWUtilConst.TWUTIL_CODE_IPOD:              // = 35;
+                            case TWUtilConst.TWUTIL_CODE_DVD:               // = 36;
+                            case TWUtilConst.TWUTIL_CODE_TV:                // = 39;
+                            case TWUtilConst.TWUTIL_CODE_AUX:               // = 40;
+                            case TWUtilConst.TWUTIL_CODE_VIDEO:             // = 44;
+                            case TWUtilConst.TWUTIL_CODE_PHONE:             // = 47;
+                                setPowerAmpPaused();
+                                break;
+                            default:
+                                break;
+                        }
+
                         break;
                     case TWUtilConst.TWUTIL_CONTEXT_PRESS_BUTTON_3:             // 33281
 	                    if ( message.arg1 == 1) {
