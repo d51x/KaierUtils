@@ -40,6 +40,12 @@ public class GlSets {
 
     public int ReverseActivityCount;
     public int SleepModeCount;
+    public boolean isStopedAfterWakeUp = false;
+    public boolean isSleepMode = false;
+    public boolean isReverseMode = false;
+    public boolean isMoving = false; // едем сейчас или стоим больше
+    public int SpeedStopTime = 7*60*1000;  // интервал с нулевой скоростью в минутах, если простояли дольше, значит вообще остановилилсь и не движемся, по хорошему, это надо вынести в настройки
+
     public long startDate;
     public long workTime;
     public long lastSleep;
@@ -62,12 +68,13 @@ public class GlSets {
     public int gpsSpeed = 0;
     public int gpsPrevSpeed = 0;
     public int gpsSpeedGrow = 0;
-
+    public int gpsMaxSpeed = 0;
     public long gpsTimeAtWay = 0;
+    public long gpsTimeAtWayHardTraffic = 0;
     public long gpsFirstTimeAtWay = 0;
     public int gpsAverageSpeed = 0;
     public int gpsAverageSpeedWithoutStops = 0;
-
+    public int gpsTimeAtWay_Type = 0;   // 0 - не учитывать простои, 1 - учитывать простои
 	public float totalDistance = 0;
     public boolean isGpsHangs = false;
     public int cntGpsHangs = 0;
@@ -154,6 +161,8 @@ public class GlSets {
             dsc_TimeToChange = prefs.getInt("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__TIME_TO_CHANGE", 10);
             dsc_DeltaToChange = prefs.getInt("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DELTA_TO_CHANGE", 5);
 
+            gpsTimeAtWay_Type = prefs.getInt("CAR_SETTINGS__GPS_TIME_AT_WAY_TYPE", 0);
+
 		} catch (Exception e) {
 
 		}
@@ -177,6 +186,16 @@ public class GlSets {
 			return true;
 		} else { return false;}
 	}
+
+    public void setGPSMAxSpeed(int speed) {
+
+        if ( speed > gpsMaxSpeed ) gpsMaxSpeed = speed;
+    }
+
+    public void setGPSAverageSpeed() {
+        gpsAverageSpeed = Math.round(totalDistance / (gpsTimeAtWay / 1000 / 60 / 60));
+        gpsAverageSpeedWithoutStops = Math.round(totalDistance / (gpsTimeAtWayHardTraffic / 1000 / 60 / 60));
+    }
 
 //	public int getBrightnessLevel () {
 //		return Brightness;

@@ -6,9 +6,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.GpsStatus;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.widget.CompoundButton;
@@ -43,7 +45,9 @@ import java.util.Locale;
 import java.util.ArrayList;
 
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
+import java.util.Calendar;
 
 import com.maxmpz.poweramp.player.PowerampAPI;
 import pt.lighthouselabs.obd.commands.protocol.*;
@@ -69,7 +73,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
 	private TextView tvGPSDistance;
 	private ImageView ivGPSDistance;
-
+    private ImageView ivTrackTime;
     private TextView tvGPSSatellitesTotal;
     private TextView tvGPSSatellitesGoodQACount;
 
@@ -79,6 +83,12 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private TextView tvGPSLongitude;
     private TextView tvGPSSpeed;
     private TextView tvTrackTime;
+    private TextView tvTrackTime2;
+    private TextView tvTrackTimeMinOrSec;
+    private TextView tvTrackTimeHourOrMin;
+
+    private TextView tvAverageSpeed;
+    private TextView tvMaxSpeed;
 
     private Button btnAGPSReset;
 
@@ -88,7 +98,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private TextView tvGPSHangs;
     private ImageView ivSpeed;
     private ImageView ivSpeedChange;
-    private ImageView ivSpeedChange2;
+    //private ImageView ivSpeedChange2;
     private TextView tvOBD_RPM;
     private TextView tvOBD_Speed;
 
@@ -128,6 +138,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
         layout_tracktime = (LinearLayout) findViewById(R.id.layout_tracktime);
         layout_tracktime.setOnLongClickListener(this);
+        layout_tracktime.setOnClickListener(this);
 
         tvReverseCount = (TextView) findViewById(R.id.tv_reverse_count);
         tvReverseCount.setText( String.format(getString(R.string.text_reverse_count), App.mGlSets.ReverseActivityCount) );
@@ -162,14 +173,20 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         tvGPSLatitude = (TextView) findViewById(R.id.text_gps_latitude);
         tvGPSLatitude.setText( "--.-----" );
         tvGPSLongitude = (TextView) findViewById(R.id.text_gps_longitude);
-        tvGPSLongitude.setText( "--.-----s" );
+        tvGPSLongitude.setText( "--.-----" );
         tvGPSSpeed = (TextView) findViewById(R.id.text_gps_speed_value);
         tvGPSSpeed.setText( "---" );
         //tvGPSSpeed.setOnClickListener(this);
 
         tvTrackTime = (TextView) findViewById(R.id.tvTrackTime);
+        tvTrackTime2 = (TextView) findViewById(R.id.tvTrackTime2);
         tvTrackTime.setText( getString(R.string.text_gps_track_time_null));
+        tvTrackTime2.setText( getString(R.string.text_gps_track_time_null));
 
+        tvTrackTimeMinOrSec = (TextView) findViewById(R.id.tvTrackTimeMinOrSec);
+        tvTrackTimeMinOrSec.setText(getString(R.string.text_gps_track_time_format_sec));
+        tvTrackTimeHourOrMin = (TextView) findViewById(R.id.tvTrackTimeHourOrMin);
+        tvTrackTimeHourOrMin.setText( getString(R.string.text_gps_track_time_format_min));
 
 		tvGPSDistance = (TextView) findViewById(R.id.tvGPSDistance);
 		tvGPSDistance.setText( "----.-" );
@@ -179,6 +196,8 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         ivGPSStatus = (ImageView) findViewById(R.id.ivGPSStatus);
         ivGPSStatus.setImageResource(R.drawable.gps_disconnected);
 
+        ivTrackTime = (ImageView) findViewById(R.id.ivTrackTime);
+
         ivVolumeLevel = (ImageView) findViewById(R.id.ivVolumeLevel);
         setVolumeIcon(ivVolumeLevel, App.mGlSets.getVolumeLevel());
 
@@ -187,9 +206,9 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
         ivSpeed = (ImageView) findViewById(R.id.ivSpeed);
         ivSpeedChange = (ImageView) findViewById(R.id.ivSpeedChange);
-        ivSpeedChange2 = (ImageView) findViewById(R.id.ivSpeedChange2);
+        //ivSpeedChange2 = (ImageView) findViewById(R.id.ivSpeedChange2);
         ivSpeedChange.setVisibility(View.INVISIBLE);
-        ivSpeedChange2.setVisibility(View.INVISIBLE);
+        //ivSpeedChange2.setVisibility(View.INVISIBLE);
 
         tvGPSHangs = (TextView) findViewById(R.id.tvGPSHangs);
         tvGPSHangs.setText(String.format(getString(R.string.text_gps_hangs), 0));
@@ -206,7 +225,10 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         btnAGPSReset = (Button) findViewById(R.id.btn_agps_reset);
         btnAGPSReset.setOnClickListener(this);
 
-
+        tvAverageSpeed = (TextView) findViewById(R.id.tvAverageSpeed);
+        tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), "---"));
+        tvMaxSpeed = (TextView) findViewById(R.id.tvMaxSpeed);
+        tvMaxSpeed.setText( String.format( getString(R.string.text_max_speed), "---"));
 
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED));
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH));
@@ -228,11 +250,17 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 case R.id.layout_waypoints:
                     App.mGlSets.totalDistance = 0;
                     tvGPSDistance.setText( "----.-" );
+                    Toast.makeText(this, "Счетчик был сброшен", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.layout_tracktime:
                     App.mGlSets.gpsTimeAtWay = 0;
+                    App.mGlSets.gpsTimeAtWayHardTraffic = 0;
                     App.mGlSets.gpsFirstTimeAtWay = System.currentTimeMillis();
                     tvTrackTime.setText( getString(R.string.text_gps_track_time_null));
+                    tvTrackTime2.setText( getString(R.string.text_gps_track_time_null));
+                    tvTrackTimeMinOrSec.setText( getString(R.string.text_gps_track_time_format_sec));
+                    tvTrackTimeHourOrMin.setText( getString(R.string.text_gps_track_time_format_min));
+                    Toast.makeText(this, "Счетчик был сброшен", Toast.LENGTH_SHORT).show();
                     return true;
                 default:
                     return false;
@@ -258,6 +286,20 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 color_speed(tvGPSSpeed, App.mGlSets.gpsSpeed);
                 App.mGlSets.isColorSpeed = ! App.mGlSets.isColorSpeed;
                 Settings.System.putInt(this.getContentResolver(), App.mGlSets.GLOBAL_SETTINGS_COLOR_SPEED, App.mGlSets.isColorSpeed ? 1 : 0);
+                break;
+            case R.id.layout_tracktime:
+                App.mGlSets.gpsTimeAtWay_Type++;
+                if ( App.mGlSets.gpsTimeAtWay_Type > 1) App.mGlSets.gpsTimeAtWay_Type = 0;
+                if ( App.mGlSets.gpsTimeAtWay_Type == 0) {
+                    Toast.makeText(this, "Пройденное время будет учитывать простое", Toast.LENGTH_SHORT).show();
+                } else if (App.mGlSets.gpsTimeAtWay_Type == 1) {
+                    Toast.makeText(this, "Пройденное время не будет учитывать простое", Toast.LENGTH_SHORT).show();
+                }
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+                prefs.edit().putInt("CAR_SETTINGS__GPS_TIME_AT_WAY_TYPE", App.mGlSets.gpsTimeAtWay_Type);
+                prefs.edit().commit();
+                // сменить иконку, сменить текст
+                showFormatedTrackTime( App.mGlSets.gpsTimeAtWay_Type );
                 break;
             default:
                 break;
@@ -406,9 +448,12 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
 				color_speed(tvGPSSpeed, speed);
 
+                tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), Integer.toString( App.mGlSets.gpsAverageSpeed)));
+                tvMaxSpeed.setText( String.format( getString(R.string.text_max_speed), Integer.toString( App.mGlSets.gpsMaxSpeed)));
+
                 if ( !App.mGlSets.dsc_isAvailable ) {
                     ivSpeedChange.setVisibility(View.INVISIBLE);
-                    ivSpeedChange2.setVisibility(View.INVISIBLE);
+                    //ivSpeedChange2.setVisibility(View.INVISIBLE);
 
                 }
                 float dist = App.mGlSets.totalDistance / 1000;
@@ -416,13 +461,10 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 tvGPSDistance.setText (  dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-" );
 
                 // time
-                long tm = intent.getLongExtra("Time", 0);
-                //if ( tm > 0 ) {
-                    Date date = new Date( tm );
-                    SimpleDateFormat ft = new SimpleDateFormat (getString(R.string.text_gps_track_time_format), Locale.getDefault());
-                    String stime = ft.format(date);
-                    tvTrackTime.setText( stime );
-
+               // long tm = intent.getLongExtra("Time", 0);
+               // long tm_hardtraffic = intent.getLongExtra("TimeHardTraffic", 0);
+                showFormatedTrackTime( App.mGlSets.gpsTimeAtWay_Type );
+               // showFormatedTrackTime(tm_hardtraffic);
                 //} else {
                 //    tvTrackTime.setText( getString(R.string.text_gps_track_time_null));
                 //}
@@ -527,29 +569,29 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 ivSpeedChange.setVisibility(View.VISIBLE);
 
 
-                if ( Math.abs( speed - (App.mGlSets.dsc_FirstSpeed + t*App.mGlSets.dsc_StepSpeed) ) > App.mGlSets.dsc_DeltaToChange  ) {
-                    ivSpeedChange2.setImageResource(R.drawable.speed_down_2);
-                    ivSpeedChange2.setVisibility(View.VISIBLE);
-                } else {
+                //if ( Math.abs( speed - (App.mGlSets.dsc_FirstSpeed + t*App.mGlSets.dsc_StepSpeed) ) > App.mGlSets.dsc_DeltaToChange  ) {
+                    //ivSpeedChange2.setImageResource(R.drawable.speed_down_2);
+                    //ivSpeedChange2.setVisibility(View.VISIBLE);
+                //} else {
 
-                }
+                //}
                 break;
             case 1:
                 ivSpeedChange.setImageResource(R.drawable.speed_up);
                 ivSpeedChange.setVisibility(View.VISIBLE);
 
-                if ( Math.abs( speed - (App.mGlSets.dsc_FirstSpeed + t*App.mGlSets.dsc_StepSpeed) ) > App.mGlSets.dsc_DeltaToChange  ) {
-                    ivSpeedChange2.setImageResource(R.drawable.speed_up_2);
-                    ivSpeedChange2.setVisibility(View.VISIBLE);
-                } else {
+                //if ( Math.abs( speed - (App.mGlSets.dsc_FirstSpeed + t*App.mGlSets.dsc_StepSpeed) ) > App.mGlSets.dsc_DeltaToChange  ) {
+                    //ivSpeedChange2.setImageResource(R.drawable.speed_up_2);
+                    //ivSpeedChange2.setVisibility(View.VISIBLE);
+                //} else {
 
-                }
+                //}
 
 
                 break;
             default:
                 ivSpeedChange.setVisibility(View.INVISIBLE);
-                ivSpeedChange2.setVisibility(View.INVISIBLE);
+                //ivSpeedChange2.setVisibility(View.INVISIBLE);
 
                 break;
         }
@@ -655,7 +697,38 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         }
 	}
 
+    private void showFormatedTrackTime(int wayType) {
+        long tm = 0;
+        if ( wayType == 0)
+        {
+            tm = App.mGlSets.gpsTimeAtWay;
+            // поменять значек
+            ivTrackTime.setImageResource(R.drawable.track_time_0);
+        } else if ( wayType == 1) {
+            tm =  App.mGlSets.gpsTimeAtWayHardTraffic;
+            ivTrackTime.setImageResource(R.drawable.track_time_1);
 
+        }
+
+        Date date = new Date( tm  );
+        Calendar cal = Calendar.getInstance();
+        cal.setTime( date );
+
+        if ( tm > 1000*60*60 ) { // больше часа
+            tvTrackTime.setText(  String.format("%1$02d", cal.get(Calendar.HOUR)) );
+            tvTrackTime2.setText(  String.format("%1$02d", cal.get(Calendar.MINUTE)) );
+            tvTrackTimeMinOrSec.setText( getString(R.string.text_gps_track_time_format_min));
+            tvTrackTimeHourOrMin.setText( getString(R.string.text_gps_track_time_format_hour));
+
+
+        } else { // меньше часа
+            tvTrackTime.setText(  String.format("%1$02d", cal.get(Calendar.MINUTE)) );
+            tvTrackTime2.setText(String.format("%1$02d", cal.get(Calendar.SECOND)));
+            tvTrackTimeMinOrSec.setText( getString(R.string.text_gps_track_time_format_sec));
+            tvTrackTimeHourOrMin.setText( getString(R.string.text_gps_track_time_format_min));
+
+        }
+    }
 }
 
 

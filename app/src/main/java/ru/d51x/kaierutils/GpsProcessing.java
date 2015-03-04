@@ -16,13 +16,13 @@ import android.widget.Toast;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TimeZone;
-import java.util.SimpleTimeZone;
 
 public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
     public static final int signal_quality = 5;
     private static final int min_good_sats = 3;
     private static final int delayTimer = 40;
+    private static final int MIN_SPEED = 3;
 
     private static final int MINUTES_TWO = 1000 * 120;
     private BroadcastReceiver gpsReceiver;
@@ -38,12 +38,14 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
     private int goodSatellitesCount = 0;
     private Timer mTimer;
+    private Timer mSpeedStopTimer;
     private Thread monThread;
     private int gpsevent = 0;
     private int pausedelay;
     private int timer, gpstime;
 
     private FirstRunTimerTask firstRunTimerTask;
+    private SpeedStopRunTimerTask speedStopRunTimerTask;
 
     public GpsProcessing(Context context) {
         Log.d("GpsProcessing", "GpsProcessing");
@@ -98,6 +100,9 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
                 App.mGlSets.isFirstFixGPS = true;
                 //App.mGlSets.gpsTimeAtWay = mLocationManager.getGpsStatus(null).getTimeToFirstFix();
                 App.mGlSets.gpsFirstTimeAtWay = System.currentTimeMillis();
+                int offset = TimeZone.getDefault().getOffset(0L);
+                App.mGlSets.gpsTimeAtWayHardTraffic = App.mGlSets.gpsTimeAtWayHardTraffic - offset;
+                App.mGlSets.gpsTimeAtWay = App.mGlSets.gpsTimeAtWay - offset;
 
                 intent.setAction( GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS );
                 intent.putExtra("gps_event", GpsStatus.GPS_EVENT_FIRST_FIX);
@@ -228,30 +233,36 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         float Accuracy = location.getAccuracy();
         int Speed = Math.round(location.getSpeed() * 3600 / 1000);
 
+        App.mGlSets.setGPSMAxSpeed(Speed);
+        App.mGlSets.setGPSAverageSpeed();
+
+        if ( Speed > MIN_SPEED ) { // едем
+            App.mGlSets.isMoving = true; // флаг, что поехали
+            if ( mSpeedStopTimer != null ) // таймер работает, а мы поехали
+            {  // стопанем таймер, нам больше не надо следить за стоянкой
+                mSpeedStopTimer.cancel();
+                mSpeedStopTimer = null;
+            }
+        } else {
+            // скорость упала ниже 5, запускаем таймер на 7 минут,
+            // который по окончанию обнулит isMoving, т.е. если не едем больше 7 минут (скорость 0), значит точно стоим
+            if (mSpeedStopTimer == null) {  // а если не null, значит таймер уже отсчитывает 7 минут
+                mSpeedStopTimer = new Timer();
+                speedStopRunTimerTask = new SpeedStopRunTimerTask();
+                mSpeedStopTimer.schedule(speedStopRunTimerTask, App.mGlSets.SpeedStopTime);
+            }
+        }
+
         // возможно здесь, после сброса agps и когда спутники найдутся, то сработает onLocationChange, пока ищутся спутники, onLocationChange скорее всего не сработает
         App.mGlSets.isGpsHangs = false;
 
-        //getBearing – насколько я понял, это угол, на который текущая траектория движения отклоняется от траектории на север. Кто точно знает, напишите, плз, на форуме!
-        // String.format(
-        // "Coordinates: lat = %1$.4f, lon = %2$.4f, time = %3$tF %3$tT",
-        //        location.getLatitude(), location.getLongitude(), new Date(
-        //        location.getTime()));
-        // У Location есть пара методов для определения расстояния между точками: distanceBetween и distanceTo.
-
-        //Лучше расскажите как получить пройденный путь
-        // - Получать расстояние между прошлой точкой и текущей и суммировать всё.
-        //и исключить погрешности в метании gps координат
         // - Отбрасывать точки, к примеру, которые GPSи точность которых более 300 метров, а также кол-во спутников менее 4-х. Также советую почитать про протокол NMEA
         // фильтра Калмана для сглаживания этих прыжков
         // 1. Самый простой: 4 спутника и более (причем данные брать с протокола NMEA), при этом "Индикатор качества GPS сигнала" должен быть>0, при этом качество GPS координат лучше 250
-        // Возникла проблемка. Помогите, если можно. Получаю координаты, формирую стринг.
-
-        //location.distanceTo(prevLocation)
 
         // подсчет дистанции, reset AGPS сбрасывает isFirstFixGPS
 	    try {
 		    if ( App.mGlSets.isFirstFixGPS ) // если не было первого фикса, то нельзя считать дистанцию, иначе от гринвича так насчитает
-
                    App.mGlSets.totalDistance += location.distanceTo ( prevLocation );
             // что происходит с prevLocation при зависании gps до момента первого получения спутников,
             // надо тестировать вживую руками делая сброс agps
@@ -259,10 +270,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
 	    }
 
-        if ( App.mGlSets.gpsFirstTimeAtWay > 0) App.mGlSets.gpsTimeAtWay = System.currentTimeMillis() - App.mGlSets.gpsFirstTimeAtWay;
-        int offset = TimeZone.getDefault().getOffset(0L);
-        App.mGlSets.gpsTimeAtWay = App.mGlSets.gpsTimeAtWay - offset;
-
+        calculateTimeAtWay(Speed);
 
         Intent intent = new Intent();
         intent.setAction( GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED );
@@ -271,7 +279,9 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         intent.putExtra("Altitude", String.format("%1$.2f", Altitude));
         intent.putExtra("Accuracy", String.format("%1$.0f", Accuracy));
         intent.putExtra("Speed", Speed);
-        intent.putExtra("Time", App.mGlSets.gpsTimeAtWay);
+       // intent.putExtra("Time", App.mGlSets.gpsTimeAtWay);
+       // intent.putExtra("TimeHardTraffic", App.mGlSets.gpsTimeAtWayHardTraffic);
+
         context.sendBroadcast(intent);
 
 
@@ -312,11 +322,11 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         App.mGlSets.isGpsHangs = true;
     }
 
-    class FirstRunTimerTask extends TimerTask {
-        @Override
-        public void run() {
-            //App.mGlSets.isFirstRunGPS = true;  // а  нафига это, если есть isFirstFix
-            // надо запустить новый таймер или новый поток, чтобы каждую секунду срабатывал
+         class FirstRunTimerTask extends TimerTask {
+                @Override
+                public void run() {
+                    //App.mGlSets.isFirstRunGPS = true;  // а  нафига это, если есть isFirstFix
+                    // надо запустить новый таймер или новый поток, чтобы каждую секунду срабатывал
             pausedelay = 60;
             monThread = new Thread(new Runnable() {
                 public void run() {
@@ -342,5 +352,40 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
             });
             monThread.start();
         }
+    }
+
+    class SpeedStopRunTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            App.mGlSets.isMoving = false; //7 минут истекло и таймер не прервали, значит стоим и не едем. Может мы на парковке?
+        }
+    }
+
+    private void calculateTimeAtWay(int speed) {
+        // расчет времени в пути с учетом первого фикса гпс
+        if ( !App.mGlSets.isSleepMode ) { // при слипе останавливается подсчет времени
+            //или холодный старт, или проснулись
+            // если проснулись, то надо дождаться набора скорости, т.е. если проснулись и скорость меньше 5, то не считаем время, мы же стоим на месте :)
+            if ( App.mGlSets.isStopedAfterWakeUp ) {
+                // проснулись и стоим на месте
+                if ( speed > MIN_SPEED ) App.mGlSets.isStopedAfterWakeUp = false; // поехали после просыпания
+            } else {
+                // не засыпали, едем... или проснулись и поехали...
+                if (  App.mGlSets.isMoving ) // едем, не стоим, т.е. учитываем пробки
+                {
+                    if (App.mGlSets.gpsFirstTimeAtWay > 0)
+                        App.mGlSets.gpsTimeAtWayHardTraffic = System.currentTimeMillis() - App.mGlSets.gpsFirstTimeAtWay;
+                    int offset = TimeZone.getDefault().getOffset(0L);
+                    App.mGlSets.gpsTimeAtWayHardTraffic = App.mGlSets.gpsTimeAtWayHardTraffic - offset;
+                }
+
+                // не учитываем пробки
+                if (App.mGlSets.gpsFirstTimeAtWay > 0)
+                    App.mGlSets.gpsTimeAtWay = System.currentTimeMillis() - App.mGlSets.gpsFirstTimeAtWay;
+                int offset = TimeZone.getDefault().getOffset(0L);
+                App.mGlSets.gpsTimeAtWay = App.mGlSets.gpsTimeAtWay - offset;
+            }
+        }
+
     }
 }

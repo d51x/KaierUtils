@@ -38,11 +38,13 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 			SetVolumeAtWakeUp();
             // запомним время ухода в SleepMode
             App.mGlSets.lastSleep = System.currentTimeMillis();
+            App.mGlSets.isStopedAfterWakeUp = false;
 		}
         // устройство проснулось (вышло из SleepMode)
 		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP ))
 		{
 	        App.mGlSets.SleepModeCount++; // увеличим счетчик просыпаний
+            App.mGlSets.isStopedAfterWakeUp = true;
 		}
         // включился задний ход
 		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_START ))

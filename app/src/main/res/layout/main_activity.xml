@@ -60,6 +60,29 @@
 
         <LinearLayout
             android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/layout_other_speed">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_average_speed"
+                android:id="@+id/tvAverageSpeed"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="30dp"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_max_speed"
+                android:id="@+id/tvMaxSpeed"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:id="@+id/layout_volume_level"
@@ -118,24 +141,53 @@ android:longClickable="true">
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/layout_tracktime"
-            android:longClickable="true">
+            android:longClickable="true"
+            android:clickable="true">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/ivTrackTime"
                 android:layout_marginLeft="26dp"
-                android:src="@drawable/track_time"/>
+                android:src="@drawable/track_time_0"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/text_gps_track_time"
+                android:text="--"
                 android:id="@+id/tvTrackTime"
                 android:layout_above="@+id/layout_test"
                 android:layout_toLeftOf="@+id/layout_obd2"
                 android:paddingLeft="10dp"
                 android:textSize="40sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_gps_track_time_format_min"
+                android:id="@+id/tvTrackTimeHourOrMin"
+                android:gravity="bottom|center_horizontal"
+                android:textSize="20sp"
+                android:paddingLeft="4dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--"
+                android:id="@+id/tvTrackTime2"
+                android:layout_above="@+id/layout_test"
+                android:layout_toLeftOf="@+id/layout_obd2"
+                android:paddingLeft="10dp"
+                android:textSize="40sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_gps_track_time_format_sec"
+                android:id="@+id/tvTrackTimeMinOrSec"
+                android:gravity="bottom|center_horizontal"
+                android:textSize="20sp"
+                android:paddingLeft="4dp"/>
         </LinearLayout>
     </LinearLayout>
 

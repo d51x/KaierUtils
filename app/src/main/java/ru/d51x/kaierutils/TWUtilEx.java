@@ -64,20 +64,19 @@ public class TWUtilEx {
 		isTWUtilOpened = false;
 		curVolume = -1;
 		mTWUtilHandler = new Handler(){
-			private boolean isSleepMode = false;
-			private boolean isReverseMode = false;
 			@Override
 			public void handleMessage(Message message) {
 				switch (message.what) {
 					case TWUtilConst.TWUTIL_COMMAND_SLEEP:
 						if ( (message.arg1 == 3) && (message.arg2 == 0) ) {
-							if ( isSleepMode ) {
+							if ( App.mGlSets.isSleepMode ) {
 								SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP );
-								isSleepMode = false;
+                                App.mGlSets.isSleepMode = false;
 							}
 						} else if ((message.arg1 == 3) && (message.arg2 == 1)) {
 							SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP );
-							isSleepMode = true;
+                            App.mGlSets.isSleepMode = true;
+                            App.mGlSets.isMoving = false; // если спим, значит стоим :)
 						} else if ( (message.arg1 == 1) && (message.arg2 == 0) ) {
 							SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_SHUTDOWN );
 						}
@@ -88,16 +87,16 @@ public class TWUtilEx {
 					case TWUtilConst.TWUTIL_COMMAND_REVERSE_ACTIVITY:
 						if ( message.arg1 == 0 ) {
 							SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH );
-							isReverseMode = false;
+                            App.mGlSets.isReverseMode = false;
 						} else {
-							if ( !isReverseMode ) {
+							if ( !App.mGlSets.isReverseMode ) {
 								SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_START );
-								isReverseMode = true;
+                                App.mGlSets.isReverseMode = true;
 							}
 						}
 						break;
 					case TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL:
-                        if ( isReverseMode ) break;
+                        if ( App.mGlSets.isReverseMode ) break;
                         curVolume = message.arg1 & Integer.MAX_VALUE;
                         App.mGlSets.setVolumeLevel(curVolume, false);
 						SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED,

@@ -68,8 +68,11 @@
     <string name="text_gps_speed_value">%1$d</string>
     <string name="text_gps_track_time">%1$s</string>
 
-    <string name="text_gps_track_time_null">--:--</string>
+    <string name="text_gps_track_time_null">--</string>
     <string name="text_gps_track_time_format">HH:mm:ss</string>
+    <string name="text_gps_track_time_format_min">м</string>
+    <string name="text_gps_track_time_format_hour">ч</string>
+    <string name="text_gps_track_time_format_sec">с</string>
 
     <string name="btn_agps_reset">Сброс AGPS</string>
 
@@ -95,4 +98,6 @@
     <string name="dsc_delta_to_change_dialogtitle">Выберите дельту скорости</string>
     <string name="text_obd2_settings">OBD 2</string>
 	<string name="text_gps_distance">%1$.2f</string>
+    <string name="text_average_speed">Avg: %1$s км/ч</string>
+    <string name="text_max_speed">Max: %1$s км/ч</string>
 </resources>
