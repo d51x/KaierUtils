@@ -77,7 +77,7 @@
     <string name="btn_agps_reset">Сброс AGPS</string>
 
 
-    <string name="text_gps_hangs">завис\n %1$d раз(а)</string>
+    <string name="text_gps_hangs">завис\n %1$d \nраз(а)</string>
     <string name="text_dynamic_sound_settings">Динамическое управление громкостью</string>
 
     <string name="dsc_available">Включить динамическое изменение громкости</string>

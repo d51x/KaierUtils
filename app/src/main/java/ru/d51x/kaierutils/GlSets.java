@@ -28,6 +28,7 @@ public class GlSets {
 	public boolean isNeedSoundDecreaseAtWakeUp;
 	public int VolumeLevelAtWakeUp;
 
+	//public boolean isDebug = false;
 
     public boolean isNotificationIconShow;
     public boolean isVolumeShowOnNotificationIcon;
@@ -48,7 +49,7 @@ public class GlSets {
     public boolean isMoving = false; // едем сейчас или стоим больше
     public boolean isFirstStart = false; // едем сейчас или стоим больше
     public long prevTime = 0;
-    public int SpeedStopTime = 4*60*1000;  // интервал с нулевой скоростью в минутах, если простояли дольше, значит вообще остановилилсь и не движемся, по хорошему, это надо вынести в настройки
+    public long SpeedStopTime = 4*60*1000;  // интервал с нулевой скоростью в минутах, если простояли дольше, значит вообще остановилилсь и не движемся, по хорошему, это надо вынести в настройки
 
     public long startDate;
     public long workTime;
@@ -78,11 +79,14 @@ public class GlSets {
     public long gpsTimeAtWay = 0;
     public long gpsTimeAtWayWithoutStops = 0;
     public long gpsPrevTimeAtWayWithoutStops = 0;
+	public long gpsTimeForAverageSpeed = 0;
+    public long gpsPrevTimeForAverageSpeed = 0;
     public long gpsFirstTimeAtWay = 0;
     public int gpsAverageSpeed = 0;
     public int gpsAverageSpeedWithoutStops = 0;
     public int gpsTimeAtWay_Type = 0;   // 0 - не учитывать простои, 1 - учитывать простои
 	public float totalDistance = 0;
+	public float totalDistanceForAverageSpeed = 0;
     public boolean isGpsHangs = false;
     public int cntGpsHangs = 0;
     //public boolean isFirstRunGPS = false;
@@ -199,21 +203,12 @@ public class GlSets {
         if ( speed > gpsMaxSpeed ) gpsMaxSpeed = speed;
     }
 
-    public void setGPSAverageSpeed() {
-        // totalDistance = km;   gpsTimeAtWay =  миллисек / 1000 - сек / 60 - мин / 60 - часы
-        int offset = TimeZone.getDefault().getOffset(0L);
-
-        float t = (gpsTimeAtWay + offset) / (1000);
-        float t2 = (gpsTimeAtWayWithoutStops + offset) / (1000);
-
+    public void setGPSAverageSpeed(int speed) {
         try {
-            gpsAverageSpeed = Math.round(totalDistance * 3600 / t / 1000);
-            gpsAverageSpeedWithoutStops = Math.round(totalDistance * 3600 / t2 / 1000);
+            if ( speed > 0) gpsAverageSpeed = Math.round(totalDistanceForAverageSpeed * 3600 / gpsTimeForAverageSpeed);
         } catch (Exception e) {
 
         }
-       // Log.d("setGPSAverageSpeed", String.format("totalDistance = %1$.2f km    gpsTimeAtWay = %2$.5f h   ", totalDistance, t ));
-       // Log.d("setGPSAverageSpeed", String.format("totalDistance = %1$.2f km    gpsTimeAtWayHardTraf = %2$.5f h   ", totalDistance, t2 ));
     }
 
 //	public int getBrightnessLevel () {

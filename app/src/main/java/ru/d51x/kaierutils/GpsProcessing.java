@@ -38,14 +38,12 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
     private int goodSatellitesCount = 0;
     private Timer mTimer;
-    private Timer mSpeedStopTimer;
     private Thread monThread;
     private int gpsevent = 0;
     private int pausedelay;
     private int timer, gpstime;
 
     private FirstRunTimerTask firstRunTimerTask;
-    private SpeedStopRunTimerTask speedStopRunTimerTask;
 
     public GpsProcessing(Context context) {
         Log.d("GpsProcessing", "GpsProcessing");
@@ -129,10 +127,14 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
                     SNR: >500 >100 >50 >10 >5 >0 bad n/a COMMENT
                     sig: 9    8    7   6   5  4  1   0   COMMENT
                      */
-                    if (it.getSnr() >= ((float) signal_quality)) {
-                        goodSatellitesCount++;
+                    if ( it.usedInFix() ) {
+	                    cntInUse++;
+
+	                    // если станет хуже, то надо вынести блок ниже из условия наверх
+	                    if (it.getSnr() >= ((float) signal_quality)) {
+		                    goodSatellitesCount++;
+	                    }
                     }
-                    if ( it.usedInFix() ) cntInUse++;
                 }
 
                 intent.setAction( GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS );
@@ -237,32 +239,9 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         float Accuracy = location.getAccuracy();
         int Speed = Math.round(location.getSpeed() * 3600 / 1000);
 
+	    //if ( ! App.mGlSets.isDebug ) Speed = (int)Math.round(Math.random ()* 100 + 12);
         // возможно здесь, после сброса agps и когда спутники найдутся, то сработает onLocationChange, пока ищутся спутники, onLocationChange скорее всего не сработает
         App.mGlSets.isGpsHangs = false;
-
-
-
-
-
-        if ( Speed > MIN_SPEED ) { // едем
-            App.mGlSets.isMoving = true; // флаг, что поехали
-            if ( mSpeedStopTimer != null ) // таймер работает, а мы поехали
-            {  // стопанем таймер, нам больше не надо следить за стоянкой
-                mSpeedStopTimer.cancel();
-                mSpeedStopTimer = null;
-            }
-        } else {
-            // скорость упала ниже 5, запускаем таймер на 7 минут,
-            // который по окончанию обнулит isMoving, т.е. если не едем больше 7 минут (скорость 0), значит точно стоим
-            if (mSpeedStopTimer == null) {  // а если не null, значит таймер уже отсчитывает 7 минут
-                mSpeedStopTimer = new Timer();
-                speedStopRunTimerTask = new SpeedStopRunTimerTask();
-                mSpeedStopTimer.schedule(speedStopRunTimerTask, App.mGlSets.SpeedStopTime);
-                //Toast.makeText(App.getInstance(), "Встали, запустили таймер", Toast.LENGTH_LONG).show();
-            }
-        }
-
-
 
         // - Отбрасывать точки, к примеру, которые GPSи точность которых более 300 метров, а также кол-во спутников менее 4-х. Также советую почитать про протокол NMEA
         // фильтра Калмана для сглаживания этих прыжков
@@ -275,6 +254,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
             // при этом мы должны начать движение
             // TODO а еще надо учесть инфу с сателитов про сигнал и точность
                    App.mGlSets.totalDistance += location.distanceTo ( prevLocation );
+                   App.mGlSets.totalDistanceForAverageSpeed += location.distanceTo ( prevLocation );
             // что происходит с prevLocation при зависании gps до момента первого получения спутников,
             // надо тестировать вживую руками делая сброс agps
 	    } catch (Exception e) {
@@ -283,7 +263,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
         calculateTimeAtWay(Speed);
         App.mGlSets.setGPSMAxSpeed(Speed);
-        App.mGlSets.setGPSAverageSpeed();
+        App.mGlSets.setGPSAverageSpeed(Speed);
 
 
         Intent intent = new Intent();
@@ -368,23 +348,20 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         }
     }
 
-    class SpeedStopRunTimerTask extends TimerTask {
-        @Override
-        public void run() {
-            App.mGlSets.isMoving = false; //7 минут истекло и таймер не прервали, значит стоим и не едем. Может мы на парковке?
-           // Toast.makeText(App.getInstance(), "Мы стоим уже больше 4-х минут", Toast.LENGTH_LONG).show();
-        }
-    }
-
     private void calculateTimeAtWay(int speed) {
-        if ( speed > 0) App.mGlSets.isFirstStart = true;
+        if ( speed > 0) {
+	        App.mGlSets.isFirstStart = true;
+	        App.mGlSets.isMoving = true;
+        } else { App.mGlSets.isMoving = false; }
         // расчет времени в пути с учетом первого фикса гпс
         if ( !App.mGlSets.isSleepMode && App.mGlSets.isFirstStart && App.mGlSets.prevTime > 0) { // при слипе останавливается подсчет времени
             //или холодный старт, или проснулись
             // если проснулись, то надо дождаться набора скорости, т.е. если проснулись и скорость меньше 5, то не считаем время, мы же стоим на месте :)
             if ( App.mGlSets.isStopedAfterWakeUp ) {
                 // проснулись и стоим на месте
-                if ( speed > MIN_SPEED ) App.mGlSets.isStopedAfterWakeUp = false; // поехали после просыпания
+                if ( speed > MIN_SPEED ) {
+	                App.mGlSets.isStopedAfterWakeUp = false; // поехали после просыпания
+                }
             } else {
                 // не засыпали, едем... или проснулись и поехали...
                 if (App.mGlSets.gpsFirstTimeAtWay > 0) {
@@ -401,9 +378,12 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
                     if (  App.mGlSets.isMoving ) // едем, не стоим, т.е. учитываем пробки
                     {
                         App.mGlSets.gpsTimeAtWayWithoutStops = App.mGlSets.gpsPrevTimeAtWayWithoutStops + curtime;
+	                    App.mGlSets.gpsTimeForAverageSpeed = App.mGlSets.gpsPrevTimeForAverageSpeed + curtime;
+
                     }
                     App.mGlSets.gpsPrevTimeAtWay = App.mGlSets.gpsTimeAtWay;
                     App.mGlSets.gpsPrevTimeAtWayWithoutStops = App.mGlSets.gpsTimeAtWayWithoutStops;
+	                App.mGlSets.gpsPrevTimeForAverageSpeed = App.mGlSets.gpsTimeForAverageSpeed;
 
                 } else {
                     // поехали в самый первый раз
@@ -412,9 +392,13 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
                     App.mGlSets.gpsTimeAtWay = 0;
                     App.mGlSets.gpsPrevTimeAtWay = 0;
                     App.mGlSets.gpsPrevTimeAtWayWithoutStops = 0;
+	                App.mGlSets.gpsPrevTimeForAverageSpeed = 0;
+	                App.mGlSets.gpsTimeForAverageSpeed = 0;
                 }
             }
         }
         App.mGlSets.prevTime = System.currentTimeMillis();
+	    long i;
+	    i = App.mGlSets.prevTime;
     }
 }
