@@ -26,7 +26,6 @@ import android.view.View.OnLongClickListener;
 
 import android.view.Window;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -41,7 +40,6 @@ import android.content.DialogInterface;
 import java.io.IOException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.ArrayList;
 
 import java.util.Set;
@@ -49,9 +47,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 import java.util.Calendar;
 
-import com.maxmpz.poweramp.player.PowerampAPI;
 import pt.lighthouselabs.obd.commands.protocol.*;
-import pt.lighthouselabs.obd.commands.ObdCommand;
 import pt.lighthouselabs.obd.commands.engine.*;
 import pt.lighthouselabs.obd.commands.SpeedObdCommand;
 import pt.lighthouselabs.obd.enums.ObdProtocols;
@@ -76,6 +72,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private ImageView ivTrackTime;
     private TextView tvGPSSatellitesTotal;
     private TextView tvGPSSatellitesGoodQACount;
+    private TextView tvGPSSatellitesInUse;
 
     private TextView tvGPSAccuracy;
     private TextView tvGPSAltitude;
@@ -163,7 +160,9 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
         tvGPSSatellitesTotal = (TextView) findViewById(R.id.text_satellites_total);
         tvGPSSatellitesGoodQACount = (TextView) findViewById(R.id.text_satellites_good);
+        tvGPSSatellitesInUse = (TextView) findViewById(R.id.text_satellites_inuse);
         tvGPSSatellitesTotal.setText( "0");
+        tvGPSSatellitesInUse.setText( "0");
         tvGPSSatellitesGoodQACount.setText( "0" );
 
         tvGPSAccuracy = (TextView) findViewById(R.id.text_gps_accuracy);
@@ -254,7 +253,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                     return true;
                 case R.id.layout_tracktime:
                     App.mGlSets.gpsTimeAtWay = 0;
-                    App.mGlSets.gpsTimeAtWayHardTraffic = 0;
+                    App.mGlSets.gpsTimeAtWayWithoutStops = 0;
                     App.mGlSets.gpsFirstTimeAtWay = System.currentTimeMillis();
                     tvTrackTime.setText( getString(R.string.text_gps_track_time_null));
                     tvTrackTime2.setText( getString(R.string.text_gps_track_time_null));
@@ -274,8 +273,11 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     public void onClick(View v){
         switch (v.getId()) {
             case R.id.btnSpeedUp:
+                App.mGlSets.isFirstStart = true;
+
                 break;
             case R.id.btnSpeedDown:
+                App.mGlSets.isFirstStart = true;
                 break;
             case R.id.btn_agps_reset:
                 Intent intent = new Intent();
@@ -372,8 +374,10 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             {
                 int cntSats = intent.getIntExtra ("SatellitesTotal", 0);
                 int goodSatellitesCount = intent.getIntExtra( "SatellitesGoodQATotal", 0 );
+                int satellitesInUse = intent.getIntExtra( "SatellitesInUse", 0 );
                 tvGPSSatellitesTotal.setText( Integer.toString(cntSats) );
                 tvGPSSatellitesGoodQACount.setText( Integer.toString(goodSatellitesCount) );
+                tvGPSSatellitesInUse.setText( Integer.toString(satellitesInUse) );
 
                 if ( goodSatellitesCount  <  2 ) {
                     tvGPSSatellitesGoodQACount.setTextColor(Color.RED);
@@ -448,7 +452,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
 				color_speed(tvGPSSpeed, speed);
 
-                tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), Integer.toString( App.mGlSets.gpsAverageSpeed)));
+                tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), Integer.toString( App.mGlSets.gpsAverageSpeedWithoutStops)));
                 tvMaxSpeed.setText( String.format( getString(R.string.text_max_speed), Integer.toString( App.mGlSets.gpsMaxSpeed)));
 
                 if ( !App.mGlSets.dsc_isAvailable ) {
@@ -701,11 +705,11 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         long tm = 0;
         if ( wayType == 0)
         {
-            tm = App.mGlSets.gpsTimeAtWay;
+            tm = App.mGlSets.gpsTimeAtWay - TimeZone.getDefault().getOffset(0L);
             // поменять значек
             ivTrackTime.setImageResource(R.drawable.track_time_0);
         } else if ( wayType == 1) {
-            tm =  App.mGlSets.gpsTimeAtWayHardTraffic;
+            tm =  App.mGlSets.gpsTimeAtWayWithoutStops - TimeZone.getDefault().getOffset(0L);
             ivTrackTime.setImageResource(R.drawable.track_time_1);
 
         }

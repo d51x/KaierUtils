@@ -24,6 +24,7 @@ public class GpsProcessingThread extends Thread {
             Looper.loop();
         } catch (Exception e) {
             Log.d ("GpsProcessingThread", "ERROR: run() failed");
+            Log.d("GpsProcessingThread Exception: ", e.toString());
         }
     }
 

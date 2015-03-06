@@ -45,6 +45,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 		{
 	        App.mGlSets.SleepModeCount++; // увеличим счетчик просыпаний
             App.mGlSets.isStopedAfterWakeUp = true;
+            App.mGlSets.wakeUpTime =  System.currentTimeMillis();
 		}
         // включился задний ход
 		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_START ))
