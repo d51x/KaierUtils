@@ -59,6 +59,7 @@
                 <action android:name="ru.d51x.kaierutils.action.WAKEUP" />
                 <action android:name="ru.d51x.kaierutils.action.REVERSE_ACTIVITY_START" />
                 <action android:name="ru.d51x.kaierutils.action.REVERSE_ACTIVITY_FINISH" />
+                <action android:name="ru.d51x.kaierutils.action.RADIO_CHANGED" />
             </intent-filter>
         </receiver>
 

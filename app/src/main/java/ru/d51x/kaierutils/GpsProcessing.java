@@ -88,30 +88,12 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         switch (event) {
             case GpsStatus.GPS_EVENT_STARTED:   // 1   когда система gps запускается
                 App.mGlSets.isFirstFixGPS = false;
-                intent.setAction( GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS );
-                intent.putExtra("gps_event", GpsStatus.GPS_EVENT_STARTED);
-                context.sendBroadcast(intent);
                 break;
             case GpsStatus.GPS_EVENT_FIRST_FIX: // 3        когда система gps получает первое положение после запуска
-                //Event sent when the GPS system has received its first fix since starting.
-                // србатывает только один раз после включения GPS?
                 App.mGlSets.isFirstFixGPS = true;
-                //App.mGlSets.gpsTimeAtWay = mLocationManager.getGpsStatus(null).getTimeToFirstFix();
-//                App.mGlSets.gpsFirstTimeAtWay = System.currentTimeMillis();
-//                int offset = TimeZone.getDefault().getOffset(0L);
-//                App.mGlSets.gpsTimeAtWayWithoutStops = App.mGlSets.gpsTimeAtWayWithoutStops - offset;
-//                if ( App.mGlSets.gpsTimeAtWay > 0)
-//                    App.mGlSets.gpsTimeAtWay = App.mGlSets.gpsTimeAtWay - offset;
-
-                intent.setAction( GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS );
-                intent.putExtra("gps_event", GpsStatus.GPS_EVENT_FIRST_FIX);
-                context.sendBroadcast(intent);
                 break;
             case GpsStatus.GPS_EVENT_STOPPED:   // 2  когда система gps останавливается
                 App.mGlSets.isFirstFixGPS = false;
-                intent.setAction( GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS );
-                intent.putExtra("gps_event", GpsStatus.GPS_EVENT_STOPPED);
-                context.sendBroadcast(intent);
                 break;
             case GpsStatus.GPS_EVENT_SATELLITE_STATUS: // 4  скорее всего инфа не приходит, если мы сделали сброс agps в течение времени, когда происходит инициализация
                 // инфа о спутниках

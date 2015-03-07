@@ -31,7 +31,12 @@ public class TWUtilEx {
 		}
 	}
 
+	private boolean isGetRadioProgram = false;
+	private boolean isGetRadioFreq = false;
+	private boolean isGetRadioTitle = false;
+
 	private TWUtil mTWUtil;
+	private TWUtil mTWUtilRadio;
 	private static int curVolume;
 	//private static int curBrightness;
 	//private static int curBrightnessMode;
@@ -47,7 +52,7 @@ public class TWUtilEx {
             TWUtilConst.TWUTIL_COMMAND_KEY_PRESS,                // 513
 			//TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS              // 258
 			(short) TWUtilConst.TWUTIL_CONTEXT_PRESS_BUTTON_3,                       // 33281 - запуск стандартных приложений
-            TWUtilConst.TWUTIL_CONTEXT_RADIO_CHANNEL_TITLE
+			TWUtilConst.TWUTIL_CONTEXT_EQ
 	};
 
 	protected boolean isTWUtilOpened;
@@ -60,6 +65,7 @@ public class TWUtilEx {
 		mHandler = new Handler();
 
 		mTWUtil = null;
+		mTWUtilRadio = null;
 		this.mTWUtilHandler = null;
 		isTWUtilOpened = false;
 		curVolume = -1;
@@ -165,11 +171,19 @@ public class TWUtilEx {
 		                    }
 	                    }
 	                    break;
-                    case TWUtilConst.TWUTIL_CONTEXT_RADIO_CHANNEL_TITLE:    // 1029
-                        String title = (String) message.obj;
-                        SendBroadcastAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_TITLE_CHANGED,
-                                            "radio_title",
-                                title);
+                    case TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA:    // 1025
+	                    if ( message.arg1 == 2) {   // и переключение и поиск
+		                    Intent ri = new Intent();
+		                    ri.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+	                        ri.putExtra ("Frequency", String.format ("%1.2f", (float) message.arg2 / 100));
+	                        ri.putExtra("Title", (String) message.obj);
+		                    ri.setAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED);
+		                    App.getInstance ().sendBroadcast(ri);
+	                    }
+                        break;
+					case TWUtilConst.TWUTIL_CONTEXT_EQ:    // 257 - EQ
+						byte[] bArr = (byte[]) message.obj;
+						SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_EQ_CHANGED, "EQ", bArr);
                         break;
 					default:
 						break;
@@ -181,13 +195,19 @@ public class TWUtilEx {
 	public void Init() {
 		Log.d ("TWUtilEx", "Init ");
 		mTWUtil = new TWUtil();
+		mTWUtilRadio = new TWUtil(1);
 		int result = mTWUtil.open(twutil_contexts);
 		if ( result == 0) {
 			isTWUtilOpened = true;
-			mTWUtil.start();
-			mTWUtil.addHandler(TWUTIL_HANDLER, mTWUtilHandler);
+			mTWUtil.start ();
+			mTWUtil.addHandler (TWUTIL_HANDLER, mTWUtilHandler);
 			mTWUtil.write (TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL, 255);
 			//mTWUtil.write (TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS, 255);
+		}
+		result = mTWUtilRadio.open(new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA});
+		if ( result == 0) {
+			mTWUtilRadio.start ();
+			mTWUtilRadio.addHandler (TWUTIL_HANDLER, mTWUtilHandler);
 		}
 	}
 
@@ -195,9 +215,13 @@ public class TWUtilEx {
 		Log.d ("TWUtil", "Destroy()");
 		if ( isTWUtilOpened ) {
 			mTWUtil.removeHandler ( TWUTIL_HANDLER );
-			mTWUtil.stop();
-			mTWUtil.close();
+			mTWUtilRadio.removeHandler ( TWUTIL_HANDLER );
+			mTWUtil.stop ();
+			mTWUtilRadio.stop ();
+			mTWUtil.close ();
+			mTWUtilRadio.close ();
 			mTWUtil = null;
+			mTWUtilRadio = null;
 			isTWUtilOpened = false;
 		}
 	}
@@ -223,6 +247,17 @@ public class TWUtilEx {
 	}
 
     private void SendBroadcastAction(String action, String key, String value) {
+        Log.d ("TWUtilEx", "SendBroadcastAction ");
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        if ( key != null ) {
+            intent.putExtra(key, value);
+        }
+        intent.setAction(action);
+        App.getInstance ().sendBroadcast(intent);
+    }
+
+	private void SendBroadcastAction(String action, String key, byte[] value) {
         Log.d ("TWUtilEx", "SendBroadcastAction ");
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
@@ -345,5 +380,6 @@ public class TWUtilEx {
 			}
 		}, 500);
 	}
+
 
 }

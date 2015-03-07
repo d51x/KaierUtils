@@ -170,33 +170,72 @@ android:longClickable="true">
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout_volume_level"
-        android:layout_alignParentTop="true" android:layout_centerHorizontal="true">
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="160dp"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true" android:layout_centerHorizontal="true">
+		<LinearLayout
+	        android:orientation="horizontal"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/layout_volume_level"
+			>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/ivVolumeLevel"
-            android:src="@drawable/volume_mute"
-            android:layout_marginLeft="26dp"/>
+	        <ImageView
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:id="@+id/ivVolumeLevel"
+	            android:src="@drawable/volume_mute"
+	            android:layout_marginLeft="26dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/tvCurrentVolum"
-            android:textSize="40sp"
-            android:textIsSelectable="false"
-            android:text="0"
-            android:layout_gravity="center"
-            android:textStyle="bold"
-            android:paddingLeft="10dp"/>
-    </LinearLayout>
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:id="@+id/tvCurrentVolum"
+	            android:textSize="40sp"
+	            android:textIsSelectable="false"
+	            android:text="0"
+	            android:layout_gravity="center"
+	            android:textStyle="bold"
+	            android:paddingLeft="10dp"/>
+	    </LinearLayout>
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent" android:layout_gravity="center_horizontal">
+			<ImageView
+				android:layout_width="16dp"
+				android:layout_height="16dp"
+				android:id="@+id/imageView2" android:src="@drawable/eq_bass"/>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:text="10"
+				android:id="@+id/tv_eq_bass" android:textSize="10dp"
+				android:gravity="center_vertical" android:paddingLeft="2dp"
+				android:paddingRight="6dp" android:layout_gravity="bottom"/>
+			<ImageView
+				android:layout_width="16dp"
+				android:layout_height="16dp"
+				android:id="@+id/imageView5" android:src="@drawable/eq_mid"/>
+			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+			          android:textAppearance="?android:attr/textAppearanceSmall" android:text="10"
+			          android:id="@+id/tv_eq_mid" android:textSize="10dp"
+			          android:gravity="center_vertical" android:paddingLeft="2dp"
+			          android:paddingRight="6dp" android:layout_gravity="bottom"/>
+			<ImageView android:layout_width="16dp" android:layout_height="16dp"
+			           android:id="@+id/imageView6" android:src="@drawable/eq_tre"/>
+			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+			          android:textAppearance="?android:attr/textAppearanceSmall" android:text="10"
+			          android:id="@+id/tv_eq_tre" android:textSize="10dp"
+			          android:gravity="center_vertical" android:paddingLeft="2dp"
+			          android:paddingRight="6dp" android:layout_gravity="bottom"/>
+		</LinearLayout>
+	</LinearLayout>
 
-    <LinearLayout
+	<LinearLayout
         android:orientation="vertical"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -206,12 +245,12 @@ android:longClickable="true">
 
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/text_gps_info_title"
             android:id="@+id/text_gps_info_title"
-            android:paddingBottom="5dp"/>
+            android:paddingBottom="5dp" android:gravity="center_horizontal"/>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -291,7 +330,7 @@ android:longClickable="true">
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:id="@+id/ivGPSStatus"
-                android:src="@drawable/gps_disconnected"
+                android:src="@drawable/gps_coordinates"
                 android:baselineAlignBottom="false"/>
 
 	        <LinearLayout
@@ -473,7 +512,7 @@ android:longClickable="true">
 	<FrameLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:id="@+id/layout_test"
         android:layout_above="@+id/frameLayout2"
         android:layout_alignParentRight="true"

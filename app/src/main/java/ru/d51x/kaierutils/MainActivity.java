@@ -2,14 +2,12 @@ package ru.d51x.kaierutils;
 
 import android.app.Activity;
 import android.app.Notification;
-import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.GpsStatus;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -48,7 +46,6 @@ import java.util.TimeZone;
 import java.util.UUID;
 import java.util.Calendar;
 
-import pt.lighthouselabs.obd.commands.SystemOfUnits;
 import pt.lighthouselabs.obd.commands.protocol.*;
 import pt.lighthouselabs.obd.commands.engine.*;
 import pt.lighthouselabs.obd.commands.SpeedObdCommand;
@@ -89,9 +86,12 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private TextView tvAverageSpeed;
     private TextView tvMaxSpeed;
 
+	private TextView tv_eq_bass;
+	private TextView tv_eq_mid;
+	private TextView tv_eq_tre;
+
     private Button btnAGPSReset;
 
-    private ImageView ivGPSStatus;
     private ImageView ivVolumeLevel;
     private TextView tvGPSHangs;
     private ImageView ivSpeed;
@@ -193,9 +193,6 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         layout_waypoints = (LinearLayout) findViewById(R.id.layout_waypoints);
         layout_waypoints.setOnLongClickListener(this);
 
-        ivGPSStatus = (ImageView) findViewById(R.id.ivGPSStatus);
-        ivGPSStatus.setImageResource(R.drawable.gps_disconnected);
-
         ivTrackTime = (ImageView) findViewById(R.id.ivTrackTime);
 
         ivVolumeLevel = (ImageView) findViewById(R.id.ivVolumeLevel);
@@ -228,17 +225,21 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         tvMaxSpeed = (TextView) findViewById(R.id.tvMaxSpeed);
         tvMaxSpeed.setText( String.format( getString(R.string.text_max_speed), "---"));
 
+		tv_eq_bass = (TextView) findViewById (R.id.tv_eq_bass);
+		tv_eq_mid = (TextView) findViewById (R.id.tv_eq_mid);
+		tv_eq_tre = (TextView) findViewById (R.id.tv_eq_tre);
+
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED));
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH));
         registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP));
-        registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_TITLE_CHANGED));
+        registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED));
+        registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_EQ_CHANGED));
 
 
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_FIRST_FIX));
-        registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS));
         registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET));
 	}
 
@@ -287,11 +288,22 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 //App.mGlSets.isFirstStart = true;
 	            //App.mGlSets.prevTime = 3526000;
 	            //App.mGlSets.gpsTimeAtWay = 3526000;
+	            //TWUTIL_BROADCAST_ACTION_RADIO_CHANGED
+	            Intent ri = new Intent();
+	            ri.putExtra ("Frequency", "87.50");
+	            ri.putExtra ("Title", "RELAX-FM");
+	            ri.setAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED );
+	            sendBroadcast(ri);
 	            break;
             case R.id.btnSpeedDown:
                 //App.mGlSets.isDebug = !App.mGlSets.isDebug;
 	            //App.mGlSets.prevTime = 3526000;
 	            //App.mGlSets.gpsTimeAtWay = 3526000;
+	            Intent ri2 = new Intent();
+	            ri2.putExtra ("Frequency", "101.20");
+	            ri2.putExtra ("Title", (String) null);
+	            ri2.setAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED );
+	            sendBroadcast(ri2);
                 break;
             case R.id.btn_agps_reset:
                 Intent intent = new Intent();
@@ -385,6 +397,23 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 			            App.mGlSets.SleepModeCount) );
 
             }
+			else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_EQ_CHANGED ) )
+            {
+	            byte[] bArr = intent.getByteArrayExtra ("EQ");
+
+	            //bass bArr[1]
+	            //mid  bArr[2]
+	            //tree bArr[3]
+	            //loud bArr[5]
+	            /*
+					0	1	2	3	4	5	6	7	8	9	10	11	12	13	14
+					-7	-6	-5	-4	-3	-2	-1	0	1	2	3	4	5	6	7
+	             */
+	            tv_eq_bass.setText( Integer.toString ( bArr[1] - 7 ));
+	            tv_eq_mid.setText( Integer.toString (bArr[2] - 7));
+	            tv_eq_tre.setText( Integer.toString (bArr[3] - 7));
+
+            }
             else if (action.equals(GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS))
             {
                 int cntSats = intent.getIntExtra ("SatellitesTotal", 0);
@@ -400,25 +429,6 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                     tvGPSSatellitesGoodQACount.setTextColor(Color.YELLOW);
                 } else {
                     tvGPSSatellitesGoodQACount.setTextColor(Color.GREEN);
-                }
-
-            }
-            else if (action.equals(GlSets.GPS_BROADCAST_ACTION_EVENT_STATUS))
-            {
-                int status = intent.getIntExtra("gps_event", 0);
-                switch ( status ) {
-                    case GpsStatus.GPS_EVENT_STARTED:
-                        ivGPSStatus.setImageResource(R.drawable.gps_searching);  // запуск таймера, мигаем
-                        break;
-                    case GpsStatus.GPS_EVENT_STOPPED:
-                        ivGPSStatus.setImageResource(R.drawable.gps_disconnected);
-                        break;
-                    case GpsStatus.GPS_EVENT_FIRST_FIX:
-                        ivGPSStatus.setImageResource(R.drawable.gps_connected);
-                        break;
-                    default:
-                        ivGPSStatus.setImageResource(R.drawable.gps_disconnected);
-                        break;
                 }
 
             }
@@ -474,10 +484,10 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 tvGPSDistance.setText (  dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-" );
                 showFormatedTrackTime( App.mGlSets.gpsTimeAtWay_Type );
             }
-			else if ( action.equals( TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_TITLE_CHANGED)) {
-                String title = intent.getStringExtra("radio_title");
-                //Toast.makeText (App.getInstance(), title, 1).show();
-                Toast.makeText (context, title, 1).show();
+			else if ( action.equals( TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED)) {
+				String title = intent.getStringExtra("Title");
+				String freq = intent.getStringExtra ("Frequency");
+
             }
 		}
 	};

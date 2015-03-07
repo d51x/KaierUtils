@@ -10,8 +10,12 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 
 	public static int prevVolume = -1;
 	private static final String TAG = "TWUtilBroadcastReceiver";
+	private RadioToast rToast;
 
-    public TWUtilBroadcastReceiver () {	}
+    public TWUtilBroadcastReceiver () {
+
+    }
+
 	@Override
 	public void onReceive (Context context, Intent intent) {
 
@@ -59,6 +63,15 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 		{
 			TWUtilEx.setVolumeLevel( prevVolume );  // вернем громкость обратно, которая была до включения заднего хода
 			App.mGlSets.getVolumeLevel ();
+		}
+		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED))
+		{
+			String title = intent.getStringExtra("Title");
+			String freq = intent.getStringExtra ("Frequency");
+			if ( rToast != null ) { rToast.cancel (); rToast = null; }
+			rToast = new RadioToast(App.getInstance());
+			rToast.SetRadioText(title, freq);
+			rToast.showToast();
 		}
 	}
 
