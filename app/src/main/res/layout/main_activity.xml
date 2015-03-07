@@ -512,7 +512,7 @@ android:longClickable="true">
 	<FrameLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:id="@+id/layout_test"
         android:layout_above="@+id/frameLayout2"
         android:layout_alignParentRight="true"

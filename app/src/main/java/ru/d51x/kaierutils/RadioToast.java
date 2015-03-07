@@ -49,7 +49,6 @@ public class RadioToast {
 	public void cancel() {
 		if ( mToast != null) {
 			mToast.cancel();
-			mToast.
 			mToast = null;
 		}
 	}
