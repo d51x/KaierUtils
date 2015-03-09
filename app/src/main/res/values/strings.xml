@@ -70,11 +70,25 @@
 	<string name="menu_radio_show_toast_title">Всплывающее окно при переключении радиостанций</string>
 	<string name="menu_radio_skip_seeking_mode_title">Не показывать при поиске радиостанций</string>
 
+	<!-- Toasts -->
+	<string name="menu_category_toasts_radio_title">Radio toast</string>
+	<string name="menu_category_toasts_music_title">Music toast</string>
+	<string name="menu_radio_toast_text1_size_title">Размер текста в строке 1</string>
+	<string name="menu_radio_toast_text2_size_title">Размер текста в строке 2</string>
+	<string name="menu_music_toast_text1_size_title">Размер текста в строке 1</string>
+	<string name="menu_music_toast_text2_size_title">Размер текста в строке 2</string>
+	<string name="menu_music_toast_picture_width_title">Ширина картинки</string>
+	<string name="menu_music_toast_picture_height_title">Высота картинки</string>
+
+
+
 	<string name="menu_item_fixed_volume_level_at_startup_title">Уровень громкости</string>
 	<string name="fixed_volume_level_at_startup_summary">Текущее значение %1$d</string>
 	<string name="fixed_volume_level_at_startup_dialog">Выберите уровень громкости (от 1 до 10)</string>
 
-    <string name="action_settings">Settings</string>
+
+
+    <string name="action_settings">Настройки</string>
     <string name="title_activity_dynamic_sound_settings">Динамическое изменение громкости</string>
 
 
@@ -106,10 +120,8 @@
     <string name="text_gps_track_time_format_hour">ч</string>
     <string name="text_gps_track_time_format_sec">с</string>
 
-    <string name="btn_agps_reset">Сброс AGPS</string>
+    <string name="menu_agps_reset_title">Сброс AGPS</string>
 
-
-    <string name="text_gps_hangs">завис\n %1$d \nраз(а)</string>
 
     <string name="dsc_available">Включить динамическое изменение громкости</string>
     <string name="dsc_firstspeed_title">Минимальная скорость</string>

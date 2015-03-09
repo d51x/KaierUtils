@@ -340,7 +340,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
             // если проснулись, то надо дождаться набора скорости, т.е. если проснулись и скорость меньше 5, то не считаем время, мы же стоим на месте :)
             if ( App.GS.isStopedAfterWakeUp ) {
                 // проснулись и стоим на месте
-                if ( speed > MIN_SPEED ) {
+                if ( speed > 0 ) {
 	                App.GS.isStopedAfterWakeUp = false; // поехали после просыпания
                 }
             } else {
@@ -379,7 +379,5 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
             }
         }
         App.GS.prevTime = System.currentTimeMillis();
-	    long i;
-	    i = App.GS.prevTime;
     }
 }

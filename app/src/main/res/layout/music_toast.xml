@@ -10,31 +10,31 @@
 	<LinearLayout
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
-		android:layout_height="144dp" android:alpha="0.99">
+		android:layout_height="wrap_content" android:alpha="0.99" android:gravity="center_vertical">
 		<ImageView android:layout_width="128.0dip"
 		           android:layout_height="128.0dip"
 		           android:layout_marginLeft="8.0dip"
 		           android:layout_marginTop="8.0dip"
 		           android:layout_marginRight="8.0dip"
 		           android:layout_marginBottom="8.0dip"
-		           android:src="@drawable/toast_music" android:id="@+id/ivAlbumArt"/>
+		           android:src="@drawable/toast_music" android:id="@+id/ivAlbumArt"
+		           android:layout_gravity="center"/>
 		<LinearLayout
 			android:orientation="vertical"
 			android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:paddingLeft="20dp"
-			android:gravity="center_vertical">
-			<TextView android:textSize="48.0sp"
+			android:layout_height="wrap_content" android:paddingLeft="20dp"
+			android:gravity="center_vertical" android:layout_gravity="center_vertical"
+			android:paddingRight="20dp">
+			<TextView android:textSize="32.0sp"
 			          android:textStyle="bold"
 			          android:textColor="#fff0f0f0"
-			          android:gravity="bottom"
 			          android:id="@+id/tvTrackTitle"
-			          android:layout_width="wrap_content"
+			          android:layout_width="match_parent"
 			          android:layout_height="wrap_content"
-			          android:layout_marginTop="8dp"
 			          android:text="Small Text"
 				/>
-			<TextView android:textSize="25.0sp"
-			          android:textColor="#ff99ccff"
+			<TextView android:textSize="22.0sp"
+			          android:textColor="@android:color/holo_blue_light"
 			          android:layout_gravity="center_vertical"
 			          android:id="@+id/tvArtistAlbum"
 			          android:layout_width="wrap_content"

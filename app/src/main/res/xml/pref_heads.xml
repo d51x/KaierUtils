@@ -26,13 +26,15 @@
 		android:icon="@android:drawable/ic_menu_info_details"
 		android:title="@string/header_radio_title">
 	</header>
+	<!--
 	<header
 		android:fragment="ru.d51x.kaierutils.SettingsDynamicVolumeFragment"
 		android:icon="@android:drawable/ic_menu_info_details"
 		android:title="@string/header_dynamic_volume_title">
 	</header>
+	-->
 	<header
-		android:fragment="ru.d51x.kaierutils.SettingsPopupFragment"
+		android:fragment="ru.d51x.kaierutils.SettingsToastsFragment"
 		android:icon="@android:drawable/ic_menu_info_details"
 		android:title="@string/header_popup_title">
 	</header>

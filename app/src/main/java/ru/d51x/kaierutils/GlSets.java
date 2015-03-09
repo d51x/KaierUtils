@@ -42,6 +42,8 @@ public class GlSets {
 	public int FixedVolumeLevelAtReverse;
 	public int PercentVolumeLevelAtReverse;
 
+	public byte[] eqData;
+
     public int ReverseActivityCount;
     public int SleepModeCount;
     public boolean isStopedAfterWakeUp = false;
@@ -113,6 +115,15 @@ public class GlSets {
 
 	public boolean isShowRadioToast;
 	public boolean isSkipSeekingMode;
+
+
+	public int radioToastLine1TextSize;
+	public int radioToastLine2TextSize;
+
+	public int musicToastLine1TextSize;
+	public int musicToastLine2TextSize;
+	public int musicToastPictureWidth;
+	public int musicToastPictureHeight;
 
 	public GlSets() {
 		Volume = 3;
@@ -198,6 +209,16 @@ public class GlSets {
             dsc_DeltaToChange = prefs.getInt("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DELTA_TO_CHANGE", 5);
 
             gpsTimeAtWay_Type = prefs.getInt("CAR_SETTINGS__GPS_TIME_AT_WAY_TYPE", 0);
+
+			radioToastLine1TextSize  = Integer.parseInt (prefs.getString("CAR_SETTINGS__RADIO_TOAST_TEXT1_SIZE", "48"));
+			radioToastLine2TextSize  = Integer.parseInt (prefs.getString("CAR_SETTINGS__RADIO_TOAST_TEXT2_SIZE", "25"));
+
+			musicToastLine1TextSize  = Integer.parseInt (prefs.getString("CAR_SETTINGS__MUSIC_TOAST_TEXT1_SIZE", "32"));
+			musicToastLine2TextSize  = Integer.parseInt (prefs.getString("CAR_SETTINGS__MUSIC_TOAST_TEXT2_SIZE", "22"));
+			musicToastPictureWidth  = Integer.parseInt (prefs.getString("CAR_SETTINGS__MUSIC_TOAST_PICTURE_WIDTH", "128"));
+			musicToastPictureHeight  = Integer.parseInt (prefs.getString("CAR_SETTINGS__MUSIC_TOAST_PICTURE_HEIGHT", "128"));
+
+
 
 		} catch (Exception e) {
 

@@ -77,7 +77,9 @@ public class TWUtilEx {
 						if ( (message.arg1 == 3) && (message.arg2 == 0) ) {
 							if ( App.GS.isSleepMode ) {
 								SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP );
-                                App.GS.isSleepMode = false;
+                                App.GS.isSleepMode = false;  //wakeup
+								App.GS.isMoving = false;
+								App.GS.isStopedAfterWakeUp = true;
 							}
 						} else if ((message.arg1 == 3) && (message.arg2 == 1)) {
 							SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP );
@@ -170,11 +172,12 @@ public class TWUtilEx {
                     case TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA:    // 1025
 	                    if ( message.arg1 == 2) {   // и переключение и поиск
 		                    if ( !App.GS.isShowRadioToast) break;
-		                    if ( App.GS.isSkipSeekingMode && message.obj == null ) break;
+		                    String rdata = (String) message.obj;
+		                    if ( App.GS.isSkipSeekingMode && ( rdata == null || rdata.isEmpty () || rdata == "") ) break;
 		                    Intent ri = new Intent();
 		                    ri.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
 	                        ri.putExtra ("Frequency", String.format ("%1.2f", (float) message.arg2 / 100));
-	                        ri.putExtra("Title", (String) message.obj);
+	                        ri.putExtra("Title", rdata);
 		                    ri.setAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED);
 		                    App.getInstance ().sendBroadcast(ri);
 	                    }

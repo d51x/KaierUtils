@@ -1,9 +1,11 @@
 package ru.d51x.kaierutils;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.graphics.Bitmap;
@@ -54,7 +56,14 @@ public class MusicToast {
 
 	public void showToast() {
 
-		tvTrackTitle.setText ( TrackTitle );
+		tvTrackTitle.setTextSize ( App.GS.musicToastLine1TextSize );
+		tvArtistAlbum.setTextSize ( App.GS.musicToastLine2TextSize );
+
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( App.GS.musicToastPictureWidth, App.GS.musicToastPictureHeight );
+		ivAlbumArt.setLayoutParams(layoutParams);
+
+
+		tvTrackTitle.setText (TrackTitle);
 		tvArtistAlbum.setText ( AlbumArtist );
 		if ( mToast != null) { mToast.cancel();	}
 		mToast = new Toast(context);

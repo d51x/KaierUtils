@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils;
 
+import android.view.View;
 import android.widget.Toast;
 import android.content.Context;
 import android.widget.RelativeLayout;
@@ -20,23 +21,28 @@ public class RadioToast {
 
 	RadioToast(Context context) {
 		this.context = context;
-		this.mLayout = (RelativeLayout) ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(R.layout.radio_toast, null);
-		this.tvRadioText1 = (TextView) this.mLayout.findViewById (R.id.tvRadioText1);
-		this.tvRadioText2 = (TextView) this.mLayout.findViewById(R.id.tvRadioText2);
+		mLayout = (RelativeLayout) ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(R.layout.radio_toast, null);
+		tvRadioText1 = (TextView) this.mLayout.findViewById (R.id.tvRadioText1);
+		tvRadioText2 = (TextView) this.mLayout.findViewById(R.id.tvRadioText2);
 	}
 
 	public void SetRadioText(String text1, String text2) {
-		if ( text1 != null ) { // есть название
-			tvRadioText1.setText ( text1 );
-			tvRadioText2.setText ( String.format("%1$s MHz", text2) );
-		} else {
+		if ( (text1 == null) || (text1.isEmpty () ) || (text1 == "" ) ) { // есть название
 			tvRadioText1.setText ( String.format("%1$s MHz", text2) );
 			tvRadioText2.setText ( "" );
+			tvRadioText2.setVisibility ( View.GONE);
+
+		} else {
+			tvRadioText1.setText ( text1 );
+			tvRadioText2.setText ( String.format("%1$s MHz", text2) );
+			tvRadioText2.setVisibility (View.VISIBLE);
 		}
 	}
 
 	public void showToast() {
 
+		tvRadioText1.setTextSize ( App.GS.radioToastLine1TextSize );
+		tvRadioText2.setTextSize ( App.GS.radioToastLine2TextSize );
 
 		if ( mToast != null) { mToast.cancel();	}
 		mToast = new Toast(context);

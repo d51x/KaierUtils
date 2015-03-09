@@ -14,16 +14,7 @@
 			android:dependency="CAR_SETTINGS__VOLUME_AT_REVERSE__DO_CHANGE"
 			/>
 
-		<ru.d51x.kaierutils.SeekBarPreference
-			android:key="CAR_SETTINGS__VOLUME_AT_REVERSE__FIXED_LEVEL"
-			android:title="@string/menu_reverse_fixed_volume_level_title"
-			android:summary="@string/menu_reverse_fixed_volume_level_summary"
-			android:dialogTitle="@string/menu_reverse_fixed_volume_level_dialog"
-			android:defaultValue="4"
-			android:dependency="CAR_SETTINGS__VOLUME_AT_REVERSE__FIXED_LEVEL_AVAILABLE"
-			seekbar:maxValue="10"
-			seekbar:minValue="0"
-			/>
+
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/menu_category_reverse_percent_volume">
 		<CheckBoxPreference
