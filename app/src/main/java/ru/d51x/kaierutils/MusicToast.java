@@ -62,7 +62,17 @@ public class MusicToast {
 		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( App.GS.musicToastPictureWidth, App.GS.musicToastPictureHeight );
 		ivAlbumArt.setLayoutParams(layoutParams);
 
+/*
+ViewGroup.LayoutParams iv_params_b = image_view.getLayoutParams();
+iv_params_b.height = thumb_size;
+iv_params_b.width = thumb_size;
+image_view.setLayoutParams(iv_params_b);
 
+android.view.ViewGroup.LayoutParams layoutParams = myImageView.getLayoutParams();
+layoutParams.width = 30;
+layoutParams.height = 30;
+myImageView.setLayoutParams(layoutParams);
+* /
 		tvTrackTitle.setText (TrackTitle);
 		tvArtistAlbum.setText ( AlbumArtist );
 		if ( mToast != null) { mToast.cancel();	}
