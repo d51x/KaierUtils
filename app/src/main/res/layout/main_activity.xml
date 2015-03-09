@@ -203,7 +203,8 @@ android:longClickable="true">
 		<LinearLayout
 			android:orientation="horizontal"
 			android:layout_width="wrap_content"
-			android:layout_height="match_parent" android:layout_gravity="center_horizontal">
+			android:layout_height="match_parent" android:layout_gravity="center_horizontal"
+			android:id="@+id/layout_eq_data">
 			<ImageView
 				android:layout_width="16dp"
 				android:layout_height="16dp"
@@ -212,7 +213,7 @@ android:longClickable="true">
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:textAppearance="?android:attr/textAppearanceSmall"
-				android:text="10"
+				android:text="0"
 				android:id="@+id/tv_eq_bass" android:textSize="10dp"
 				android:gravity="center_vertical" android:paddingLeft="2dp"
 				android:paddingRight="6dp" android:layout_gravity="bottom"/>
@@ -221,14 +222,14 @@ android:longClickable="true">
 				android:layout_height="16dp"
 				android:id="@+id/imageView5" android:src="@drawable/eq_mid"/>
 			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-			          android:textAppearance="?android:attr/textAppearanceSmall" android:text="10"
+			          android:textAppearance="?android:attr/textAppearanceSmall" android:text="0"
 			          android:id="@+id/tv_eq_mid" android:textSize="10dp"
 			          android:gravity="center_vertical" android:paddingLeft="2dp"
 			          android:paddingRight="6dp" android:layout_gravity="bottom"/>
 			<ImageView android:layout_width="16dp" android:layout_height="16dp"
 			           android:id="@+id/imageView6" android:src="@drawable/eq_tre"/>
 			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-			          android:textAppearance="?android:attr/textAppearanceSmall" android:text="10"
+			          android:textAppearance="?android:attr/textAppearanceSmall" android:text="0"
 			          android:id="@+id/tv_eq_tre" android:textSize="10dp"
 			          android:gravity="center_vertical" android:paddingLeft="2dp"
 			          android:paddingRight="6dp" android:layout_gravity="bottom"/>
@@ -414,25 +415,16 @@ android:longClickable="true">
             android:layout_height="wrap_content"
             android:text="@string/text_device_name"
             android:id="@+id/txtDeviceName"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textIsSelectable="false"
             android:layout_gravity="right"/>
-
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_show_notification_icon"
-            android:id="@+id/switch_show_notification_icon"
-            android:checked="false"
-            android:gravity="center_vertical"
-            />
 
     </LinearLayout>
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/frameLayout2"
+        android:id="@+id/layout_statistics"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true">
 
@@ -514,7 +506,7 @@ android:longClickable="true">
 		android:layout_height="wrap_content"
         android:visibility="invisible"
         android:id="@+id/layout_test"
-        android:layout_above="@+id/frameLayout2"
+        android:layout_above="@+id/layout_statistics"
         android:layout_alignParentRight="true"
         android:layout_alignLeft="@+id/layout_gps_info">
 		<Button

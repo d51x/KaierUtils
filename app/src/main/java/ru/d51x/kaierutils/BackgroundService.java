@@ -2,13 +2,12 @@ package ru.d51x.kaierutils;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.provider.Settings;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 import android.app.Notification;
-import android.app.PendingIntent;
-import android.app.NotificationManager;
 
 public class BackgroundService extends Service {
 
@@ -36,10 +35,14 @@ public class BackgroundService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d ("BackgroundService", "onStartCommand");
+
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+		App.GS.isNotificationIconShow = prefs.getBoolean ("kaierutils_show_notification_icon", true);
+
         NotifyData notifyData = new  NotifyData( getApplicationContext() );
         notifyData.NotifyID = NotifyData.NOTIFY_ID;
         notifyData.Title = NotifyData.NOTIFICATION_TITLE;
-        notifyData.smallIcon = App.mGlSets.isNotificationIconShow ? R.drawable.notify_auto : 0;
+        notifyData.smallIcon = App.GS.isNotificationIconShow ? R.drawable.notify_auto : 0;
         notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
         Notification notification = notifyData.show();
         startForeground( NotifyData.NOTIFY_ID, notification);

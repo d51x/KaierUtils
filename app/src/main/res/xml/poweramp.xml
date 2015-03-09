@@ -1,0 +1,94 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:seekbar="http://schemas.android.com/apk/res/ru.d51x.kaierutils"
+	>
+	<SwitchPreference
+		android:key="CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE"
+		android:title="@string/menu_poweramp_interaction_title"
+		android:defaultValue="false"
+	/>
+
+	<CheckBoxPreference
+		android:key="CAR_SETTINGS__CONTROL_POWERAMP_SHOW_TOAST"
+		android:title="@string/menu_poweramp_show_toast_title"
+		android:defaultValue="false"
+		android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE"
+		/>
+
+	<CheckBoxPreference
+		android:key="CAR_SETTINGS__CONTROL_POWERAMP_WATCH_SLEEP"
+		android:title="@string/menu_poweramp_watch_sleep_title"
+		android:defaultValue="false"
+		android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE"
+	/>
+
+	<CheckBoxPreference
+		android:key="CAR_SETTINGS__CONTROL_POWERAMP_WATCH_WAKEUP"
+		android:title="@string/menu_poweramp_watch_wakeup_title"
+		android:defaultValue="false"
+		android:persistent="true"
+		android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE"
+	/>
+	<ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__CONTROL_POWERAMP_WAKEUP_DELAY"
+	                                      android:title="@string/menu_poweramp_wakeup_start_delay_title"
+	                                      android:summary="@string/menu_poweramp_wakeup_start_delay_summary"
+	                                      android:dialogTitle="@string/menu_poweramp_wakeup_start_delay_dialog"
+	                                      android:defaultValue="3000"
+	                                      seekbar:maxValue="10000"
+	                                      seekbar:minValue="500"
+	                                      android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_WATCH_WAKEUP"
+
+	/>
+
+
+	<CheckBoxPreference
+		android:key="CAR_SETTINGS__CONTROL_POWERAMP_WATCH_BOOTUP"
+		android:title="@string/menu_poweramp_watch_bootup_title"
+		android:defaultValue="false"
+		android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE"
+		/>
+
+	<ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__CONTROL_POWERAMP_START_DELAY"
+	                                      android:title="@string/menu_poweramp_watch_bootup_delay_title"
+	                                      android:summary="@string/menu_poweramp_watch_bootup_delay_summary"
+	                                      android:dialogTitle="@string/menu_poweramp_watch_bootup_delay_dialog"
+	                                      android:defaultValue="3000"
+	                                      seekbar:maxValue="10000"
+	                                      seekbar:minValue="500"
+	                                      android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_WATCH_BOOTUP"
+		/>
+
+
+	<PreferenceCategory android:title="@string/menu_poweramp_watch_longpress_category">
+		<CheckBoxPreference
+			android:key="CAR_SETTINGS__CONTROL_POWERAMP_NEXT_FOLDER"
+			android:title="@string/menu_poweramp_watch_longpress_next_title"
+			android:summary="@string/menu_poweramp_watch_longpress_next_summary"
+			android:defaultValue="false"
+			android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE"
+			/>
+		<EditTextPreference
+			android:key="CAR_SETTINGS__CONTROL_POWERAMP_CODE_NEXT_CAT"
+			android:title="@string/menu_poweramp_watch_longpress_next_code_title"
+			android:summary="@string/menu_poweramp_watch_longpress_next_code_summary"
+			android:defaultValue="22"
+			android:numeric="decimal"
+			android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_NEXT_FOLDER"
+		/>
+		<CheckBoxPreference
+			android:key="CAR_SETTINGS__CONTROL_POWERAMP_PREV_FOLDER"
+			android:title="@string/menu_poweramp_watch_longpress_prev_title"
+			android:summary="@string/menu_poweramp_watch_longpress_prev_summary"
+			android:defaultValue="false"
+			android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE"
+		/>
+		<EditTextPreference
+			android:key="CAR_SETTINGS__CONTROL_POWERAMP_CODE_PREV_CAT"
+			android:title="@string/menu_poweramp_watch_longpress_prev_code_title"
+			android:summary="@string/menu_poweramp_watch_longpress_prev_code_summary"
+			android:defaultValue="23"
+			android:numeric="decimal"
+			android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_PREV_FOLDER"
+		/>
+	</PreferenceCategory>
+
+</PreferenceScreen>

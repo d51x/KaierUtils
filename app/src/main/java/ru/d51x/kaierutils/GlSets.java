@@ -30,6 +30,8 @@ public class GlSets {
 	//public boolean isDebug = false;
 
     public boolean isNotificationIconShow;
+	public boolean isShowStatistics;
+	public boolean isShowEQData;
     public boolean isVolumeShowOnNotificationIcon;
 	public boolean isColorSpeed = false;
 
@@ -56,6 +58,7 @@ public class GlSets {
     public long wakeUpTime;
 
     public boolean isPowerAmpPlaying;
+    public boolean isNeedPowerAmpToPlayAfterWakeup = false;
     public boolean interactWithPowerAmp;
     public boolean needWatchSleepPowerAmp;
     public boolean needWatchWakeUpPowerAmp;
@@ -63,11 +66,15 @@ public class GlSets {
 
     public boolean pressNextFolderPowerAmp;
     public boolean pressPrevFolderPowerAmp;
+	public int codeNextFolder;
+	public int codePrevFolder;
+	public boolean isShowTrackInfoToast;
 
     public boolean pa_isPlaying;
     public boolean pa_isStarted;
 
     public int resumeDelayForPowerAmp = 3000;
+    public int startDelayForPowerAmp = 3000;
 
 
     public int gpsSpeed = 0;
@@ -102,6 +109,10 @@ public class GlSets {
     public int dsc_StepVolume = 1;    // шаг изменения громкости
     public int dsc_TimeToChange = 10;   // время в секундах, при котором не меняем громкость, если скорость упала, ниже порога или возросла выше и при этом не менялась
     public int dsc_DeltaToChange = 5;  // дельта изменения скорости, внутри которой не сработает изменение громкости
+
+
+	public boolean isShowRadioToast;
+	public boolean isSkipSeekingMode;
 
 	public GlSets() {
 		Volume = 3;
@@ -143,6 +154,14 @@ public class GlSets {
 			//BrightnessMode = getBrightnessMode ();
 
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+
+			// load general settings
+			isNotificationIconShow = prefs.getBoolean ("kaierutils_show_notification_icon", true);
+			isColorSpeed = prefs.getBoolean ("kaierutils_show_color_speed", false);
+			isShowStatistics = prefs.getBoolean ("kaierutils_show_statistics", true);
+			isShowEQData = prefs.getBoolean ("kaierutils_show_eq", false);
+
+			// load reverse settings
 			isNeedSoundDecreaseAtStartUp = prefs.getBoolean ("CAR_SETTINGS__VOLUME_AT_START_UP__DO_CHANGE", false);
 			VolumeLevelAtStartUp = prefs.getInt("CAR_SETTINGS__VOLUME_AT_START_UP__LEVEL", 3);
 			isNeedSoundDecreaseAtWakeUp = prefs.getBoolean ("CAR_SETTINGS__VOLUME_AT_WAKE_UP__DO_CHANGE", false);
@@ -156,13 +175,20 @@ public class GlSets {
 			PercentVolumeLevelAtReverse = prefs.getInt("CAR_SETTINGS__VOLUME_AT_REVERSE__PERCENTAGE_LEVEL", 30);
 
             interactWithPowerAmp = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE", false);
+            isShowTrackInfoToast = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_SHOW_TOAST", false);
             needWatchSleepPowerAmp = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_WATCH_SLEEP", false);
             needWatchWakeUpPowerAmp = prefs.getBoolean ("CAR_SETTINGS__CONTROL_POWERAMP_WATCH_WAKEUP", false);
             needWatchBootUpPowerAmp = prefs.getBoolean ("CAR_SETTINGS__CONTROL_POWERAMP_WATCH_BOOTUP", false);
             pressNextFolderPowerAmp = prefs.getBoolean ("CAR_SETTINGS__CONTROL_POWERAMP_NEXT_FOLDER", false);
             pressPrevFolderPowerAmp = prefs.getBoolean ("CAR_SETTINGS__CONTROL_POWERAMP_PREV_FOLDER", false);
-            resumeDelayForPowerAmp = prefs.getInt("CAR_SETTINGS__CONTROL_POWERAMP_START_DELAY", 3000);
+            resumeDelayForPowerAmp = prefs.getInt("CAR_SETTINGS__CONTROL_POWERAMP_WAKEUP_DELAY", 3000);
+			startDelayForPowerAmp = prefs.getInt("CAR_SETTINGS__CONTROL_POWERAMP_START_DELAY", 3000);
 
+			codeNextFolder = Integer.parseInt (prefs.getString ("CAR_SETTINGS__CONTROL_POWERAMP_CODE_NEXT_CAT", "22"));
+			codePrevFolder = Integer.parseInt (prefs.getString ("CAR_SETTINGS__CONTROL_POWERAMP_CODE_PREV_CAT", "23"));
+
+			isShowRadioToast = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_TOAST", false);
+			isSkipSeekingMode = prefs.getBoolean("CAR_SETTINGS__RADIO_SKIP_SEEKING_MODE", true);
 
             dsc_isAvailable = prefs.getBoolean("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DO_CHAGE", false);
             dsc_FirstSpeed = prefs.getInt("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__FIRST_SPEED", 40);

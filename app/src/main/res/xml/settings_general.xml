@@ -1,0 +1,23 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:seekbar="http://schemas.android.com/apk/res/ru.d51x.kaierutils"
+	>
+
+	<SwitchPreference   android:key="kaierutils_show_notification_icon"
+	                    android:title="@string/menu_general_show_notification_icon_title"
+	                    android:defaultValue="true"
+	/>
+	<SwitchPreference   android:key="kaierutils_show_color_speed"
+	                    android:title="@string/menu_general_color_speed_title"
+	                    android:defaultValue="false"
+		/>
+	<SwitchPreference   android:key="kaierutils_show_statistics"
+	                    android:title="@string/menu_general_show_statistics_title"
+	                    android:defaultValue="true"
+		/>
+	<SwitchPreference   android:key="kaierutils_show_eq"
+	                    android:title="@string/menu_general_show_eq_title"
+	                    android:summary="@string/menu_general_show_eq_summary"
+	                    android:defaultValue="false"
+		/>
+</PreferenceScreen>
+

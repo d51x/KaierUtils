@@ -4,13 +4,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
+import java.util.List;
 
 public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 
 
 	public static int prevVolume = -1;
 	private static final String TAG = "TWUtilBroadcastReceiver";
-	private RadioToast rToast;
+
 
     public TWUtilBroadcastReceiver () {
 
@@ -41,71 +45,79 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 		{	// изменение уровня громкости при sleep
 			SetVolumeAtWakeUp();
             // запомним время ухода в SleepMode
-            App.mGlSets.lastSleep = System.currentTimeMillis();
-            App.mGlSets.isStopedAfterWakeUp = false;
+            App.GS.lastSleep = System.currentTimeMillis();
+            App.GS.isStopedAfterWakeUp = false;
 		}
         // устройство проснулось (вышло из SleepMode)
 		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP ))
 		{
-	        App.mGlSets.SleepModeCount++; // увеличим счетчик просыпаний
-            App.mGlSets.isStopedAfterWakeUp = true;
-            App.mGlSets.wakeUpTime =  System.currentTimeMillis();
+	        App.GS.SleepModeCount++; // увеличим счетчик просыпаний
+            App.GS.isStopedAfterWakeUp = true;
+            App.GS.wakeUpTime =  System.currentTimeMillis();
 		}
         // включился задний ход
 		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_START ))
 		{
-			prevVolume = App.mGlSets.getVolumeLevel (); // запомнили текущую громкость
-            App.mGlSets.ReverseActivityCount++;         // увеличим счетчик включений заднего хода
+			prevVolume = App.GS.getVolumeLevel (); // запомнили текущую громкость
+            App.GS.ReverseActivityCount++;         // увеличим счетчик включений заднего хода
 			changeVolumeAtReverse();
 		}
         // задний ход выключился
 		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH ))
 		{
 			TWUtilEx.setVolumeLevel( prevVolume );  // вернем громкость обратно, которая была до включения заднего хода
-			App.mGlSets.getVolumeLevel ();
+			App.GS.getVolumeLevel ();
 		}
 		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED))
 		{
-			String title = intent.getStringExtra("Title");
-			String freq = intent.getStringExtra ("Frequency");
-			if ( rToast != null ) { rToast.cancel (); rToast = null; }
-			rToast = new RadioToast(App.getInstance());
-			rToast.SetRadioText(title, freq);
-			rToast.showToast();
+			ActivityManager activityManager = (ActivityManager) context.getSystemService("activity");
+			List<RunningTaskInfo> taskInfo = activityManager.getRunningTasks(1);
+			if ( taskInfo.size() <= 0 ||
+				 !((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("com.tw.radio")
+				)
+			{
+				String title = intent.getStringExtra("Title");
+				String freq = intent.getStringExtra ("Frequency");
+				App.rToast.cancel();
+				App.rToast.SetRadioText(title, freq);
+				App.rToast.showToast();
+			}
+
+
 		}
 	}
 
 	private void changeVolumeAtReverse() {
 		Log.d ("TWUtilBroadcastReceiver", "changeVolumeAtReverse ");
         // не нужно уменьшать громкость при включении заднего хода
-		if ( !App.mGlSets.isNeedSoundDecreaseAtReverse  ) {	return; }
+		if ( !App.GS.isNeedSoundDecreaseAtReverse  ) {	return; }
 
         // уменьшаем гроскость
-		if ( App.mGlSets.isFixedVolumeAtReverse ) {
+		if ( App.GS.isFixedVolumeAtReverse ) {
             // уменьшаем громкость до фиксированного значения, если громкость до включения была выше этого значения
-			if ( App.mGlSets.FixedVolumeLevelAtReverse <= prevVolume ) {
-				TWUtilEx.setVolumeLevel( App.mGlSets.FixedVolumeLevelAtReverse );
+			if ( App.GS.FixedVolumeLevelAtReverse <= prevVolume ) {
+				TWUtilEx.setVolumeLevel( App.GS.FixedVolumeLevelAtReverse );
 			}
-		} else if (  App.mGlSets.isPercentVolumeAtReverse ) {
+		} else if (  App.GS.isPercentVolumeAtReverse ) {
             // уменьшаем громкость до заданного процента от текущей
-			int newLevel = Math.round(prevVolume * App.mGlSets.PercentVolumeLevelAtReverse / 100);
+			int newLevel = Math.round(prevVolume * App.GS.PercentVolumeLevelAtReverse / 100);
 			TWUtilEx.setVolumeLevel( newLevel );
 		}
 	}
 
 	private void SetVolumeAtStartUp(){
 		Log.d ("TWUtilBroadcastReceiver", "SetVolumeAtStartUp ");
-		if ( App.mGlSets.isNeedSoundDecreaseAtStartUp ) {
-			int level = App.mGlSets.VolumeLevelAtStartUp;
-			App.mGlSets.setVolumeLevel(level, true);
+		if ( App.GS.isNeedSoundDecreaseAtStartUp ) {
+			int level = App.GS.VolumeLevelAtStartUp;
+			App.GS.setVolumeLevel(level, true);
 		}
 	}
 
 	private void SetVolumeAtWakeUp(){
 		Log.d ("TWUtilBroadcastReceiver", "SetVolumeAtWakeUp ");
-		if ( App.mGlSets.isNeedSoundDecreaseAtWakeUp ) {
-			int level = App.mGlSets.VolumeLevelAtWakeUp;
-			App.mGlSets.setVolumeLevel(level, true);
+		if ( App.GS.isNeedSoundDecreaseAtWakeUp ) {
+			int level = App.GS.VolumeLevelAtWakeUp;
+			App.GS.setVolumeLevel(level, true);
 		}
 	}
 }

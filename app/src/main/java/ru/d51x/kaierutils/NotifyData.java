@@ -47,7 +47,7 @@ public class NotifyData {
         builder.setContentTitle( this.Title );
         builder.setContentText( this.Text );
         builder.setAutoCancel(false);
-        //builder.setWhen( App.mGlSets.startDate);
+        //builder.setWhen( App.GS.startDate);
         if ( this.smallIcon > 0 ) builder.setSmallIcon( this.smallIcon );
         Notification notification = builder.build();
         notification.flags |= this.flags;

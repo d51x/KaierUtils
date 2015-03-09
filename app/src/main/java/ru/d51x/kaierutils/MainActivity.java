@@ -1,7 +1,6 @@
 package ru.d51x.kaierutils;
 
 import android.app.Activity;
-import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,19 +8,21 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuInflater;
-import android.widget.CompoundButton;
+import android.view.LayoutInflater;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
 import android.view.View;
-import android.provider.Settings;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 
 import android.view.Window;
 import android.view.Menu;
@@ -45,18 +46,21 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.Calendar;
+import android.widget.PopupWindow;
+import android.view.Gravity;
 
 import pt.lighthouselabs.obd.commands.protocol.*;
 import pt.lighthouselabs.obd.commands.engine.*;
 import pt.lighthouselabs.obd.commands.SpeedObdCommand;
 import pt.lighthouselabs.obd.enums.ObdProtocols;
 
-public class MainActivity extends Activity implements CompoundButton.OnCheckedChangeListener,
-                                                      View.OnClickListener, OnLongClickListener  {
+public class MainActivity extends Activity implements View.OnClickListener,
+													  OnLongClickListener {
 
-    private TextView tvDeviceName;
+	private Handler mHandler;
+	private PopupWindow pwindo;
+	private TextView tvDeviceName;
     private TextView tvCurrentVolume;
-    private Switch switch_show_notification_icon;
     private LinearLayout layout_gps_speed;
     private LinearLayout layout_waypoints;
     private LinearLayout layout_tracktime;
@@ -86,6 +90,9 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private TextView tvAverageSpeed;
     private TextView tvMaxSpeed;
 
+	private FrameLayout layout_statistics;
+	private LinearLayout layout_eq_data;
+
 	private TextView tv_eq_bass;
 	private TextView tv_eq_mid;
 	private TextView tv_eq_tre;
@@ -96,11 +103,14 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     private TextView tvGPSHangs;
     private ImageView ivSpeed;
     private ImageView ivSpeedChange;
-    //private ImageView ivSpeedChange2;
-    private TextView tvOBD_RPM;
+
+	private TextView tvOBD_RPM;
     private TextView tvOBD_Speed;
 
+
+
 	private Button btnSpeedUp, btnSpeedDown;
+	private SharedPreferences prefs;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -115,98 +125,65 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
 		setContentView (R.layout.main_activity);
 		Log.d ("MainActivity", "onCreate");
+
+		prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance ());
+
 		startService(new Intent(this, BackgroundService.class));
-		Toast.makeText (this, "Service started", 0).show();
 
         tvDeviceName = (TextView) findViewById(R.id.txtDeviceName);
-        String string_device_name = String.format(getString(R.string.text_device_name), TWUtilEx.GetDeviceID());
-        tvDeviceName.setText( string_device_name );
-
         tvCurrentVolume = (TextView) findViewById(R.id.tvCurrentVolum);
-        tvCurrentVolume.setText(Integer.toString(App.mGlSets.getVolumeLevel()) );
 
-        switch_show_notification_icon = (Switch) findViewById(R.id.switch_show_notification_icon);
-        App.mGlSets.isNotificationIconShow = Settings.System.getInt(getContentResolver(), NotifyData.OPTION_SHOW_NOTIFICATION_ICON, 0) == 1;
-        switch_show_notification_icon.setChecked(App.mGlSets.isNotificationIconShow);
-        switch_show_notification_icon.setOnCheckedChangeListener(this);
-
-        App.mGlSets.isColorSpeed = Settings.System.getInt(getContentResolver(), App.mGlSets.GLOBAL_SETTINGS_COLOR_SPEED, 0) == 1;
-        layout_gps_speed = (LinearLayout) findViewById(R.id.layout_gps_speed);
+		// color speed
+		layout_gps_speed = (LinearLayout) findViewById(R.id.layout_gps_speed);
         layout_gps_speed.setOnClickListener(this);
 
+		// track time
         layout_tracktime = (LinearLayout) findViewById(R.id.layout_tracktime);
-        layout_tracktime.setOnLongClickListener(this);
+        layout_tracktime.setOnLongClickListener (this);
         layout_tracktime.setOnClickListener(this);
 
-        tvReverseCount = (TextView) findViewById(R.id.tv_reverse_count);
-        tvReverseCount.setText( String.format(getString(R.string.text_reverse_count), App.mGlSets.ReverseActivityCount) );
+		// statistics
+		layout_statistics = (FrameLayout) findViewById (R.id.layout_statistics);
+		tvReverseCount = (TextView) findViewById(R.id.tv_reverse_count);
+		tvSleepModeCount = (TextView) findViewById(R.id.tv_sleep_mode_count);
+		tvSleepModeLastTime = (TextView) findViewById(R.id.tv_sleep_mode_last_time);
+		tvWorkingStart = (TextView) findViewById(R.id.tv_working_start);
 
-        tvSleepModeCount = (TextView) findViewById(R.id.tv_sleep_mode_count);
-        tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count), App.mGlSets.SleepModeCount) );
+		layout_eq_data = (LinearLayout) findViewById (R.id.layout_eq_data);
+		tv_eq_bass = (TextView) findViewById (R.id.tv_eq_bass);
+		tv_eq_mid = (TextView) findViewById (R.id.tv_eq_mid);
+		tv_eq_tre = (TextView) findViewById (R.id.tv_eq_tre);
 
-        tvSleepModeLastTime = (TextView) findViewById(R.id.tv_sleep_mode_last_time);
-        if ( App.mGlSets.lastSleep == 0) {
-            tvSleepModeLastTime.setVisibility( View.INVISIBLE );
-        } else {
-            Date date = new Date( App.mGlSets.lastSleep );
-            SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy  hh:mm");
-            tvSleepModeLastTime.setText( String.format(getString(R.string.text_sleep_mode_last_time), ft.format(date)) );
-            tvSleepModeLastTime.setVisibility( View.VISIBLE );
-        }
 
-        tvWorkingStart = (TextView) findViewById(R.id.tv_working_start);
-        Date date = new Date( App.mGlSets.startDate );
-        SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
-        tvWorkingStart.setText( String.format(getString(R.string.text_working_start), ft.format(date)) );
-
+		// gps info
         tvGPSSatellitesTotal = (TextView) findViewById(R.id.text_satellites_total);
         tvGPSSatellitesGoodQACount = (TextView) findViewById(R.id.text_satellites_good);
         tvGPSSatellitesInUse = (TextView) findViewById(R.id.text_satellites_inuse);
-        tvGPSSatellitesTotal.setText( "--");
-        tvGPSSatellitesInUse.setText( "--");
-        tvGPSSatellitesGoodQACount.setText( "--" );
-
         tvGPSAccuracy = (TextView) findViewById(R.id.text_gps_accuracy);
-        tvGPSAccuracy.setText( "---" );
-        tvGPSAltitude = (TextView) findViewById(R.id.text_gps_altitude);
-        tvGPSAltitude.setText( "---" );
-        tvGPSLatitude = (TextView) findViewById(R.id.text_gps_latitude);
-        tvGPSLatitude.setText( "--.-----" );
-        tvGPSLongitude = (TextView) findViewById(R.id.text_gps_longitude);
-        tvGPSLongitude.setText( "--.-----" );
-        tvGPSSpeed = (TextView) findViewById(R.id.text_gps_speed_value);
-        tvGPSSpeed.setText( "---" );
-        //tvGPSSpeed.setOnClickListener(this);
+		tvGPSAltitude = (TextView) findViewById(R.id.text_gps_altitude);
+		tvGPSLatitude = (TextView) findViewById(R.id.text_gps_latitude);
+		tvGPSLongitude = (TextView) findViewById(R.id.text_gps_longitude);
+		tvGPSSpeed = (TextView) findViewById(R.id.text_gps_speed_value);
 
+		// track distance
         tvTrackTime = (TextView) findViewById(R.id.tvTrackTime);
         tvTrackTime2 = (TextView) findViewById(R.id.tvTrackTime2);
-        tvTrackTime.setText( getString(R.string.text_gps_track_time_null));
-        tvTrackTime2.setText( getString(R.string.text_gps_track_time_null));
-
         tvTrackTimeMinOrSec = (TextView) findViewById(R.id.tvTrackTimeMinOrSec);
-        tvTrackTimeMinOrSec.setText(getString(R.string.text_gps_track_time_format_sec));
-        tvTrackTimeHourOrMin = (TextView) findViewById(R.id.tvTrackTimeHourOrMin);
-        tvTrackTimeHourOrMin.setText( getString(R.string.text_gps_track_time_format_min));
-
+		tvTrackTimeHourOrMin = (TextView) findViewById(R.id.tvTrackTimeHourOrMin);
 		tvGPSDistance = (TextView) findViewById(R.id.tvGPSDistance);
-		tvGPSDistance.setText( "----.-" );
         layout_waypoints = (LinearLayout) findViewById(R.id.layout_waypoints);
         layout_waypoints.setOnLongClickListener(this);
-
         ivTrackTime = (ImageView) findViewById(R.id.ivTrackTime);
+		tvAverageSpeed = (TextView) findViewById(R.id.tvAverageSpeed);
+		tvMaxSpeed = (TextView) findViewById(R.id.tvMaxSpeed);
 
         ivVolumeLevel = (ImageView) findViewById(R.id.ivVolumeLevel);
-        setVolumeIcon(ivVolumeLevel, App.mGlSets.getVolumeLevel());
-
         ivSpeed = (ImageView) findViewById(R.id.ivSpeed);
         ivSpeedChange = (ImageView) findViewById(R.id.ivSpeedChange);
-        //ivSpeedChange2 = (ImageView) findViewById(R.id.ivSpeedChange2);
         ivSpeedChange.setVisibility(View.INVISIBLE);
-        //ivSpeedChange2.setVisibility(View.INVISIBLE);
 
         tvGPSHangs = (TextView) findViewById(R.id.tvGPSHangs);
 		tvGPSHangs.setVisibility (View.INVISIBLE);
-        tvGPSHangs.setText(String.format(getString(R.string.text_gps_hangs), 0));
 
         tvOBD_RPM = (TextView) findViewById(R.id.text_obd_rpm);
         tvOBD_Speed = (TextView) findViewById(R.id.text_obd_speed);
@@ -220,46 +197,71 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         btnAGPSReset = (Button) findViewById(R.id.btn_agps_reset);
         btnAGPSReset.setOnClickListener(this);
 
-        tvAverageSpeed = (TextView) findViewById(R.id.tvAverageSpeed);
-        tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), "---"));
-        tvMaxSpeed = (TextView) findViewById(R.id.tvMaxSpeed);
-        tvMaxSpeed.setText( String.format( getString(R.string.text_max_speed), "---"));
+		registerReceivers(receiver);
 
-		tv_eq_bass = (TextView) findViewById (R.id.tv_eq_bass);
-		tv_eq_mid = (TextView) findViewById (R.id.tv_eq_mid);
-		tv_eq_tre = (TextView) findViewById (R.id.tv_eq_tre);
+	}
 
-        registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED));
-        registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH));
-        registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP));
-        registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED));
-        registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_EQ_CHANGED));
+	public void onStart() {
+		super.onStart();
 
+		String string_device_name = String.format(getString(R.string.text_device_name), TWUtilEx.GetDeviceID());
+		tvDeviceName.setText( string_device_name );
 
-        registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS));
-        registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED));
-        registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED));
-        registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_FIRST_FIX));
-        registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET));
+		// gps info
+		tvGPSSatellitesTotal.setText( "--");
+		tvGPSSatellitesInUse.setText( "--");
+		tvGPSSatellitesGoodQACount.setText( "--" );
+		tvGPSAccuracy.setText( "---" );
+		tvGPSAltitude.setText( "---" );
+		tvGPSLatitude.setText( "--.-----" );
+		tvGPSLongitude.setText( "--.-----" );
+		tvGPSSpeed.setText( "---" );
+
+		//track distance
+		tvTrackTime.setText( getString(R.string.text_gps_track_time_null));
+		tvTrackTime2.setText( getString(R.string.text_gps_track_time_null));
+		tvTrackTimeMinOrSec.setText(getString(R.string.text_gps_track_time_format_sec));
+		tvTrackTimeHourOrMin.setText( getString(R.string.text_gps_track_time_format_min));
+		tvGPSDistance.setText( "----.-" );
+		tvMaxSpeed.setText( String.format( getString(R.string.text_max_speed), "---"));
+		tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), "---"));
+
+		tvGPSHangs.setText(String.format(getString(R.string.text_gps_hangs), 0));
+
+	}
+
+	public void onPause() {
+		super.onPause();
+	}
+
+	public void onResume() {
+		super.onResume();
+
+		tvCurrentVolume.setText(Integer.toString (App.GS.getVolumeLevel ()) );
+		layout_eq_data.setVisibility ( App.GS.isShowEQData ? View.VISIBLE : View.INVISIBLE );
+		setVolumeIcon (ivVolumeLevel, App.GS.getVolumeLevel ());
+
+		process_statistics_layout_and_elements(App.GS.isShowStatistics);
+
 	}
 
     @Override
         public boolean onLongClick(View v) {
             switch (v.getId()) {
                 case R.id.layout_waypoints:
-                    App.mGlSets.totalDistance = 0;
+                    App.GS.totalDistance = 0;
                     tvGPSDistance.setText( "----.-" );
-                    Toast.makeText(this, "Счетчик был сброшен", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Счетчик был сброшен", Toast.LENGTH_SHORT).show ();
                     return true;
                 case R.id.layout_tracktime:
-	                switch(App.mGlSets.gpsTimeAtWay_Type) {
+	                switch(App.GS.gpsTimeAtWay_Type) {
 		                case 0:
-			                App.mGlSets.gpsTimeAtWay = 0;
-			                App.mGlSets.gpsPrevTimeAtWay = 0;
+			                App.GS.gpsTimeAtWay = 0;
+			                App.GS.gpsPrevTimeAtWay = 0;
 			                break;
 		                case 1:
-			                App.mGlSets.gpsTimeAtWayWithoutStops = 0;
-			                App.mGlSets.gpsPrevTimeAtWayWithoutStops = 0;
+			                App.GS.gpsTimeAtWayWithoutStops = 0;
+			                App.GS.gpsPrevTimeAtWayWithoutStops = 0;
 			                break;
 		                default:
 			                break;
@@ -285,25 +287,29 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
         switch (v.getId()) {
             case R.id.btnSpeedUp:
-                //App.mGlSets.isFirstStart = true;
-	            //App.mGlSets.prevTime = 3526000;
-	            //App.mGlSets.gpsTimeAtWay = 3526000;
+                //App.GS.isFirstStart = true;
+	            //App.GS.prevTime = 3526000;
+	            //App.GS.gpsTimeAtWay = 3526000;
 	            //TWUTIL_BROADCAST_ACTION_RADIO_CHANGED
 	            Intent ri = new Intent();
 	            ri.putExtra ("Frequency", "87.50");
 	            ri.putExtra ("Title", "RELAX-FM");
 	            ri.setAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED );
 	            sendBroadcast(ri);
+
+
 	            break;
             case R.id.btnSpeedDown:
-                //App.mGlSets.isDebug = !App.mGlSets.isDebug;
-	            //App.mGlSets.prevTime = 3526000;
-	            //App.mGlSets.gpsTimeAtWay = 3526000;
+                //App.GS.isDebug = !App.GS.isDebug;
+	            //App.GS.prevTime = 3526000;
+	            //App.GS.gpsTimeAtWay = 3526000;
 	            Intent ri2 = new Intent();
 	            ri2.putExtra ("Frequency", "101.20");
 	            ri2.putExtra ("Title", (String) null);
 	            ri2.setAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED );
 	            sendBroadcast(ri2);
+
+
                 break;
             case R.id.btn_agps_reset:
                 Intent intent = new Intent();
@@ -311,53 +317,29 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 sendBroadcast(intent);
                 break;
             case R.id.layout_gps_speed:
-                color_speed(tvGPSSpeed, App.mGlSets.gpsSpeed);
-                App.mGlSets.isColorSpeed = ! App.mGlSets.isColorSpeed;
-                Settings.System.putInt(this.getContentResolver(), App.mGlSets.GLOBAL_SETTINGS_COLOR_SPEED, App.mGlSets.isColorSpeed ? 1 : 0);
+                color_speed(tvGPSSpeed, App.GS.gpsSpeed);
+                App.GS.isColorSpeed = ! App.GS.isColorSpeed;
+	            PreferenceManager.getDefaultSharedPreferences (App.getInstance ()).edit().putBoolean ("kaierutils_show_color_speed", App.GS.isColorSpeed).commit ();
                 break;
             case R.id.layout_tracktime:
-                App.mGlSets.gpsTimeAtWay_Type++;
-                if ( App.mGlSets.gpsTimeAtWay_Type > 1) App.mGlSets.gpsTimeAtWay_Type = 0;
-                if ( App.mGlSets.gpsTimeAtWay_Type == 0) {
+                App.GS.gpsTimeAtWay_Type++;
+                if ( App.GS.gpsTimeAtWay_Type > 1) App.GS.gpsTimeAtWay_Type = 0;
+                if ( App.GS.gpsTimeAtWay_Type == 0) {
                     Toast.makeText(this, "Пройденное время с учетом простоя", Toast.LENGTH_SHORT).show();
-                } else if (App.mGlSets.gpsTimeAtWay_Type == 1) {
+                } else if (App.GS.gpsTimeAtWay_Type == 1) {
                     Toast.makeText(this, "Пройденное время без учета простоя", Toast.LENGTH_SHORT).show();
                 }
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
-                prefs.edit().putInt("CAR_SETTINGS__GPS_TIME_AT_WAY_TYPE", App.mGlSets.gpsTimeAtWay_Type);
+                prefs.edit().putInt("CAR_SETTINGS__GPS_TIME_AT_WAY_TYPE", App.GS.gpsTimeAtWay_Type);
                 prefs.edit().commit();
                 // сменить иконку, сменить текст
-                showFormatedTrackTime( App.mGlSets.gpsTimeAtWay_Type );
+                showFormatedTrackTime( App.GS.gpsTimeAtWay_Type );
                 break;
             default:
                 break;
         }
     }
 
-
-
-
-
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        int id = buttonView.getId();
-        NotifyData notifyData = new NotifyData( getApplicationContext() );
-        switch (id){
-            case R.id.switch_show_notification_icon:
-                Settings.System.putInt(this.getContentResolver(), NotifyData.OPTION_SHOW_NOTIFICATION_ICON, isChecked ? 1 : 0);
-                App.mGlSets.isNotificationIconShow = isChecked;
-                notifyData.smallIcon = (App.mGlSets.isNotificationIconShow) ? R.drawable.notify_auto : 0;
-                notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-                notifyData.show();
-                break;
-            default:
-                break;
-        }
-
-
-
-    }
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
@@ -372,20 +354,20 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH ) )
             {
                 tvReverseCount.setText( String.format(getString(R.string.text_reverse_count),
-                                                      App.mGlSets.ReverseActivityCount) );
+                                                      App.GS.ReverseActivityCount) );
             }
             else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP ) )
             {
 //                tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count),
-//                        App.mGlSets.SleepModeCount) );
+//                        App.GS.SleepModeCount) );
 
-                if ( App.mGlSets.lastSleep == 0)
+                if ( App.GS.lastSleep == 0)
                 {
                     tvSleepModeLastTime.setVisibility( View.INVISIBLE );
                 }
                 else
                 {
-                    Date date = new Date( App.mGlSets.lastSleep );
+                    Date date = new Date( App.GS.lastSleep );
                     SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
                     tvSleepModeLastTime.setText( String.format("%s", ft.format(date)) );
                     tvSleepModeLastTime.setVisibility( View.VISIBLE );
@@ -394,7 +376,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP ) )
             {
 	            tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count),
-			            App.mGlSets.SleepModeCount) );
+			            App.GS.SleepModeCount) );
 
             }
 			else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_EQ_CHANGED ) )
@@ -433,9 +415,9 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
             }
             else if (action.equals(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET)) {
-				App.mGlSets.cntGpsHangs++;
+				App.GS.cntGpsHangs++;
 				tvGPSHangs.setVisibility (View.VISIBLE);
-                tvGPSHangs.setText(String.format(getString(R.string.text_gps_hangs), App.mGlSets.cntGpsHangs));
+                tvGPSHangs.setText (String.format (getString (R.string.text_gps_hangs), App.GS.cntGpsHangs));
             }
             else if (action.equals(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED)) {
                 int speed = intent.getIntExtra("Speed", 0);
@@ -473,16 +455,16 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
 				color_speed(tvGPSSpeed, speed);
 
-                tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), Integer.toString( App.mGlSets.gpsAverageSpeed)));
-                tvMaxSpeed.setText( String.format( getString(R.string.text_max_speed), Integer.toString( App.mGlSets.gpsMaxSpeed)));
+                tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), Integer.toString( App.GS.gpsAverageSpeed)));
+                tvMaxSpeed.setText( String.format( getString(R.string.text_max_speed), Integer.toString( App.GS.gpsMaxSpeed)));
 
-                if ( !App.mGlSets.dsc_isAvailable ) {
+                if ( !App.GS.dsc_isAvailable ) {
                     ivSpeedChange.setVisibility(View.INVISIBLE);
                 }
-                float dist = App.mGlSets.totalDistance / 1000;
+                float dist = App.GS.totalDistance / 1000;
 
                 tvGPSDistance.setText (  dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-" );
-                showFormatedTrackTime( App.mGlSets.gpsTimeAtWay_Type );
+                showFormatedTrackTime( App.GS.gpsTimeAtWay_Type );
             }
 			else if ( action.equals( TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED)) {
 				String title = intent.getStringExtra("Title");
@@ -513,14 +495,8 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         // Операции для выбранного пункта меню
         switch (item.getItemId())
         {
-            case R.id.menu_sound_settings:
-                show_sound_settings();
-                return true;
-            case R.id.menu_poweramp_control:
-                show_poweramp_control();
-                return true;
-	        case R.id.menu_dynamic_sound_control:
-		        show_dynamic_sound_settings();
+	        case R.id.menu_general_settings:
+		        show_general_settings();
 		        return true;
 	        case R.id.menu_odb2_settings:
 		        show_avalaible_BT_devices( MainActivity.this );
@@ -530,38 +506,18 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         }
     }
 
-    private void show_sound_settings() {
-        try {
-            Intent it = new Intent();
-            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.SoundSettingsPreferenceActivity");
-            //it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(it);
-        } catch (Exception e) {
-        }
-    }
+	private void show_general_settings() {
+		try {
+			Intent it = new Intent();
+			it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.SettingsActivity");
+			//it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			startActivity(it);
+		} catch (Exception e) {
+		}
 
-    private void show_poweramp_control() {
-        try {
-            Intent it = new Intent();
-            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.PowerAmpPreferenceActivity");
-            //it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(it);
-        } catch (Exception e) {
-        }
-    }
 
-    private void show_dynamic_sound_settings() {
-        try {
-            Intent it = new Intent();
-            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.DynamicSoundSettingsActivity");
-            //it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(it);
-        } catch (Exception e) {
-        }
-    }
+	}
 
     private void setVolumeIcon(ImageView iv, int vol) {
         if ( vol < 1 ) {
@@ -577,15 +533,15 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     }
 
     private void  processDynamicVoume(int speed, int grow) {
-        if ( !App.mGlSets.dsc_isAvailable) return;
-        int  t = Math.abs(speed - App.mGlSets.dsc_FirstSpeed) / App.mGlSets.dsc_StepSpeed;
+        if ( !App.GS.dsc_isAvailable) return;
+        int  t = Math.abs(speed - App.GS.dsc_FirstSpeed) / App.GS.dsc_StepSpeed;
         switch ( grow ){
             case -1:
                 ivSpeedChange.setImageResource(R.drawable.speed_down);
                 ivSpeedChange.setVisibility(View.VISIBLE);
 
 
-                //if ( Math.abs( speed - (App.mGlSets.dsc_FirstSpeed + t*App.mGlSets.dsc_StepSpeed) ) > App.mGlSets.dsc_DeltaToChange  ) {
+                //if ( Math.abs( speed - (App.GS.dsc_FirstSpeed + t*App.GS.dsc_StepSpeed) ) > App.GS.dsc_DeltaToChange  ) {
                     //ivSpeedChange2.setImageResource(R.drawable.speed_down_2);
                     //ivSpeedChange2.setVisibility(View.VISIBLE);
                 //} else {
@@ -596,7 +552,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 ivSpeedChange.setImageResource(R.drawable.speed_up);
                 ivSpeedChange.setVisibility(View.VISIBLE);
 
-                //if ( Math.abs( speed - (App.mGlSets.dsc_FirstSpeed + t*App.mGlSets.dsc_StepSpeed) ) > App.mGlSets.dsc_DeltaToChange  ) {
+                //if ( Math.abs( speed - (App.GS.dsc_FirstSpeed + t*App.GS.dsc_StepSpeed) ) > App.GS.dsc_DeltaToChange  ) {
                     //ivSpeedChange2.setImageResource(R.drawable.speed_up_2);
                     //ivSpeedChange2.setVisibility(View.VISIBLE);
                 //} else {
@@ -611,7 +567,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
                 break;
         }
-        App.mGlSets.gpsPrevSpeed = speed;
+        App.GS.gpsPrevSpeed = speed;
     }
 
     private void show_avalaible_BT_devices( Context context) {
@@ -646,14 +602,14 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
                 int position = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
                 String deviceAddress = devices.get(position);
                 // TODO save deviceAddress
-                App.mGlSets.BT_deviceAddress = deviceAddress;
+                App.GS.BT_deviceAddress = deviceAddress;
             }
         });
 
         alertDialog.setTitle("Choose Bluetooth device");
         alertDialog.show();
 
-        if ( App.mGlSets.BT_deviceAddress != "unknown" ) BT_connect(App.mGlSets.BT_deviceAddress);
+        if ( App.GS.BT_deviceAddress != "unknown" ) BT_connect(App.GS.BT_deviceAddress);
     }
 
     private void BT_connect(String deviceAddress) {
@@ -700,8 +656,9 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
     }
 
 	private void color_speed(TextView tv, int speed) {
-		if ( App.mGlSets.isColorSpeed ) {
-			if ( speed < 10 ) tv.setTextColor( Color.LTGRAY);
+		if ( App.GS.isColorSpeed ) {
+			//if ( speed < 10 ) tv.setTextColor( Color.LTGRAY);
+			if ( speed < 10 ) tv.setTextColor( Color.BLUE);
 			else if ( speed < 40 ) tv.setTextColor( Color.rgb(0,255,255));
 			else if ( speed < 60 ) tv.setTextColor( Color.rgb(0,255,144));
 			else if ( speed < 80 ) tv.setTextColor( Color.rgb(182,255,0));
@@ -717,11 +674,11 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         long tm = 0;
         if ( wayType == 0)
         {
-            tm = App.mGlSets.gpsTimeAtWay;// - TimeZone.getDefault().getOffset(0L);
+            tm = App.GS.gpsTimeAtWay;// - TimeZone.getDefault().getOffset(0L);
             // поменять значек
             ivTrackTime.setImageResource(R.drawable.track_time_0);
         } else if ( wayType == 1) {
-            tm =  App.mGlSets.gpsTimeAtWayWithoutStops;// - TimeZone.getDefault().getOffset(0L);
+            tm =  App.GS.gpsTimeAtWayWithoutStops;// - TimeZone.getDefault().getOffset(0L);
             ivTrackTime.setImageResource(R.drawable.track_time_1);
 
         }
@@ -745,6 +702,48 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
         }
     }
+
+	private void registerReceivers(BroadcastReceiver receiver) {
+		registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED));
+		registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH));
+		registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP));
+		registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED));
+		registerReceiver(receiver, new IntentFilter(TWUtilConst.TWUTIL_BROADCAST_ACTION_EQ_CHANGED));
+
+
+		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS));
+		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED));
+		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED));
+		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_FIRST_FIX));
+		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET));
+	}
+
+	private void  process_statistics_layout_and_elements(boolean isShow) {
+
+		if ( isShow ) {
+			tvReverseCount.setText( String.format(getString(R.string.text_reverse_count), App.GS.ReverseActivityCount) );
+			tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count), App.GS.SleepModeCount) );
+
+			if ( App.GS.lastSleep == 0) {
+				tvSleepModeLastTime.setVisibility( View.INVISIBLE );
+			} else {
+				Date date = new Date( App.GS.lastSleep );
+				SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy  hh:mm");
+				tvSleepModeLastTime.setText( String.format(getString(R.string.text_sleep_mode_last_time), ft.format(date)) );
+				tvSleepModeLastTime.setVisibility( View.VISIBLE );
+			}
+			Date date = new Date( App.GS.startDate );
+			SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
+			tvWorkingStart.setText( String.format(getString(R.string.text_working_start), ft.format(date)) );
+			layout_statistics.setVisibility ( View.VISIBLE );
+		} else {
+			layout_statistics.setVisibility ( View.INVISIBLE );
+		}
+	}
+
+
+
+
 }
 
 

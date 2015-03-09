@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_sound_settings"
-          android:title="@string/title_settings_activity"
+    <item android:id="@+id/menu_general_settings"
+          android:title="@string/action_settings"
         />
-    <item android:id="@+id/menu_poweramp_control"
-          android:title="@string/title_activity_power_amp_preference"
-        />
-	<item android:id="@+id/menu_dynamic_sound_control"
-	      android:title="@string/text_dynamic_sound_settings"
-		/>
 	<item android:id="@+id/menu_odb2_settings"
 	      android:title="@string/text_obd2_settings"
 		/>

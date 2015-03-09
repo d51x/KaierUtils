@@ -1,0 +1,39 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:seekbar="http://schemas.android.com/apk/res/ru.d51x.kaierutils"
+	>
+	<PreferenceCategory android:title="@string/menu_category_startup_change_volume">
+	    <CheckBoxPreference
+	        android:key="CAR_SETTINGS__VOLUME_AT_START_UP__DO_CHANGE"
+	        android:title="@string/menu_startup_volume_change_title"
+	        android:defaultValue="false"
+		/>
+
+		<ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__VOLUME_AT_START_UP__LEVEL"
+                                             android:title="@string/menu_startup_volume_level_title"
+                                             android:summary="@string/menu_startup_volume_level_summary"
+                                             android:dialogTitle="@string/menu_startup_volume_level_dialog"
+                                             android:defaultValue="4"
+                                             seekbar:maxValue="10"
+                                             seekbar:minValue="0"
+                                             android:dependency="CAR_SETTINGS__VOLUME_AT_START_UP__DO_CHANGE"
+
+			/>
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="@string/menu_category_wakeup_change_volume">
+		<CheckBoxPreference
+			android:key="CAR_SETTINGS__VOLUME_AT_WAKE_UP__DO_CHANGE"
+			android:title="@string/menu_wakeup_volume_change_title"
+			android:defaultValue="false"
+		/>
+		<ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__VOLUME_AT_WAKE_UP__LEVEL"
+		                                      android:title="@string/menu_wakeup_volume_level_title"
+		                                      android:summary="@string/menu_wakeup_volume_level_summary"
+		                                      android:dialogTitle="@string/menu_wakeup_volume_level_dialog"
+		                                      android:defaultValue="4"
+		                                      seekbar:maxValue="10"
+		                                      seekbar:minValue="0"
+		                                      android:dependency="CAR_SETTINGS__VOLUME_AT_WAKE_UP__DO_CHANGE"
+		/>
+	</PreferenceCategory>
+</PreferenceScreen>

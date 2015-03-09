@@ -75,14 +75,14 @@ public class TWUtilEx {
 				switch (message.what) {
 					case TWUtilConst.TWUTIL_COMMAND_SLEEP:
 						if ( (message.arg1 == 3) && (message.arg2 == 0) ) {
-							if ( App.mGlSets.isSleepMode ) {
+							if ( App.GS.isSleepMode ) {
 								SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP );
-                                App.mGlSets.isSleepMode = false;
+                                App.GS.isSleepMode = false;
 							}
 						} else if ((message.arg1 == 3) && (message.arg2 == 1)) {
 							SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP );
-                            App.mGlSets.isSleepMode = true;
-                            App.mGlSets.isMoving = false; // если спим, значит стоим :)
+                            App.GS.isSleepMode = true;
+                            App.GS.isMoving = false; // если спим, значит стоим :)
 						} else if ( (message.arg1 == 1) && (message.arg2 == 0) ) {
 							SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_SHUTDOWN );
 						}
@@ -93,46 +93,42 @@ public class TWUtilEx {
 					case TWUtilConst.TWUTIL_COMMAND_REVERSE_ACTIVITY:
 						if ( message.arg1 == 0 ) {
 							SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH );
-                            App.mGlSets.isReverseMode = false;
+                            App.GS.isReverseMode = false;
 						} else {
-							if ( !App.mGlSets.isReverseMode ) {
+							if ( !App.GS.isReverseMode ) {
 								SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_START );
-                                App.mGlSets.isReverseMode = true;
+                                App.GS.isReverseMode = true;
 							}
 						}
 						break;
 					case TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL:
-                        if ( App.mGlSets.isReverseMode ) break;
+                        if ( App.GS.isReverseMode ) break;
                         curVolume = message.arg1 & Integer.MAX_VALUE;
-                        App.mGlSets.setVolumeLevel(curVolume, false);
+                        App.GS.setVolumeLevel(curVolume, false);
 						SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED,
 								             TWUtilConst.TWUTIL_BROADCAST_ACTION_VOLUME_CHANGED, curVolume);
 						break;
 //					case TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS:
 //						curBrightness = message.arg1;
 //						curBrightnessMode = message.arg2;
-//						App.mGlSets.setBrightnessLevel (curBrightness, false);
-//						App.mGlSets.setBrightnessMode (curBrightnessMode, false);
+//						App.GS.setBrightnessLevel (curBrightness, false);
+//						App.GS.setBrightnessMode (curBrightnessMode, false);
 //						break;
                     case TWUtilConst.TWUTIL_COMMAND_KEY_PRESS:
                         if ( message.arg1 == 2) {   // долгое нажатие
-                            switch ( message.arg2) {
-                                case TWUtilConst.TWUTIL_SVC_BUTTON_NEXT:
+
+	                        if ( message.arg2 == App.GS.codeNextFolder ) {
+                                //case TWUtilConst.TWUTIL_SVC_BUTTON_NEXT:
                                     SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
                                                          TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
                                                          TWUtilConst.TWUTIL_SVC_BUTTON_NEXT);
-                                    break;
-                                case TWUtilConst.TWUTIL_SVC_BUTTON_PREV:
+	                        } else if ( message.arg2 == App.GS.codePrevFolder ) {
+                                //case TWUtilConst.TWUTIL_SVC_BUTTON_PREV:
                                     SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
                                                          TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED,
                                                          TWUtilConst.TWUTIL_SVC_BUTTON_PREV);
-                                    break;
-
-                                default:
-                                    break;
-                            }
+	                        }
                         }
-
                         switch ( message.arg2 ) {
                             case TWUtilConst.TWUTIL_CODE_MUSIC:             // = 41;
                                 setPowerAmpPlayed();
@@ -173,6 +169,8 @@ public class TWUtilEx {
 	                    break;
                     case TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA:    // 1025
 	                    if ( message.arg1 == 2) {   // и переключение и поиск
+		                    if ( !App.GS.isShowRadioToast) break;
+		                    if ( App.GS.isSkipSeekingMode && message.obj == null ) break;
 		                    Intent ri = new Intent();
 		                    ri.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
 	                        ri.putExtra ("Frequency", String.format ("%1.2f", (float) message.arg2 / 100));
@@ -209,6 +207,8 @@ public class TWUtilEx {
 			mTWUtilRadio.start ();
 			mTWUtilRadio.addHandler (TWUTIL_HANDLER, mTWUtilHandler);
 		}
+
+		initEqData();
 	}
 
 	public void Destroy() {
@@ -381,5 +381,17 @@ public class TWUtilEx {
 		}, 500);
 	}
 
-
+	public static void initEqData() {
+		if ( ! isTWUtilAvailable() ) return;
+		TWUtil mTW = new TWUtil ();
+		if (mTW.open (new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_EQ}) == 0) {
+			try {
+				mTW.start ();
+				mTW.write ( TWUtilConst.TWUTIL_CONTEXT_EQ, 255);
+				mTW.stop ();
+				mTW.close ();
+			} catch (Exception e) {
+			}
+		}
+	}
 }

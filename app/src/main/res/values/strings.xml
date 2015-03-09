@@ -3,42 +3,89 @@
 
     <string name="app_name">KaierUtils</string>
 
+	<!-- menu headers -->
+    <string name="header_general_title">Общее</string>
+	<string name="header_reverse_title">Задний ход</string>
+	<string name="header_sleep_wakeup_title">Sleep mode/WakeUp</string>
+	<string name="header_poweramp_title">PowerAmp</string>
+	<string name="header_radio_title">Радио</string>
+	<string name="header_dynamic_volume_title">Динамическая громкость</string>
+	<string name="header_popup_title">Всплывающее окно</string>
+
+	<!-- general menu -->
+	<string name="menu_general_show_notification_icon_title">Иконка статуса</string>
+	<string name="menu_general_color_speed_title">Цветная скорость</string>
+	<string name="menu_general_show_statistics_title">Отображать статистику</string>
+	<string name="menu_general_show_eq_title">Отображать данные эквалайзера под громкостью</string>
+	<string name="menu_general_show_eq_summary">Под громкостью отображаются уровни низких, средних, высоких частот</string>
+
+	<!-- reverse menu -->
+	<string name="menu_category_reverse_fixed_volume"></string>
+	<string name="menu_category_reverse_percent_volume"></string>
+	<string name="menu_reverse_change_volume_title">Уменьшать громкости при включении ЗХ</string>
+	<string name="menu_reverse_fixed_volume_available_title">Уменьшение громкости до уровня</string>
+	<string name="menu_reverse_fixed_volume_level_title">Уровень громкости</string>
+	<string name="menu_reverse_fixed_volume_level_summary">Текущее значение %1$d</string>
+	<string name="menu_reverse_fixed_volume_level_dialog">Выберите уровень громкости (от 1 до 10)</string>
+	<string name="menu_reverse_percent_volume_available_title">Уменьшение громкости на процент</string>
+	<string name="menu_reverse_percent_volume_level_title">Процент уменьшения</string>
+	<string name="menu_reverse_percent_volume_level_summary">Текущее значение %1$d </string>
+	<string name="menu_reverse_percent_volume_level_dialog">Введите процент уменьшения</string>
+
+	<!-- sleep mode / wake up -->
+	<string name="menu_category_startup_change_volume">Громкость при включении устройства</string>
+	<string name="menu_startup_volume_change_title">Изменять громкость при запуске</string>
+	<string name="menu_startup_volume_level_title">Уровень громкости</string>
+	<string name="menu_startup_volume_level_summary">Текущее значение %1$d</string>
+	<string name="menu_startup_volume_level_dialog">Выберите уровень громкости (от 1 до 10) </string>
+	<string name="menu_category_wakeup_change_volume">Громкость при просыпании устройства</string>
+	<string name="menu_wakeup_volume_change_title">Изменять громкость при просыпании</string>
+	<string name="menu_wakeup_volume_level_title">Уровень громкости</string>
+	<string name="menu_wakeup_volume_level_summary">Текущее значение %1$d</string>
+	<string name="menu_wakeup_volume_level_dialog">Выберите уровень громкости (от 1 до 10) </string>
+
+	<!-- PowerAmp -->
+	<string name="menu_poweramp_interaction_title">Взаимодействовать с PowerAmp</string>
+	<string name="menu_poweramp_show_toast_title">Показывать тоаст с информацией о треке</string>
+	<string name="menu_poweramp_watch_sleep_title">Ставить на паузу при уходе в sleep</string>
+	<string name="menu_poweramp_watch_wakeup_title">Начинать воспроизведение при просыпании</string>
+	<string name="menu_poweramp_wakeup_start_delay_title">Задержка включения воспроизведения</string>
+	<string name="menu_poweramp_wakeup_start_delay_summary">PowerAmp будет запущен с задержкой после просыпания (через %1$d мсек)</string>
+	<string name="menu_poweramp_wakeup_start_delay_dialog">Укажите значение (мсек)</string>
+	<string name="menu_poweramp_watch_bootup_title">Начинать воспроизведение при включении</string>
+	<string name="menu_poweramp_watch_bootup_delay_title">Задержка включения воспроизведения</string>
+	<string name="menu_poweramp_watch_bootup_delay_summary">PowerAmp будет запущен с задержкой после включения (через %1$d мсек)</string>
+	<string name="menu_poweramp_watch_bootup_delay_dialog">Укажите значение (мсек)</string>
+	<string name="menu_poweramp_watch_longpress_category">Переключение каталогов кнопками руля</string>
+	<string name="menu_poweramp_watch_longpress_next_title">Переключать на следующий каталог</string>
+	<string name="menu_poweramp_watch_longpress_next_summary">Отслеживание долгого нажатия кнопки переключения "вперед" на руле</string>
+	<string name="menu_poweramp_watch_longpress_next_code_title">Код события</string>
+	<string name="menu_poweramp_watch_longpress_next_code_summary">Обычно 22, но если не работает, то попробуйте 19</string>
+	<string name="menu_poweramp_watch_longpress_prev_title">Переключать на предыдущий каталог</string>
+	<string name="menu_poweramp_watch_longpress_prev_summary">Отслеживание долгого нажатия кнопки переключения "назад" на руле</string>
+	<string name="menu_poweramp_watch_longpress_prev_code_title">Код события</string>
+	<string name="menu_poweramp_watch_longpress_prev_code_summary">Обычно 23, но если не работает, то попробуйте 18</string>
+
+	<!-- Radio -->
+	<string name="menu_radio_show_toast_title">Всплывающее окно при переключении радиостанций</string>
+	<string name="menu_radio_skip_seeking_mode_title">Не показывать при поиске радиостанций</string>
+
+	<string name="menu_item_fixed_volume_level_at_startup_title">Уровень громкости</string>
+	<string name="fixed_volume_level_at_startup_summary">Текущее значение %1$d</string>
+	<string name="fixed_volume_level_at_startup_dialog">Выберите уровень громкости (от 1 до 10)</string>
+
     <string name="action_settings">Settings</string>
-    <string name="title_settings_activity">Дополнительные настройки громкости</string>
-    <string name="title_activity_poweramp_settings">Управление PowerAmp</string>
     <string name="title_activity_dynamic_sound_settings">Динамическое изменение громкости</string>
 
-    <string name="change_volume_at_startup_category">Громкость при включении устройства</string>
-    <string name="change_volume_at_startup_title">Изменение громкости при запуске</string>
-    <string name="change_volume_at_startup_summary">Установка уровня громкости на заданную величину при запуске усройства</string>
-    <string name="volume_level_at_startup_title">Уровень громкости</string>
-    <string name="volume_level_at_startup_summary">Текущее значение %1$d</string>
-    <string name="volume_level_at_startup_dialog">Выберите уровень громкости (от 1 до 10) </string>
-	<string name="change_volume_at_wakeup_title">Изменение громкости при просыпании</string>
-	<string name="change_volume_at_wakeup_summary">Установка уровня громкости на заданную величину при просыпании усройства</string>
-	<string name="volume_level_at_wakeup_title">Уровень громкости</string>
-	<string name="volume_level_at_wakeup_summary">Текущее значение %1$d</string>
-	<string name="volume_level_at_wakeup_dialog">Выберите уровень громкости (от 1 до 10) </string>
 
 
 
-    <string name="change_volume_at_reverse_category">Громкость при включении заднего хода</string>
-    <string name="change_volume_at_reverse_title">Уменьшение громкости при включении ЗХ</string>
-    <string name="change_volume_at_reverse_summary">Уменьшение уровня громкости до заданной величины при включении ЗХ. Приглушение громкости должно быть отключено.</string>
-    <string name="fixed_volume_available_at_reverse_title">Уменьшение громкости до уровня</string>
-    <string name="fixed_volume_available_at_reverse_summary"></string>
-    <string name="fixed_volume_level_at_startup_title">Уровень громкости</string>
-    <string name="fixed_volume_level_at_startup_summary">Текущее значение %1$d</string>
-    <string name="fixed_volume_level_at_startup_dialog">Выберите уровень громкости (от 1 до 10)</string>
-    <string name="percent_volume_available_at_reverse_title">Уменьшение громкости на процент</string>
-    <string name="percent_volume_available_at_reverse_summary">Уменьшение громкости на заданный процент</string>
-    <string name="percent_volume_level_at_startup_title">Процент уменьшения</string>
-    <string name="percent_volume_level_at_startup_summary">Текущее значение %1$d </string>
-    <string name="percent_volume_level_at_startup_dialog">Введите процент уменьшения</string>
+
+
     <string name="sound_settings_title">Дополнительные настройки звука</string>
     <string name="text_device_name">Устройство %1$s</string>
 
-    <string name="text_show_notification_icon">Иконка статуса</string>
+
 
     <string name="text_reverse_count">Задний ход включался %1$d раз(а)</string>
     <string name="text_sleep_mode_count">SleepMode сработал %1$d раз(а)</string>
@@ -46,21 +93,6 @@
     <string name="text_statistic_title">Статистика с момента включения:</string>
     <string name="text_working_start">Работает с %1$s</string>
 
-    <string name="title_activity_power_amp_preference">Управление PowerAmp</string>
-    <string name="poweramp_interaction_title">Взимодействовать с PowerAmp</string>
-    <string name="poweramp_interaction_summary">Отслеживание состояния, старт/остановка воспроизведения, переключение папок</string>
-    <string name="poweramp_watch_sleep_title">Вставать на паузу при Sleep</string>
-    <string name="poweramp_watch_wakeup_title">Начинать воспроизведение при просыпании</string>
-    <string name="poweramp_watch_bootup_title">Начинать воспроизведение при включении</string>
-
-    <string name="poweramp_watch_longpress_next_title">Переключать на следующий каталог</string>
-    <string name="poweramp_watch_longpress_next_summary">Отслеживание долгого нажатия кнопки переключения "вперед" на руле</string>
-    <string name="poweramp_watch_longpress_prev_title">Переключать на предыдущий каталог</string>
-    <string name="poweramp_watch_longpress_prev_summary">Отслеживание долгого нажатия кнопки переключения "назад" на руле</string>
-
-    <string name="poweramp_start_delay_title">Задержка включения воспроизведения</string>
-    <string name="poweramp_start_delay_summary">PowerAmp будет запущен с задержкой после просыпания или включения (через %1$d мсек)</string>
-    <string name="poweramp_start_delay_text">Укажите значение (мсек)</string>
     <string name="text_gps_info_title">GPS информация</string>
 
     <string name="text_gps_altitude">Высота: %1$s м</string>
@@ -78,7 +110,6 @@
 
 
     <string name="text_gps_hangs">завис\n %1$d \nраз(а)</string>
-    <string name="text_dynamic_sound_settings">Динамическое управление громкостью</string>
 
     <string name="dsc_available">Включить динамическое изменение громкости</string>
     <string name="dsc_firstspeed_title">Минимальная скорость</string>
@@ -100,4 +131,10 @@
 	<string name="text_gps_distance">%1$.2f</string>
     <string name="text_average_speed">Avg: %1$s км/ч</string>
     <string name="text_max_speed">Max: %1$s км/ч</string>
+
+	<string name="title_activity_floating">Floating Activity</string>
+
+
+<!-- TODO: Remove or change this placeholder text -->
+	<string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

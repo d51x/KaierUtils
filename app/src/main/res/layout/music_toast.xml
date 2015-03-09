@@ -10,14 +10,14 @@
 	<LinearLayout
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
-		android:layout_height="116dp" android:alpha="0.99">
-		<ImageView android:layout_width="100.0dip"
-		           android:layout_height="100.0dip"
+		android:layout_height="144dp" android:alpha="0.99">
+		<ImageView android:layout_width="128.0dip"
+		           android:layout_height="128.0dip"
 		           android:layout_marginLeft="8.0dip"
 		           android:layout_marginTop="8.0dip"
 		           android:layout_marginRight="8.0dip"
 		           android:layout_marginBottom="8.0dip"
-		           android:src="@drawable/toast_radio" />
+		           android:src="@drawable/toast_music" android:id="@+id/ivAlbumArt"/>
 		<LinearLayout
 			android:orientation="vertical"
 			android:layout_width="fill_parent"
@@ -27,7 +27,7 @@
 			          android:textStyle="bold"
 			          android:textColor="#fff0f0f0"
 			          android:gravity="bottom"
-			          android:id="@+id/tvRadioText1"
+			          android:id="@+id/tvTrackTitle"
 			          android:layout_width="wrap_content"
 			          android:layout_height="wrap_content"
 			          android:layout_marginTop="8dp"
@@ -36,7 +36,7 @@
 			<TextView android:textSize="25.0sp"
 			          android:textColor="#ff99ccff"
 			          android:layout_gravity="center_vertical"
-			          android:id="@+id/tvRadioText2"
+			          android:id="@+id/tvArtistAlbum"
 			          android:layout_width="wrap_content"
 			          android:layout_height="wrap_content"
 			          android:layout_marginBottom="8.0dip"

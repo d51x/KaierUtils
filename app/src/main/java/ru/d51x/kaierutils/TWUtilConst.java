@@ -62,7 +62,7 @@ public class TWUtilConst {
 
     protected static final int TWUTIL_CONTEXT_RADIO_DATA = 1025; // radio channel name ???
 
-    protected static final int TWUTIL_SVC_BUTTON_NEXT = 22;
-    protected static final int TWUTIL_SVC_BUTTON_PREV = 23;
+    protected static final int TWUTIL_SVC_BUTTON_NEXT = 22; //19
+    protected static final int TWUTIL_SVC_BUTTON_PREV = 23; //18
 
 }
