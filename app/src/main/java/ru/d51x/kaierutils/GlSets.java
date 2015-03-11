@@ -30,6 +30,7 @@ public class GlSets {
 	//public boolean isDebug = false;
 
     public boolean isNotificationIconShow;
+    public boolean isAutoStart;
 	public boolean isShowStatistics;
 	public boolean isShowEQData;
     public boolean isVolumeShowOnNotificationIcon;
@@ -168,6 +169,7 @@ public class GlSets {
 
 			// load general settings
 			isNotificationIconShow = prefs.getBoolean ("kaierutils_show_notification_icon", true);
+			isAutoStart = prefs.getBoolean ("kaierutils_auto_start", false);
 			isColorSpeed = prefs.getBoolean ("kaierutils_show_color_speed", false);
 			isShowStatistics = prefs.getBoolean ("kaierutils_show_statistics", true);
 			isShowEQData = prefs.getBoolean ("kaierutils_show_eq", false);

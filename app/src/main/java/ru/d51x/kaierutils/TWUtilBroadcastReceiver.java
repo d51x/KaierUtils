@@ -33,6 +33,11 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
         // устройство загрузилось, запустим фоновый сервис
 		if ( action.equals (Intent.ACTION_BOOT_COMPLETED ) ) {
 			context.startService(new Intent(context, BackgroundService.class));
+			if (App.GS.isAutoStart) {
+				Intent mIntent = new Intent(context, MainActivity.class);
+				mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				context.startActivity(mIntent);
+			}
 		}
         // устройство выключается
 		else if ( action.equals ( Intent.ACTION_SHUTDOWN ) ||

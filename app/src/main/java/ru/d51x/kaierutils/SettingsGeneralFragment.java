@@ -40,6 +40,9 @@ public class SettingsGeneralFragment extends PreferenceFragment implements Share
 			notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 			notifyData.show();
 		}
+		else if ( key.equals ( "kaierutils_auto_start" ) ) {
+			App.GS.isAutoStart = sharedPreferences.getBoolean ( key, false);
+		}
 		else if ( key.equals ( "kaierutils_show_color_speed" ) ) {
 			App.GS.isColorSpeed = sharedPreferences.getBoolean ( key, false);
 		}

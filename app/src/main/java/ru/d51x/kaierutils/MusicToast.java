@@ -72,7 +72,7 @@ android.view.ViewGroup.LayoutParams layoutParams = myImageView.getLayoutParams()
 layoutParams.width = 30;
 layoutParams.height = 30;
 myImageView.setLayoutParams(layoutParams);
-* /
+*/
 		tvTrackTitle.setText (TrackTitle);
 		tvArtistAlbum.setText ( AlbumArtist );
 		if ( mToast != null) { mToast.cancel();	}

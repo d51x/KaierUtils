@@ -14,20 +14,23 @@
 
 	<!-- general menu -->
 	<string name="menu_general_show_notification_icon_title">Иконка статуса</string>
+	<string name="menu_general_auto_start">Показывать главное окно при включении</string>
 	<string name="menu_general_color_speed_title">Цветная скорость</string>
 	<string name="menu_general_show_statistics_title">Отображать статистику</string>
 	<string name="menu_general_show_eq_title">Отображать данные эквалайзера под громкостью</string>
 	<string name="menu_general_show_eq_summary">Под громкостью отображаются уровни низких, средних, высоких частот</string>
 
 	<!-- reverse menu -->
-	<string name="menu_category_reverse_fixed_volume"></string>
-	<string name="menu_category_reverse_percent_volume"></string>
+	<string name="menu_category_reverse_fixed_volume">Фиксированный уровень громкости</string>
+	<string name="menu_category_reverse_percent_volume">Относительный уровень громкости</string>
 	<string name="menu_reverse_change_volume_title">Уменьшать громкости при включении ЗХ</string>
 	<string name="menu_reverse_fixed_volume_available_title">Уменьшение громкости до уровня</string>
+	<string name="menu_reverse_fixed_volume_available_summary">Имеет приоритет над относительным уровнем</string>
 	<string name="menu_reverse_fixed_volume_level_title">Уровень громкости</string>
 	<string name="menu_reverse_fixed_volume_level_summary">Текущее значение %1$d</string>
 	<string name="menu_reverse_fixed_volume_level_dialog">Выберите уровень громкости (от 1 до 10)</string>
 	<string name="menu_reverse_percent_volume_available_title">Уменьшение громкости на процент</string>
+	<string name="menu_reverse_percent_volume_available_summary">Не работает при включенном фиксированном уровне</string>
 	<string name="menu_reverse_percent_volume_level_title">Процент уменьшения</string>
 	<string name="menu_reverse_percent_volume_level_summary">Текущее значение %1$d </string>
 	<string name="menu_reverse_percent_volume_level_dialog">Введите процент уменьшения</string>

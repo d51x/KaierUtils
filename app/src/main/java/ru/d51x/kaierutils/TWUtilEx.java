@@ -341,7 +341,7 @@ public class TWUtilEx {
                 switch (res) {
                     case 17:
                     case 14:
-                        rstr = "Kaier (RP)";
+                        rstr = "Kaier";
                         break;
                     case 1:
                         rstr = "Create";

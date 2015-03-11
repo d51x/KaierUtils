@@ -23,8 +23,11 @@ public class PowerAmpProcessing {
     public PowerAmpProcessing(Context context) {
         Log.d("PowerAmpProcessing", "PowerAmpProcessing");
 
+
         this.context = context;
         mHandler = new Handler();
+
+	    setPowerAmpStarted();
 
         powerAmpReceiver = new BroadcastReceiver() {
             @Override
@@ -131,6 +134,7 @@ public class PowerAmpProcessing {
     }
 
     private void setPowerAmpStarted() {
+	    Log.d("setPowerAmpStarted", "started");
         if ( App.GS.interactWithPowerAmp &&
              App.GS.needWatchBootUpPowerAmp )
         {

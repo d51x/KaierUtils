@@ -716,7 +716,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 				tvSleepModeLastTime.setVisibility( View.INVISIBLE );
 			} else {
 				Date date = new Date( App.GS.lastSleep );
-				SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy  hh:mm");
+				SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
 				tvSleepModeLastTime.setText( String.format(getString(R.string.text_sleep_mode_last_time), ft.format(date)) );
 				tvSleepModeLastTime.setVisibility( View.VISIBLE );
 			}
