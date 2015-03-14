@@ -405,4 +405,32 @@ public class TWUtilEx {
 			}
 		}
 	}
+
+    public static void setAudioFocus(int id) {
+        if ( ! isTWUtilAvailable() ) return;
+        TWUtil mTW = new TWUtil ();
+        if (mTW.open (new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_AUDIO_FOCUS_TAG}) == 0) {
+            try {
+                mTW.start ();
+                mTW.write ( TWUtilConst.TWUTIL_COMMAND_AUDIO_FOCUS, 192, id);
+                mTW.stop ();
+                mTW.close ();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public static void requestRadioInfo() {
+        if ( ! isTWUtilAvailable() ) return;
+        TWUtil mTW = new TWUtil (1);
+        if (mTW.open (new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA}) == 0) {
+            try {
+                mTW.start ();
+                mTW.write ( TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA, 255);
+                mTW.stop ();
+                mTW.close ();
+            } catch (Exception e) {
+            }
+        }
+    }
 }

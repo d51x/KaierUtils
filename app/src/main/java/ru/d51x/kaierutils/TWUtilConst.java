@@ -53,6 +53,7 @@ public class TWUtilConst {
 				// -24805 = 40731
 
     protected static final int TWUTIL_CONTEXT_AUDIO_FOCUS_TAG = 769;
+    protected static final int TWUTIL_COMMAND_AUDIO_FOCUS = 40465;
 	protected static final int TWUTIL_CONTEXT_REVERSE_TAG = 772;
 
 	protected static final int TWUTIL_CONTEXT_ROOT_CMD = -24806;

@@ -114,7 +114,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private TextView tvAudioMode;
     private LinearLayout layout_radio_info;
 
-	private Button btnSpeedUp, btnSpeedDown, btnNextTrack;
+	private Button btnTest2, btnTest1, btnTest3;
 	private SharedPreferences prefs;
 
 	@Override
@@ -190,14 +190,14 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvOBD_RPM = (TextView) findViewById(R.id.text_obd_rpm);
 		tvOBD_Speed = (TextView) findViewById(R.id.text_obd_speed);
 
-		btnSpeedUp = (Button) findViewById (R.id.btnSpeedUp);
-		btnSpeedUp.setOnClickListener(this);
+		btnTest2 = (Button) findViewById (R.id.btnTest2);
+		btnTest2.setOnClickListener(this);
 
-		btnNextTrack = (Button) findViewById (R.id.btn_test_next_track);
-		btnNextTrack.setOnClickListener(this);
+		btnTest3 = (Button) findViewById (R.id.btnTest3);
+		btnTest3.setOnClickListener(this);
 
-		btnSpeedDown = (Button) findViewById (R.id.btnSpeedDown);
-		btnSpeedDown.setOnClickListener(this);
+		btnTest1 = (Button) findViewById (R.id.btnTest1);
+		btnTest1.setOnClickListener(this);
 
         tvRadioInfo1 = (TextView) findViewById(R.id.tvRadioInfo1);
         tvRadioInfo2 = (TextView) findViewById(R.id.tvRadioInfo2);
@@ -299,32 +299,22 @@ public class MainActivity extends Activity implements View.OnClickListener,
     public void onClick(View v){
 
         switch (v.getId()) {
-	        case R.id.btn_test_next_track:
-		        startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
-				        PowerampAPI.Commands.NEXT));
+	        case R.id.btnTest1:
+                // radio audio focus
+                if (App.GS.curAudioFocusID > 0) TWUtilEx.setAudioFocus(128 & App.GS.curAudioFocusID);
+                TWUtilEx.setAudioFocus(1);
+                TWUtilEx.requestRadioInfo();
 		        break;
-            case R.id.btnSpeedUp:
-                //App.GS.isFirstStart = true;
-	            //App.GS.prevTime = 3526000;
-	            //App.GS.gpsTimeAtWay = 3526000;
-	            //TWUTIL_BROADCAST_ACTION_RADIO_CHANGED
-	            Intent ri = new Intent();
-	            ri.putExtra ("Frequency", "87.50");
-	            ri.putExtra ("Title", "RELAX-FM");
-	            ri.setAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED );
-	            sendBroadcast(ri);
-
+            case R.id.btnTest2:
+                // music audio focus
+                if (App.GS.curAudioFocusID > 0) TWUtilEx.setAudioFocus(128 & App.GS.curAudioFocusID);
+                TWUtilEx.setAudioFocus(3);
+                startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
+                        PowerampAPI.Commands.NEXT));
 
 	            break;
-            case R.id.btnSpeedDown:
-                //App.GS.isDebug = !App.GS.isDebug;
-	            //App.GS.prevTime = 3526000;
-	            //App.GS.gpsTimeAtWay = 3526000;
-	            Intent ri2 = new Intent();
-	            ri2.putExtra ("Frequency", "101.20");
-	            ri2.putExtra ("Title", (String) null);
-	            ri2.setAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED );
-	            sendBroadcast(ri2);
+            case R.id.btnTest3:
+
 
 
                 break;
