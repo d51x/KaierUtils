@@ -75,7 +75,7 @@ public class PowerAmpProcessing {
                 App.GS.isPowerAmpPlaying = ((status == PowerampAPI.Status.TRACK_PLAYING) && (!paused));
             }
             else if (action.equals(PowerampAPI.ACTION_TRACK_CHANGED)) {
-	            if ( App.GS.interactWithPowerAmp && App.GS.isShowTrackInfoToast )
+	            if ( App.GS.interactWithPowerAmp && App.GS.isShowTrackInfoToast && App.GS.isPowerAmpPlaying )
 	            {
 		            ActivityManager activityManager = (ActivityManager) context.getSystemService("activity");
 		            List<ActivityManager.RunningTaskInfo> taskInfo = activityManager.getRunningTasks (1);
@@ -96,7 +96,7 @@ public class PowerAmpProcessing {
 	            }
             }
             else if (action.equals(PowerampAPI.ACTION_AA_CHANGED)) {
-	            if ( App.GS.interactWithPowerAmp && App.GS.isShowTrackInfoToast )
+	            if ( App.GS.interactWithPowerAmp && App.GS.isShowTrackInfoToast && App.GS.isPowerAmpPlaying)
 	            {
 	                App.mToast.setAlbumArt ((Bitmap) intent.getParcelableExtra(PowerampAPI.ALBUM_ART_BITMAP));
 	            }

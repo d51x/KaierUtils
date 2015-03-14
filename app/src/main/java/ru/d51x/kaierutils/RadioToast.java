@@ -27,7 +27,7 @@ public class RadioToast {
 	}
 
 	public void SetRadioText(String text1, String text2) {
-		if ( (text1 == null) || (text1.isEmpty () ) || (text1 == "" ) ) { // есть название
+		if ( (text1 == null) || (text1.isEmpty () ) || (text1 == "" ) || (text1 == "null")) { // есть название
 			tvRadioText1.setText ( String.format("%1$s MHz", text2) );
 			tvRadioText2.setText ( "" );
 			tvRadioText2.setVisibility ( View.GONE);

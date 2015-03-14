@@ -22,17 +22,17 @@
 			android:orientation="vertical"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:paddingLeft="20dp"
-			android:gravity="center_vertical" android:layout_gravity="center_vertical">
+			android:gravity="center_vertical|left" android:layout_gravity="center_vertical|left">
 			<TextView android:textSize="48.0sp"
 			          android:textStyle="bold"
 			          android:textColor="#fff0f0f0"
-			          android:gravity="bottom"
+			          android:gravity="bottom|left"
 			          android:id="@+id/tvRadioText1"
 			          android:layout_width="wrap_content"
 			          android:layout_height="wrap_content"
 			          android:layout_marginTop="8dp"
 			          android:text="Small Text"
-				/>
+                      android:layout_gravity="left"/>
 			<TextView android:textSize="25.0sp"
 			          android:textColor="@android:color/holo_blue_light"
 			          android:layout_gravity="center_vertical"
@@ -41,7 +41,7 @@
 			          android:layout_height="wrap_content"
 			          android:layout_marginBottom="8.0dip"
 			          android:text="Small Text"
-			          android:gravity="bottom" android:visibility="visible"/>
+			          android:gravity="bottom|left" android:visibility="visible"/>
 		</LinearLayout>
 	</LinearLayout>
 </RelativeLayout>

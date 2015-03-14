@@ -18,6 +18,7 @@ public class TWUtilConst {
 
     protected static final String TWUTIL_BROADCAST_ACTION_KEY_PRESSED = "ru.d51x.kaierutils.action.KEY_TW_PRESSED";
     protected static final String TWUTIL_BROADCAST_ACTION_RADIO_CHANGED = "ru.d51x.kaierutils.action.RADIO_CHANGED";
+    protected static final String TWUTIL_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED = "ru.d51x.kaierutils.action.AUDIO_FOCUS_CHANGED";
 
 	protected static final int TWUTIL_CODE_NAVI = 32;
 
@@ -51,6 +52,7 @@ public class TWUtilConst {
 	protected static final int TWUTIL_COMMAND_REVERSE_ACTIVITY = 40732;
 				// -24805 = 40731
 
+    protected static final int TWUTIL_CONTEXT_AUDIO_FOCUS_TAG = 769;
 	protected static final int TWUTIL_CONTEXT_REVERSE_TAG = 772;
 
 	protected static final int TWUTIL_CONTEXT_ROOT_CMD = -24806;
@@ -64,5 +66,16 @@ public class TWUtilConst {
 
     protected static final int TWUTIL_SVC_BUTTON_NEXT = 22; //19
     protected static final int TWUTIL_SVC_BUTTON_PREV = 23; //18
+
+
+    protected static final int TWUTIL_AUDIO_FOCUS_RADIO_ID = 1;
+    protected static final int TWUTIL_AUDIO_FOCUS_DVD_ID = 2;
+    protected static final int TWUTIL_AUDIO_FOCUS_MUSIC_ID = 3;
+    protected static final int TWUTIL_AUDIO_FOCUS_IPOD_ID = 4;
+    protected static final int TWUTIL_AUDIO_FOCUS_TV_ID = 5;
+    protected static final int TWUTIL_AUDIO_FOCUS_AUX_ID = 7;
+    protected static final int TWUTIL_AUDIO_FOCUS_BT_ID = 8;
+    protected static final int TWUTIL_AUDIO_FOCUS_VIDEO_ID = 9;
+
 
 }

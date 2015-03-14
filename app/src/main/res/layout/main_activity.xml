@@ -515,4 +515,65 @@ android:longClickable="true">
 
 	</FrameLayout>
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/layout_obd2"
+        android:layout_toLeftOf="@+id/layout_gps_info"
+        android:layout_below="@+id/linearLayout"
+        android:layout_above="@+id/layout_statistics">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/tvAudioMode"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="6dp"
+            android:textSize="22sp"
+            android:layout_marginBottom="6dp"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayout"
+            android:id="@+id/layout_radio_info"
+            android:layout_toLeftOf="@+id/layout_gps_info"
+            android:layout_alignLeft="@+id/linearLayout"
+            android:paddingTop="10dp"
+            android:visibility="invisible">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivRadioInfo"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/toast_radio"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Medium Text"
+                android:id="@+id/tvRadioInfo1"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:textSize="32sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Medium Text"
+                android:id="@+id/tvRadioInfo2"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/holo_blue_dark"/>
+        </LinearLayout>
+    </LinearLayout>
+
 </RelativeLayout>

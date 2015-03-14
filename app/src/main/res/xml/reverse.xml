@@ -20,10 +20,10 @@
 			android:title="@string/menu_reverse_fixed_volume_level_title"
 			android:summary="@string/menu_reverse_fixed_volume_level_summary"
 			android:dialogTitle="@string/menu_reverse_fixed_volume_level_dialog"
-			android:defaultValue="30"
+			android:defaultValue="4"
 			android:dependency="CAR_SETTINGS__VOLUME_AT_REVERSE__FIXED_LEVEL_AVAILABLE"
-			seekbar:maxValue="100"
-			seekbar:minValue="10"
+			seekbar:maxValue="8"
+			seekbar:minValue="1"
 			/>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/menu_category_reverse_percent_volume">

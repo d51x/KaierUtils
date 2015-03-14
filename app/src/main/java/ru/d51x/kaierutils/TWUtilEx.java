@@ -52,7 +52,8 @@ public class TWUtilEx {
             TWUtilConst.TWUTIL_COMMAND_KEY_PRESS,                // 513
 			//TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS              // 258
 			(short) TWUtilConst.TWUTIL_CONTEXT_PRESS_BUTTON_3,                       // 33281 - запуск стандартных приложений
-			TWUtilConst.TWUTIL_CONTEXT_EQ
+			TWUtilConst.TWUTIL_CONTEXT_EQ,
+            TWUtilConst.TWUTIL_CONTEXT_AUDIO_FOCUS_TAG                      // 769 - audio focus
 	};
 
 	protected boolean isTWUtilOpened;
@@ -183,8 +184,12 @@ public class TWUtilEx {
 	                    }
                         break;
 					case TWUtilConst.TWUTIL_CONTEXT_EQ:    // 257 - EQ
-						byte[] bArr = (byte[]) message.obj;
-						SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_EQ_CHANGED, "EQ", bArr);
+                        byte[] bArr = (byte[]) message.obj;
+                        SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_EQ_CHANGED, "EQ", bArr);
+                        break;
+                    case TWUtilConst.TWUTIL_CONTEXT_AUDIO_FOCUS_TAG:    // 769 - audio focus
+                        App.GS.curAudioFocusID = message.arg1;
+                        SendBroadcastAction( TWUtilConst.TWUTIL_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED, "audio_focus_id", message.arg1);
                         break;
 					default:
 						break;
@@ -204,11 +209,14 @@ public class TWUtilEx {
 			mTWUtil.addHandler (TWUTIL_HANDLER, mTWUtilHandler);
 			mTWUtil.write (TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL, 255);
 			//mTWUtil.write (TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS, 255);
+            mTWUtil.write ( TWUtilConst.TWUTIL_CONTEXT_EQ, 255);
+
 		}
 		result = mTWUtilRadio.open(new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA});
 		if ( result == 0) {
 			mTWUtilRadio.start ();
 			mTWUtilRadio.addHandler (TWUTIL_HANDLER, mTWUtilHandler);
+            mTWUtilRadio.write (TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA, 255);
 		}
 
 		initEqData();

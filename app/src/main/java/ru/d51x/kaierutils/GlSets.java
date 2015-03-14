@@ -126,6 +126,8 @@ public class GlSets {
 	public int musicToastPictureWidth;
 	public int musicToastPictureHeight;
 
+    public int curAudioFocusID = -1;
+
 	public GlSets() {
 		Volume = 3;
 		//Brightness = 7;
