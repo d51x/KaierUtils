@@ -1,0 +1,110 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="ru.d51x.kaierutils.AboutFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout2"
+        android:layout_alignRight="@+id/layout_gps_info"
+        android:layout_gravity="left|top"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="0dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/tvProgramVersion"
+            android:textColor="@android:color/holo_blue_light"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="right"
+            android:layout_gravity="right"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_device_name"
+            android:id="@+id/txtDeviceName"
+            android:textSize="20sp"
+            android:textIsSelectable="false"
+            android:layout_gravity="right"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_alignParentLeft="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_below="@+id/linearLayout2"
+            android:layout_alignParentLeft="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/text_statistic_title"
+                android:id="@+id/textView"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_working_start"
+                android:id="@+id/tv_working_start"
+                android:layout_below="@+id/textView"
+                android:layout_alignParentLeft="true"/>
+
+            <TextView
+                android:layout_width="643dp"
+                android:layout_height="wrap_content"
+                android:text="@string/text_reverse_count"
+                android:id="@+id/tv_reverse_count"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_sleep_mode_count"
+                    android:id="@+id/tv_sleep_mode_count"
+                    android:layout_above="@+id/tv_reverse_count"
+                    android:layout_alignParentLeft="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_sleep_mode_last_time"
+                    android:id="@+id/tv_sleep_mode_last_time"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_above="@+id/tv_reverse_count"
+                    android:layout_alignRight="@+id/textView"
+                    android:layout_weight="0.13"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

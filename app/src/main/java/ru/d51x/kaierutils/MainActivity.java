@@ -61,16 +61,12 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 	private Handler mHandler;
 	private PopupWindow pwindo;
-	private TextView tvDeviceName;
     private TextView tvCurrentVolume;
     private LinearLayout layout_gps_speed;
     private LinearLayout layout_waypoints;
     private LinearLayout layout_tracktime;
 
-    private TextView tvReverseCount;
-    private TextView tvSleepModeCount;
-    private TextView tvSleepModeLastTime;
-    private TextView tvWorkingStart;
+
 
 	private TextView tvGPSDistance;
 	private ImageView ivGPSDistance;
@@ -92,7 +88,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private TextView tvAverageSpeed;
     private TextView tvMaxSpeed;
 
-	private FrameLayout layout_statistics;
+
 	private LinearLayout layout_eq_data;
 
 	private TextView tv_eq_bass;
@@ -111,8 +107,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private TextView tvRadioInfo1;
     private TextView tvRadioInfo2;
-    private TextView tvAudioMode;
+    private TextView tvMusicInfo1;
+    private TextView tvMusicInfo2;
+
     private LinearLayout layout_radio_info;
+    private LinearLayout layout_music_info;
 
 	private Button btnTest2, btnTest1, btnTest3;
 	private SharedPreferences prefs;
@@ -135,7 +134,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	}
 
 	public void initComponents() {
-		tvDeviceName = (TextView) findViewById(R.id.txtDeviceName);
 		tvCurrentVolume = (TextView) findViewById(R.id.tvCurrentVolum);
 
 		// color speed
@@ -147,12 +145,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		layout_tracktime.setOnLongClickListener (this);
 		layout_tracktime.setOnClickListener(this);
 
-		// statistics
-		layout_statistics = (FrameLayout) findViewById (R.id.layout_statistics);
-		tvReverseCount = (TextView) findViewById(R.id.tv_reverse_count);
-		tvSleepModeCount = (TextView) findViewById(R.id.tv_sleep_mode_count);
-		tvSleepModeLastTime = (TextView) findViewById(R.id.tv_sleep_mode_last_time);
-		tvWorkingStart = (TextView) findViewById(R.id.tv_working_start);
+
 
 		layout_eq_data = (LinearLayout) findViewById (R.id.layout_eq_data);
 		tv_eq_bass = (TextView) findViewById (R.id.tv_eq_bass);
@@ -201,13 +194,17 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         tvRadioInfo1 = (TextView) findViewById(R.id.tvRadioInfo1);
         tvRadioInfo2 = (TextView) findViewById(R.id.tvRadioInfo2);
-        tvAudioMode = (TextView) findViewById(R.id.tvAudioMode);
+        tvMusicInfo1 = (TextView) findViewById(R.id.tvMusicInfo1);
+        tvMusicInfo2 = (TextView) findViewById(R.id.tvMusicInfo2);
+
         layout_radio_info = (LinearLayout) findViewById(R.id.layout_radio_info);
+        layout_music_info = (LinearLayout) findViewById(R.id.layout_music_info);
+        layout_radio_info.setVisibility( View.GONE );
+        layout_music_info.setVisibility( View.GONE );
 	}
 
 	public void setInitData() {
-		String string_device_name = String.format(getString(R.string.text_device_name), TWUtilEx.GetDeviceID());
-		tvDeviceName.setText( string_device_name );
+
 
 		// gps info
 		tvGPSSatellitesTotal.setText( "--");
@@ -229,10 +226,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), "---"));
 
 		setEQData(App.GS.eqData);
-
+        TWUtilEx.requestRadioInfo();
         tvRadioInfo1.setText("");
         tvRadioInfo2.setText("");
-        tvAudioMode.setText("");
+        tvMusicInfo1.setText("");
+        tvMusicInfo2.setText("");
 	}
 
 	public void updataData() {
@@ -254,8 +252,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvCurrentVolume.setText(Integer.toString (App.GS.getVolumeLevel ()) );
 		layout_eq_data.setVisibility ( App.GS.isShowEQData ? View.VISIBLE : View.INVISIBLE );
 		setVolumeIcon (ivVolumeLevel, App.GS.getVolumeLevel ());
-		process_statistics_layout_and_elements(App.GS.isShowStatistics);
-        updataAudioMmodeInfo(App.GS.curAudioFocusID);
+		updataAudioMmodeInfo(App.GS.curAudioFocusID);
 	}
 
     @Override
@@ -310,7 +307,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 if (App.GS.curAudioFocusID > 0) TWUtilEx.setAudioFocus(128 & App.GS.curAudioFocusID);
                 TWUtilEx.setAudioFocus(3);
                 startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
-                        PowerampAPI.Commands.NEXT));
+                        PowerampAPI.Commands.TOGGLE_PLAY_PAUSE));
 
 	            break;
             case R.id.btnTest3:
@@ -355,30 +352,30 @@ public class MainActivity extends Activity implements View.OnClickListener,
 			}
             else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH ) )
             {
-                tvReverseCount.setText( String.format(getString(R.string.text_reverse_count),
-                                                      App.GS.ReverseActivityCount) );
+                //tvReverseCount.setText( String.format(getString(R.string.text_reverse_count),
+                //                                      App.GS.ReverseActivityCount) );
             }
             else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP ) )
             {
 //                tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count),
 //                        App.GS.SleepModeCount) );
 
-                if ( App.GS.lastSleep == 0)
-                {
-                    tvSleepModeLastTime.setVisibility( View.INVISIBLE );
-                }
-                else
-                {
-                    Date date = new Date( App.GS.lastSleep );
-                    SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
-                    tvSleepModeLastTime.setText( String.format("%s", ft.format(date)) );
-                    tvSleepModeLastTime.setVisibility( View.VISIBLE );
-                }
+                //if ( App.GS.lastSleep == 0)
+                //{
+                    //tvSleepModeLastTime.setVisibility( View.INVISIBLE );
+                //}
+                //else
+                //{
+                    //Date date = new Date( App.GS.lastSleep );
+                   // SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
+                   // tvSleepModeLastTime.setText( String.format("%s", ft.format(date)) );
+                   // tvSleepModeLastTime.setVisibility( View.VISIBLE );
+                //}
             }
             else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP ) )
             {
-	            tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count),
-			            App.GS.SleepModeCount) );
+	           // tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count),
+			   //         App.GS.SleepModeCount) );
 
             }
 			else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_EQ_CHANGED ) )
@@ -458,25 +455,20 @@ public class MainActivity extends Activity implements View.OnClickListener,
 				String title = intent.getStringExtra("Title");
 				String freq = intent.getStringExtra ("Frequency");
                 tvRadioInfo1.setText( title );
-                tvRadioInfo2.setText( freq );
+                tvRadioInfo2.setText( freq + " MHz");
             }
             else if ( action.equals( TWUtilConst.TWUTIL_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED)) {
 				int af_id = intent.getIntExtra("audio_focus_id", -1);
                 // update screen
                 updataAudioMmodeInfo(App.GS.curAudioFocusID);
-                layout_radio_info.setVisibility( View.INVISIBLE );
-                switch ( af_id ) {
-                    case TWUtilConst.TWUTIL_AUDIO_FOCUS_RADIO_ID:
-                        // show radio info
-                        layout_radio_info.setVisibility( View.VISIBLE );
-                        break;
-                    case TWUtilConst.TWUTIL_AUDIO_FOCUS_MUSIC_ID:
-                           // show music info
-                        break;
-                    default:
-                        // hide all info
-                        break;
-                }
+
+            }
+            else if ( action.equals( GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED)) {
+                String TrackTitle = intent.getStringExtra("TrackTitle");
+                String AlbumArtist = intent.getStringExtra ("AlbumArtist");
+                tvMusicInfo1.setText( TrackTitle );
+                tvMusicInfo2.setText( AlbumArtist );
+
             }
 		}
 	};
@@ -728,30 +720,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED));
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_FIRST_FIX));
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET));
+		registerReceiver(receiver, new IntentFilter(GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED));
 	}
 
-	private void  process_statistics_layout_and_elements(boolean isShow) {
 
-		if ( isShow ) {
-			tvReverseCount.setText( String.format(getString(R.string.text_reverse_count), App.GS.ReverseActivityCount) );
-			tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count), App.GS.SleepModeCount) );
-
-			if ( App.GS.lastSleep == 0) {
-				tvSleepModeLastTime.setVisibility( View.INVISIBLE );
-			} else {
-				Date date = new Date( App.GS.lastSleep );
-				SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
-				tvSleepModeLastTime.setText( String.format(getString(R.string.text_sleep_mode_last_time), ft.format(date)) );
-				tvSleepModeLastTime.setVisibility( View.VISIBLE );
-			}
-			Date date = new Date( App.GS.startDate );
-			SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
-			tvWorkingStart.setText( String.format(getString(R.string.text_working_start), ft.format(date)) );
-			layout_statistics.setVisibility ( View.VISIBLE );
-		} else {
-			layout_statistics.setVisibility ( View.INVISIBLE );
-		}
-	}
 
 
 	public void setEQData(byte[] bArr) {
@@ -768,33 +740,21 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	}
 
     public void updataAudioMmodeInfo(int id) {
+        layout_radio_info.setVisibility( View.GONE );
+        layout_music_info.setVisibility( View.GONE );
         switch (id) {
             case TWUtilConst.TWUTIL_AUDIO_FOCUS_RADIO_ID:
-                tvAudioMode.setText("RADIO");
+                if (  App.GS.isShowRadioInfo ) {
+                    layout_radio_info.setVisibility( View.VISIBLE );
+                }
                 break;
+            case 0:
             case TWUtilConst.TWUTIL_AUDIO_FOCUS_MUSIC_ID:
-                tvAudioMode.setText("MUSIC");
+                if ( App.GS.interactWithPowerAmp && App.GS.isShowMusicInfo ) {
+                    layout_music_info.setVisibility(View.VISIBLE);
+                }
                 break;
-            case TWUtilConst.TWUTIL_AUDIO_FOCUS_BT_ID:
-                tvAudioMode.setText("BlueTooth");
-                break;
-            case TWUtilConst.TWUTIL_AUDIO_FOCUS_DVD_ID:
-                tvAudioMode.setText("DVD");
-                break;
-            case TWUtilConst.TWUTIL_AUDIO_FOCUS_IPOD_ID:
-                tvAudioMode.setText("IPOD");
-                break;
-            case TWUtilConst.TWUTIL_AUDIO_FOCUS_VIDEO_ID:
-                tvAudioMode.setText("VIDEO");
-                break;
-            case TWUtilConst.TWUTIL_AUDIO_FOCUS_AUX_ID:
-                tvAudioMode.setText("AUX");
-                break;
-            case TWUtilConst.TWUTIL_AUDIO_FOCUS_TV_ID:
-                tvAudioMode.setText("TV");
-                break;
-            default:
-                tvAudioMode.setText("");
+              default:
                 break;
         }
     }

@@ -54,6 +54,8 @@ public class SettingsPowerAmpFragment extends PreferenceFragment implements OnSh
 			App.GS.codeNextFolder = Integer.parseInt (sharedPreferences.getString (key, "22"));
 		} else if ( key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_CODE_PREV_CAT")) {
 			App.GS.codePrevFolder = Integer.parseInt (sharedPreferences.getString (key, "23"));
+		} else if ( key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_SHOW_MUSIC_INFO")) {
+			App.GS.isShowMusicInfo = sharedPreferences.getBoolean (key, false);
 		}
 	}
 }

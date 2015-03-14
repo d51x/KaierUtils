@@ -173,8 +173,16 @@ public class TWUtilEx {
                     case TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA:    // 1025
 	                    if ( message.arg1 == 2) {   // и переключение и поиск
 		                    if ( !App.GS.isShowRadioToast) break;
+		                    if ( App.GS.isDontShowRadioToastWhenMainActivity) break;
+
 		                    String rdata = (String) message.obj;
-		                    if ( App.GS.isSkipSeekingMode && ( rdata == null || rdata.isEmpty () || rdata == "") ) break;
+		                    if ( App.GS.isSkipSeekingMode && ( rdata == null ||
+                                                               rdata.isEmpty () ||
+                                                               rdata.equals( "" ) ||
+                                                               rdata.equals( "null" ) ||
+                                                               message.obj == null
+                                                              )
+                                ) break;
 		                    Intent ri = new Intent();
 		                    ri.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
 	                        ri.putExtra ("Frequency", String.format ("%1.2f", (float) message.arg2 / 100));
@@ -349,23 +357,23 @@ public class TWUtilEx {
                 switch (res) {
                     case 17:
                     case 14:
-                        rstr = "Kaier";
+                        rstr = String.format("Kaier (ID: %d)", res);
                         break;
                     case 1:
-                        rstr = "Create";
+                        rstr = String.format("Create (ID: %d)", res);
                         break;
                     case 3:
-                        rstr = "Anstar";
+                        rstr = String.format("Anstar (ID: %d)", res);
                         break;
                     case 7:
                     case 48:
-                        rstr = "Waybo";
+                        rstr = String.format("Waybo (ID: %d)", res);
                         break;
                     case 6:
-                        rstr = "Waybo";
+                        rstr = String.format("Waybo (ID: %d)", res);
                         break;
                     case 22:
-                        rstr = "Infidini";
+                        rstr = String.format("Infidini (ID: %d)", res);
                         break;
                     default:
                         rstr = String.format("<Unknown> (ID: %d)", res);
@@ -426,7 +434,7 @@ public class TWUtilEx {
         if (mTW.open (new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA}) == 0) {
             try {
                 mTW.start ();
-                mTW.write ( TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA, 255);
+                mTW.write ( TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA, 4, 255);
                 mTW.stop ();
                 mTW.close ();
             } catch (Exception e) {

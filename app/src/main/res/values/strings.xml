@@ -4,6 +4,7 @@
     <string name="app_name">KaierUtils</string>
 
 	<!-- menu headers -->
+    <string name="header_about_title">О программе</string>
     <string name="header_general_title">Общее</string>
 	<string name="header_reverse_title">Задний ход</string>
 	<string name="header_sleep_wakeup_title">Sleep mode/WakeUp</string>
@@ -50,6 +51,7 @@
 	<!-- PowerAmp -->
 	<string name="menu_poweramp_interaction_title">Взаимодействовать с PowerAmp</string>
 	<string name="menu_poweramp_show_toast_title">Показывать тоаст с информацией о треке</string>
+	<string name="menu_poweramp_show_music_info_title">Отображать информацию о треке в главном окне</string>
 	<string name="menu_poweramp_watch_sleep_title">Ставить на паузу при уходе в sleep</string>
 	<string name="menu_poweramp_watch_wakeup_title">Начинать воспроизведение при просыпании</string>
 	<string name="menu_poweramp_wakeup_start_delay_title">Задержка включения воспроизведения</string>
@@ -72,6 +74,8 @@
 	<!-- Radio -->
 	<string name="menu_radio_show_toast_title">Всплывающее окно при переключении радиостанций</string>
 	<string name="menu_radio_skip_seeking_mode_title">Не показывать при поиске радиостанций</string>
+	<string name="menu_radio_show_info_title">Отображать информацию о радио на главном экране</string>
+	<string name="menu_radio_show_toast_2_title">Не отображать всплывающее окно при активном главном экране</string>
 
 	<!-- Toasts -->
 	<string name="menu_category_toasts_radio_title">Radio toast</string>
@@ -123,7 +127,7 @@
     <string name="text_gps_track_time_format_hour">ч</string>
     <string name="text_gps_track_time_format_sec">с</string>
 
-    <string name="menu_agps_reset_title">Сброс AGPS</string>
+    <string name="menu_agps_reset_title">Сброс GPS</string>
 
 
     <string name="dsc_available">Включить динамическое изменение громкости</string>

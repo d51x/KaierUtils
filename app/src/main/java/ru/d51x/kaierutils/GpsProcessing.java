@@ -293,7 +293,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         mLocationManager.sendExtraCommand("gps", "delete_aiding_data", null);
         mLocationManager.sendExtraCommand("gps", "force_xtra_injection", bundle);
         mLocationManager.sendExtraCommand("gps", "force_time_injection", bundle);
-        Toast.makeText(context, "GPS завис\nAGPS данные были обнулены", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "GPS завис\nAGPS данные будут обнулены", Toast.LENGTH_LONG).show();
         App.GS.isGpsHangs = true;
     }
 

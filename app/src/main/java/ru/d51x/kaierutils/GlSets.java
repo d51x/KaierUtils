@@ -3,8 +3,6 @@ package ru.d51x.kaierutils;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import java.util.TimeZone;
-
 /**
  * Created by Dmitriy on 21.02.2015.
  */
@@ -15,6 +13,7 @@ public class GlSets {
     protected static final String GPS_BROADCAST_ACTION_FIRST_FIX = "ru.d51x.kaierutils.action.GPS_EVENT_FIRST_FIX";
     protected static final String GPS_BROADCAST_ACTION_SATELLITE_STATUS = "ru.d51x.kaierutils.action.GPS_EVENT_SATELLITE_STATUS";
     protected static final String GPS_BROADCAST_ACTION_AGPS_RESET = "ru.d51x.kaierutils.action.GPS_EVENT_AGPS_RESET";
+    protected static final String PWRAMP_BROADCAST_ACTION_TRACK_CHANGED = "ru.d51x.kaierutils.action.TRACK_CHANGED";
 
 	public static final String GLOBAL_SETTINGS_COLOR_SPEED = "kaierutils_show_color_speed";
 	//public static final boolean IN_EMULATOR = true;
@@ -76,6 +75,9 @@ public class GlSets {
     public boolean pa_isPlaying;
     public boolean pa_isStarted;
 
+    public String PowerAmp_TrackTitle = "";
+    public String PowerAmp_AlbumArtist = "";
+
     public int resumeDelayForPowerAmp = 3000;
     public int startDelayForPowerAmp = 3000;
 
@@ -116,6 +118,7 @@ public class GlSets {
 
 	public boolean isShowRadioToast;
 	public boolean isSkipSeekingMode;
+	public boolean isDontShowRadioToastWhenMainActivity;
 
 
 	public int radioToastLine1TextSize;
@@ -127,6 +130,8 @@ public class GlSets {
 	public int musicToastPictureHeight;
 
     public int curAudioFocusID = -1;
+    public boolean isShowRadioInfo = false;
+    public boolean isShowMusicInfo = false;
 
 	public GlSets() {
 		Volume = 3;
@@ -191,6 +196,7 @@ public class GlSets {
 
             interactWithPowerAmp = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE", false);
             isShowTrackInfoToast = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_SHOW_TOAST", false);
+            isShowMusicInfo = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_SHOW_MUSIC_INFO", false);
             needWatchSleepPowerAmp = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_WATCH_SLEEP", false);
             needWatchWakeUpPowerAmp = prefs.getBoolean ("CAR_SETTINGS__CONTROL_POWERAMP_WATCH_WAKEUP", false);
             needWatchBootUpPowerAmp = prefs.getBoolean ("CAR_SETTINGS__CONTROL_POWERAMP_WATCH_BOOTUP", false);
@@ -204,6 +210,8 @@ public class GlSets {
 
 			isShowRadioToast = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_TOAST", false);
 			isSkipSeekingMode = prefs.getBoolean("CAR_SETTINGS__RADIO_SKIP_SEEKING_MODE", true);
+            isShowRadioInfo = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_INFO", false);
+            isDontShowRadioToastWhenMainActivity = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_TOAST_2", true);
 
             dsc_isAvailable = prefs.getBoolean("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DO_CHAGE", false);
             dsc_FirstSpeed = prefs.getInt("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__FIRST_SPEED", 40);

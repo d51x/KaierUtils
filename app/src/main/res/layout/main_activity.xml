@@ -384,91 +384,7 @@ android:longClickable="true">
 
 	</LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout_general_options"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/layout_gps_info">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_device_name"
-            android:id="@+id/txtDeviceName"
-            android:textSize="20sp"
-            android:textIsSelectable="false"
-            android:layout_gravity="right"/>
-
-    </LinearLayout>
-
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout_statistics"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true">
-
-        <RelativeLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left|bottom"
-            android:id="@+id/layout_statistics">
-
-	        <LinearLayout
-		        android:orientation="vertical"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignBottom="@+id/tv_working_start"
-		        android:layout_alignParentLeft="true">
-		        <TextView
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:textAppearance="?android:attr/textAppearanceLarge"
-		            android:text="@string/text_statistic_title"
-		            android:id="@+id/textView"
-		            android:layout_alignParentTop="true" android:layout_alignParentLeft="true"/>
-		        <TextView
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:text="@string/text_working_start"
-		            android:id="@+id/tv_working_start"
-		            android:layout_below="@+id/textView" android:layout_alignParentLeft="true"/>
-		        <LinearLayout
-			        android:orientation="horizontal"
-			        android:layout_width="fill_parent"
-			        android:layout_height="wrap_content">
-			        <TextView
-		                android:layout_width="wrap_content"
-		                android:layout_height="wrap_content"
-		                android:text="@string/text_sleep_mode_count"
-		                android:id="@+id/tv_sleep_mode_count"
-		                android:layout_above="@+id/tv_reverse_count"
-		                android:layout_alignParentLeft="true"/>
-			        <TextView
-		                android:layout_width="wrap_content"
-		                android:layout_height="wrap_content"
-		                android:text="@string/text_sleep_mode_last_time"
-		                android:id="@+id/tv_sleep_mode_last_time"
-		                android:layout_gravity="center_horizontal"
-		                android:layout_above="@+id/tv_reverse_count"
-		                android:layout_alignRight="@+id/textView"/>
-		        </LinearLayout>
-		        <TextView
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="@string/text_reverse_count"
-	                android:id="@+id/tv_reverse_count"
-	                android:layout_alignParentBottom="true"
-	                android:layout_alignParentLeft="true"/>
-	        </LinearLayout>
-
-        </RelativeLayout>
-    </FrameLayout>
-
-	<FrameLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
         android:id="@+id/layout_obd2" android:visibility="invisible"
@@ -493,13 +409,12 @@ android:longClickable="true">
 		android:layout_height="wrap_content"
         android:visibility="visible"
         android:id="@+id/layout_test"
-        android:layout_above="@+id/layout_statistics"
-        android:layout_alignParentRight="true"
-		>
+        android:layout_alignParentBottom="true">
 		<LinearLayout
 			android:orientation="horizontal"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:visibility="visible">
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent" android:visibility="visible"
+            android:layout_gravity="right">
 			<Button android:layout_width="wrap_content" android:layout_height="wrap_content"
 			        android:text="Radio" android:id="@+id/btnTest1"
 			        android:layout_gravity="right|center_vertical"/>
@@ -519,61 +434,100 @@ android:longClickable="true">
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/layout_obd2"
-        android:layout_toLeftOf="@+id/layout_gps_info"
-        android:layout_below="@+id/linearLayout"
-        android:layout_above="@+id/layout_statistics">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/tvAudioMode"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="6dp"
-            android:textSize="22sp"
-            android:layout_marginBottom="6dp"/>
+        android:layout_below="@+id/layout_obd2"
+        android:layout_alignParentLeft="true">
 
         <LinearLayout
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/linearLayout"
             android:id="@+id/layout_radio_info"
-            android:layout_toLeftOf="@+id/layout_gps_info"
-            android:layout_alignLeft="@+id/linearLayout"
-            android:paddingTop="10dp"
-            android:visibility="invisible">
+            android:layout_gravity="left">
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:id="@+id/ivRadioInfo"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/toast_radio"/>
+                android:src="@drawable/toast_radio"
+                android:layout_marginRight="8dp"/>
 
-            <TextView
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
-                android:id="@+id/tvRadioInfo1"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal"
-                android:textSize="32sp"/>
+                android:layout_toLeftOf="@+id/layout_gps_info"
+                android:layout_alignLeft="@+id/linearLayout"
+                android:paddingTop="10dp"
+                android:visibility="visible">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
-                android:id="@+id/tvRadioInfo2"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal"
-                android:textColor="@android:color/holo_blue_dark"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:id="@+id/tvRadioInfo1"
+                    android:layout_gravity="center"
+                    android:textSize="32sp"
+                    android:gravity="left"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:id="@+id/tvRadioInfo2"
+                    android:layout_gravity="left"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:gravity="left"/>
+            </LinearLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/layout_music_info"
+            android:layout_gravity="left"
+            android:focusableInTouchMode="false">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:id="@+id/imageView7"
+                android:src="@drawable/toast_music"
+                android:layout_marginRight="8dp"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/layout_gps_info"
+                android:layout_alignLeft="@+id/linearLayout"
+                android:paddingTop="10dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:id="@+id/tvMusicInfo1"
+                    android:layout_gravity="center"
+                    android:textSize="32sp"
+                    android:gravity="left"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:id="@+id/tvMusicInfo2"
+                    android:layout_gravity="left"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:gravity="left"/>
+            </LinearLayout>
+        </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

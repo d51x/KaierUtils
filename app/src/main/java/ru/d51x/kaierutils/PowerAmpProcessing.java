@@ -87,10 +87,24 @@ public class PowerAmpProcessing {
 			            String artist = bundle.getString(Track.ARTIST);
 			            String album = bundle.getString(Track.ALBUM);
 			            String track = bundle.getString(Track.TITLE);
+                        App.GS.PowerAmp_TrackTitle = (track != null) ? track : "";
+                        App.GS.PowerAmp_AlbumArtist = "";
+                        if (artist != null) {
+                            App.GS.PowerAmp_AlbumArtist = artist;
+                        }
+                        if (album != null) {
+                            App.GS.PowerAmp_AlbumArtist += " (" + album + ")";
+                        }
+
+                        Intent intent2 = new Intent();
+                        intent2.setAction(GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED);
+                        intent2.putExtra("TrackTitle", App.GS.PowerAmp_TrackTitle);
+                        intent2.putExtra("AlbumArtist", App.GS.PowerAmp_AlbumArtist);
+                        App.getInstance().sendBroadcast(intent2);
 
 						App.mToast.cancel();
-						App.mToast.setTrackTitle (track);
-			            App.mToast.setArtistAlbum (artist, album);
+						App.mToast.setTrackTitle (App.GS.PowerAmp_TrackTitle);
+			            App.mToast.setArtistAlbum ( App.GS.PowerAmp_AlbumArtist);
 						App.mToast.showToast();
 		            }
 	            }

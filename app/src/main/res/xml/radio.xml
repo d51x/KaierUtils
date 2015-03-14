@@ -13,4 +13,17 @@
 	                    android:dependency="CAR_SETTINGS__RADIO_SHOW_TOAST"
 		/>
 
+
+    <CheckBoxPreference   android:key="CAR_SETTINGS__RADIO_SHOW_INFO"
+                          android:title="@string/menu_radio_show_info_title"
+                          android:defaultValue="false"
+                          android:dependency="CAR_SETTINGS__RADIO_SHOW_TOAST"
+        />
+
+    <CheckBoxPreference   android:key="CAR_SETTINGS__RADIO_SHOW_TOAST_2"
+                          android:title="@string/menu_radio_show_toast_2_title"
+                          android:defaultValue="true"
+                          android:dependency="CAR_SETTINGS__RADIO_SHOW_INFO"
+        />
+
 </PreferenceScreen>

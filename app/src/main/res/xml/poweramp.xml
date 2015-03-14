@@ -13,7 +13,12 @@
 		android:defaultValue="false"
 		android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE"
 		/>
-
+    <CheckBoxPreference
+        android:key="CAR_SETTINGS__CONTROL_POWERAMP_SHOW_MUSIC_INFO"
+        android:title="@string/menu_poweramp_show_music_info_title"
+        android:defaultValue="false"
+        android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE"
+        />
 	<CheckBoxPreference
 		android:key="CAR_SETTINGS__CONTROL_POWERAMP_WATCH_SLEEP"
 		android:title="@string/menu_poweramp_watch_sleep_title"

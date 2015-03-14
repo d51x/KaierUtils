@@ -33,17 +33,11 @@ public class MusicToast {
 	}
 
 	public void setTrackTitle(String trackTitle) {
-		TrackTitle =  (trackTitle != null) ? trackTitle : "";
+		TrackTitle =  trackTitle;
 	}
 
-	public void setArtistAlbum(String artist, String album) {
-		AlbumArtist = "";
-		if (artist != null) {
-			AlbumArtist = artist;
-		}
-		if (album != null) {
-			AlbumArtist += " (" + album + ")";
-		}
+	public void setArtistAlbum(String albumArtist) {
+		AlbumArtist = albumArtist;
 	}
 
 	public void setAlbumArt(Bitmap albumArt) {
