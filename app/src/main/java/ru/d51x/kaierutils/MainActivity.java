@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -109,11 +110,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private TextView tvRadioInfo2;
     private TextView tvMusicInfo1;
     private TextView tvMusicInfo2;
-
+    private ImageView ivAlbumArt;
     private LinearLayout layout_radio_info;
     private LinearLayout layout_music_info;
 
-	private Button btnTest2, btnTest1, btnTest3;
+	private Button btnTest2, btnTest1;
 	private SharedPreferences prefs;
 
 	@Override
@@ -186,9 +187,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		btnTest2 = (Button) findViewById (R.id.btnTest2);
 		btnTest2.setOnClickListener(this);
 
-		btnTest3 = (Button) findViewById (R.id.btnTest3);
-		btnTest3.setOnClickListener(this);
-
 		btnTest1 = (Button) findViewById (R.id.btnTest1);
 		btnTest1.setOnClickListener(this);
 
@@ -196,6 +194,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         tvRadioInfo2 = (TextView) findViewById(R.id.tvRadioInfo2);
         tvMusicInfo1 = (TextView) findViewById(R.id.tvMusicInfo1);
         tvMusicInfo2 = (TextView) findViewById(R.id.tvMusicInfo2);
+        ivAlbumArt = (ImageView) findViewById(R.id.ivAlbumArt);
 
         layout_radio_info = (LinearLayout) findViewById(R.id.layout_radio_info);
         layout_music_info = (LinearLayout) findViewById(R.id.layout_music_info);
@@ -226,11 +225,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), "---"));
 
 		setEQData(App.GS.eqData);
-        TWUtilEx.requestRadioInfo();
         tvRadioInfo1.setText("");
         tvRadioInfo2.setText("");
         tvMusicInfo1.setText("");
         tvMusicInfo2.setText("");
+        ivAlbumArt.setImageResource(R.drawable.toast_music);
 	}
 
 	public void updataData() {
@@ -310,11 +309,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         PowerampAPI.Commands.TOGGLE_PLAY_PAUSE));
 
 	            break;
-            case R.id.btnTest3:
-
-
-
-                break;
             case R.id.layout_gps_speed:
                 color_speed(tvGPSSpeed, App.GS.gpsSpeed);
                 App.GS.isColorSpeed = ! App.GS.isColorSpeed;
@@ -466,9 +460,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
             else if ( action.equals( GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED)) {
                 String TrackTitle = intent.getStringExtra("TrackTitle");
                 String AlbumArtist = intent.getStringExtra ("AlbumArtist");
+                Bitmap AlbumArt = (Bitmap) intent.getParcelableExtra("AlbumArt");
                 tvMusicInfo1.setText( TrackTitle );
                 tvMusicInfo2.setText( AlbumArtist );
-
+                ivAlbumArt.setImageBitmap( AlbumArt );
             }
 		}
 	};

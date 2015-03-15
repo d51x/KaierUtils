@@ -38,9 +38,10 @@ public class SettingsRadioFragment extends PreferenceFragment implements OnShare
             App.GS.isSkipSeekingMode = sharedPreferences.getBoolean ( key, true);
         } else if ( key.equals ( "CAR_SETTINGS__RADIO_SHOW_INFO" )) {
             App.GS.isShowRadioInfo = sharedPreferences.getBoolean ( key, false);
-        } else if ( key.equals ( "CAR_SETTINGS__RADIO_SHOW_TOAST_2" )) {
-            App.GS.isShowRadioInfo = sharedPreferences.getBoolean ( key, true);
         }
+//        else if ( key.equals ( "CAR_SETTINGS__RADIO_SHOW_TOAST_2" )) {
+//            App.GS.isDontShowRadioToastWhenMainActivity = sharedPreferences.getBoolean ( key, true);
+//        }
 
 	}
 }

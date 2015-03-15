@@ -100,6 +100,8 @@ public class PowerAmpProcessing {
                         intent2.setAction(GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED);
                         intent2.putExtra("TrackTitle", App.GS.PowerAmp_TrackTitle);
                         intent2.putExtra("AlbumArtist", App.GS.PowerAmp_AlbumArtist);
+                        intent2.putExtra("AlbumArt", App.GS.PowerAmp_AlbumArt);
+
                         App.getInstance().sendBroadcast(intent2);
 
 						App.mToast.cancel();
@@ -112,7 +114,8 @@ public class PowerAmpProcessing {
             else if (action.equals(PowerampAPI.ACTION_AA_CHANGED)) {
 	            if ( App.GS.interactWithPowerAmp && App.GS.isShowTrackInfoToast && App.GS.isPowerAmpPlaying)
 	            {
-	                App.mToast.setAlbumArt ((Bitmap) intent.getParcelableExtra(PowerampAPI.ALBUM_ART_BITMAP));
+	                App.GS.PowerAmp_AlbumArt = (Bitmap) intent.getParcelableExtra(PowerampAPI.ALBUM_ART_BITMAP);
+                    App.mToast.setAlbumArt (App.GS.PowerAmp_AlbumArt);
 	            }
             }
         }

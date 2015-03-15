@@ -2,6 +2,7 @@ package ru.d51x.kaierutils;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.graphics.Bitmap;
 
 /**
  * Created by Dmitriy on 21.02.2015.
@@ -75,8 +76,9 @@ public class GlSets {
     public boolean pa_isPlaying;
     public boolean pa_isStarted;
 
-    public String PowerAmp_TrackTitle = "";
+    public String PowerAmp_TrackTitle = "";  //TODO перевести кучу переменных на классы (структуры)
     public String PowerAmp_AlbumArtist = "";
+    public Bitmap PowerAmp_AlbumArt = null;
 
     public int resumeDelayForPowerAmp = 3000;
     public int startDelayForPowerAmp = 3000;
@@ -118,7 +120,7 @@ public class GlSets {
 
 	public boolean isShowRadioToast;
 	public boolean isSkipSeekingMode;
-	public boolean isDontShowRadioToastWhenMainActivity;
+	//public boolean isDontShowRadioToastWhenMainActivity;
 
 
 	public int radioToastLine1TextSize;
@@ -211,7 +213,7 @@ public class GlSets {
 			isShowRadioToast = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_TOAST", false);
 			isSkipSeekingMode = prefs.getBoolean("CAR_SETTINGS__RADIO_SKIP_SEEKING_MODE", true);
             isShowRadioInfo = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_INFO", false);
-            isDontShowRadioToastWhenMainActivity = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_TOAST_2", true);
+            //isDontShowRadioToastWhenMainActivity = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_TOAST_2", true);
 
             dsc_isAvailable = prefs.getBoolean("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DO_CHAGE", false);
             dsc_FirstSpeed = prefs.getInt("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__FIRST_SPEED", 40);

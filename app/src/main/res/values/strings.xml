@@ -75,7 +75,7 @@
 	<string name="menu_radio_show_toast_title">Всплывающее окно при переключении радиостанций</string>
 	<string name="menu_radio_skip_seeking_mode_title">Не показывать при поиске радиостанций</string>
 	<string name="menu_radio_show_info_title">Отображать информацию о радио на главном экране</string>
-	<string name="menu_radio_show_toast_2_title">Не отображать всплывающее окно при активном главном экране</string>
+	<!--<string name="menu_radio_show_toast_2_title">Не отображать всплывающее окно при активном главном экране</string>-->
 
 	<!-- Toasts -->
 	<string name="menu_category_toasts_radio_title">Radio toast</string>

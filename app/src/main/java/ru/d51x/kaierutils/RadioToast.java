@@ -19,7 +19,7 @@ public class RadioToast {
 	private String Text1;
 	private String Text2;
     private boolean isShowSecondLine = true;
-    public boolean isShowToastWhenActive = true;
+    //public boolean isShowToastWhenActive = true;
 
 	RadioToast(Context context) {
 		this.context = context;
@@ -42,7 +42,7 @@ public class RadioToast {
 
 	public void showToast() {
         if ( mToast != null) { mToast.cancel();	mToast = null; }
-        if ( !App.GS.isShowRadioToast || ( App.GS.isDontShowRadioToastWhenMainActivity && !isShowToastWhenActive ) ) return;
+        if ( !App.GS.isShowRadioToast /*|| ( App.GS.isDontShowRadioToastWhenMainActivity && !isShowToastWhenActive )*/ ) return;
 
         tvRadioText1.setTextSize ( App.GS.radioToastLine1TextSize );
         tvRadioText2.setTextSize ( App.GS.radioToastLine2TextSize );

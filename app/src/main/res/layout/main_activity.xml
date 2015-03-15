@@ -423,33 +423,33 @@ android:longClickable="true">
 				android:layout_height="wrap_content"
 				android:text="Music"
 				android:id="@+id/btnTest2" android:layout_gravity="right"/>
-			<Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-			        android:text="Next track" android:id="@+id/btnTest3"
-				/>
-		</LinearLayout>
+        </LinearLayout>
 
 	</FrameLayout>
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_obd2"
-        android:layout_alignParentLeft="true">
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayout"
+        android:layout_above="@+id/layout_test"
+        android:id="@+id/layout_radio_music_info">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/layout_radio_info"
-            android:layout_gravity="left">
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal">
 
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:id="@+id/ivRadioInfo"
                 android:src="@drawable/toast_radio"
-                android:layout_marginRight="8dp"/>
+                android:layout_gravity="center_horizontal"/>
 
             <LinearLayout
                 android:orientation="vertical"
@@ -458,7 +458,9 @@ android:longClickable="true">
                 android:layout_toLeftOf="@+id/layout_gps_info"
                 android:layout_alignLeft="@+id/linearLayout"
                 android:paddingTop="10dp"
-                android:visibility="visible">
+                android:visibility="visible"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -466,9 +468,9 @@ android:longClickable="true">
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Medium Text"
                     android:id="@+id/tvRadioInfo1"
-                    android:layout_gravity="center"
+                    android:layout_gravity="center_horizontal"
                     android:textSize="32sp"
-                    android:gravity="left"/>
+                    android:gravity="center_horizontal"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -476,26 +478,28 @@ android:longClickable="true">
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Medium Text"
                     android:id="@+id/tvRadioInfo2"
-                    android:layout_gravity="left"
                     android:textColor="@android:color/holo_blue_dark"
-                    android:gravity="left"/>
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"/>
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/layout_music_info"
-            android:layout_gravity="left"
-            android:focusableInTouchMode="false">
+            android:focusableInTouchMode="false"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone">
 
             <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:id="@+id/imageView7"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:id="@+id/ivAlbumArt"
                 android:src="@drawable/toast_music"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginRight="8dp"
+                android:layout_gravity="center_horizontal"/>
 
             <LinearLayout
                 android:orientation="vertical"
@@ -504,7 +508,8 @@ android:longClickable="true">
                 android:layout_toLeftOf="@+id/layout_gps_info"
                 android:layout_alignLeft="@+id/linearLayout"
                 android:paddingTop="10dp"
-                android:visibility="visible">
+                android:visibility="visible"
+                android:layout_gravity="center_horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -512,9 +517,9 @@ android:longClickable="true">
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Medium Text"
                     android:id="@+id/tvMusicInfo1"
-                    android:layout_gravity="center"
+                    android:layout_gravity="center_horizontal"
                     android:textSize="32sp"
-                    android:gravity="left"/>
+                    android:gravity="center"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -522,9 +527,9 @@ android:longClickable="true">
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Medium Text"
                     android:id="@+id/tvMusicInfo2"
-                    android:layout_gravity="left"
                     android:textColor="@android:color/holo_blue_dark"
-                    android:gravity="left"/>
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"/>
             </LinearLayout>
         </LinearLayout>
 

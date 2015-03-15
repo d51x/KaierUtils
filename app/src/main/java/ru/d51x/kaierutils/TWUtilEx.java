@@ -173,7 +173,7 @@ public class TWUtilEx {
                     case TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA:    // 1025
 	                    if ( message.arg1 == 2) {   // и переключение и поиск
 		                    if ( !App.GS.isShowRadioToast) break;
-		                    if ( App.GS.isDontShowRadioToastWhenMainActivity) break;
+		                    //if ( App.GS.isDontShowRadioToastWhenMainActivity) break;
 
 		                    String rdata = (String) message.obj;
 		                    if ( App.GS.isSkipSeekingMode && ( rdata == null ||
@@ -228,6 +228,7 @@ public class TWUtilEx {
 		}
 
 		initEqData();
+        requestRadioInfo();
 	}
 
 	public void Destroy() {
@@ -430,11 +431,14 @@ public class TWUtilEx {
 
     public static void requestRadioInfo() {
         if ( ! isTWUtilAvailable() ) return;
-        TWUtil mTW = new TWUtil (1);
+        TWUtil mTW = new TWUtil ();
         if (mTW.open (new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA}) == 0) {
             try {
                 mTW.start ();
-                mTW.write ( TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA, 4, 255);
+                //mTW.write ( TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA, 4, 255);
+                //mTW.write ( 1030, 0);  // ????
+                mTW.write ( TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA, 255);
+
                 mTW.stop ();
                 mTW.close ();
             } catch (Exception e) {
