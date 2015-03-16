@@ -77,11 +77,13 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 		{
 			ActivityManager activityManager = (ActivityManager) context.getSystemService("activity");
 			List<RunningTaskInfo> taskInfo = activityManager.getRunningTasks(1);
+			String activeWnd = ((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName();
 			if ( taskInfo.size() <= 0 ||
-				 !((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("com.tw.radio") //||
+				 !(activeWnd.equalsIgnoreCase ("com.tw.radio")) //||
                  //!((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils")
 				)
 			{
+                if ( App.GS.isDontShowRadioToastWhenMainActivity && activeWnd.equalsIgnoreCase ("ru.d51x.kaierutils") ) return;
                 //App.rToast.isShowToastWhenActive = !((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils");
                 String title = intent.getStringExtra("Title");
 				String freq = intent.getStringExtra ("Frequency");

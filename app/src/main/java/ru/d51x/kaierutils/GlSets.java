@@ -122,7 +122,7 @@ public class GlSets {
 
 	public boolean isShowRadioToast;
 	public boolean isSkipSeekingMode;
-	//public boolean isDontShowRadioToastWhenMainActivity;
+	public boolean isDontShowRadioToastWhenMainActivity;
 
 
 	public int radioToastLine1TextSize;
@@ -218,7 +218,7 @@ public class GlSets {
 			isShowRadioToast = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_TOAST", false);
 			isSkipSeekingMode = prefs.getBoolean("CAR_SETTINGS__RADIO_SKIP_SEEKING_MODE", true);
             isShowRadioInfo = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_INFO", false);
-            //isDontShowRadioToastWhenMainActivity = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_TOAST_2", true);
+            isDontShowRadioToastWhenMainActivity = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_TOAST_2", true);
 
             dsc_isAvailable = prefs.getBoolean("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DO_CHAGE", false);
             dsc_FirstSpeed = prefs.getInt("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__FIRST_SPEED", 40);
