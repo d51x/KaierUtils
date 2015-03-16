@@ -176,7 +176,8 @@ public class TWUtilEx {
 		                    //if ( App.GS.isDontShowRadioToastWhenMainActivity) break;
 
 		                    String rdata = (String) message.obj;
-		                    if ( App.GS.isSkipSeekingMode && ( rdata == null ||
+		                    if ( App.GS.isSkipSeekingMode && ( rdata == App.GS.RADIO_BLANK_STATION_NAME ||
+                                                               rdata == null ||
                                                                rdata.isEmpty () ||
                                                                rdata.equals( "" ) ||
                                                                rdata.equals( "null" ) ||

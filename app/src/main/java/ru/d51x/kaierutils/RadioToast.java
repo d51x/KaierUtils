@@ -29,7 +29,7 @@ public class RadioToast {
 	}
 
 	public void SetRadioText(String text1, String text2) {
-		if ( (text1.equals( null )) || (text1.isEmpty () ) || (text1.equals("") ) || (text1.equals( "null"))) { // есть название
+		if ( (text1 == App.GS.RADIO_BLANK_STATION_NAME) || (text1.equals( null )) || (text1.isEmpty () ) || (text1.equals("") ) || (text1.equals( "null"))) { // есть название
             isShowSecondLine = false;
             Text1 = String.format("%1$s MHz", text2);
             Text2 = "";

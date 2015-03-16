@@ -458,12 +458,14 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
             }
             else if ( action.equals( GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED)) {
-                String TrackTitle = intent.getStringExtra("TrackTitle");
-                String AlbumArtist = intent.getStringExtra ("AlbumArtist");
-                Bitmap AlbumArt = (Bitmap) intent.getParcelableExtra("AlbumArt");
-                tvMusicInfo1.setText( TrackTitle );
-                tvMusicInfo2.setText( AlbumArtist );
-                ivAlbumArt.setImageBitmap( AlbumArt );
+                //String TrackTitle = intent.getStringExtra("TrackTitle");
+                //String AlbumArtist = intent.getStringExtra ("AlbumArtist");
+                //Bitmap AlbumArt = (Bitmap) intent.getParcelableExtra("AlbumArt");
+                //tvMusicInfo1.setText( TrackTitle );
+                tvMusicInfo1.setText( App.GS.PowerAmp_TrackTitle );
+                //tvMusicInfo2.setText( AlbumArtist );
+                tvMusicInfo2.setText( App.GS.PowerAmp_AlbumArtist );
+                ivAlbumArt.setImageBitmap(  App.GS.PowerAmp_AlbumArt );
             }
 		}
 	};
