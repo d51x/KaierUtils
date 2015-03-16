@@ -136,6 +136,7 @@ public class GlSets {
     public int curAudioFocusID = -1;
     public boolean isShowRadioInfo = false;
     public boolean isShowMusicInfo = false;
+    public boolean dontShowMusicInfoWhenMainActive = true;
 
 	public GlSets() {
 		Volume = 3;
@@ -201,6 +202,8 @@ public class GlSets {
             interactWithPowerAmp = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE", false);
             isShowTrackInfoToast = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_SHOW_TOAST", false);
             isShowMusicInfo = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_SHOW_MUSIC_INFO", false);
+			dontShowMusicInfoWhenMainActive = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_SHOW_TOAST2", true);
+
             needWatchSleepPowerAmp = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_WATCH_SLEEP", false);
             needWatchWakeUpPowerAmp = prefs.getBoolean ("CAR_SETTINGS__CONTROL_POWERAMP_WATCH_WAKEUP", false);
             needWatchBootUpPowerAmp = prefs.getBoolean ("CAR_SETTINGS__CONTROL_POWERAMP_WATCH_BOOTUP", false);

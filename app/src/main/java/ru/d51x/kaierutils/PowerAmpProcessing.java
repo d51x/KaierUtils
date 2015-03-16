@@ -75,35 +75,38 @@ public class PowerAmpProcessing {
                 App.GS.isPowerAmpPlaying = ((status == PowerampAPI.Status.TRACK_PLAYING) && (!paused));
             }
             else if (action.equals(PowerampAPI.ACTION_TRACK_CHANGED)) {
+
+	            Bundle bundle = intent.getBundleExtra(PowerampAPI.TRACK);
+	            String artist = bundle.getString(Track.ARTIST);
+	            String album = bundle.getString(Track.ALBUM);
+	            String track = bundle.getString(Track.TITLE);
+	            App.GS.PowerAmp_TrackTitle = (track != null) ? track : "";
+	            App.GS.PowerAmp_AlbumArtist = "";
+	            if (artist != null) {
+		            App.GS.PowerAmp_AlbumArtist = artist;
+	            }
+	            if (album != null) {
+		            App.GS.PowerAmp_AlbumArtist += " (" + album + ")";
+	            }
+
+	            Intent intent2 = new Intent();
+	            intent2.setAction(GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED);
+	            intent2.putExtra("TrackTitle", App.GS.PowerAmp_TrackTitle);
+	            intent2.putExtra("AlbumArtist", App.GS.PowerAmp_AlbumArtist);
+	            intent2.putExtra("AlbumArt", App.GS.PowerAmp_AlbumArt);
+
+	            App.getInstance().sendBroadcast(intent2);
+
 	            if ( App.GS.interactWithPowerAmp && App.GS.isShowTrackInfoToast && App.GS.isPowerAmpPlaying )
 	            {
 		            ActivityManager activityManager = (ActivityManager) context.getSystemService("activity");
 		            List<ActivityManager.RunningTaskInfo> taskInfo = activityManager.getRunningTasks (1);
+		            String activeWnd = ((ActivityManager.RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName();
 		            if ( taskInfo.size() <= 0 ||
-	                     !((ActivityManager.RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals(PowerampAPI.PACKAGE_NAME)
+	                     !(activeWnd.equalsIgnoreCase (PowerampAPI.PACKAGE_NAME))
 				       )
 		            {
-			            Bundle bundle = intent.getBundleExtra(PowerampAPI.TRACK);
-			            String artist = bundle.getString(Track.ARTIST);
-			            String album = bundle.getString(Track.ALBUM);
-			            String track = bundle.getString(Track.TITLE);
-                        App.GS.PowerAmp_TrackTitle = (track != null) ? track : "";
-                        App.GS.PowerAmp_AlbumArtist = "";
-                        if (artist != null) {
-                            App.GS.PowerAmp_AlbumArtist = artist;
-                        }
-                        if (album != null) {
-                            App.GS.PowerAmp_AlbumArtist += " (" + album + ")";
-                        }
-
-                        Intent intent2 = new Intent();
-                        intent2.setAction(GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED);
-                        intent2.putExtra("TrackTitle", App.GS.PowerAmp_TrackTitle);
-                        intent2.putExtra("AlbumArtist", App.GS.PowerAmp_AlbumArtist);
-                        intent2.putExtra("AlbumArt", App.GS.PowerAmp_AlbumArt);
-
-                        App.getInstance().sendBroadcast(intent2);
-
+			            if ( App.GS.dontShowMusicInfoWhenMainActive && activeWnd.equalsIgnoreCase("ru.d51x.kaierutils")) return;
 						App.mToast.cancel();
 						App.mToast.setTrackTitle (App.GS.PowerAmp_TrackTitle);
 			            App.mToast.setArtistAlbum ( App.GS.PowerAmp_AlbumArtist);
@@ -112,9 +115,18 @@ public class PowerAmpProcessing {
 	            }
             }
             else if (action.equals(PowerampAPI.ACTION_AA_CHANGED)) {
+	            App.GS.PowerAmp_AlbumArt = (Bitmap) intent.getParcelableExtra(PowerampAPI.ALBUM_ART_BITMAP);
+
+	            Intent intent3 = new Intent();
+	            intent3.setAction(GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED);
+	            intent3.putExtra("TrackTitle", App.GS.PowerAmp_TrackTitle);
+	            intent3.putExtra("AlbumArtist", App.GS.PowerAmp_AlbumArtist);
+	            intent3.putExtra("AlbumArt", App.GS.PowerAmp_AlbumArt);
+
+	            App.getInstance().sendBroadcast(intent3);
+
 	            if ( App.GS.interactWithPowerAmp && App.GS.isShowTrackInfoToast && App.GS.isPowerAmpPlaying)
 	            {
-	                App.GS.PowerAmp_AlbumArt = (Bitmap) intent.getParcelableExtra(PowerampAPI.ALBUM_ART_BITMAP);
                     App.mToast.setAlbumArt (App.GS.PowerAmp_AlbumArt);
 	            }
             }

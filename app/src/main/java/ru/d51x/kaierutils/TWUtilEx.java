@@ -212,7 +212,7 @@ public class TWUtilEx {
 			mTWUtil.write (TWUtilConst.TWUTIL_CONTEXT_VOLUME_CONTROL, 255);
 			//mTWUtil.write (TWUtilConst.TWUTIL_CONTEXT_BRIGHTNESS, 255);
             mTWUtil.write ( TWUtilConst.TWUTIL_CONTEXT_EQ, 255);
-
+			mTWUtil.write ( TWUtilConst.TWUTIL_COMMAND_AUDIO_FOCUS, 255);
 		}
 		result = mTWUtilRadio.open(new short[]{(short) TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA});
 		if ( result == 0) {
@@ -221,8 +221,6 @@ public class TWUtilEx {
             mTWUtilRadio.write (TWUtilConst.TWUTIL_CONTEXT_RADIO_DATA, 255);
 		}
 
-		initEqData();
-        requestRadioInfo();
 	}
 
 	public void Destroy() {

@@ -51,6 +51,7 @@
 	<!-- PowerAmp -->
 	<string name="menu_poweramp_interaction_title">Взаимодействовать с PowerAmp</string>
 	<string name="menu_poweramp_show_toast_title">Показывать тоаст с информацией о треке</string>
+	<string name="menu_poweramp_show_toast2_title">Не показывать тоаст, когда KaierUtils активно</string>
 	<string name="menu_poweramp_show_music_info_title">Отображать информацию о треке в главном окне</string>
 	<string name="menu_poweramp_watch_sleep_title">Ставить на паузу при уходе в sleep</string>
 	<string name="menu_poweramp_watch_wakeup_title">Начинать воспроизведение при просыпании</string>

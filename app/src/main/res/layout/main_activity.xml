@@ -434,7 +434,7 @@ android:longClickable="true">
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/linearLayout"
         android:layout_above="@+id/layout_test"
-        android:id="@+id/layout_radio_music_info">
+        android:id="@+id/layout_radio_music_info" android:layout_marginTop="8dp">
 
         <LinearLayout
             android:orientation="vertical"
@@ -486,24 +486,23 @@ android:longClickable="true">
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="400dp"
             android:layout_height="wrap_content"
             android:id="@+id/layout_music_info"
             android:focusableInTouchMode="false"
             android:layout_gravity="center_horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="128dp"
                 android:layout_height="128dp"
                 android:id="@+id/ivAlbumArt"
                 android:src="@drawable/toast_music"
-                android:layout_marginRight="8dp"
                 android:layout_gravity="center_horizontal"/>
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/layout_gps_info"
                 android:layout_alignLeft="@+id/linearLayout"
@@ -518,7 +517,7 @@ android:longClickable="true">
                     android:text="Medium Text"
                     android:id="@+id/tvMusicInfo1"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="32sp"
+                    android:textSize="28sp"
                     android:gravity="center"/>
 
                 <TextView

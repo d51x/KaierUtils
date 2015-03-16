@@ -19,6 +19,14 @@
         android:defaultValue="false"
         android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE"
         />
+
+	<CheckBoxPreference
+		android:key="CAR_SETTINGS__CONTROL_POWERAMP_SHOW_TOAST2"
+		android:title="@string/menu_poweramp_show_toast2_title"
+		android:defaultValue="true"
+		android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE"
+		/>
+
 	<CheckBoxPreference
 		android:key="CAR_SETTINGS__CONTROL_POWERAMP_WATCH_SLEEP"
 		android:title="@string/menu_poweramp_watch_sleep_title"
