@@ -176,14 +176,7 @@ public class TWUtilEx {
 		                    //if ( App.GS.isDontShowRadioToastWhenMainActivity) break;
 
 		                    String rdata = (String) message.obj;
-		                    if ( App.GS.isSkipSeekingMode && ( rdata == App.GS.RADIO_BLANK_STATION_NAME ||
-                                                               rdata == null ||
-                                                               rdata.isEmpty () ||
-                                                               rdata.equals( "" ) ||
-                                                               rdata.equals( "null" ) ||
-                                                               message.obj == null
-                                                              )
-                                ) break;
+		                    if ( App.GS.isSkipSeekingMode && ( rdata.equals( App.GS.RADIO_BLANK_STATION_NAME))) break;
 		                    Intent ri = new Intent();
 		                    ri.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
 	                        ri.putExtra ("Frequency", String.format ("%1.2f", (float) message.arg2 / 100));

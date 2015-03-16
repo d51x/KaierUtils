@@ -78,8 +78,8 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 			ActivityManager activityManager = (ActivityManager) context.getSystemService("activity");
 			List<RunningTaskInfo> taskInfo = activityManager.getRunningTasks(1);
 			if ( taskInfo.size() <= 0 ||
-				 !((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("com.tw.radio") ||
-                 !((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils")
+				 !((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("com.tw.radio") //||
+                 //!((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils")
 				)
 			{
                 //App.rToast.isShowToastWhenActive = !((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils");
