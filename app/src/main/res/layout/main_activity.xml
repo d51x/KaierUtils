@@ -434,7 +434,7 @@ android:longClickable="true">
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/linearLayout"
         android:layout_above="@+id/layout_test"
-        android:id="@+id/layout_radio_music_info" android:layout_marginTop="8dp">
+        android:id="@+id/layout_radio_music_info" android:layout_marginTop="12dp">
 
         <LinearLayout
             android:orientation="vertical"
@@ -486,7 +486,7 @@ android:longClickable="true">
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="400dp"
+            android:layout_width="480dp"
             android:layout_height="wrap_content"
             android:id="@+id/layout_music_info"
             android:focusableInTouchMode="false"
@@ -494,8 +494,8 @@ android:longClickable="true">
             android:visibility="visible">
 
             <ImageView
-                android:layout_width="128dp"
-                android:layout_height="128dp"
+                android:layout_width="144dp"
+                android:layout_height="144dp"
                 android:id="@+id/ivAlbumArt"
                 android:src="@drawable/toast_music"
                 android:layout_gravity="center_horizontal"/>
@@ -517,7 +517,7 @@ android:longClickable="true">
                     android:text="Medium Text"
                     android:id="@+id/tvMusicInfo1"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="28sp"
+                    android:textSize="26sp"
                     android:gravity="center"/>
 
                 <TextView

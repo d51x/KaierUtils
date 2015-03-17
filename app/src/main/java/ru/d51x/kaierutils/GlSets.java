@@ -16,7 +16,7 @@ public class GlSets {
     protected static final String GPS_BROADCAST_ACTION_AGPS_RESET = "ru.d51x.kaierutils.action.GPS_EVENT_AGPS_RESET";
     protected static final String PWRAMP_BROADCAST_ACTION_TRACK_CHANGED = "ru.d51x.kaierutils.action.TRACK_CHANGED";
 
-    protected static final String RADIO_BLANK_STATION_NAME = "        ";
+    protected static final CharSequence RADIO_BLANK_STATION_NAME = "        ";
 
 	public static final String GLOBAL_SETTINGS_COLOR_SPEED = "kaierutils_show_color_speed";
 	//public static final boolean IN_EMULATOR = true;

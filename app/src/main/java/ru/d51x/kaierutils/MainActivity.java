@@ -299,6 +299,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 // radio audio focus
                 if (App.GS.curAudioFocusID > 0) TWUtilEx.setAudioFocus(128 & App.GS.curAudioFocusID);
                 TWUtilEx.setAudioFocus(1);
+                startService(new Intent("com.tw.radio"));
                 TWUtilEx.requestRadioInfo();
 		        break;
             case R.id.btnTest2:
@@ -449,6 +450,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 				String title = intent.getStringExtra("Title");
 				String freq = intent.getStringExtra ("Frequency");
                 tvRadioInfo1.setText( title );
+                tvRadioInfo1.setVisibility( title.contentEquals( App.GS.RADIO_BLANK_STATION_NAME) ? View.GONE : View.VISIBLE);
                 tvRadioInfo2.setText( freq + " MHz");
             }
             else if ( action.equals( TWUtilConst.TWUTIL_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED)) {
@@ -458,14 +460,18 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
             }
             else if ( action.equals( GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED)) {
-                //String TrackTitle = intent.getStringExtra("TrackTitle");
-                //String AlbumArtist = intent.getStringExtra ("AlbumArtist");
-                //Bitmap AlbumArt = (Bitmap) intent.getParcelableExtra("AlbumArt");
-                //tvMusicInfo1.setText( TrackTitle );
-                tvMusicInfo1.setText( App.GS.PowerAmp_TrackTitle );
-                //tvMusicInfo2.setText( AlbumArtist );
-                tvMusicInfo2.setText( App.GS.PowerAmp_AlbumArtist );
-                ivAlbumArt.setImageBitmap(  App.GS.PowerAmp_AlbumArt );
+                if ( App.GS.interactWithPowerAmp && App.GS.isShowMusicInfo && App.GS.isPowerAmpPlaying )
+                {
+                    //String TrackTitle = intent.getStringExtra("TrackTitle");
+                    //String AlbumArtist = intent.getStringExtra ("AlbumArtist");
+                    Bitmap AlbumArt = (Bitmap) intent.getParcelableExtra("AlbumArt");
+                    //tvMusicInfo1.setText( TrackTitle );
+                    tvMusicInfo1.setText(App.GS.PowerAmp_TrackTitle);
+                    //tvMusicInfo2.setText( AlbumArtist );
+                    tvMusicInfo2.setText(App.GS.PowerAmp_AlbumArtist);
+                    if (!AlbumArt.equals(App.GS.PowerAmp_AlbumArt))
+                        ivAlbumArt.setImageBitmap(App.GS.PowerAmp_AlbumArt);
+                }
             }
 		}
 	};

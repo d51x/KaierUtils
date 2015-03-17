@@ -24,12 +24,12 @@ public class RadioToast {
 	RadioToast(Context context) {
 		this.context = context;
 		mLayout = (RelativeLayout) ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(R.layout.radio_toast, null);
-		tvRadioText1 = (TextView) this.mLayout.findViewById (R.id.tvRadioText1);
-		tvRadioText2 = (TextView) this.mLayout.findViewById(R.id.tvRadioText2);
+		tvRadioText1 = (TextView) mLayout.findViewById(R.id.tvRadioText1);
+		tvRadioText2 = (TextView) mLayout.findViewById(R.id.tvRadioText2);
 	}
 
 	public void SetRadioText(String text1, String text2) {
-		if (text1.equals ( App.GS.RADIO_BLANK_STATION_NAME )) { // есть название
+		if (text1.contentEquals ( App.GS.RADIO_BLANK_STATION_NAME )) { // есть название
             isShowSecondLine = false;
             Text1 = String.format("%1$s MHz", text2);
             Text2 = "";
@@ -53,12 +53,12 @@ public class RadioToast {
         } else {
             tvRadioText1.setText ( Text2 );
             tvRadioText2.setText ( "" );
-            tvRadioText2.setVisibility ( View.GONE);
+            tvRadioText2.setVisibility ( View.INVISIBLE);
         }
 		mToast = new Toast(context);
 		mToast.setGravity(55, 0, 0);
 		mToast.setDuration(Toast.LENGTH_LONG);
-		mToast.setView(this.mLayout);
+		mToast.setView(mLayout);
 		mToast.show();
 	}
 
