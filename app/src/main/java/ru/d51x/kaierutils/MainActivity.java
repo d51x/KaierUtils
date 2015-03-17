@@ -67,7 +67,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private LinearLayout layout_waypoints;
     private LinearLayout layout_tracktime;
 
-
+    public EngineRPMObdCommand engineRpmCommand;
+    public SpeedObdCommand speedCommand;
 
 	private TextView tvGPSDistance;
 	private ImageView ivGPSDistance;
@@ -633,12 +634,12 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 new EchoOffObdCommand().run(socket.getInputStream(), socket.getOutputStream());
                 new LineFeedOffObdCommand().run(socket.getInputStream(), socket.getOutputStream());
                 new TimeoutObdCommand(0).run(socket.getInputStream(), socket.getOutputStream());
-                new SelectProtocolObdCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
+                new SelectProtocolObdCommand(ObdProtocols.ISO_9141_2).run(socket.getInputStream(), socket.getOutputStream());
                 //new AmbientAirTemperatureObdCommand().run(socket.getInputStream(), socket.getOutputStream());
 
 
-                EngineRPMObdCommand engineRpmCommand = new EngineRPMObdCommand();
-                SpeedObdCommand speedCommand = new SpeedObdCommand();
+               engineRpmCommand = new EngineRPMObdCommand();
+               speedCommand = new SpeedObdCommand();
                 while (!Thread.currentThread().isInterrupted())
                 {
                     engineRpmCommand.run(socket.getInputStream(), socket.getOutputStream());
@@ -646,12 +647,19 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     // TODO handle commands result
                     Log.d("MainActivity", "RPM: " + engineRpmCommand.getFormattedResult());
                     Log.d("MainActivity", "Speed: " + speedCommand.getFormattedResult());
-                    try {
-                        tvOBD_RPM.setText( engineRpmCommand.getFormattedResult() );
-                        tvOBD_Speed.setText( speedCommand.getFormattedResult() );
-                    } catch (Exception e3) {
 
-                    }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                tvOBD_RPM.setText( engineRpmCommand.getFormattedResult() );
+                                tvOBD_Speed.setText( speedCommand.getFormattedResult() );
+                            } catch (Exception e3) {
+
+                            }
+                        }
+                    });
                 }
 
             } catch (Exception e2) {

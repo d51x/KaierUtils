@@ -387,22 +387,34 @@ android:longClickable="true">
     <FrameLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-        android:id="@+id/layout_obd2" android:visibility="invisible"
+        android:id="@+id/layout_obd2" android:visibility="visible"
         android:layout_below="@+id/layout_gps_info"
-        android:layout_alignParentLeft="true" android:layout_toLeftOf="@+id/linearLayout">
-		<TextView
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:text="New Text"
-	        android:id="@+id/text_obd_rpm"
-	        android:layout_gravity="bottom"/>
-		<TextView
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:text="New Text"
-	        android:id="@+id/text_obd_speed"
-	        android:layout_gravity="top"/>
-	</FrameLayout>
+        android:layout_alignParentLeft="true" android:layout_toLeftOf="@+id/linearLayout"
+        android:layout_alignBottom="@+id/layout_test">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/text_obd_rpm"
+                android:layout_gravity="bottom"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/text_obd_speed"
+                android:gravity="bottom"
+                />
+        </LinearLayout>
+
+    </FrameLayout>
 
 	<FrameLayout
 		android:layout_width="match_parent"

@@ -7,9 +7,9 @@
 	      android:title="@string/menu_agps_reset_title"
 		/>
 
-	<!--
+
 	<item android:id="@+id/menu_odb2_settings"
 	      android:title="@string/text_obd2_settings"
 		/>
-	-->
+
 </menu>
