@@ -771,8 +771,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
         } else {
             ivOBD_FuelConsump.setImageResource( R.drawable.fuel_consump_max);
         }
-        tvOBD_FuelConsump.setText( String.format("%1$.1f", l));
-        tvOBD_FuelTank.setText( String.format("%1$.1f", l2));
+        tvOBD_FuelConsump.setText( String.format("%1$.1f л/ч", l));
+        tvOBD_FuelTank.setText( String.format("%1$.1f л/100км", l2));
     }
 
 
