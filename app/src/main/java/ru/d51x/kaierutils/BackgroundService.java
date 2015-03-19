@@ -14,11 +14,13 @@ public class BackgroundService extends Service {
 	private TWUtilProcessingThread twUtilProcessingThread;
     private PowerAmpProcessingThread powerAmpProcessingThread;
     private GpsProcessingThread gpsProcessingThread;
+    public static OBDThread obdiiThread;
 
 	public BackgroundService () {
 		twUtilProcessingThread = null;
         powerAmpProcessingThread = null;
         gpsProcessingThread = null;
+        obdiiThread = null;
 	}
 
 	@Override
@@ -60,6 +62,7 @@ public class BackgroundService extends Service {
 		startPowerAmpProcessingThread();
 		startRadioProcessingThread();
         startGpsProcessingThread();
+        startOBDThread();
 
         return Service.START_STICKY;
 	}
@@ -112,6 +115,21 @@ public class BackgroundService extends Service {
         gpsProcessingThread = null;
     }
 
+
+    public static synchronized void startOBDThread(){
+        Log.d ("BackgroundService", "startOBDThread");
+        if ( obdiiThread != null ) return;
+        obdiiThread = new OBDThread ();
+        obdiiThread.start();
+    }
+
+    public static synchronized void stopOBDThread(){
+        Log.d ("BackgroundService", "stopOBDThread");
+        if ( obdiiThread == null) return;
+        obdiiThread.finish();
+        obdiiThread = null;
+    }
+
 	@Override
 	public void onDestroy() {
 		Toast.makeText(getApplicationContext(), "KaierUtils is stopped", Toast.LENGTH_LONG).show();
@@ -121,6 +139,7 @@ public class BackgroundService extends Service {
 		stopRadioProcessingThread();
 		stopPowerAmpProcessingThread();
 		stopTWUtilProcessingThread();
+        stopOBDThread();
 		super.onDestroy();
 	}
 

@@ -16,9 +16,11 @@ public class GlSets {
     protected static final String GPS_BROADCAST_ACTION_AGPS_RESET = "ru.d51x.kaierutils.action.GPS_EVENT_AGPS_RESET";
     protected static final String PWRAMP_BROADCAST_ACTION_TRACK_CHANGED = "ru.d51x.kaierutils.action.TRACK_CHANGED";
 
-    protected static final CharSequence RADIO_BLANK_STATION_NAME = "        ";
 
 	public static final String GLOBAL_SETTINGS_COLOR_SPEED = "kaierutils_show_color_speed";
+
+
+    public Radio radio;
 	//public static final boolean IN_EMULATOR = true;
 	private int Volume;
 	//private int Brightness;
@@ -120,11 +122,6 @@ public class GlSets {
     public int dsc_DeltaToChange = 5;  // дельта изменения скорости, внутри которой не сработает изменение громкости
 
 
-	public boolean isShowRadioToast;
-	public boolean isSkipSeekingMode;
-	public boolean isDontShowRadioToastWhenMainActivity;
-
-
 	public int radioToastLine1TextSize;
 	public int radioToastLine2TextSize;
 
@@ -134,9 +131,9 @@ public class GlSets {
 	public int musicToastPictureHeight;
 
     public int curAudioFocusID = -1;
-    public boolean isShowRadioInfo = false;
     public boolean isShowMusicInfo = false;
     public boolean dontShowMusicInfoWhenMainActive = true;
+
 
 	public GlSets() {
 		Volume = 3;
@@ -171,6 +168,8 @@ public class GlSets {
 
         pa_isPlaying = false;
         pa_isStarted = false;
+
+        radio = new Radio(App.getInstance());
 
 		try {
 			Volume = getVolumeLevel ();
@@ -215,10 +214,10 @@ public class GlSets {
 			codeNextFolder = Integer.parseInt (prefs.getString ("CAR_SETTINGS__CONTROL_POWERAMP_CODE_NEXT_CAT", "22"));
 			codePrevFolder = Integer.parseInt (prefs.getString ("CAR_SETTINGS__CONTROL_POWERAMP_CODE_PREV_CAT", "23"));
 
-			isShowRadioToast = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_TOAST", false);
-			isSkipSeekingMode = prefs.getBoolean("CAR_SETTINGS__RADIO_SKIP_SEEKING_MODE", true);
-            isShowRadioInfo = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_INFO", false);
-            isDontShowRadioToastWhenMainActivity = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_TOAST_2", true);
+			radio.showToast = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_TOAST", false);
+			radio.skipSeekingMode = prefs.getBoolean("CAR_SETTINGS__RADIO_SKIP_SEEKING_MODE", true);
+            radio.showInfo = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_INFO", false);
+            radio.dontShowToastOnMainActivity = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_TOAST_2", true);
 
             dsc_isAvailable = prefs.getBoolean("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DO_CHAGE", false);
             dsc_FirstSpeed = prefs.getInt("CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__FIRST_SPEED", 40);

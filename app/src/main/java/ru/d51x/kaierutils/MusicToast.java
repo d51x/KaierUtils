@@ -49,6 +49,7 @@ public class MusicToast {
 	}
 
 	public void showToast() {
+        cancel();
 
 		tvTrackTitle.setTextSize ( App.GS.musicToastLine1TextSize );
 		tvArtistAlbum.setTextSize ( App.GS.musicToastLine2TextSize );
@@ -69,7 +70,7 @@ myImageView.setLayoutParams(layoutParams);
 */
 		tvTrackTitle.setText (TrackTitle);
 		tvArtistAlbum.setText ( AlbumArtist );
-		if ( mToast != null) { mToast.cancel();	}
+
 		mToast = new Toast(context);
 		mToast.setGravity(55, 0, 0);
 		mToast.setDuration(Toast.LENGTH_LONG);

@@ -41,10 +41,10 @@ public class PowerAmpProcessing {
         intentFilter.addAction(PowerampAPI.ACTION_AA_CHANGED);
         intentFilter.addAction(PowerampAPI.ACTION_TRACK_CHANGED);
         intentFilter.addAction(Intent.ACTION_BOOT_COMPLETED);
-        intentFilter.addAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED);
-        intentFilter.addAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_SHUTDOWN);
-        intentFilter.addAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP);
-        intentFilter.addAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP);
+        intentFilter.addAction(TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED);
+        intentFilter.addAction(TWUtilConst.TW_BROADCAST_ACTION_SHUTDOWN);
+        intentFilter.addAction(TWUtilConst.TW_BROADCAST_ACTION_SLEEP);
+        intentFilter.addAction(TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP);
         context.registerReceiver(powerAmpReceiver, intentFilter);
     }
 
@@ -53,20 +53,20 @@ public class PowerAmpProcessing {
             String action = intent.getAction();
             Log.d("PowerAmpProcessing -> OnReceive: ", action);
 
-            if ( action.equals(TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP) ) {
+            if ( action.equals(TWUtilConst.TW_BROADCAST_ACTION_SLEEP) ) {
                 setPowerAmpPaused();
             }
-            else if ( action.equals(TWUtilConst.TWUTIL_BROADCAST_ACTION_SHUTDOWN) ) {
+            else if ( action.equals(TWUtilConst.TW_BROADCAST_ACTION_SHUTDOWN) ) {
                 setPowerAmpPaused();
             }
-            else if (action.equals(TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP)) {
+            else if (action.equals(TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP)) {
                 setPowerAmpResumed();
             }
             else if (action.equals (Intent.ACTION_BOOT_COMPLETED )) {
                 setPowerAmpStarted();
             }
-            else if (action.equals(TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED)) {
-                int key = intent.getIntExtra (TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED, -1);
+            else if (action.equals(TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED)) {
+                int key = intent.getIntExtra (TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED, -1);
                 sendPowerAmpKeyPressed(key);
             }
             else if (action.equals(PowerampAPI.ACTION_STATUS_CHANGED)) {
@@ -127,10 +127,10 @@ public class PowerAmpProcessing {
 
 	            if ( App.GS.interactWithPowerAmp && App.GS.isShowTrackInfoToast && App.GS.isPowerAmpPlaying)
 	            {
-                    if ( !bmp.equals( App.GS.PowerAmp_AlbumArt )) {
+                    //if ( !bmp.sameAs( App.GS.PowerAmp_AlbumArt )) {
                         App.GS.PowerAmp_AlbumArt = bmp;
                         App.mToast.setAlbumArt (App.GS.PowerAmp_AlbumArt);
-                    }
+                   // }
 
 	            }
             }
@@ -198,10 +198,10 @@ public class PowerAmpProcessing {
     private void sendPowerAmpKeyPressed(int key) {
         if (App.GS.interactWithPowerAmp &&  App.GS.isPowerAmpPlaying) {
             switch (key) {
-                case TWUtilConst.TWUTIL_SVC_BUTTON_NEXT:
+                case TWUtilConst.TW_SVC_BUTTON_NEXT:
                     sendSetNextFolder();
                     break;
-                case TWUtilConst.TWUTIL_SVC_BUTTON_PREV:
+                case TWUtilConst.TW_SVC_BUTTON_PREV:
                     sendSetPrevFolder();
                     break;
                 default:

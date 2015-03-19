@@ -58,9 +58,9 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
         };
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_KEY_PRESSED);
-        intentFilter.addAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP);
-        intentFilter.addAction(TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP);
+        intentFilter.addAction(TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED);
+        intentFilter.addAction(TWUtilConst.TW_BROADCAST_ACTION_SLEEP);
+        intentFilter.addAction(TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP);
         intentFilter.addAction(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET);
         context.registerReceiver(gpsReceiver, intentFilter);
 
@@ -179,11 +179,11 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
     private void processIntent(Intent intent) {
         if (intent != null) {
             String action = intent.getAction();
-            if ( action.equals(TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP) ) {
+            if ( action.equals(TWUtilConst.TW_BROADCAST_ACTION_SLEEP) ) {
                 // stop location listener
                 mLocationManager.removeUpdates(this);
             }
-            else if (action.equals(TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP)) {
+            else if (action.equals(TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP)) {
                // start location listener after 30 sec
                 Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 firstLocation = lastKnownLocation;

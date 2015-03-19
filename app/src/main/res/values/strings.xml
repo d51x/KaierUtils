@@ -157,4 +157,19 @@
 
 <!-- TODO: Remove or change this placeholder text -->
 	<string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_obdii">OBDIIActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="odbii_device_name">Устройство: %1$s</string>
+    <string name="odbii_device_status">Статус: %1$s</string>
+    <string name="odbii_select_device">Выбор устройства</string>
+    <string name="btnOBDConnect">Подключить</string>
+    <string name="btnOBDDisconnect">Отключить</string>
+    <string name="text_obd_speed">Скорость: %1$s</string>
+    <string name="text_obd_engine_rpm">Обороты двигателя: %1$s</string>
+    <string name="text_obd_coolant_temp">Температура охл. жид.: %1$s</string>
+    <string name="text_obd_fuel_level">Уровень топлива: %1$s</string>
+    <string name="text_obd_cmu_voltage">Напряжение: %1$s</string>
+    <string name="text_obd_fuel_consumption">Расход топлива: %1$s</string>
+    <string name="text_obd_use">Bluetooth OBD (ELM327)</string>
 </resources>

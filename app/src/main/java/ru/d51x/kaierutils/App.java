@@ -12,6 +12,7 @@ import android.view.WindowManager;
 public class App extends Application {
 	static App self;
 	public static GlSets GS;
+    public static OBDII obd;
 	public static RadioToast rToast;
 	public static MusicToast mToast;
 
@@ -30,6 +31,7 @@ public class App extends Application {
 		Log.d ("App", "onCreate");
 		self = this;
 		GS = new GlSets();
+        obd = new OBDII( self );
 		this.startService (new Intent (this, BackgroundService.class));
 		rToast = new RadioToast( self );
 		mToast = new MusicToast( self );

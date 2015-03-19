@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import java.util.List;
@@ -41,12 +40,12 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 		}
         // устройство выключается
 		else if ( action.equals ( Intent.ACTION_SHUTDOWN ) ||
-				  action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_SHUTDOWN ))
+				  action.equals ( TWUtilConst.TW_BROADCAST_ACTION_SHUTDOWN))
 		{	// изменение уровня громкости при выключении
 			SetVolumeAtStartUp();
 		}
         // устройство засыпает
-		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_SLEEP ))
+		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_SLEEP))
 		{	// изменение уровня громкости при sleep
 			SetVolumeAtWakeUp();
             // запомним время ухода в SleepMode
@@ -54,36 +53,36 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             App.GS.isStopedAfterWakeUp = false;
 		}
         // устройство проснулось (вышло из SleepMode)
-		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_WAKE_UP ))
+		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP))
 		{
 	        App.GS.SleepModeCount++; // увеличим счетчик просыпаний
             App.GS.isStopedAfterWakeUp = true;
             App.GS.wakeUpTime =  System.currentTimeMillis();
 		}
         // включился задний ход
-		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_START ))
+		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_START))
 		{
 			prevVolume = App.GS.getVolumeLevel (); // запомнили текущую громкость
             App.GS.ReverseActivityCount++;         // увеличим счетчик включений заднего хода
 			changeVolumeAtReverse();
 		}
         // задний ход выключился
-		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH ))
+		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH))
 		{
 			TWUtilEx.setVolumeLevel( prevVolume );  // вернем громкость обратно, которая была до включения заднего хода
 			App.GS.getVolumeLevel ();
 		}
-		else if ( action.equals ( TWUtilConst.TWUTIL_BROADCAST_ACTION_RADIO_CHANGED))
+		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED))
 		{
 			ActivityManager activityManager = (ActivityManager) context.getSystemService("activity");
 			List<RunningTaskInfo> taskInfo = activityManager.getRunningTasks(1);
 			String activeWnd = ((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName();
 			if ( taskInfo.size() <= 0 ||
-				 !(activeWnd.equalsIgnoreCase ("com.tw.radio")) //||
+				 !(activeWnd.equalsIgnoreCase ( Radio.PACKAGE_NAME )) //||
                  //!((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils")
 				)
 			{
-                if ( App.GS.isDontShowRadioToastWhenMainActivity && activeWnd.equalsIgnoreCase ("ru.d51x.kaierutils") ) return;
+                if ( App.GS.radio.dontShowToastOnMainActivity && activeWnd.equalsIgnoreCase ("ru.d51x.kaierutils") ) return;
                 //App.rToast.isShowToastWhenActive = !((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils");
                 String title = intent.getStringExtra("Title");
 				String freq = intent.getStringExtra ("Frequency");

@@ -63,17 +63,20 @@
             </intent-filter>
         </receiver>
 
-	    <activity
-		    android:name=".SettingsActivity"
-		    android:label="@string/header_general_title" >
-		    <intent-filter>
-			    <action android:name="android.intent.action.GeneralSettings" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/header_general_title" >
+            <intent-filter>
+                <action android:name="android.intent.action.GeneralSettings" />
 
-			    <category android:name="android.intent.category.PREFERENCE" />
-			    <category android:name="android.intent.category.DEFAULT" />
-		    </intent-filter>
-	    </activity>
-
+                <category android:name="android.intent.category.PREFERENCE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".OBDIIActivity"
+            android:label="@string/title_activity_obdii" >
+        </activity>
     </application>
 
 </manifest>

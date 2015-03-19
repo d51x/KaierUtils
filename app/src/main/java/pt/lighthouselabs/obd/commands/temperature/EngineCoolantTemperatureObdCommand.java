@@ -19,9 +19,8 @@ import pt.lighthouselabs.obd.enums.AvailableCommandNames;
  */
 public class EngineCoolantTemperatureObdCommand extends TemperatureObdCommand {
 
-  /**
-	 * 
-	 */
+    private int coolant = -1;
+
   public EngineCoolantTemperatureObdCommand() {
     super("01 05");
   }

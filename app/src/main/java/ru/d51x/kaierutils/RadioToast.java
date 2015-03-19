@@ -29,7 +29,7 @@ public class RadioToast {
 	}
 
 	public void SetRadioText(String text1, String text2) {
-		if (text1.contentEquals ( App.GS.RADIO_BLANK_STATION_NAME )) { // есть название
+		if (text1.contentEquals ( Radio.BLANK_STATION_NAME)) { // нет названия
             isShowSecondLine = false;
             Text1 = String.format("%1$s MHz", text2);
             Text2 = "";
@@ -41,8 +41,9 @@ public class RadioToast {
 	}
 
 	public void showToast() {
-        if ( mToast != null) { mToast.cancel();	mToast = null; }
-        if ( !App.GS.isShowRadioToast /*|| ( App.GS.isDontShowRadioToastWhenMainActivity && !isShowToastWhenActive )*/ ) return;
+        if ( !App.GS.radio.showToast) return;
+        if ( App.GS.radio.skipSeekingMode && ( Text1.contentEquals( Radio.BLANK_STATION_NAME))) return;
+        cancel();
 
         tvRadioText1.setTextSize ( App.GS.radioToastLine1TextSize );
         tvRadioText2.setTextSize ( App.GS.radioToastLine2TextSize );
@@ -51,7 +52,7 @@ public class RadioToast {
             tvRadioText2.setText ( Text2 );
             tvRadioText2.setVisibility (View.VISIBLE);
         } else {
-            tvRadioText1.setText ( Text2 );
+            tvRadioText1.setText ( Text1 );
             tvRadioText2.setText ( "" );
             tvRadioText2.setVisibility ( View.INVISIBLE);
         }

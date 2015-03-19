@@ -26,6 +26,7 @@ public enum AvailableCommandNames {
   ENGINE_RUNTIME("Engine Runtime"),
   ENGINE_RPM("Engine RPM"),
   SPEED("Vehicle Speed"),
+  CMU_VOLTAGE("Control module voltage"),
   MAF("Mass Air Flow"),
   THROTTLE_POS("Throttle Position"),
   TROUBLE_CODES("Trouble Codes"),

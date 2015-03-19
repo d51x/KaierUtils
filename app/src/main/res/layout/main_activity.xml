@@ -384,42 +384,128 @@ android:longClickable="true">
 
 	</LinearLayout>
 
-    <FrameLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-        android:id="@+id/layout_obd2" android:visibility="visible"
-        android:layout_below="@+id/layout_gps_info"
-        android:layout_alignParentLeft="true" android:layout_toLeftOf="@+id/linearLayout"
-        android:layout_alignBottom="@+id/layout_test">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_obd2"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="false"
+        android:layout_centerHorizontal="true"
+        android:baselineAligned="false">
 
         <LinearLayout
-            android:orientation="vertical"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivOBD_CarBattery"
+                android:src="@drawable/car_battery_bad"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="12,5"
+                android:id="@+id/tvOBD_CarBattery"
+                android:textSize="36sp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom">
+            android:layout_marginLeft="20dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivOBD_CoolantTemp"
+                android:src="@drawable/coolant_temp_min"/>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/text_obd_rpm"
-                android:layout_gravity="bottom"/>
+                android:text="90"
+                android:id="@+id/tvOBD_CoolantTemp"
+                android:layout_marginLeft="4dp"
+                android:textSize="36sp"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivOBD_FuelTank"
+                android:src="@drawable/fuel_tank_min"/>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/text_obd_speed"
-                android:gravity="bottom"
+                android:text="60"
+                android:id="@+id/tvOBD_FuelTank"
+                android:layout_marginLeft="4dp"
+                android:textSize="36sp"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivOBD_FuelConsump"
+                android:src="@drawable/fuel_consump_min"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="9.7"
+                android:id="@+id/tvOBD_FuelConsump"
+                android:layout_marginLeft="4dp"
+                android:textSize="36sp"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivOBD2Status"
+                android:src="@drawable/obd_disconnected"
+                android:clickable="true"
                 />
         </LinearLayout>
 
-    </FrameLayout>
+    </LinearLayout>
 
-	<FrameLayout
+    <FrameLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/layout_test"
         android:layout_alignParentBottom="true">
 		<LinearLayout
