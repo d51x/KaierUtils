@@ -114,7 +114,7 @@ public class OBDII {
             socket.connect();
             //
 	        Log.d("OBD2->connect()", "sleep after connect, waiting....");
-            Thread.sleep(3000);
+            Thread.sleep(5000);
             isConnected = socket.isConnected();
 	        Log.d("OBD2->connect()", "socked connected is " + String.valueOf (isConnected));
             isConnected = true;

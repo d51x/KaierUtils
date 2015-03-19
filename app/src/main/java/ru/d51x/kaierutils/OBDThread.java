@@ -26,7 +26,7 @@ public class OBDThread extends Thread {
                             App.obd.init();
                             App.obd.prepareData();
                         } else {
-                            Thread.sleep(3000);
+                            Thread.sleep(5000);
                         }
                 }
             }
