@@ -7,7 +7,7 @@ import android.util.Log;
  */
 public class OBDThread extends Thread {
 
-	public OBDThread() {	super("PowerAmpProcessingThread");	}
+	public OBDThread() {	super("OBDThread");	}
 
 	@Override
 	public void run() {
@@ -26,7 +26,7 @@ public class OBDThread extends Thread {
                             App.obd.init();
                             App.obd.prepareData();
                         } else {
-                            Thread.sleep(10000);
+                            Thread.sleep(3000);
                         }
                 }
             }

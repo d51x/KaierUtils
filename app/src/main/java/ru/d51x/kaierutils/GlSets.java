@@ -32,6 +32,7 @@ public class GlSets {
 	public int VolumeLevelAtWakeUp;
 
 	//public boolean isDebug = false;
+	public boolean isRadioActivityRunning = false;
 
     public boolean isNotificationIconShow;
     public boolean isAutoStart;

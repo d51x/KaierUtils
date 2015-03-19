@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.view.View;
@@ -65,8 +66,9 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBD_FuelConsumption2 = (TextView) findViewById(R.id.tvOBD_FuelConsumption2);
 
         swUseOBD = (Switch) findViewById(R.id.swUseOBD);
-
-        tvOBDEngineRPM.setText( String.format( getString( R.string.text_obd_engine_rpm), ""));
+	    swUseOBD.setOnClickListener (this);
+	    swUseOBD.setChecked (App.obd.useOBD);
+        tvOBDEngineRPM.setText (String.format (getString (R.string.text_obd_engine_rpm), ""));
         tvOBDSpeed.setText( String.format( getString( R.string.text_obd_speed), ""));
         tvOBD_CoolantTemp.setText( String.format( getString( R.string.text_obd_coolant_temp), ""));
         tvOBD_FuelLevel.setText( String.format( getString( R.string.text_obd_fuel_level), ""));

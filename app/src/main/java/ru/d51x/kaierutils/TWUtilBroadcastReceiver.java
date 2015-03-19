@@ -74,7 +74,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 		}
 		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED))
 		{
-			ActivityManager activityManager = (ActivityManager) context.getSystemService("activity");
+			ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 			List<RunningTaskInfo> taskInfo = activityManager.getRunningTasks(1);
 			String activeWnd = ((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName();
 			if ( taskInfo.size() <= 0 ||

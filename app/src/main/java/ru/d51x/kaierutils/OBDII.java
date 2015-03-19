@@ -100,18 +100,23 @@ public class OBDII {
     }
 
     public void connect() {
+	    Log.d("OBD2->connect()", "useOBD is " + String.valueOf (useOBD));
         if ( !useOBD ) return;
         if ( deviceAddress == null) return;
+	    Log.d("OBD2->connect()", "isConnected is " + String.valueOf (isConnected));
         if ( isConnected ) return;
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
         BluetoothDevice device = btAdapter.getRemoteDevice(deviceAddress);
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
         try {
             socket = device.createInsecureRfcommSocketToServiceRecord(uuid);
+	        Log.d("OBD2->connect()", "try to connect to socket ");
             socket.connect();
             //
-            Thread.sleep(10000);
+	        Log.d("OBD2->connect()", "sleep after connect, waiting....");
+            Thread.sleep(3000);
             isConnected = socket.isConnected();
+	        Log.d("OBD2->connect()", "socked connected is " + String.valueOf (isConnected));
             isConnected = true;
             Intent intent = new Intent();
             intent.setAction(OBD_BROADCAST_ACTION_STATUS_CHANGED);
@@ -125,7 +130,9 @@ public class OBDII {
 
     public void disconnect() {
         try {
+	        Log.d("OBD2->connect()", "try to close socked ");
             socket.close();
+	        Log.d("OBD2->connect()", "socket is closed");
 
         } catch (Exception e) {
             Log.d("OBDII-->disconnect()", e.toString());
@@ -139,6 +146,7 @@ public class OBDII {
     }
 
     public void init() {
+	    Log.d("OBD2->init()", "");
         try {
             // echo off: "AT E0"
             new EchoOffObdCommand().run(socket.getInputStream(), socket.getOutputStream());
@@ -150,6 +158,7 @@ public class OBDII {
             //new TimeoutObdCommand(0).run(socket.getInputStream(), socket.getOutputStream());
 
             // AT SP
+	        Log.d("OBD2->init()", "set protocol to ISO 15765-4 CAN");
             new SelectProtocolObdCommand(ObdProtocols.ISO_15765_4_CAN).run(socket.getInputStream(), socket.getOutputStream());
 
         } catch (Exception e2) {
