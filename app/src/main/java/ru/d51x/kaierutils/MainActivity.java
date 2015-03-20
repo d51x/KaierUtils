@@ -492,9 +492,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 float temp = intent.getFloatExtra("coolantTempD", 0);
                 updateOBD_CoolantTemp(temp);
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED )) {
-                float maf = intent.getFloatExtra("dMAF", 0);
-                updateOBD_FuelConsump(maf);
-                updateOBD_FuelTank(maf);
+                updateOBD_FuelConsump( App.obd.obdData.fuel_consump_lph );
+                updateOBD_FuelTank( App.obd.obdData.fuel_consump_lpk_inst );
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED )) {
 
             }

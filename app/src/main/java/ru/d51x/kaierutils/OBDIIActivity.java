@@ -197,11 +197,8 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
             } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED)) {
                 tvOBD_MAF.setText( String.format( "MAF: %1$s", intent.getStringExtra("sMAF")));
-
-                float l = ((intent.getFloatExtra("dMAF", 0) / 14.7f) / 720) * 3600;
-                float l2 = (100 * l) / ( App.obd.speedCommand.getMetricSpeed() * 720);
-                tvOBD_FuelConsumption.setText( String.format( "Расход, л/ч: %1$.1f", l));
-                tvOBD_FuelConsumption2.setText( String.format( "Мгновенный расход, л/100км: %1$.1f", l2));
+                tvOBD_FuelConsumption.setText( String.format( "Расход, л/ч: %1$.1f", App.obd.obdData.fuel_consump_lph));
+                tvOBD_FuelConsumption2.setText( String.format( "Мгновенный расход, л/100км: %1$.1f", App.obd.obdData.fuel_consump_lpk_inst));
 
             } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_AIR_INTAKE_TEMP_CHANGED)) {
                 tvOBD_AirIntakeTemp.setText( String.format( "AirIntakeTemp: %1$s", intent.getStringExtra("sAirIntakeTemp")));

@@ -52,7 +52,7 @@ public class MassAirFlowObdCommand extends ObdCommand {
   /**
    * @return MAF value for further calculus.
    */
-  public double getMAF() {
+  public float getMAF() {
     return maf;
   }
 

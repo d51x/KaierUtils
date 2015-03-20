@@ -18,7 +18,7 @@ import pt.lighthouselabs.obd.enums.AvailableCommandNames;
 public class ControlModuleVoltageObdCommand extends ObdCommand {
 
 
-  private double voltage = 0.00;
+  private float voltage = 0.00f;
 
   /**
    * Default ctor.
@@ -56,7 +56,7 @@ public class ControlModuleVoltageObdCommand extends ObdCommand {
   /**
    * @return a double.
    */
-  public double getVoltage() {
+  public float getVoltage() {
     return voltage;
   }
 

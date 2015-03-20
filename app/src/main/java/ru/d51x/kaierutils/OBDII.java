@@ -18,8 +18,6 @@ import pt.lighthouselabs.obd.commands.engine.EngineRPMObdCommand;
 import pt.lighthouselabs.obd.commands.engine.MassAirFlowObdCommand;
 import pt.lighthouselabs.obd.commands.temperature.EngineCoolantTemperatureObdCommand;
 import pt.lighthouselabs.obd.commands.temperature.AirIntakeTemperatureObdCommand;
-import pt.lighthouselabs.obd.commands.fuel.FuelLevelObdCommand;
-import pt.lighthouselabs.obd.commands.fuel.FuelEconomyObdCommand;
 import pt.lighthouselabs.obd.commands.control.ControlModuleVoltageObdCommand;
 
 
@@ -60,6 +58,46 @@ public class OBDII {
     private Handler mHandler;
 
     public boolean useOBD;
+    public OBDData obdData;
+
+    public class OBDData {
+        public float speed;
+        public float rpm;
+        public float coolant;
+        public float maf;
+        public float voltage;
+        public float airIntake;
+        public float fuel_consump_lph;
+        public float fuel_consump_lpk_inst;
+        public float fuel_consump_lpk_trip;
+
+        public OBDData() {
+            speed = -1;
+            rpm = -1;
+            coolant = -1000;
+            maf = -1;
+            voltage = -1;
+            airIntake = -1000;
+
+            fuel_consump_lph = -1;
+            fuel_consump_lpk_inst = -1;
+            fuel_consump_lpk_trip = -1;
+        }
+
+        public void calc_fuel_consump_lph() {
+            fuel_consump_lph = (( maf / 14.7f) / 720) * 3600;
+        }
+
+        public void calc_fuel_consump_lpk_inst() {
+            fuel_consump_lpk_inst = (100 * maf) / speed;
+        }
+
+        public void calc_fuel_consump_lpk_trip() {
+            fuel_consump_lpk_trip = fuel_consump_lpk_inst;
+        }
+
+    };
+
 
     public OBDII(Context context) {
         mContext = context;
@@ -72,6 +110,7 @@ public class OBDII {
         socket = null;
         mHandler = new Handler();
         useOBD = prefs.getBoolean("ODBII_USE_BLUETOOTH", false);
+        obdData = new OBDData();
         // запустить бесконечный цикл
         // если подключены, то выполняем команды
         // если не подключены, то пытаемся подключиться
@@ -113,15 +152,20 @@ public class OBDII {
 	        Log.d("OBD2->connect()", "try to connect to socket ");
             socket.connect();
             //
-	        Log.d("OBD2->connect()", "sleep after connect, waiting....");
-            Thread.sleep(5000);
-            isConnected = socket.isConnected();
-	        Log.d("OBD2->connect()", "socked connected is " + String.valueOf (isConnected));
-            isConnected = true;
-            Intent intent = new Intent();
-            intent.setAction(OBD_BROADCAST_ACTION_STATUS_CHANGED);
-            intent.putExtra("Status",  isConnected );
-            mContext.sendBroadcast(intent);
+            if ( socket != null ) {
+                Log.d("OBD2->connect()", "sleep after connect, waiting....");
+                Thread.sleep(5000);
+                isConnected = socket.isConnected();
+                Log.d("OBD2->connect()", "socked connected is " + String.valueOf (isConnected));
+                isConnected = true;
+                Intent intent = new Intent();
+                intent.setAction(OBD_BROADCAST_ACTION_STATUS_CHANGED);
+                intent.putExtra("Status",  isConnected );
+                mContext.sendBroadcast(intent);
+            } else {
+                Log.d("OBD2->connect()", "socket is NULL....");
+            }
+
        } catch (Exception e) {
             Log.d("OBDII-->connect()", e.toString());
             isConnected = false;
@@ -180,13 +224,13 @@ public class OBDII {
 
     public void processData() {
         if ( !isConnected ) return;
-
-        processOBD_EngineRPM(); // RPM: 01 0C
-        processOBD_Speed(); // Speed: 01 0D
-        processOBD_coolantTemp();
-        processOBD_CMVoltage();
-        processOBD_MAF();
-        processOBD_AirIntake();
+        Log.d("OBDII-->processData()", "");
+        processOBD_EngineRPM();         // RPM:             01 0C
+        processOBD_Speed();             // Speed:           01 0D
+        processOBD_coolantTemp();       // Coolant:         01 05
+        processOBD_CMVoltage();         // Voltage:         01 42
+        processOBD_MAF();               // MAF:             01 10
+        processOBD_AirIntake();         // AirIntake:       01 0F
     }
 
 
@@ -194,6 +238,7 @@ public class OBDII {
     private void processOBD_EngineRPM() {
         try {
             engineRpmCommand.run(socket.getInputStream(), socket.getOutputStream());
+            obdData.rpm = engineRpmCommand.getRPM();
             SendBroadcastAction(OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED, "engineRPM", engineRpmCommand.getFormattedResult());
             Log.d("OBDII-->processOBD_EngineRPM()", "RPM: " + engineRpmCommand.getFormattedResult());
         } catch ( NoDataException e) {
@@ -206,6 +251,7 @@ public class OBDII {
     private void processOBD_Speed() {
         try {
             speedCommand.run(socket.getInputStream(), socket.getOutputStream());
+            obdData.speed = speedCommand.getMetricSpeed();
             SendBroadcastAction(OBD_BROADCAST_ACTION_SPEED_CHANGED, "speed", speedCommand.getFormattedResult());
             Log.d("OBDII-->processOBD_Speed()", "Speed: " + speedCommand.getFormattedResult());
         } catch ( NoDataException e) {
@@ -218,11 +264,11 @@ public class OBDII {
     private void processOBD_coolantTemp() {
         try {
             coolantTempCommand.run(socket.getInputStream(), socket.getOutputStream());
-
+            obdData.coolant = coolantTempCommand.getTemperature();
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             intent.putExtra("coolantTemp", coolantTempCommand.getFormattedResult());
-            intent.putExtra("coolantTempD", coolantTempCommand.getTemperature());
+            intent.putExtra("coolantTempD", obdData.coolant);
             intent.setAction(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED);
             App.getInstance ().sendBroadcast(intent);
 
@@ -237,10 +283,11 @@ public class OBDII {
     private void processOBD_CMVoltage() {
         try {
             cmuVoltageCommand.run(socket.getInputStream(), socket.getOutputStream());
+            obdData.voltage = cmuVoltageCommand.getVoltage();
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             intent.putExtra("cmuVoltage", cmuVoltageCommand.getFormattedResult());
-            intent.putExtra("cmuVoltageD", cmuVoltageCommand.getVoltage());
+            intent.putExtra("cmuVoltageD", obdData.voltage);
             intent.setAction(OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED);
             App.getInstance ().sendBroadcast(intent);
             Log.d("OBDII-->processOBD_CMVoltage()", "cmuVoltage: " + cmuVoltageCommand.getFormattedResult());
@@ -254,10 +301,15 @@ public class OBDII {
     private void processOBD_MAF() {
         try {
             MAFObdCommand.run(socket.getInputStream(), socket.getOutputStream());
+            obdData.maf = MAFObdCommand.getMAF();
+
+            obdData.calc_fuel_consump_lph();
+            obdData.calc_fuel_consump_lpk_inst();
+
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             intent.putExtra("sMAF", MAFObdCommand.getFormattedResult());
-            intent.putExtra("dMAF", MAFObdCommand.getMAF());
+            intent.putExtra("dMAF", obdData.maf);
             intent.setAction(OBD_BROADCAST_ACTION_MAF_CHANGED);
             App.getInstance ().sendBroadcast(intent);
             Log.d("OBDII-->processOBD_MAF()", "MAF: " + MAFObdCommand.getFormattedResult());
@@ -271,10 +323,11 @@ public class OBDII {
     private void processOBD_AirIntake() {
         try {
             airIntakeTemperatureObdCommand.run(socket.getInputStream(), socket.getOutputStream());
+            obdData.airIntake = airIntakeTemperatureObdCommand.getTemperature();
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             intent.putExtra("sAirIntakeTemp", airIntakeTemperatureObdCommand.getFormattedResult());
-            intent.putExtra("dAirIntakeTemp", airIntakeTemperatureObdCommand.getTemperature());
+            intent.putExtra("dAirIntakeTemp", obdData.airIntake);
             intent.setAction(OBD_BROADCAST_ACTION_AIR_INTAKE_TEMP_CHANGED);
             App.getInstance ().sendBroadcast(intent);
             Log.d("OBDII-->processOBD_AirIntake()", "AirIntakeTemperature: " + airIntakeTemperatureObdCommand.getFormattedResult());
