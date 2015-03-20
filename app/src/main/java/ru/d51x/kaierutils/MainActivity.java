@@ -104,7 +104,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate (savedInstanceState);
         // Убираем заголовок
-        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         // Убираем панель уведомлений
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView (R.layout.main_activity);
@@ -759,19 +759,17 @@ public class MainActivity extends Activity implements View.OnClickListener,
             ivOBD_FuelTank.setImageResource( R.drawable.fuel_tank_full);
         }
         //tvOBD_FuelTank.setText( String.format("%1$.1f", tank));
+        tvOBD_FuelTank.setText( String.format("%1$.1f", tank));
     }
 
     public void updateOBD_FuelConsump(float consump){
-        float l = ((consump / 14.7f) / 720) * 3600;
-        float l2 = (100 * l) / ( App.obd.speedCommand.getMetricSpeed() * 720);
-
-        if ( l < 9 ) {
+        if ( consump < 9 ) {
             ivOBD_FuelConsump.setImageResource( R.drawable.fuel_consump_min);
         } else {
             ivOBD_FuelConsump.setImageResource( R.drawable.fuel_consump_max);
         }
-        tvOBD_FuelConsump.setText( String.format("%1$.1f л/ч", l));
-        tvOBD_FuelTank.setText( String.format("%1$.1f л/100км", l2));
+        tvOBD_FuelConsump.setText( String.format("%1$.1f", consump));
+
     }
 
 
