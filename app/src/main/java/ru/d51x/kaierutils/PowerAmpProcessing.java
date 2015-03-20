@@ -117,18 +117,25 @@ public class PowerAmpProcessing {
             else if (action.equals(PowerampAPI.ACTION_AA_CHANGED)) {
 	            Bitmap bmp = (Bitmap) intent.getParcelableExtra(PowerampAPI.ALBUM_ART_BITMAP);
 
-	            Intent intent3 = new Intent();
-	            intent3.setAction(GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED);
-	            intent3.putExtra("TrackTitle", App.GS.PowerAmp_TrackTitle);
-	            intent3.putExtra("AlbumArtist", App.GS.PowerAmp_AlbumArtist);
-	            intent3.putExtra("AlbumArt", App.GS.PowerAmp_AlbumArt);
 
-	            App.getInstance().sendBroadcast(intent3);
 
 	            if ( App.GS.interactWithPowerAmp && App.GS.isShowTrackInfoToast && App.GS.isPowerAmpPlaying)
 	            {
                     //if ( !bmp.sameAs( App.GS.PowerAmp_AlbumArt )) {
+                    Intent intent3 = new Intent();
+                    intent3.setAction(GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED);
+                    intent3.putExtra("TrackTitle", App.GS.PowerAmp_TrackTitle);
+                    intent3.putExtra("AlbumArtist", App.GS.PowerAmp_AlbumArtist);
+                    intent3.putExtra("AlbumArt", bmp);
+
+                   // if ( bmp != null )    {
                         App.GS.PowerAmp_AlbumArt = bmp;
+                    //} else {
+
+                    //}
+                    //intent3.putExtra("AlbumArt", App.GS.PowerAmp_AlbumArt);
+                    //intent3.putExtra("AlbumArt", App.GS.PowerAmp_AlbumArt);
+                    App.getInstance().sendBroadcast(intent3);
                         App.mToast.setAlbumArt (App.GS.PowerAmp_AlbumArt);
                    // }
 
@@ -175,7 +182,7 @@ public class PowerAmpProcessing {
                 @Override
                 public void run() {
                     context.startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
-                                                    PowerampAPI.Commands.TOGGLE_PLAY_PAUSE));
+                                                    PowerampAPI.Commands.RESUME));
                 }
             }, App.GS.startDelayForPowerAmp);
         }

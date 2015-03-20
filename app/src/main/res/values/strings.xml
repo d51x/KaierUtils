@@ -168,8 +168,15 @@
     <string name="text_obd_speed">Скорость: %1$s</string>
     <string name="text_obd_engine_rpm">Обороты двигателя: %1$s</string>
     <string name="text_obd_coolant_temp">Температура охл. жид.: %1$s</string>
-    <string name="text_obd_fuel_level">Уровень топлива: %1$s</string>
+    <string name="text_obd_fuel_usage">Потрачено топлива: %1$.2f</string>
     <string name="text_obd_cmu_voltage">Напряжение: %1$s</string>
-    <string name="text_obd_fuel_consumption">Расход топлива: %1$s</string>
     <string name="text_obd_use">Bluetooth OBD (ELM327)</string>
+    <string name="text_obd_fuel_consumption_lph">Мгновенный расход (л/ч): %1$.1f</string>
+    <string name="text_obd_fuel_consumption_mpg">Мгновенный расход (л/100км): %1$.1f</string>
+    <string name="text_obd_fuel_consumption_avg">Средний расход (л/100км): %1$.1f</string>
+    <string name="text_fuel_tank_full">Бак заправлен полностью?</string>
+    <string name="text_fuel_tank_capacity">Объем бака</string>
+    <string name="text_fuel_tank_remain">Осталось топлива (л)</string>
+    <string name="text_fuel_tank_title">Заправка</string>
+    <string name="text_fuel_tank_detail">Параметры бака</string>
 </resources>

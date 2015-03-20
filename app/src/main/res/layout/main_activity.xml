@@ -435,16 +435,17 @@ android:longClickable="true">
                 android:layout_height="wrap_content"
                 android:text="90"
                 android:id="@+id/tvOBD_CoolantTemp"
-                android:layout_marginLeft="4dp"
                 android:textSize="36sp"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="-4dp"/>
         </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp">
+            android:layout_marginLeft="20dp"
+            android:id="@+id/layout_fuel_data">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -466,7 +467,8 @@ android:longClickable="true">
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp">
+            android:layout_marginLeft="20dp"
+            android:id="@+id/layout_fuel_consump">
 
             <ImageView
                 android:layout_width="wrap_content"

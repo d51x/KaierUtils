@@ -276,6 +276,8 @@ public class GlSets {
         }
     }
 
+
+
 //	public int getBrightnessLevel () {
 //		return Brightness;
 //	}

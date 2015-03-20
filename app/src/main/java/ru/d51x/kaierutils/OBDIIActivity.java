@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.view.View;
@@ -35,10 +34,11 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TextView tvOBDEngineRPM;
     private TextView tvOBDSpeed;
     private TextView tvOBD_CoolantTemp;
-    private TextView tvOBD_FuelLevel;
+    private TextView tvOBD_FuelUsage;
     private TextView tvOBD_CMUVoltage;
-    private TextView tvOBD_FuelConsumption;
-    private TextView tvOBD_FuelConsumption2;
+    private TextView tvOBD_FuelConsumption_lph;
+    private TextView tvOBD_FuelConsumption_mpg;
+    private TextView tvOBD_FuelConsumption_avg;
 
     private TextView tvOBD_MAF;
     private TextView tvOBD_AirIntakeTemp;
@@ -60,21 +60,23 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBDEngineRPM = (TextView) findViewById(R.id.tvOBDEngineRPM);
         tvOBDSpeed = (TextView) findViewById(R.id.tvOBD_Speed);
         tvOBD_CoolantTemp = (TextView) findViewById(R.id.tvOBD_CoolantTemp);
-        tvOBD_FuelLevel = (TextView) findViewById(R.id.tvOBD_FuelLevel);
+        tvOBD_FuelUsage = (TextView) findViewById(R.id.tvOBD_FuelUsage);
         tvOBD_CMUVoltage = (TextView) findViewById(R.id.tvOBD_CMUVoltage);
-        tvOBD_FuelConsumption = (TextView) findViewById(R.id.tvOBD_FuelConsumption);
-        tvOBD_FuelConsumption2 = (TextView) findViewById(R.id.tvOBD_FuelConsumption2);
+        tvOBD_FuelConsumption_lph = (TextView) findViewById(R.id.tvOBD_FuelConsumption_lph);
+        tvOBD_FuelConsumption_mpg = (TextView) findViewById(R.id.tvOBD_FuelConsumption_mpg);
+        tvOBD_FuelConsumption_avg = (TextView) findViewById(R.id.tvOBD_FuelConsumption_avg);
 
         swUseOBD = (Switch) findViewById(R.id.swUseOBD);
-	    swUseOBD.setOnClickListener (this);
-	    swUseOBD.setChecked (App.obd.useOBD);
+	    swUseOBD.setOnClickListener(this);
+	    swUseOBD.setChecked(App.obd.useOBD);
         tvOBDEngineRPM.setText (String.format (getString (R.string.text_obd_engine_rpm), ""));
         tvOBDSpeed.setText( String.format( getString( R.string.text_obd_speed), ""));
         tvOBD_CoolantTemp.setText( String.format( getString( R.string.text_obd_coolant_temp), ""));
-        tvOBD_FuelLevel.setText( String.format( getString( R.string.text_obd_fuel_level), ""));
+        tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage), 0.0f));
         tvOBD_CMUVoltage.setText( String.format( getString( R.string.text_obd_cmu_voltage), ""));
-        tvOBD_FuelConsumption.setText( String.format( getString( R.string.text_obd_fuel_consumption), ""));
-        tvOBD_FuelConsumption2.setText( String.format( getString( R.string.text_obd_fuel_consumption), ""));
+        tvOBD_FuelConsumption_lph.setText( String.format( getString( R.string.text_obd_fuel_consumption_lph), 0.0f));
+        tvOBD_FuelConsumption_mpg.setText( String.format( getString( R.string.text_obd_fuel_consumption_mpg), 0.0f));
+        tvOBD_FuelConsumption_avg.setText( String.format( getString( R.string.text_obd_fuel_consumption_avg), 0.0f));
 
         tvOBD_MAF = (TextView) findViewById(R.id.tvOBD_MAF);
         tvOBD_MAF.setText("");
@@ -190,15 +192,18 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
             } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED)) {
                 tvOBD_CoolantTemp.setText( String.format( getString( R.string.text_obd_coolant_temp), intent.getStringExtra("coolantTemp")));
             } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_FUEL_LEVEL_CHANGED)) {
-                tvOBD_FuelLevel.setText( String.format( getString( R.string.text_obd_fuel_level), intent.getStringExtra("FuelLevel")));
+
             } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED)) {
                 tvOBD_CMUVoltage.setText( String.format( getString( R.string.text_obd_cmu_voltage), intent.getStringExtra("cmuVoltage")));
             } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED)) {
 
             } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED)) {
                 tvOBD_MAF.setText( String.format( "MAF: %1$s", intent.getStringExtra("sMAF")));
-                tvOBD_FuelConsumption.setText( String.format( "Расход, л/ч: %1$.1f", App.obd.obdData.fuel_consump_lph));
-                tvOBD_FuelConsumption2.setText( String.format( "Мгновенный расход, л/100км: %1$.1f", App.obd.obdData.fuel_consump_lpk_inst));
+
+                tvOBD_FuelConsumption_lph.setText( String.format( getString( R.string.text_obd_fuel_consumption_lph), App.obd.obdData.fuel_consump_lph));
+                tvOBD_FuelConsumption_mpg.setText( String.format( getString( R.string.text_obd_fuel_consumption_mpg), App.obd.obdData.fuel_consump_lpk_inst));
+                tvOBD_FuelConsumption_avg.setText( String.format( getString( R.string.text_obd_fuel_consumption_avg), App.obd.obdData.fuel_consump_lpk_trip));
+                tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage), App.obd.obdData.fuel_usage));
 
             } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_AIR_INTAKE_TEMP_CHANGED)) {
                 tvOBD_AirIntakeTemp.setText( String.format( "AirIntakeTemp: %1$s", intent.getStringExtra("sAirIntakeTemp")));

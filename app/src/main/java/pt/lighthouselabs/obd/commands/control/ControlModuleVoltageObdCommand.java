@@ -29,7 +29,7 @@ public class ControlModuleVoltageObdCommand extends ObdCommand {
 
   /**
    * Copy ctor.
-   *
+   *'
    * @param other a {@link pt.lighthouselabs.obd.commands.control.ControlModuleVoltageObdCommand} object.
    */
   public ControlModuleVoltageObdCommand(ControlModuleVoltageObdCommand other) {
@@ -42,7 +42,7 @@ public class ControlModuleVoltageObdCommand extends ObdCommand {
       // ((A*256)+B)/1000
     int a = buffer.get(2);
     int b = buffer.get(3);
-      voltage = (a * 256 + b) / 1000;
+      voltage = (a * 256 + b) / 1000f;
   }
 
   /**

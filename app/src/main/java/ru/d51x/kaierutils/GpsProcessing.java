@@ -32,6 +32,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
     private Location gpsLocation = null;
 
     private Location prevLocation = null;
+    private Location prevFuelLocation = null;
     private Location firstLocation = null;
     private Location lastLocation = null;
 
@@ -236,6 +237,10 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
             // TODO а еще надо учесть инфу с сателитов про сигнал и точность
                    App.GS.totalDistance += location.distanceTo ( prevLocation );
                    App.GS.totalDistanceForAverageSpeed += location.distanceTo ( prevLocation );
+                   if ( App.obd.isConnected && App.obd.obdData.speed > 0) {
+                       App.obd.obdData.distance_to_fuel_consump += location.distanceTo ( prevFuelLocation );
+                       App.obd.obdData.distance_to_fuel_consump2 += location.distanceTo ( prevFuelLocation );
+                   }
             // что происходит с prevLocation при зависании gps до момента первого получения спутников,
             // надо тестировать вживую руками делая сброс agps
 	    } catch (Exception e) {
@@ -285,7 +290,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
 
 	    prevLocation = location;
-
+        if ( App.obd.isConnected && App.obd.obdData.speed > 0 ) prevFuelLocation = location;
     }
 
     private void resetAGPS() {

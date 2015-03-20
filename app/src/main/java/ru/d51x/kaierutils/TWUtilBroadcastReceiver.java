@@ -36,6 +36,8 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 				Intent mIntent = new Intent(context, MainActivity.class);
 				mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(mIntent);
+
+
 			}
 		}
         // устройство выключается
@@ -43,6 +45,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 				  action.equals ( TWUtilConst.TW_BROADCAST_ACTION_SHUTDOWN))
 		{	// изменение уровня громкости при выключении
 			SetVolumeAtStartUp();
+            App.obd.saveFuelRemain();
 		}
         // устройство засыпает
 		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_SLEEP))
@@ -51,6 +54,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             // запомним время ухода в SleepMode
             App.GS.lastSleep = System.currentTimeMillis();
             App.GS.isStopedAfterWakeUp = false;
+            App.obd.saveFuelRemain();
 		}
         // устройство проснулось (вышло из SleepMode)
 		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP))
@@ -58,6 +62,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 	        App.GS.SleepModeCount++; // увеличим счетчик просыпаний
             App.GS.isStopedAfterWakeUp = true;
             App.GS.wakeUpTime =  System.currentTimeMillis();
+            App.obd.loadFuelRemain();
 		}
         // включился задний ход
 		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_START))

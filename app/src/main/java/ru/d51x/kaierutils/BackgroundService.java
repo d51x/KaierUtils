@@ -127,6 +127,7 @@ public class BackgroundService extends Service {
         Log.d ("BackgroundService", "stopOBDThread");
         if ( obdiiThread == null) return;
         obdiiThread.finish();
+
         obdiiThread = null;
     }
 

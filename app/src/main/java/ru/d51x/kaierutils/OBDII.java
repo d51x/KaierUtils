@@ -69,32 +69,59 @@ public class OBDII {
         public float airIntake;
         public float fuel_consump_lph;
         public float fuel_consump_lpk_inst;
+        private float fuel_consump_lpk_inst_prev;
         public float fuel_consump_lpk_trip;
+        public float distance_to_fuel_consump;
+        public float distance_to_fuel_consump2; //нужно для сохраняемого расчета остатка
+        public float fuel_usage;  // нужно просто для информации и не обнуляется при заправке
+        public float fuel_usage2; // нужно для расчета, изменяется при заправке
+        public float fuel_remain; // сохраняем в преференсы и читаем оттуда
+        public float fuel_tank; // читаем из преференсов
 
         public OBDData() {
-            speed = -1;
-            rpm = -1;
-            coolant = -1000;
-            maf = -1;
-            voltage = -1;
-            airIntake = -1000;
+            speed = 0;
+            rpm = 0;
+            coolant = 0;
+            maf = 0;
+            voltage = 0;
+            airIntake = 0;
 
-            fuel_consump_lph = -1;
-            fuel_consump_lpk_inst = -1;
-            fuel_consump_lpk_trip = -1;
+            fuel_consump_lph = 0;
+            fuel_consump_lpk_inst = 0;
+            fuel_consump_lpk_trip = 0;
+            fuel_consump_lpk_inst_prev = 0;
+
+            distance_to_fuel_consump = 0;
+            fuel_usage = 0;
+
+            fuel_remain = 0;
+            fuel_tank = 0;
+            fuel_usage2 = 0;
+            distance_to_fuel_consump2 = 0;
         }
 
-        public void calc_fuel_consump_lph() {
+
+
+        public void calc_fuel_consump() {
             fuel_consump_lph = (( maf / 14.7f) / 720) * 3600;
+            if ( speed > 2 ) {
+                fuel_consump_lpk_inst = (100 * fuel_consump_lph) / speed;
+
+                fuel_consump_lpk_trip = (fuel_consump_lpk_inst + fuel_consump_lpk_inst_prev) / 2f;
+                fuel_consump_lpk_inst_prev = fuel_consump_lpk_inst;
+                fuel_usage = (fuel_consump_lpk_trip * (distance_to_fuel_consump/1000f)) / 100f;
+                fuel_usage2 = (fuel_consump_lpk_trip * (distance_to_fuel_consump2/1000f)) / 100f;
+
+                if ( fuel_tank > 40 && fuel_tank >= fuel_usage2 ) {
+                        fuel_remain = fuel_tank - fuel_usage2;
+
+                } else {
+                    fuel_remain = 0;
+                }
+            }
         }
 
-        public void calc_fuel_consump_lpk_inst() {
-            fuel_consump_lpk_inst = (100 * maf) / speed;
-        }
 
-        public void calc_fuel_consump_lpk_trip() {
-            fuel_consump_lpk_trip = fuel_consump_lpk_inst;
-        }
 
     };
 
@@ -111,6 +138,7 @@ public class OBDII {
         mHandler = new Handler();
         useOBD = prefs.getBoolean("ODBII_USE_BLUETOOTH", false);
         obdData = new OBDData();
+        loadFuelRemain();
         // запустить бесконечный цикл
         // если подключены, то выполняем команды
         // если не подключены, то пытаемся подключиться
@@ -154,7 +182,7 @@ public class OBDII {
             //
             if ( socket != null ) {
                 Log.d("OBD2->connect()", "sleep after connect, waiting....");
-                Thread.sleep(5000);
+                Thread.sleep(3000);
                 isConnected = socket.isConnected();
                 Log.d("OBD2->connect()", "socked connected is " + String.valueOf (isConnected));
                 isConnected = true;
@@ -303,8 +331,7 @@ public class OBDII {
             MAFObdCommand.run(socket.getInputStream(), socket.getOutputStream());
             obdData.maf = MAFObdCommand.getMAF();
 
-            obdData.calc_fuel_consump_lph();
-            obdData.calc_fuel_consump_lpk_inst();
+            obdData.calc_fuel_consump();
 
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
@@ -351,6 +378,29 @@ public class OBDII {
         App.getInstance ().sendBroadcast(intent);
     }
 
+    public void saveFuelRemain() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        prefs.edit().putFloat("kaierutils_fuel_remain", obdData.fuel_remain).commit();
+        prefs.edit().putFloat("kaierutils_fuel_tank", obdData.fuel_tank).commit();
+        prefs.edit().putFloat("kaierutils_fuel_usage", obdData.fuel_usage2).commit();
+        prefs.edit().putFloat("kaierutils_fuel_distance", obdData.distance_to_fuel_consump2).commit();
+
+    }
+
+    public void loadFuelRemain() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        obdData.fuel_remain = prefs.getFloat("kaierutils_fuel_remain", 60f);
+        obdData.fuel_tank = prefs.getFloat("kaierutils_fuel_tank", 60f);
+        obdData.fuel_usage2 = prefs.getFloat("kaierutils_fuel_usage", 0f);
+        obdData.distance_to_fuel_consump2 = prefs.getFloat("kaierutils_fuel_distance", 0f);
+    }
+
+    public void setFullTank() {
+        obdData.fuel_remain =  obdData.fuel_tank;
+        obdData.fuel_usage2 = 0;
+        obdData.distance_to_fuel_consump2 = 0;
+        saveFuelRemain();
+    }
 
 }
 /*

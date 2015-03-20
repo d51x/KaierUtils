@@ -7,14 +7,18 @@ import android.util.Log;
  */
 public class OBDThread extends Thread {
 
-	public OBDThread() {	super("OBDThread");	}
+	public OBDThread() {
+        super("OBDThread");
+        isActive = true;
+    }
+    public volatile boolean isActive = false;
 
 	@Override
 	public void run() {
 		try {
 			Log.d ("OBDThread", "run()");
             //while (true) {
-            while (!Thread.currentThread().isInterrupted())
+            while (!Thread.currentThread().isInterrupted() || isActive )
             {
                 if ( App.obd.isConnected) {
                     // send or process data
@@ -26,10 +30,11 @@ public class OBDThread extends Thread {
                             App.obd.init();
                             App.obd.prepareData();
                         } else {
-                            Thread.sleep(5000);
+                            Thread.sleep(3000);
                         }
                 }
             }
+            App.obd.disconnect();
 		} catch (Exception e) {
 			Log.d ("OBDThread", "ERROR: run() failed");
 		}
@@ -37,7 +42,10 @@ public class OBDThread extends Thread {
 
 	public synchronized void finish() {
 		Log.d ("OBDThread", "finish()");
+        interrupt();
+        isActive = false;
         App.obd.disconnect();
+
 	}
 }
 

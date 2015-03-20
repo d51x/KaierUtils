@@ -114,22 +114,29 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/text_obd_fuel_consumption"
-                android:id="@+id/tvOBD_FuelConsumption"
+                android:text="@string/text_obd_fuel_consumption_lph"
+                android:id="@+id/tvOBD_FuelConsumption_lph"
                 android:textSize="20sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/text_obd_fuel_consumption"
-                android:id="@+id/tvOBD_FuelConsumption2"
+                android:text="@string/text_obd_fuel_consumption_mpg"
+                android:id="@+id/tvOBD_FuelConsumption_mpg"
                 android:textSize="20sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/text_obd_fuel_level"
-                android:id="@+id/tvOBD_FuelLevel"
+                android:text="@string/text_obd_fuel_consumption_avg"
+                android:id="@+id/tvOBD_FuelConsumption_avg"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_obd_fuel_usage"
+                android:id="@+id/tvOBD_FuelUsage"
                 android:textSize="20sp"/>
 
             <TextView

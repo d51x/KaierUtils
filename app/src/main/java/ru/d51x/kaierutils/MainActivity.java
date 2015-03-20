@@ -16,15 +16,16 @@ import android.view.MenuInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.Button;
 import android.view.View;
 import android.view.View.OnLongClickListener;
-
+import android.app.AlertDialog;
 import android.view.Window;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.content.DialogInterface;
 
 import java.util.Date;
 
@@ -44,7 +45,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private LinearLayout layout_waypoints;
     private LinearLayout layout_tracktime;
 
-
+    private int modeFuelTank = 0;
+    private int modeFuelConsump = 0;
 
 	private TextView tvGPSDistance;
 	private ImageView ivGPSDistance;
@@ -86,6 +88,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private ImageView ivAlbumArt;
     private LinearLayout layout_radio_info;
     private LinearLayout layout_music_info;
+
+    private LinearLayout layout_obd_fuel;
+    private LinearLayout layout_fuel_consump;
 
     private ImageView ivOBD2Status;
     private ImageView ivOBD_CarBattery;
@@ -200,6 +205,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_music_info = (LinearLayout) findViewById(R.id.layout_music_info);
         layout_radio_info.setVisibility( View.GONE );
         layout_music_info.setVisibility( View.GONE );
+
+        layout_obd_fuel = (LinearLayout) findViewById(R.id.layout_fuel_data);
+        layout_obd_fuel.setOnLongClickListener (this);
+        layout_obd_fuel.setOnClickListener (this);
+
+        layout_fuel_consump = (LinearLayout) findViewById(R.id.layout_fuel_consump);
+        layout_fuel_consump.setOnClickListener (this);
 	}
 
 	public void setInitData() {
@@ -286,6 +298,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     tvTrackTimeHourOrMin.setText( getString(R.string.text_gps_track_time_format_min));
 
                     return true;
+                case R.id.layout_fuel_data:
+                    // показать диалог с вводом топлива
+                    show_obd_fuel_dialog();
+                    return true;
                 default:
                     return false;
             }
@@ -338,6 +354,12 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 } else {
                     BackgroundService.startOBDThread();
                 }
+                break;
+            case R.id.layout_fuel_data:
+                switch_fuel_tank_mode();
+                break;
+            case R.id.layout_fuel_consump:
+                switch_fuel_consump_mode();
                 break;
             default:
                 break;
@@ -480,20 +502,22 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     //tvMusicInfo2.setText( AlbumArtist );
                     tvMusicInfo2.setText(App.GS.PowerAmp_AlbumArtist);
                     //if (!AlbumArt.equals(App.GS.PowerAmp_AlbumArt))
-                        ivAlbumArt.setImageBitmap(App.GS.PowerAmp_AlbumArt);
+                    //if ( AlbumArt != null ) {
+                        ivAlbumArt.setImageBitmap(AlbumArt);
+                    //} else {
+                      //  ivAlbumArt.setImageResource( R.drawable.toast_music);
+                    //}
                 }
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_STATUS_CHANGED )) {
                 boolean obd_status = intent.getBooleanExtra("Status", false);
                 updateOBDStatus(obd_status);
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED )) {
-                double voltage = intent.getDoubleExtra("cmuVoltageD", 0);
-                updateOBD_CarBattery(voltage);
+                updateOBD_CarBattery(App.obd.obdData.voltage);
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED )) {
-                float temp = intent.getFloatExtra("coolantTempD", 0);
-                updateOBD_CoolantTemp(temp);
+                updateOBD_CoolantTemp(App.obd.obdData.coolant);
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED )) {
                 updateOBD_FuelConsump( App.obd.obdData.fuel_consump_lph );
-                updateOBD_FuelTank( App.obd.obdData.fuel_consump_lpk_inst );
+                updateOBD_FuelTank( App.obd.obdData.fuel_remain );
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED )) {
 
             }
@@ -744,22 +768,22 @@ public class MainActivity extends Activity implements View.OnClickListener,
     public void updateOBD_CoolantTemp(float temp){
         if ( temp < 80 ) {
             ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_min);
-        } else if (temp < 95) {
+        } else if (temp < 99) {
             ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_norm);
         } else {
             ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_hot);
         }
-        tvOBD_CoolantTemp.setText( String.format("%1$.1f", temp));
+        tvOBD_CoolantTemp.setText( String.format("%1$.0f", temp));
     }
 
-    public void updateOBD_FuelTank(float tank){
-        if ( tank < 30 ) {
+    public void updateOBD_FuelTank(float remain){
+        if ( remain < 20 ) {
             ivOBD_FuelTank.setImageResource( R.drawable.fuel_tank_min);
         } else {
             ivOBD_FuelTank.setImageResource( R.drawable.fuel_tank_full);
         }
         //tvOBD_FuelTank.setText( String.format("%1$.1f", tank));
-        tvOBD_FuelTank.setText( String.format("%1$.1f", tank));
+        tvOBD_FuelTank.setText( String.format("%1$.1f", remain));
     }
 
     public void updateOBD_FuelConsump(float consump){
@@ -772,7 +796,122 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     }
 
+    public void show_obd_fuel_dialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
+        alertDialogBuilder.setTitle(getString(R.string.text_fuel_tank_title));
+        alertDialogBuilder.setMessage( getString(R.string.text_fuel_tank_full));
+        alertDialogBuilder.setIcon(R.drawable.fuel_tank_full);
+
+        alertDialogBuilder.setPositiveButton("Отмена", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        // Обработчик на нажатие НЕТ
+        alertDialogBuilder.setNegativeButton("Да", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                App.obd.setFullTank();
+
+            }
+        });
+
+        // Обработчик на нажатие ОТМЕНА
+        alertDialogBuilder.setNeutralButton("Нет", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // show dialog to enter fuel details
+                show_obd_fuel_detail();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // показываем Alert
+        alertDialog.show();
+    }
+
+    public void show_obd_fuel_detail(){
+        AlertDialog.Builder fuelDialog = new AlertDialog.Builder(MainActivity.this);
+        fuelDialog.setTitle(getString(R.string.text_fuel_tank_detail));
+        View linearlayout = getLayoutInflater().inflate(R.layout.fuel_dialog, null);
+        fuelDialog.setView(linearlayout);
+
+        final EditText etFuelTankCapacity = (EditText)linearlayout.findViewById(R.id.etFuelTankCapacity);
+        final EditText etFuelTankRemain = (EditText)linearlayout.findViewById(R.id.etFuelTankRemain);
+
+        etFuelTankCapacity.setText( String.format("%1$.0f", App.obd.obdData.fuel_tank));
+        etFuelTankRemain.setText( String.format("%1$.0f", App.obd.obdData.fuel_remain));
+
+        fuelDialog.setPositiveButton("Сохранить",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        App.obd.obdData.fuel_remain = Float.parseFloat(etFuelTankRemain.getText().toString() );
+                        App.obd.obdData.fuel_tank = Float.parseFloat(etFuelTankCapacity.getText().toString() );
+                        App.obd.obdData.fuel_usage2 = 0;
+                        App.obd.obdData.distance_to_fuel_consump2 = 0;
+                        App.obd.saveFuelRemain();
+                    }
+                });
+
+        fuelDialog.setNegativeButton("Отмена",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        fuelDialog.create();
+        fuelDialog.show();
+    }
+
+    private void switch_fuel_tank_mode() {
+        // режим отображения уровня топлива
+        // 0 - осталось в литрах
+        // 1 - осталось в процентах
+        // 2 - микс-режим (первая строка - литры, вторая строка - проценты
+        if ( modeFuelTank > 2) modeFuelTank = 0;
+        switch (modeFuelTank) {
+            case 0:
+                tvOBD_FuelTank.setText( String.format("%1$.0f", App.obd.obdData.fuel_remain));
+                break;
+            case 1:
+                tvOBD_FuelTank.setText( String.format("%1$.0f", (float) ((App.obd.obdData.fuel_remain * 100) / App.obd.obdData.fuel_tank))  + "%");
+                break;
+            case 2:
+
+                break;
+            default:
+                break;
+        }
+        modeFuelTank++;
+        if ( modeFuelTank > 2) modeFuelTank = 0;
+    }
+
+    private void switch_fuel_consump_mode() {
+        // режим отображения расхода
+        // 0 - мгновенный
+        // 1 - средний за поездку с учетом sleep
+        // 2 - отображаем литры в час
+        // 3 - комбинированный режим, первая строка - средний, вторая мгновенный
+        switch (modeFuelConsump) {
+            case 0:
+                tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lpk_inst) );
+                Toast.makeText(this, "Мгновенный расход (л/100км)", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lpk_trip) );
+                Toast.makeText(this, "Средний расход (л/100км) за поездку", Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lph) );
+                Toast.makeText(this, "Часовой расход (л/ч)", Toast.LENGTH_SHORT).show();
+                break;
+            case 3:
+                //Toast.makeText(this, "Комбинированный режим\nСредний расход за поездку (л/100км)\nМгновенный расход (л/100км)", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+        modeFuelConsump++;
+        if ( modeFuelConsump > 3) modeFuelConsump = 0;
+    }
 }
 
 
