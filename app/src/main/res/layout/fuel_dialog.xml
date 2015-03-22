@@ -8,33 +8,64 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/layout_fuel_data">
+        android:id="@+id/layout_fuel_data"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/text_fuel_tank_capacity"
-            android:id="@+id/textView4"/>
+            android:id="@+id/textView4"
+            android:layout_marginLeft="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="numberSigned"
             android:ems="10"
-            android:id="@+id/etFuelTankCapacity"/>
+            android:id="@+id/etFuelTankCapacity"
+            android:layout_marginLeft="10dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/text_fuel_tank_remain"
-            android:id="@+id/textView5"/>
+            android:id="@+id/textView5"
+            android:layout_marginLeft="10dp"/>
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:ems="10"
-            android:id="@+id/etFuelTankRemain"/>
+            android:id="@+id/etFuelTankRemain"
+            android:layout_marginLeft="10dp"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent">
+
+            <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/seekBarFuel"
+                android:layout_gravity="left"
+                android:layout_weight="0.8"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 %"
+                android:id="@+id/tvFuelPercent"
+                android:gravity="center|center_vertical|center_horizontal|right"
+                android:textSize="28sp"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"/>
+        </LinearLayout>
 
     </LinearLayout>
 

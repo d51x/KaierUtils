@@ -77,82 +77,90 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginTop="10dp">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView2">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_obd_speed"
-                android:id="@+id/tvOBD_Speed"
-                android:textSize="20sp"/>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="10dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_obd_engine_rpm"
-                android:id="@+id/tvOBDEngineRPM"
-                android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_obd_speed"
+                    android:id="@+id/tvOBD_Speed"
+                    android:textSize="20sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_obd_coolant_temp"
-                android:id="@+id/tvOBD_CoolantTemp"
-                android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_obd_engine_rpm"
+                    android:id="@+id/tvOBDEngineRPM"
+                    android:textSize="20sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_obd_cmu_voltage"
-                android:id="@+id/tvOBD_CMUVoltage"
-                android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_obd_coolant_temp"
+                    android:id="@+id/tvOBD_CoolantTemp"
+                    android:textSize="20sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_obd_fuel_consumption_lph"
-                android:id="@+id/tvOBD_FuelConsumption_lph"
-                android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_obd_cmu_voltage"
+                    android:id="@+id/tvOBD_CMUVoltage"
+                    android:textSize="20sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_obd_fuel_consumption_mpg"
-                android:id="@+id/tvOBD_FuelConsumption_mpg"
-                android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_obd_fuel_consumption_lph"
+                    android:id="@+id/tvOBD_FuelConsumption_lph"
+                    android:textSize="20sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_obd_fuel_consumption_avg"
-                android:id="@+id/tvOBD_FuelConsumption_avg"
-                android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_obd_fuel_consumption_mpg"
+                    android:id="@+id/tvOBD_FuelConsumption_mpg"
+                    android:textSize="20sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_obd_fuel_usage"
-                android:id="@+id/tvOBD_FuelUsage"
-                android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_obd_fuel_consumption_avg"
+                    android:id="@+id/tvOBD_FuelConsumption_avg"
+                    android:textSize="20sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MAF"
-                android:id="@+id/tvOBD_MAF"
-                android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_obd_fuel_usage"
+                    android:id="@+id/tvOBD_FuelUsage"
+                    android:textSize="20sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="AirIntakeTemp"
-                android:id="@+id/tvOBD_AirIntakeTemp"
-                android:textSize="20sp"/>
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MAF"
+                    android:id="@+id/tvOBD_MAF"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AirIntakeTemp"
+                    android:id="@+id/tvOBD_AirIntakeTemp"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 

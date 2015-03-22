@@ -162,7 +162,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="odbii_device_name">Устройство: %1$s</string>
     <string name="odbii_device_status">Статус: %1$s</string>
-    <string name="odbii_select_device">Выбор устройства</string>
+    <string name="odbii_select_device">Устройство</string>
     <string name="btnOBDConnect">Подключить</string>
     <string name="btnOBDDisconnect">Отключить</string>
     <string name="text_obd_speed">Скорость: %1$s</string>

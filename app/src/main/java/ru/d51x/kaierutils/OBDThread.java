@@ -25,10 +25,9 @@ public class OBDThread extends Thread {
                     App.obd.processData();
                 } else {
                     //try to connect
-                        App.obd.connect();
+                        App.obd.isConnected = App.obd.connect();
                         if ( App.obd.isConnected ) {
-                            App.obd.init();
-                            App.obd.prepareData();
+                                App.obd.prepareData();
                         } else {
                             Thread.sleep(3000);
                         }

@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.io.IOException;
+import java.net.SocketException;
 import java.util.UUID;
 
 
@@ -103,18 +105,29 @@ public class OBDII {
 
 
         public void calc_fuel_consump() {
+            // литры в час
             fuel_consump_lph = (( maf / 14.7f) / 720) * 3600;
+
             if ( speed > 2 ) {
+                // мгновенный расход л/100км
                 fuel_consump_lpk_inst = (100 * fuel_consump_lph) / speed;
 
+                // средний расход л/100км (среднее между мгновенным текущим и мгновенным предыдущим)
+                // в процессе будет накапливаться среднее арифметическое мгновенных расходов - л/00км
                 fuel_consump_lpk_trip = (fuel_consump_lpk_inst + fuel_consump_lpk_inst_prev) / 2f;
                 fuel_consump_lpk_inst_prev = fuel_consump_lpk_inst;
-                fuel_usage = (fuel_consump_lpk_trip * (distance_to_fuel_consump/1000f)) / 100f;
-                fuel_usage2 = (fuel_consump_lpk_trip * (distance_to_fuel_consump2/1000f)) / 100f;
 
-                if ( fuel_tank > 40 && fuel_tank >= fuel_usage2 ) {
-                        fuel_remain = fuel_tank - fuel_usage2;
+                // кол-во израсходованного топлива для отображения (должно накапливаться в течение поездки)
+                fuel_usage += (fuel_consump_lpk_trip * (distance_to_fuel_consump/1000f)) / 100f;
 
+                // кол-во израсходованного топлива для подсчета остатка в баке
+                fuel_usage2 += (fuel_consump_lpk_trip * (distance_to_fuel_consump2/1000f)) / 100f;
+
+                // сейчас на машинах баков менье 40 литров не бывает?
+                // и размер бака не может быть меньше израсходованного количества?
+                if ( fuel_tank >= 40 && fuel_tank >= fuel_usage2 ) {
+                    // остаток топлива в баке
+                    fuel_remain = fuel_tank - fuel_usage2;
                 } else {
                     fuel_remain = 0;
                 }
@@ -166,37 +179,41 @@ public class OBDII {
 
     }
 
-    public void connect() {
+    public boolean connect() {
 	    Log.d("OBD2->connect()", "useOBD is " + String.valueOf (useOBD));
-        if ( !useOBD ) return;
-        if ( deviceAddress == null) return;
+        if ( !useOBD ) return false;
+        if ( deviceAddress == null) return false;
 	    Log.d("OBD2->connect()", "isConnected is " + String.valueOf (isConnected));
-        if ( isConnected ) return;
+        //if ( isConnected ) return;
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
         BluetoothDevice device = btAdapter.getRemoteDevice(deviceAddress);
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
         try {
+            try {
+                btAdapter.cancelDiscovery();
+            } catch (Exception e11) {
+                Log.d("OBD2->connect()", e11.getMessage());
+                return false;
+            }
             socket = device.createInsecureRfcommSocketToServiceRecord(uuid);
-	        Log.d("OBD2->connect()", "try to connect to socket ");
-            socket.connect();
             //
             if ( socket != null ) {
+                Thread.sleep(1000);
+                Log.d("OBD2->connect()", "try to connect to socket ");
+                socket.connect();
                 Log.d("OBD2->connect()", "sleep after connect, waiting....");
-                Thread.sleep(3000);
-                isConnected = socket.isConnected();
-                Log.d("OBD2->connect()", "socked connected is " + String.valueOf (isConnected));
-                isConnected = true;
-                Intent intent = new Intent();
-                intent.setAction(OBD_BROADCAST_ACTION_STATUS_CHANGED);
-                intent.putExtra("Status",  isConnected );
-                mContext.sendBroadcast(intent);
+                Thread.sleep(1000);
+                boolean res = init();
+                SendBroadcastAction(OBD_BROADCAST_ACTION_STATUS_CHANGED, "Status", res);
+                return res;
             } else {
                 Log.d("OBD2->connect()", "socket is NULL....");
+                return false;
             }
 
        } catch (Exception e) {
             Log.d("OBDII-->connect()", e.toString());
-            isConnected = false;
+            return false;
         }
     }
 
@@ -209,32 +226,42 @@ public class OBDII {
         } catch (Exception e) {
             Log.d("OBDII-->disconnect()", e.toString());
         }
-        isConnected = false;
-        socket = null;
-        Intent intent = new Intent();
-        intent.setAction(OBD_BROADCAST_ACTION_STATUS_CHANGED);
-        intent.putExtra("Status", isConnected);
-        mContext.sendBroadcast(intent);
+        notify_disconnect();
     }
 
-    public void init() {
-	    Log.d("OBD2->init()", "");
+    public boolean init() {
+        boolean res = true;
+	    Log.d("OBD2->init()", "_");
         try {
+
             // echo off: "AT E0"
-            new EchoOffObdCommand().run(socket.getInputStream(), socket.getOutputStream());
+            EchoOffObdCommand cmd1 = new EchoOffObdCommand();
+            cmd1.run(socket.getInputStream(), socket.getOutputStream());
+            Log.d("OBD2->init(): ", "echoOff result:  !" + cmd1.getFormattedResult());
+            res = res && (cmd1.getFormattedResult().equalsIgnoreCase("OK"));
+            if ( !res ) return res;
 
             // "AT L0"
-            new LineFeedOffObdCommand().run(socket.getInputStream(), socket.getOutputStream());
+            LineFeedOffObdCommand cmd2 = new LineFeedOffObdCommand();
+            cmd2.run(socket.getInputStream(), socket.getOutputStream());
+            Log.d("OBD2->init(): ", "LineFeedOff result:  !" + cmd2.getFormattedResult());
+            res = res && (cmd2.getFormattedResult().equalsIgnoreCase("OK"));
+            if ( !res ) return res;
 
             // AT ST
             //new TimeoutObdCommand(0).run(socket.getInputStream(), socket.getOutputStream());
 
             // AT SP
 	        Log.d("OBD2->init()", "set protocol to ISO 15765-4 CAN");
-            new SelectProtocolObdCommand(ObdProtocols.ISO_15765_4_CAN).run(socket.getInputStream(), socket.getOutputStream());
-
+            SelectProtocolObdCommand cmd3 = new SelectProtocolObdCommand(ObdProtocols.ISO_15765_4_CAN);
+            cmd3.run(socket.getInputStream(), socket.getOutputStream());
+            Log.d("OBD2->init(): ", "SelectProtocol result:  !" + cmd3.getFormattedResult());
+            res = res && (cmd3.getFormattedResult().equalsIgnoreCase("OK"));
+            if ( !res ) return res;
+            return res;
         } catch (Exception e2) {
             Log.d("OBDII-->init()", e2.toString());
+            return false;
         }
     }
 
@@ -252,7 +279,7 @@ public class OBDII {
 
     public void processData() {
         if ( !isConnected ) return;
-        Log.d("OBDII-->processData()", "");
+        Log.d("OBDII-->processData()", "_");
         processOBD_EngineRPM();         // RPM:             01 0C
         processOBD_Speed();             // Speed:           01 0D
         processOBD_coolantTemp();       // Coolant:         01 05
@@ -271,6 +298,12 @@ public class OBDII {
             Log.d("OBDII-->processOBD_EngineRPM()", "RPM: " + engineRpmCommand.getFormattedResult());
         } catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_EngineRPM()", e.toString());
+        } catch (UnableToConnectException e3) {
+            Log.d("OBDII-->processOBD_EngineRPM()", e3.toString());
+            notify_disconnect();
+        } catch (IOException e4) {
+            Log.d("OBDII-->processOBD_EngineRPM()", e4.toString());
+            notify_disconnect();
         } catch ( Exception e2) {
             Log.d("OBDII-->processOBD_EngineRPM()", e2.toString());
         }
@@ -284,6 +317,12 @@ public class OBDII {
             Log.d("OBDII-->processOBD_Speed()", "Speed: " + speedCommand.getFormattedResult());
         } catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_Speed()", e.toString());
+        } catch (UnableToConnectException e3) {
+            Log.d("OBDII-->processOBD_Speed()", e3.toString());
+            notify_disconnect();
+        } catch (IOException e4) {
+            Log.d("OBDII-->processOBD_Speed()", e4.toString());
+            notify_disconnect();
         } catch ( Exception e2) {
             Log.d("OBDII-->processOBD_Speed()", e2.toString());
         }
@@ -303,6 +342,12 @@ public class OBDII {
             Log.d("OBDII-->processOBD_coolantTemp()", "coolantTemp: " + coolantTempCommand.getFormattedResult());
         } catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_coolantTemp()", e.toString());
+        } catch (UnableToConnectException e3) {
+            Log.d("OBDII-->processOBD_coolantTemp()", e3.toString());
+            notify_disconnect();
+        } catch (IOException e4) {
+            Log.d("OBDII-->processOBD_coolantTemp()", e4.toString());
+            notify_disconnect();
         } catch ( Exception e2) {
             Log.d("OBDII-->processOBD_coolantTemp()", e2.toString());
         }
@@ -321,6 +366,12 @@ public class OBDII {
             Log.d("OBDII-->processOBD_CMVoltage()", "cmuVoltage: " + cmuVoltageCommand.getFormattedResult());
         } catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_CMVoltage()", e.toString());
+        } catch (UnableToConnectException e3) {
+            Log.d("OBDII-->processOBD_CMVoltage()", e3.toString());
+            notify_disconnect();
+        } catch (IOException e4) {
+            Log.d("OBDII-->processOBD_CMVoltage()", e4.toString());
+            notify_disconnect();
         } catch ( Exception e2) {
             Log.d("OBDII-->processOBD_CMVoltage()", e2.toString());
         }
@@ -342,6 +393,12 @@ public class OBDII {
             Log.d("OBDII-->processOBD_MAF()", "MAF: " + MAFObdCommand.getFormattedResult());
         } catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_MAF()", e.toString());
+        } catch (UnableToConnectException e3) {
+            Log.d("OBDII-->processOBD_MAF()", e3.toString());
+            notify_disconnect();
+        } catch (IOException e4) {
+            Log.d("OBDII-->processOBD_MAF()", e4.toString());
+            notify_disconnect();
         } catch ( Exception e2) {
             Log.d("OBDII-->processOBD_MAF()", e2.toString());
         }
@@ -360,15 +417,25 @@ public class OBDII {
             Log.d("OBDII-->processOBD_AirIntake()", "AirIntakeTemperature: " + airIntakeTemperatureObdCommand.getFormattedResult());
         } catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_AirIntake()", e.toString());
+        } catch (UnableToConnectException e3) {
+            Log.d("OBDII-->processOBD_AirIntake()", e3.toString());
+            notify_disconnect();
+        } catch (IOException e4) {
+            Log.d("OBDII-->processOBD_AirIntake()", e4.toString());
+            notify_disconnect();
         } catch ( Exception e2) {
             Log.d("OBDII-->processOBD_AirIntake()", e2.toString());
         }
     }
 
-
+    private void notify_disconnect() {
+        isConnected = false;
+        socket = null;
+        SendBroadcastAction(OBD_BROADCAST_ACTION_STATUS_CHANGED, "Status", false);
+    }
 
     private void SendBroadcastAction(String action, String key, String value) {
-        Log.d ("OBDII", "SendBroadcastAction " + action + " key = " + key + " value = " + value);
+       // Log.d ("OBDII", "SendBroadcastAction " + action + " key = " + key + " value = " + value);
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         if ( key != null ) {
@@ -377,6 +444,18 @@ public class OBDII {
         intent.setAction(action);
         App.getInstance ().sendBroadcast(intent);
     }
+
+    private void SendBroadcastAction(String action, String key, boolean value) {
+        // Log.d ("OBDII", "SendBroadcastAction " + action + " key = " + key + " value = " + value);
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        if ( key != null ) {
+            intent.putExtra(key, value);
+        }
+        intent.setAction(action);
+        App.getInstance ().sendBroadcast(intent);
+    }
+
 
     public void saveFuelRemain() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
