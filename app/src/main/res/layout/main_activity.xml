@@ -494,15 +494,33 @@ android:longClickable="true">
                 android:src="@drawable/fuel_consump_min"
                 android:layout_gravity="center_vertical"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="9.7"
-                android:id="@+id/tvOBD_FuelConsump"
-                android:layout_marginLeft="4dp"
-                android:textSize="32sp"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"/>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="9.7"
+                    android:id="@+id/tvOBD_FuelConsump"
+                    android:layout_marginLeft="4dp"
+                    android:textSize="32sp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="9.7"
+                    android:id="@+id/tvOBD_FuelConsump2"
+                    android:layout_marginLeft="4dp"
+                    android:textSize="32sp"
+                    android:gravity="bottom"
+                    android:visibility="gone"
+                    android:layout_gravity="bottom"/>
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout

@@ -11,7 +11,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.IOException;
-import java.net.SocketException;
 import java.util.UUID;
 
 
@@ -72,13 +71,17 @@ public class OBDII {
         public float fuel_consump_lph;
         public float fuel_consump_lpk_inst;
         private float fuel_consump_lpk_inst_prev;
-        public float fuel_consump_lpk_trip;
+        public float fuel_consump_lpk_trip;  // без учета простоя в пробках
+        public float fuel_consump_lpk_trip2; // с учетом простоя в пробках
         public float distance_to_fuel_consump;
         public float distance_to_fuel_consump2; //нужно для сохраняемого расчета остатка
         public float fuel_usage;  // нужно просто для информации и не обнуляется при заправке
         public float fuel_usage2; // нужно для расчета, изменяется при заправке
+        public float fuel_usage_with_stops; // нужно для расчета, изменяется при заправке, учитывает простои в пробках
         public float fuel_remain; // сохраняем в преференсы и читаем оттуда
         public float fuel_tank; // читаем из преференсов
+
+        private long prevMafTime = 0;
 
         public OBDData() {
             speed = 0;
@@ -91,6 +94,7 @@ public class OBDII {
             fuel_consump_lph = 0;
             fuel_consump_lpk_inst = 0;
             fuel_consump_lpk_trip = 0;
+            fuel_consump_lpk_trip2 = 0;
             fuel_consump_lpk_inst_prev = 0;
 
             distance_to_fuel_consump = 0;
@@ -99,14 +103,28 @@ public class OBDII {
             fuel_remain = 0;
             fuel_tank = 0;
             fuel_usage2 = 0;
+            fuel_usage_with_stops = 0;
             distance_to_fuel_consump2 = 0;
+
         }
 
 
 
         public void calc_fuel_consump() {
+            // литры в секунду
+            float fuel_consump_lpsec = ( maf / 14.7f) / 720;
             // литры в час
-            fuel_consump_lph = (( maf / 14.7f) / 720) * 3600;
+            fuel_consump_lph = fuel_consump_lpsec * 3600;
+
+            long curMafTime = System.currentTimeMillis();
+            long delta = curMafTime - prevMafTime;
+            // использовано литров за delta секунд (между первым показанием и вторым)
+            float usedmaf = fuel_consump_lpsec *1000 / delta;
+
+
+
+            fuel_usage_with_stops += usedmaf; // с учетом порстоя
+            fuel_consump_lpk_trip2 = fuel_usage_with_stops * 100 / (distance_to_fuel_consump2/1000f);
 
             if ( speed > 2 ) {
                 // мгновенный расход л/100км
@@ -114,24 +132,32 @@ public class OBDII {
 
                 // средний расход л/100км (среднее между мгновенным текущим и мгновенным предыдущим)
                 // в процессе будет накапливаться среднее арифметическое мгновенных расходов - л/00км
-                fuel_consump_lpk_trip = (fuel_consump_lpk_inst + fuel_consump_lpk_inst_prev) / 2f;
-                fuel_consump_lpk_inst_prev = fuel_consump_lpk_inst;
+                //fuel_consump_lpk_trip = (fuel_consump_lpk_inst + fuel_consump_lpk_inst_prev) / 2f;
+                //fuel_consump_lpk_trip = (fuel_consump_lpk_trip + fuel_consump_lpk_inst) / 2f;
+                //fuel_consump_lpk_inst_prev = fuel_consump_lpk_inst;
 
                 // кол-во израсходованного топлива для отображения (должно накапливаться в течение поездки)
-                fuel_usage += (fuel_consump_lpk_trip * (distance_to_fuel_consump/1000f)) / 100f;
+                //fuel_usage = (fuel_consump_lpk_trip * (distance_to_fuel_consump/1000f)) / 100f;
+                fuel_usage += usedmaf;
 
                 // кол-во израсходованного топлива для подсчета остатка в баке
-                fuel_usage2 += (fuel_consump_lpk_trip * (distance_to_fuel_consump2/1000f)) / 100f;
+                //fuel_usage2 = (fuel_consump_lpk_trip * (distance_to_fuel_consump2/1000f)) / 100f;
+                fuel_usage2 += usedmaf;
+                fuel_consump_lpk_trip = fuel_usage2 * 100 / (distance_to_fuel_consump2/1000f);
 
-                // сейчас на машинах баков менье 40 литров не бывает?
-                // и размер бака не может быть меньше израсходованного количества?
-                if ( fuel_tank >= 40 && fuel_tank >= fuel_usage2 ) {
-                    // остаток топлива в баке
-                    fuel_remain = fuel_tank - fuel_usage2;
-                } else {
-                    fuel_remain = 0;
-                }
+
             }
+
+            // сейчас на машинах баков менье 40 литров не бывает?
+            // и размер бака не может быть меньше израсходованного количества?
+            if ( fuel_tank >= 40 && fuel_tank >= fuel_usage_with_stops) {
+                // остаток топлива в баке
+                fuel_remain = fuel_tank - fuel_usage_with_stops;
+            } else {
+                fuel_remain = 0;
+            }
+            prevMafTime = curMafTime;
+
         }
 
 
@@ -258,6 +284,7 @@ public class OBDII {
             Log.d("OBD2->init(): ", "SelectProtocol result:  !" + cmd3.getFormattedResult());
             res = res && (cmd3.getFormattedResult().equalsIgnoreCase("OK"));
             if ( !res ) return res;
+            obdData.prevMafTime = System.currentTimeMillis();
             return res;
         } catch (Exception e2) {
             Log.d("OBDII-->init()", e2.toString());
@@ -286,6 +313,8 @@ public class OBDII {
         processOBD_CMVoltage();         // Voltage:         01 42
         processOBD_MAF();               // MAF:             01 10
         processOBD_AirIntake();         // AirIntake:       01 0F
+
+        //Thread.sleep(500);
     }
 
 
@@ -461,7 +490,8 @@ public class OBDII {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
         prefs.edit().putFloat("kaierutils_fuel_remain", obdData.fuel_remain).commit();
         prefs.edit().putFloat("kaierutils_fuel_tank", obdData.fuel_tank).commit();
-        prefs.edit().putFloat("kaierutils_fuel_usage", obdData.fuel_usage2).commit();
+        //prefs.edit().putFloat("kaierutils_fuel_usage", obdData.fuel_usage2).commit();
+        prefs.edit().putFloat("kaierutils_fuel_usage", obdData.fuel_usage_with_stops).commit();
         prefs.edit().putFloat("kaierutils_fuel_distance", obdData.distance_to_fuel_consump2).commit();
 
     }
@@ -470,13 +500,15 @@ public class OBDII {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
         obdData.fuel_remain = prefs.getFloat("kaierutils_fuel_remain", 60f);
         obdData.fuel_tank = prefs.getFloat("kaierutils_fuel_tank", 60f);
-        obdData.fuel_usage2 = prefs.getFloat("kaierutils_fuel_usage", 0f);
+        //obdData.fuel_usage2 = prefs.getFloat("kaierutils_fuel_usage", 0f);
+        obdData.fuel_usage_with_stops = prefs.getFloat("kaierutils_fuel_usage", 0f);
         obdData.distance_to_fuel_consump2 = prefs.getFloat("kaierutils_fuel_distance", 0f);
     }
 
     public void setFullTank() {
         obdData.fuel_remain =  obdData.fuel_tank;
         obdData.fuel_usage2 = 0;
+        obdData.fuel_usage_with_stops = 0;
         obdData.distance_to_fuel_consump2 = 0;
         saveFuelRemain();
     }

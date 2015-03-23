@@ -35,10 +35,13 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TextView tvOBDSpeed;
     private TextView tvOBD_CoolantTemp;
     private TextView tvOBD_FuelUsage;
+    private TextView tvOBD_FuelUsage2;
     private TextView tvOBD_CMUVoltage;
+    private TextView tvGPS_Distanse;
     private TextView tvOBD_FuelConsumption_lph;
     private TextView tvOBD_FuelConsumption_mpg;
     private TextView tvOBD_FuelConsumption_avg;
+    private TextView tvOBD_FuelConsumption_avg2;
 
     private TextView tvOBD_MAF;
     private TextView tvOBD_AirIntakeTemp;
@@ -61,10 +64,13 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBDSpeed = (TextView) findViewById(R.id.tvOBD_Speed);
         tvOBD_CoolantTemp = (TextView) findViewById(R.id.tvOBD_CoolantTemp);
         tvOBD_FuelUsage = (TextView) findViewById(R.id.tvOBD_FuelUsage);
+        tvOBD_FuelUsage2 = (TextView) findViewById(R.id.tvOBD_FuelUsage2);
         tvOBD_CMUVoltage = (TextView) findViewById(R.id.tvOBD_CMUVoltage);
+        tvGPS_Distanse = (TextView) findViewById(R.id.tvGPS_Distanse);
         tvOBD_FuelConsumption_lph = (TextView) findViewById(R.id.tvOBD_FuelConsumption_lph);
         tvOBD_FuelConsumption_mpg = (TextView) findViewById(R.id.tvOBD_FuelConsumption_mpg);
         tvOBD_FuelConsumption_avg = (TextView) findViewById(R.id.tvOBD_FuelConsumption_avg);
+        tvOBD_FuelConsumption_avg2 = (TextView) findViewById(R.id.tvOBD_FuelConsumption_avg2);
 
         swUseOBD = (Switch) findViewById(R.id.swUseOBD);
 	    swUseOBD.setOnClickListener(this);
@@ -73,10 +79,13 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBDSpeed.setText( String.format( getString( R.string.text_obd_speed), ""));
         tvOBD_CoolantTemp.setText( String.format( getString( R.string.text_obd_coolant_temp), ""));
         tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage), 0.0f));
+        tvOBD_FuelUsage2.setText(String.format(getString(R.string.text_obd_fuel_usage_with_stops), 0.0f));
         tvOBD_CMUVoltage.setText( String.format( getString( R.string.text_obd_cmu_voltage), ""));
+        tvGPS_Distanse.setText( String.format( getString( R.string.text_obd_distanse), 0.0f));
         tvOBD_FuelConsumption_lph.setText( String.format( getString( R.string.text_obd_fuel_consumption_lph), 0.0f));
         tvOBD_FuelConsumption_mpg.setText( String.format( getString( R.string.text_obd_fuel_consumption_mpg), 0.0f));
         tvOBD_FuelConsumption_avg.setText( String.format( getString( R.string.text_obd_fuel_consumption_avg), 0.0f));
+        tvOBD_FuelConsumption_avg2.setText( String.format( getString( R.string.text_obd_fuel_consumption_avg2), 0.0f));
 
         tvOBD_MAF = (TextView) findViewById(R.id.tvOBD_MAF);
         tvOBD_MAF.setText("");
@@ -203,7 +212,10 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 tvOBD_FuelConsumption_lph.setText( String.format( getString( R.string.text_obd_fuel_consumption_lph), App.obd.obdData.fuel_consump_lph));
                 tvOBD_FuelConsumption_mpg.setText( String.format( getString( R.string.text_obd_fuel_consumption_mpg), App.obd.obdData.fuel_consump_lpk_inst));
                 tvOBD_FuelConsumption_avg.setText( String.format( getString( R.string.text_obd_fuel_consumption_avg), App.obd.obdData.fuel_consump_lpk_trip));
-                tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage), App.obd.obdData.fuel_usage));
+                tvOBD_FuelConsumption_avg2.setText( String.format( getString( R.string.text_obd_fuel_consumption_avg2), App.obd.obdData.fuel_consump_lpk_trip2));
+                tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage), App.obd.obdData.fuel_usage2));
+                tvOBD_FuelUsage2.setText(String.format(getString(R.string.text_obd_fuel_usage_with_stops), App.obd.obdData.fuel_usage_with_stops));
+                tvGPS_Distanse.setText(String.format(getString(R.string.text_obd_distanse), App.obd.obdData.distance_to_fuel_consump2));
 
             } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_AIR_INTAKE_TEMP_CHANGED)) {
                 tvOBD_AirIntakeTemp.setText( String.format( "AirIntakeTemp: %1$s", intent.getStringExtra("sAirIntakeTemp")));

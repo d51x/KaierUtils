@@ -103,6 +103,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private TextView tvOBD_FuelTank;
     private ImageView ivOBD_FuelConsump;
     private TextView tvOBD_FuelConsump;
+    private TextView tvOBD_FuelConsump2;
 
 	private Button btnTest2, btnTest1;
 	private SharedPreferences prefs;
@@ -191,6 +192,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
         ivOBD_FuelConsump = (ImageView) findViewById(R.id.ivOBD_FuelConsump);
         tvOBD_FuelConsump = (TextView) findViewById(R.id.tvOBD_FuelConsump);
         tvOBD_FuelConsump.setText("--");
+        tvOBD_FuelConsump2 = (TextView) findViewById(R.id.tvOBD_FuelConsump2);
+        tvOBD_FuelConsump2.setText("--");
+        tvOBD_FuelConsump2.setVisibility(View.GONE);
 
 		btnTest2 = (Button) findViewById (R.id.btnTest2);
 		btnTest2.setOnClickListener(this);
@@ -254,6 +258,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
         tvMusicInfo1.setText("");
         tvMusicInfo2.setText("");
         ivAlbumArt.setImageResource(R.drawable.toast_music);
+
+        ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst);
+        ivOBD_FuelTank.setImageResource(R.drawable.fuel_tank_in_tank_full);
 	}
 
 	public void updataData() {
@@ -279,6 +286,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
         // определим, запущено ли радио
         Radio.checkRadioActivityStarted();
         updateOBDStatus(App.obd.isConnected);
+
+
 	}
 
     @Override
@@ -792,22 +801,22 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
     public void updateOBD_FuelTank(float remain){
-        if ( remain < 20 ) {
-            ivOBD_FuelTank.setImageResource( R.drawable.fuel_tank_min);
-        } else {
-            ivOBD_FuelTank.setImageResource( R.drawable.fuel_tank_full);
-        }
+//        if ( remain < 20 ) {
+//            ivOBD_FuelTank.setImageResource( R.drawable.fuel_tank_min);
+//        } else {
+//            ivOBD_FuelTank.setImageResource( R.drawable.fuel_tank_full);
+//        }
         //tvOBD_FuelTank.setText( String.format("%1$.1f", tank));
         //tvOBD_FuelTank.setText( String.format("%1$.1f", remain));
         show_fuel_tank_data(modeFuelTank);
     }
 
     public void updateOBD_FuelConsump(float consump){
-        if ( consump < 9 ) {
-            ivOBD_FuelConsump.setImageResource( R.drawable.fuel_consump_min);
-        } else {
-            ivOBD_FuelConsump.setImageResource( R.drawable.fuel_consump_max);
-        }
+//        if ( consump < 9 ) {
+//            ivOBD_FuelConsump.setImageResource( R.drawable.fuel_consump_min);
+//        } else {
+//            ivOBD_FuelConsump.setImageResource( R.drawable.fuel_consump_max);
+//        }
         //tvOBD_FuelConsump.setText( String.format("%1$.1f", consump));
         show_fuel_consumption(modeFuelConsump);
     }
@@ -888,6 +897,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         App.obd.obdData.fuel_remain = Float.parseFloat(etFuelTankRemain.getText().toString());
                         App.obd.obdData.fuel_tank = Float.parseFloat(etFuelTankCapacity.getText().toString());
                         App.obd.obdData.fuel_usage2 = 0;
+                        App.obd.obdData.fuel_usage_with_stops = 0;
                         App.obd.obdData.distance_to_fuel_consump2 = 0;
                         App.obd.saveFuelRemain();
                     }
@@ -910,8 +920,26 @@ public class MainActivity extends Activity implements View.OnClickListener,
         // 2 - микс-режим (первая строка - литры, вторая строка - проценты
         // 3 - потрачено за поездку (л)
         modeFuelTank++;
-        if ( modeFuelTank > 3) modeFuelTank = 0;
+        if ( modeFuelTank > 2) modeFuelTank = 0;
         show_fuel_tank_data(modeFuelTank);
+
+        switch ( modeFuelTank ) {
+            case 0:
+                ivOBD_FuelTank.setImageResource(R.drawable.fuel_tank_in_tank_full);
+                //Toast.makeText(this, "Остаток в баке(л) ", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                ivOBD_FuelTank.setImageResource(R.drawable.fuel_tank_in_tank_percent_full);
+                //Toast.makeText(this, "Остаток в баке (%)", Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                ivOBD_FuelTank.setImageResource(R.drawable.fuel_tank_used_full);
+                //Toast.makeText(this, "Израсходовано топлива (л)", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                ivOBD_FuelTank.setImageResource(R.drawable.fuel_tank_full);
+                break;
+        }
     }
 
     private void switch_fuel_consump_mode() {
@@ -922,26 +950,50 @@ public class MainActivity extends Activity implements View.OnClickListener,
         // 3 - комбинированный режим, первая строка - средний, вторая мгновенный
         modeFuelConsump++;
         if ( modeFuelConsump > 3) modeFuelConsump = 0;
+
         show_fuel_consumption(modeFuelConsump);
+
         // инфу о переключении надо отображать здесь
+        switch ( modeFuelConsump ) {
+            case 0:
+                ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst);
+                show_hide_fuel_consump_line_2( modeFuelConsump == 3);
+                //Toast.makeText(this, "Мгновенный расход (л/100км)", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lpk_avg);
+                show_hide_fuel_consump_line_2( modeFuelConsump == 3);
+                //Toast.makeText(this, "Средний расход (л/100км) за поездку", Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lph);
+                show_hide_fuel_consump_line_2( modeFuelConsump == 3);
+                //Toast.makeText(this, "Часовой расход (л/ч)", Toast.LENGTH_SHORT).show();
+                break;
+            case 3:
+                ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst_avg);
+                show_hide_fuel_consump_line_2( modeFuelConsump == 3);
+                //Toast.makeText(this, "Комбинированный режим\nСредний расход за поездку (л/100км)\nМгновенный расход (л/100км)", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                show_hide_fuel_consump_line_2( modeFuelConsump == 3);
+                ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump);
+                break;
+        }
     }
 
     private void show_fuel_consumption(int mode) {
         switch (mode) {
             case 0:
                 tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lpk_inst) );
-                //Toast.makeText(this, "Мгновенный расход (л/100км)", Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lpk_trip) );
-                //Toast.makeText(this, "Средний расход (л/100км) за поездку", Toast.LENGTH_SHORT).show();
                 break;
             case 2:
                 tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lph) );
-                //Toast.makeText(this, "Часовой расход (л/ч)", Toast.LENGTH_SHORT).show();
                 break;
             case 3:
-                //Toast.makeText(this, "Комбинированный режим\nСредний расход за поездку (л/100км)\nМгновенный расход (л/100км)", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -952,18 +1004,28 @@ public class MainActivity extends Activity implements View.OnClickListener,
         switch (mode) {
             case 0:
                 tvOBD_FuelTank.setText( String.format("%1$.1f", App.obd.obdData.fuel_remain));
-                //Toast.makeText(this, "Остаток в баке(л) ", Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 tvOBD_FuelTank.setText( String.format("%1$.0f", (float) ((App.obd.obdData.fuel_remain * 100) / App.obd.obdData.fuel_tank))  + "%");
-                //Toast.makeText(this, "Остаток в баке (%)", Toast.LENGTH_SHORT).show();
                 break;
             case 2:
-                tvOBD_FuelTank.setText( String.format("%1$.1f", App.obd.obdData.fuel_usage));
-                //Toast.makeText(this, "Израсходовано топлива (л)", Toast.LENGTH_SHORT).show();
+                tvOBD_FuelTank.setText( String.format("%1$.3f", App.obd.obdData.fuel_usage));
                 break;
             default:
                 break;
+        }
+    }
+
+    private void show_hide_fuel_consump_line_2 (boolean line2) {
+        if ( line2 ) {
+            // show line 2
+            tvOBD_FuelConsump.setTextSize( 16 );
+            tvOBD_FuelConsump2.setTextSize( 12 );
+            tvOBD_FuelConsump2.setVisibility(View.VISIBLE);
+        } else {
+            // hide line 2
+            tvOBD_FuelConsump.setTextSize( 32 );
+            tvOBD_FuelConsump2.setVisibility(View.GONE);
         }
     }
 }
