@@ -156,7 +156,7 @@ public class OBDII {
             } else {
                 fuel_remain = 0;
             }
-            prevMafTime = curMafTime;
+
 
         }
 
@@ -408,6 +408,7 @@ public class OBDII {
 
     private void processOBD_MAF() {
         try {
+            obdData.prevMafTime = System.currentTimeMillis();
             MAFObdCommand.run(socket.getInputStream(), socket.getOutputStream());
             obdData.maf = MAFObdCommand.getMAF();
 

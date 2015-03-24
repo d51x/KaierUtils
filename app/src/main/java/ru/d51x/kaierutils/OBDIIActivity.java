@@ -215,7 +215,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 tvOBD_FuelConsumption_avg2.setText( String.format( getString( R.string.text_obd_fuel_consumption_avg2), App.obd.obdData.fuel_consump_lpk_trip2));
                 tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage), App.obd.obdData.fuel_usage2));
                 tvOBD_FuelUsage2.setText(String.format(getString(R.string.text_obd_fuel_usage_with_stops), App.obd.obdData.fuel_usage_with_stops));
-                tvGPS_Distanse.setText(String.format(getString(R.string.text_obd_distanse), App.obd.obdData.distance_to_fuel_consump2));
+                tvGPS_Distanse.setText(String.format(getString(R.string.text_obd_distanse), App.obd.obdData.distance_to_fuel_consump2/1000f));
 
             } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_AIR_INTAKE_TEMP_CHANGED)) {
                 tvOBD_AirIntakeTemp.setText( String.format( "AirIntakeTemp: %1$s", intent.getStringExtra("sAirIntakeTemp")));
