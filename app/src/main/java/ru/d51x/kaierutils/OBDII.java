@@ -74,20 +74,7 @@ public class OBDII {
         public float maf;
         public float voltage;
         public float airIntake;
-        public float fuel_consump_lph;
-        public float fuel_consump_lpk_inst;
-        private float fuel_consump_lpk_inst_prev;
-        public float fuel_consump_lpk_trip;  // без учета простоя в пробках
-        public float fuel_consump_lpk_trip2; // с учетом простоя в пробках
-        public float distance_to_fuel_consump;
-        public float distance_to_fuel_consump2; //нужно для сохраняемого расчета остатка
-        public float fuel_usage;  // нужно просто для информации и не обнуляется при заправке
-        public float fuel_usage2; // нужно для расчета, изменяется при заправке
-        public float fuel_usage_with_stops; // нужно для расчета, изменяется при заправке, учитывает простои в пробках
-        public float fuel_remain; // сохраняем в преференсы и читаем оттуда
         public float fuel_tank; // читаем из преференсов
-
-        private long prevMafTime = 0;
 
         public OBDData() {
             speed = 0;
@@ -96,78 +83,8 @@ public class OBDII {
             maf = 0;
             voltage = 0;
             airIntake = 0;
-
-            fuel_consump_lph = 0;
-            fuel_consump_lpk_inst = 0;
-            fuel_consump_lpk_trip = 0;
-            fuel_consump_lpk_trip2 = 0;
-            fuel_consump_lpk_inst_prev = 0;
-
-            distance_to_fuel_consump = 0;
-            fuel_usage = 0;
-
-            fuel_remain = 0;
             fuel_tank = 0;
-            fuel_usage2 = 0;
-            fuel_usage_with_stops = 0;
-            distance_to_fuel_consump2 = 0;
-
         }
-
-
-
-        public void calc_fuel_consump() {
-            // литры в секунду
-            float fuel_consump_lpsec = ( maf / 14.7f) / 720;
-            // литры в час
-            fuel_consump_lph = fuel_consump_lpsec * 3600;
-
-            long curMafTime = System.currentTimeMillis();
-            long delta = curMafTime - prevMafTime;
-            // использовано литров за delta секунд (между первым показанием и вторым)
-            float usedmaf = fuel_consump_lpsec *1000 / delta;
-
-
-
-            fuel_usage_with_stops += usedmaf; // с учетом порстоя
-            fuel_consump_lpk_trip2 = fuel_usage_with_stops * 100 / (distance_to_fuel_consump2/1000f);
-
-            if ( speed > 2 ) {
-                // мгновенный расход л/100км
-                fuel_consump_lpk_inst = (100 * fuel_consump_lph) / speed;
-
-                // средний расход л/100км (среднее между мгновенным текущим и мгновенным предыдущим)
-                // в процессе будет накапливаться среднее арифметическое мгновенных расходов - л/00км
-                //fuel_consump_lpk_trip = (fuel_consump_lpk_inst + fuel_consump_lpk_inst_prev) / 2f;
-                //fuel_consump_lpk_trip = (fuel_consump_lpk_trip + fuel_consump_lpk_inst) / 2f;
-                //fuel_consump_lpk_inst_prev = fuel_consump_lpk_inst;
-
-                // кол-во израсходованного топлива для отображения (должно накапливаться в течение поездки)
-                //fuel_usage = (fuel_consump_lpk_trip * (distance_to_fuel_consump/1000f)) / 100f;
-                fuel_usage += usedmaf;
-
-                // кол-во израсходованного топлива для подсчета остатка в баке
-                //fuel_usage2 = (fuel_consump_lpk_trip * (distance_to_fuel_consump2/1000f)) / 100f;
-                fuel_usage2 += usedmaf;
-                fuel_consump_lpk_trip = fuel_usage2 * 100 / (distance_to_fuel_consump2/1000f);
-
-
-            }
-
-            // сейчас на машинах баков менье 40 литров не бывает?
-            // и размер бака не может быть меньше израсходованного количества?
-            if ( fuel_tank >= 40 && fuel_tank >= fuel_usage_with_stops) {
-                // остаток топлива в баке
-                fuel_remain = fuel_remain - fuel_usage_with_stops;
-            } else {
-                fuel_remain = 0;
-            }
-
-
-        }
-
-
-
     };
 
 
@@ -185,7 +102,7 @@ public class OBDII {
         obdData = new OBDData();
         totalTrip = new TripData("total", true);
         oneTrip = new TripData("trip", false);
-        loadFuelRemain();
+        loadFuelTank();
         // запустить бесконечный цикл
         // если подключены, то выполняем команды
         // если не подключены, то пытаемся подключиться
@@ -206,11 +123,6 @@ public class OBDII {
 
     public void setDeviceAddress(String address) {
         deviceAddress = address;
-    }
-
-    public void show_devices_list() {
-
-
     }
 
     public boolean connect() {
@@ -292,7 +204,6 @@ public class OBDII {
             Log.d("OBD2->init(): ", "SelectProtocol result:  !" + cmd3.getFormattedResult());
             res = res && (cmd3.getFormattedResult().equalsIgnoreCase("OK"));
             if ( !res ) return res;
-            obdData.prevMafTime = System.currentTimeMillis();
             return res;
         } catch (Exception e2) {
             Log.d("OBDII-->init()", e2.toString());
@@ -314,14 +225,14 @@ public class OBDII {
 
     public void processData() {
         if ( !isConnected ) return;
-        Log.d("OBDII-->processData()", "_");
+        //Log.d("OBDII-->processData()", "_");
         processOBD_EngineRPM();         // RPM:             01 0C
         processOBD_Speed();             // Speed:           01 0D
         processOBD_coolantTemp();       // Coolant:         01 05
         processOBD_CMVoltage();         // Voltage:         01 42
         processOBD_AirIntake();         // AirIntake:       01 0F
         // к этому моменту уже должна пройти 1 сек = 5 функций с задержкой 200 мсек
-        processOBD_MAF();               // MAF:             01 10
+        //processOBD_MAF();               // MAF:             01 10
 
 
         //Thread.sleep(500);
@@ -334,7 +245,7 @@ public class OBDII {
             engineRpmCommand.run(socket.getInputStream(), socket.getOutputStream());
             obdData.rpm = engineRpmCommand.getRPM();
             SendBroadcastAction(OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED, "engineRPM", engineRpmCommand.getFormattedResult());
-            Log.d("OBDII-->processOBD_EngineRPM()", "RPM: " + engineRpmCommand.getFormattedResult());
+           // Log.d("OBDII-->processOBD_EngineRPM()", "RPM: " + engineRpmCommand.getFormattedResult());
         } catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_EngineRPM()", e.toString());
         } catch (UnableToConnectException e3) {
@@ -353,17 +264,17 @@ public class OBDII {
             speedCommand.run(socket.getInputStream(), socket.getOutputStream());
             obdData.speed = speedCommand.getMetricSpeed();
             SendBroadcastAction(OBD_BROADCAST_ACTION_SPEED_CHANGED, "speed", speedCommand.getFormattedResult());
-            Log.d("OBDII-->processOBD_Speed()", "Speed: " + speedCommand.getFormattedResult());
+            //Log.d("OBDII-->processOBD_Speed()", "Speed: " + speedCommand.getFormattedResult());
         } catch ( NoDataException e) {
-            Log.d("OBDII-->processOBD_Speed()", e.toString());
+            Log.d("processOBD_Speed()", e.toString());
         } catch (UnableToConnectException e3) {
-            Log.d("OBDII-->processOBD_Speed()", e3.toString());
+            Log.d("processOBD_Speed()", e3.toString());
             notify_disconnect();
         } catch (IOException e4) {
-            Log.d("OBDII-->processOBD_Speed()", e4.toString());
+            Log.d("processOBD_Speed()", e4.toString());
             notify_disconnect();
         } catch ( Exception e2) {
-            Log.d("OBDII-->processOBD_Speed()", e2.toString());
+            Log.d("processOBD_Speed()", e2.toString());
         }
     }
 
@@ -378,17 +289,17 @@ public class OBDII {
             intent.setAction(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED);
             App.getInstance ().sendBroadcast(intent);
 
-            Log.d("OBDII-->processOBD_coolantTemp()", "coolantTemp: " + coolantTempCommand.getFormattedResult());
+            //Log.d("OBDII-->processOBD_coolantTemp()", "coolantTemp: " + coolantTempCommand.getFormattedResult());
         } catch ( NoDataException e) {
-            Log.d("OBDII-->processOBD_coolantTemp()", e.toString());
+            Log.d("processOBD_coolantTemp()", e.toString());
         } catch (UnableToConnectException e3) {
-            Log.d("OBDII-->processOBD_coolantTemp()", e3.toString());
+            Log.d("processOBD_coolantTemp()", e3.toString());
             notify_disconnect();
         } catch (IOException e4) {
-            Log.d("OBDII-->processOBD_coolantTemp()", e4.toString());
+            Log.d("processOBD_coolantTemp()", e4.toString());
             notify_disconnect();
         } catch ( Exception e2) {
-            Log.d("OBDII-->processOBD_coolantTemp()", e2.toString());
+            Log.d("processOBD_coolantTemp()", e2.toString());
         }
     }
 
@@ -402,7 +313,7 @@ public class OBDII {
             intent.putExtra("cmuVoltageD", obdData.voltage);
             intent.setAction(OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED);
             App.getInstance ().sendBroadcast(intent);
-            Log.d("OBDII-->processOBD_CMVoltage()", "cmuVoltage: " + cmuVoltageCommand.getFormattedResult());
+            //Log.d("OBDII-->processOBD_CMVoltage()", "cmuVoltage: " + cmuVoltageCommand.getFormattedResult());
         } catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_CMVoltage()", e.toString());
         } catch (UnableToConnectException e3) {
@@ -416,16 +327,13 @@ public class OBDII {
         }
     }
 
-    private void processOBD_MAF() {
+    public void processOBD_MAF() {
         try {
-            obdData.prevMafTime = System.currentTimeMillis();
             MAFObdCommand.run(socket.getInputStream(), socket.getOutputStream());
-            long curMafTime = System.currentTimeMillis();
             obdData.maf = MAFObdCommand.getMAF();
 
-            obdData.calc_fuel_consump();
-            oneTrip.calculateData(obdData.speed, obdData.maf, curMafTime - obdData.prevMafTime);
-            totalTrip.calculateData(obdData.speed, obdData.maf, curMafTime - obdData.prevMafTime);
+            oneTrip.calculateData(obdData.speed, obdData.maf, 0);
+            totalTrip.calculateData(obdData.speed, obdData.maf, 0);
 
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
@@ -457,7 +365,7 @@ public class OBDII {
             intent.putExtra("dAirIntakeTemp", obdData.airIntake);
             intent.setAction(OBD_BROADCAST_ACTION_AIR_INTAKE_TEMP_CHANGED);
             App.getInstance ().sendBroadcast(intent);
-            Log.d("OBDII-->processOBD_AirIntake()", "AirIntakeTemperature: " + airIntakeTemperatureObdCommand.getFormattedResult());
+          //  Log.d("OBDII-->processOBD_AirIntake()", "AirIntakeTemperature: " + airIntakeTemperatureObdCommand.getFormattedResult());
         } catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_AirIntake()", e.toString());
         } catch (UnableToConnectException e3) {
@@ -500,77 +408,32 @@ public class OBDII {
     }
 
 
-    public void saveFuelRemain() {
+    public void saveFuelTank() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
-        prefs.edit().putFloat("kaierutils_fuel_remain", obdData.fuel_remain).commit();
-        prefs.edit().putFloat("kaierutils_fuel_tank", obdData.fuel_tank).commit();
-        //prefs.edit().putFloat("kaierutils_fuel_usage", obdData.fuel_usage2).commit();
-        prefs.edit().putFloat("kaierutils_fuel_usage", obdData.fuel_usage_with_stops).commit();
-        prefs.edit().putFloat("kaierutils_fuel_distance", obdData.distance_to_fuel_consump2).commit();
+        prefs.edit().putFloat("kaierutils_fuel_tank", obdData.fuel_tank).apply();
+        //prefs.edit().putFloat("kaierutils_fuel_usage", obdData.fuel_usage2).apply();
 
     }
 
-    public void loadFuelRemain() {
+    public void loadFuelTank() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
-        obdData.fuel_remain = prefs.getFloat("kaierutils_fuel_remain", 60f);
         obdData.fuel_tank = prefs.getFloat("kaierutils_fuel_tank", 60f);
         //obdData.fuel_usage2 = prefs.getFloat("kaierutils_fuel_usage", 0f);
-        obdData.fuel_usage_with_stops = prefs.getFloat("kaierutils_fuel_usage", 0f);
-        obdData.distance_to_fuel_consump2 = prefs.getFloat("kaierutils_fuel_distance", 0f);
     }
 
 
     // заправили полный бак
     public void setFullTank() {
-        obdData.fuel_remain =  obdData.fuel_tank;
-        obdData.fuel_usage2 = 0;
-        obdData.fuel_usage_with_stops = 0;
-        obdData.distance_to_fuel_consump2 = 0;
 
-        oneTrip.updateData( true, obdData.fuel_remain, obdData.fuel_tank);
-        saveFuelRemain();
+        oneTrip.updateData( true, obdData.fuel_tank, obdData.fuel_tank);
+        saveFuelTank();
     }
 
     // заправили не полный бак / коррекция значений
     public void setCustomTank(float tank_volume, float fuel_remain) {
-        obdData.fuel_remain = fuel_remain;
         obdData.fuel_tank = tank_volume;
 
-        obdData.fuel_usage2 = 0;
-        obdData.fuel_usage_with_stops = 0;
-        obdData.distance_to_fuel_consump2 = 0;
-        oneTrip.updateData( false, obdData.fuel_remain, obdData.fuel_tank);
-        saveFuelRemain();
+        oneTrip.updateData( false, fuel_remain, tank_volume);
+        saveFuelTank();
     }
 }
-/*
-* ATSP6\nATAL\nATSH7E0\nATCRA7E8\nATST32\nATSW00
-* запросы 21F0 и 2102
-*
-* - долговременная балансировка - смесь, работа форсунок, работа лямбд, качество топлива
-- вторая лямбда - исправность ката
-- температура ОЖ - удобно смотреть в цифирках
-- обороты - удобно смотреть
-- средний расход - понятно зачем
-- расход мл/мин - можно быстро оценить расход и качество бензина
-- напряжение бортсети
-
-для поездки
-
-- скорость - удобно смотреть в цифирках
-- пробег - удобно сбрасывать
-- пробег за поездку
-- ср расход за поездку
-- потрачено топлива за поездку
-- ср. скорость в пути
-- время езды/ время простоя
-*
-* */
-
-
-/*
-как идея
-отображаем уровень в баке,
-после заправки надо на него тыкнуть и сказать, полный бак или сколько литров долито
-вычисляем по расходу и пробегу
-*/

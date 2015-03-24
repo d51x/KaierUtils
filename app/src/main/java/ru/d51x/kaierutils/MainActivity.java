@@ -264,7 +264,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	}
 
 	public void updataData() {
-
+        updateOBD_FuelTank(App.obd.oneTrip.fuel_remains);
 	}
 
 	public void onStart() {
@@ -540,8 +540,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED )) {
                 updateOBD_CoolantTemp(App.obd.obdData.coolant);
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED )) {
-                updateOBD_FuelConsump( App.obd.obdData.fuel_consump_lph );
-                updateOBD_FuelTank( App.obd.obdData.fuel_remain );
+                updateOBD_FuelConsump( App.obd.oneTrip.fuel_cons_lph );
+                updateOBD_FuelTank( App.obd.oneTrip.fuel_remains );
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED )) {
 
             }
@@ -867,9 +867,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
         final TextView tvFuelPercent = (TextView) linearlayout.findViewById(R.id.tvFuelPercent);
 
         etFuelTankCapacity.setText( String.format("%1$.0f", App.obd.obdData.fuel_tank));
-        etFuelTankRemain.setText( String.format("%1$.0f", App.obd.obdData.fuel_remain));
+        etFuelTankRemain.setText( String.format("%1$.0f", App.obd.oneTrip.fuel_remains));
         seekBarFuel.setMax( 100 );
-        int percent = Math.round(App.obd.obdData.fuel_remain * 100 / App.obd.obdData.fuel_tank);
+        int percent = Math.round(App.obd.oneTrip.fuel_remains * 100 / App.obd.obdData.fuel_tank);
         seekBarFuel.setProgress( percent );
         tvFuelPercent.setText(String.valueOf(percent) + " %");
         seekBarFuel.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -898,6 +898,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     public void onClick(DialogInterface dialog, int which) {
                         App.obd.setCustomTank(Float.parseFloat(etFuelTankCapacity.getText().toString()),
                                 Float.parseFloat(etFuelTankRemain.getText().toString()));
+                        updateOBD_FuelTank(App.obd.oneTrip.fuel_remains);
                     }
                 });
 
@@ -958,22 +959,18 @@ public class MainActivity extends Activity implements View.OnClickListener,
             case 0:
                 ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst);
                 show_hide_fuel_consump_line_2( modeFuelConsump == 3);
-                //Toast.makeText(this, "Мгновенный расход (л/100км)", Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lpk_avg);
                 show_hide_fuel_consump_line_2( modeFuelConsump == 3);
-                //Toast.makeText(this, "Средний расход (л/100км) за поездку", Toast.LENGTH_SHORT).show();
                 break;
             case 2:
                 ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lph);
                 show_hide_fuel_consump_line_2( modeFuelConsump == 3);
-                //Toast.makeText(this, "Часовой расход (л/ч)", Toast.LENGTH_SHORT).show();
                 break;
             case 3:
                 ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst_avg);
                 show_hide_fuel_consump_line_2( modeFuelConsump == 3);
-                //Toast.makeText(this, "Комбинированный режим\nСредний расход за поездку (л/100км)\nМгновенный расход (л/100км)", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 show_hide_fuel_consump_line_2( modeFuelConsump == 3);
@@ -984,77 +981,39 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     // отобразить данные о текущем расходе топлива
     private void show_fuel_consumption(int mode) {
-        if ( App.obd.newMethod ) {
-            switch (mode) {
-                case 0:
-                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst) );
-                    break;
-                case 1:
-                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg) );
-                    break;
-                case 2:
-                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph) );
-                    break;
-                case 3:
-                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg) );
-                    tvOBD_FuelConsump2.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst) );
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            switch (mode) {
-                case 0:
-                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lpk_inst) );
-                    break;
-                case 1:
-                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lpk_trip) );
-                    break;
-                case 2:
-                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lph) );
-                    break;
-                case 3:
-                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lpk_trip) );
-                    tvOBD_FuelConsump2.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lpk_inst) );
-                    break;
-                default:
-                    break;
-            }
+        switch (mode) {
+            case 0:
+                tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst) );
+                break;
+            case 1:
+                tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg) );
+                break;
+            case 2:
+                tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph) );
+                break;
+            case 3:
+                tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg) );
+                tvOBD_FuelConsump2.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst) );
+                break;
+            default:
+                break;
         }
-
     }
 
     // отобразить данные  о количестве топлива в баке
     private void show_fuel_tank_data(int mode) {
-
-        if ( App.obd.newMethod ) {
-            switch (mode) {
-                case 0:
-                    tvOBD_FuelTank.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_remains));
-                    break;
-                case 1:
-                    tvOBD_FuelTank.setText( String.format("%1$.0f", (float) ((App.obd.oneTrip.fuel_remains * 100) / App.obd.obdData.fuel_tank))  + "%");
-                    break;
-                case 2:
-                    tvOBD_FuelTank.setText( String.format("%1$.3f", App.obd.oneTrip.fuel_usage_for_display));
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            switch (mode) {
-                case 0:
-                    tvOBD_FuelTank.setText( String.format("%1$.1f", App.obd.obdData.fuel_remain));
-                    break;
-                case 1:
-                    tvOBD_FuelTank.setText( String.format("%1$.0f", (float) ((App.obd.obdData.fuel_remain * 100) / App.obd.obdData.fuel_tank))  + "%");
-                    break;
-                case 2:
-                    tvOBD_FuelTank.setText( String.format("%1$.3f", App.obd.obdData.fuel_usage));
-                    break;
-                default:
-                    break;
-            }
+        switch (mode) {
+            case 0:
+                tvOBD_FuelTank.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_remains));
+                break;
+            case 1:
+                tvOBD_FuelTank.setText( String.format("%1$.0f", (float) ((App.obd.oneTrip.fuel_remains * 100) / App.obd.obdData.fuel_tank))  + "%");
+                break;
+            case 2:
+                tvOBD_FuelTank.setText( String.format("%1$.3f", App.obd.oneTrip.fuel_usage));
+                break;
+            default:
+                break;
         }
     }
 

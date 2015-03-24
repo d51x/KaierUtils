@@ -45,7 +45,9 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 				  action.equals ( TWUtilConst.TW_BROADCAST_ACTION_SHUTDOWN))
 		{	// изменение уровня громкости при выключении
 			SetVolumeAtStartUp();
-            App.obd.saveFuelRemain();
+            App.obd.saveFuelTank();
+            App.obd.oneTrip.saveData();
+            App.obd.totalTrip.saveData();
 		}
         // устройство засыпает
 		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_SLEEP))
@@ -54,7 +56,9 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             // запомним время ухода в SleepMode
             App.GS.lastSleep = System.currentTimeMillis();
             App.GS.isStopedAfterWakeUp = false;
-            App.obd.saveFuelRemain();
+            App.obd.saveFuelTank();
+            App.obd.oneTrip.saveData();
+            App.obd.totalTrip.saveData();
 		}
         // устройство проснулось (вышло из SleepMode)
 		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP))
@@ -62,7 +66,9 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 	        App.GS.SleepModeCount++; // увеличим счетчик просыпаний
             App.GS.isStopedAfterWakeUp = true;
             App.GS.wakeUpTime =  System.currentTimeMillis();
-            App.obd.loadFuelRemain();
+            App.obd.loadFuelTank();
+            App.obd.oneTrip.loadData();
+            App.obd.totalTrip.loadData();
 		}
         // включился задний ход
 		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_START))
@@ -79,15 +85,19 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 		}
 		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED))
 		{
-			ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+			if ( App.GS.curAudioFocusID != TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID ) return;
+            ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 			List<RunningTaskInfo> taskInfo = activityManager.getRunningTasks(1);
 			String activeWnd = ((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName();
+            String activeActivity = ((ActivityManager.RunningTaskInfo) taskInfo.get(0)).topActivity.getClassName();
 			if ( taskInfo.size() <= 0 ||
 				 !(activeWnd.equalsIgnoreCase ( Radio.PACKAGE_NAME )) //||
                  //!((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils")
 				)
 			{
-                if ( App.GS.radio.dontShowToastOnMainActivity && activeWnd.equalsIgnoreCase ("ru.d51x.kaierutils") ) return;
+                if ( App.GS.radio.dontShowToastOnMainActivity  &&
+                        activeWnd.equalsIgnoreCase("ru.d51x.kaierutils") &&
+                        activeActivity.equalsIgnoreCase("MainActivity")) return;
                 //App.rToast.isShowToastWhenActive = !((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils");
                 String title = intent.getStringExtra("Title");
 				String freq = intent.getStringExtra ("Frequency");

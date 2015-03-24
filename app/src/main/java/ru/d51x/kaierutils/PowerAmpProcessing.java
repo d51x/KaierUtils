@@ -99,14 +99,19 @@ public class PowerAmpProcessing {
 
 	            if ( App.GS.interactWithPowerAmp && App.GS.isShowTrackInfoToast && App.GS.isPowerAmpPlaying )
 	            {
-		            ActivityManager activityManager = (ActivityManager) context.getSystemService("activity");
+                    if ( !(App.GS.curAudioFocusID == TWUtilConst.TW_AUDIO_FOCUS_MUSIC_ID || App.GS.curAudioFocusID == 0 )) return;
+                    ActivityManager activityManager = (ActivityManager) context.getSystemService("activity");
 		            List<ActivityManager.RunningTaskInfo> taskInfo = activityManager.getRunningTasks (1);
 		            String activeWnd = ((ActivityManager.RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName();
-		            if ( taskInfo.size() <= 0 ||
+		            String activeActivity = ((ActivityManager.RunningTaskInfo) taskInfo.get(0)).topActivity.getClassName();
+
+                    if ( taskInfo.size() <= 0 ||
 	                     !(activeWnd.equalsIgnoreCase (PowerampAPI.PACKAGE_NAME))
 				       )
 		            {
-			            if ( App.GS.dontShowMusicInfoWhenMainActive && activeWnd.equalsIgnoreCase("ru.d51x.kaierutils")) return;
+			            if ( App.GS.dontShowMusicInfoWhenMainActive &&
+                                activeWnd.equalsIgnoreCase("ru.d51x.kaierutils") &&
+                                activeActivity.equalsIgnoreCase("MainActivity")) return;
 						App.mToast.cancel();
 						App.mToast.setTrackTitle (App.GS.PowerAmp_TrackTitle);
 			            App.mToast.setArtistAlbum ( App.GS.PowerAmp_AlbumArtist);

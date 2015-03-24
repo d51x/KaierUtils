@@ -238,8 +238,6 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
                    App.GS.totalDistance += location.distanceTo ( prevLocation );
                    App.GS.totalDistanceForAverageSpeed += location.distanceTo ( prevLocation );
                    if ( App.obd.isConnected && App.obd.obdData.speed > 0) {
-                       App.obd.obdData.distance_to_fuel_consump += location.distanceTo ( prevFuelLocation );
-                       App.obd.obdData.distance_to_fuel_consump2 += location.distanceTo ( prevFuelLocation );
                        App.obd.oneTrip.distance += location.distanceTo ( prevFuelLocation );
                        App.obd.totalTrip.distance += location.distanceTo ( prevFuelLocation );
                    }

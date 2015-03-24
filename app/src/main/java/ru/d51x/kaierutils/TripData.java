@@ -96,8 +96,7 @@ public class TripData {
         float fuel_consump_lpsec = ( maf / 14.7f) / 720;
         // литры в час
         fuel_cons_lph = fuel_consump_lpsec * 3600;
-        float usedmaf = fuel_consump_lpsec  /  ( deltaTime / 1000f );
-        //float usedmaf = fuel_consump_lpsec;
+        float usedmaf = fuel_consump_lpsec;
 
         // использовано топлива
         fuel_usage += usedmaf; // с учетом порстоя
@@ -111,7 +110,7 @@ public class TripData {
         }
 
         // остаток топлива в баке
-        fuel_remains = fuel_remains - fuel_usage;
+        fuel_remains = fuel_remains - usedmaf;
         if ( fuel_remains < 0 )  fuel_remains = 0;
     }
 }

@@ -208,24 +208,13 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
             } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED)) {
                 tvOBD_MAF.setText( String.format( "MAF: %1$s", intent.getStringExtra("sMAF")));
-
-                if ( App.obd.newMethod ) {
-                    tvOBD_FuelConsumption_lph.setText(String.format(getString(R.string.text_obd_fuel_consumption_lph), App.obd.oneTrip.fuel_cons_lph));
-                    tvOBD_FuelConsumption_mpg.setText(String.format(getString(R.string.text_obd_fuel_consumption_mpg), App.obd.oneTrip.fuel_cons_lp100km_inst));
-                    tvOBD_FuelConsumption_avg.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg), App.obd.oneTrip.fuel_cons_lp100km_avg));
-                    tvOBD_FuelConsumption_avg2.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg2), App.obd.oneTrip.fuel_cons_lp100km_avg_wo_stops));
-                    tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage), App.obd.oneTrip.fuel_usage));
-                    tvOBD_FuelUsage2.setText(String.format(getString(R.string.text_obd_fuel_usage_with_stops), App.obd.oneTrip.fuel_usage_wo_stops));
-                    tvGPS_Distanse.setText(String.format(getString(R.string.text_obd_distanse), App.obd.oneTrip.distance / 1000f));
-                } else {
-                    tvOBD_FuelConsumption_lph.setText(String.format(getString(R.string.text_obd_fuel_consumption_lph), App.obd.obdData.fuel_consump_lph));
-                    tvOBD_FuelConsumption_mpg.setText(String.format(getString(R.string.text_obd_fuel_consumption_mpg), App.obd.obdData.fuel_consump_lpk_inst));
-                    tvOBD_FuelConsumption_avg.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg), App.obd.obdData.fuel_consump_lpk_trip));
-                    tvOBD_FuelConsumption_avg2.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg2), App.obd.obdData.fuel_consump_lpk_trip2));
-                    tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage), App.obd.obdData.fuel_usage2));
-                    tvOBD_FuelUsage2.setText(String.format(getString(R.string.text_obd_fuel_usage_with_stops), App.obd.obdData.fuel_usage_with_stops));
-                    tvGPS_Distanse.setText(String.format(getString(R.string.text_obd_distanse), App.obd.obdData.distance_to_fuel_consump2 / 1000f));
-                }
+                tvOBD_FuelConsumption_lph.setText(String.format(getString(R.string.text_obd_fuel_consumption_lph), App.obd.oneTrip.fuel_cons_lph));
+                tvOBD_FuelConsumption_mpg.setText(String.format(getString(R.string.text_obd_fuel_consumption_mpg), App.obd.oneTrip.fuel_cons_lp100km_inst));
+                tvOBD_FuelConsumption_avg.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg), App.obd.oneTrip.fuel_cons_lp100km_avg));
+                tvOBD_FuelConsumption_avg2.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg2), App.obd.oneTrip.fuel_cons_lp100km_avg_wo_stops));
+                tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage), App.obd.oneTrip.fuel_usage));
+                tvOBD_FuelUsage2.setText(String.format(getString(R.string.text_obd_fuel_usage_with_stops), App.obd.oneTrip.fuel_usage_wo_stops));
+                tvGPS_Distanse.setText(String.format(getString(R.string.text_obd_distanse), App.obd.oneTrip.distance / 1000f));
             } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_AIR_INTAKE_TEMP_CHANGED)) {
                 tvOBD_AirIntakeTemp.setText( String.format( "AirIntakeTemp: %1$s", intent.getStringExtra("sAirIntakeTemp")));
             }
