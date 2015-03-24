@@ -426,6 +426,7 @@ public class OBDII {
     public void setFullTank() {
 
         oneTrip.updateData( true, obdData.fuel_tank, obdData.fuel_tank);
+        totalTrip.updateData( true, obdData.fuel_tank, obdData.fuel_tank);
         saveFuelTank();
     }
 
@@ -434,6 +435,7 @@ public class OBDII {
         obdData.fuel_tank = tank_volume;
 
         oneTrip.updateData( false, fuel_remain, tank_volume);
+        totalTrip.updateData( false, fuel_remain, tank_volume);
         saveFuelTank();
     }
 }

@@ -1010,7 +1010,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 tvOBD_FuelTank.setText( String.format("%1$.0f", (float) ((App.obd.totalTrip.fuel_remains * 100) / App.obd.obdData.fuel_tank))  + "%");
                 break;
             case 2:
-                tvOBD_FuelTank.setText( String.format("%1$.3f", App.obd.oneTrip.fuel_usage));
+                tvOBD_FuelTank.setText( String.format("%1$.2f", App.obd.oneTrip.fuel_usage));
                 break;
             default:
                 break;
