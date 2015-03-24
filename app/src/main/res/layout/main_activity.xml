@@ -404,8 +404,8 @@ android:longClickable="true">
             android:baselineAligned="false">
 
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:id="@+id/ivOBD_CarBattery"
                 android:src="@drawable/car_battery_bad"
                 android:layout_gravity="center_vertical"/>
@@ -432,8 +432,8 @@ android:longClickable="true">
             android:baselineAligned="false">
 
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:id="@+id/ivOBD_CoolantTemp"
                 android:src="@drawable/coolant_temp_min"
                 android:layout_gravity="center_vertical"/>
@@ -460,8 +460,8 @@ android:longClickable="true">
             android:baselineAligned="false">
 
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:id="@+id/ivOBD_FuelTank"
                 android:src="@drawable/fuel_tank_min"
                 android:layout_gravity="center_vertical"/>
@@ -488,8 +488,8 @@ android:longClickable="true">
             android:baselineAligned="false">
 
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:id="@+id/ivOBD_FuelConsump"
                 android:src="@drawable/fuel_consump_min"
                 android:layout_gravity="center_vertical"/>

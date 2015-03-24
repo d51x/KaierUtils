@@ -157,7 +157,7 @@
 
 <!-- TODO: Remove or change this placeholder text -->
 	<string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_obdii">OBDIIActivity</string>
+    <string name="title_activity_obdii">OBDII информация</string>
 
     <string name="odbii_device_name">Устройство: %1$s</string>
     <string name="odbii_device_status">Статус: %1$s</string>
@@ -180,8 +180,8 @@
     <string name="text_fuel_tank_title">Заправка</string>
     <string name="text_fuel_tank_detail">Параметры бака</string>
     <!--<string name="text_obd_fuel_usage_with_stops">Потрачено топлива с учетом простоев: %1$.3f</string>-->
-    <string name="text_obd_fuel_usage_with_stops"> с простоями: %1$.3f</string>
+    <string name="text_obd_fuel_usage_with_stops"> без простоев: %1$.3f</string>
     <string name="text_obd_distanse">Пройдено за поездку (км): %1$.3f</string>
     <!--<string name="text_obd_fuel_consumption_avg2">Средний расход (л/100км) с учетом простоев: %1$.1f</string>-->
-    <string name="text_obd_fuel_consumption_avg2">  с простоями (л/100км): %1$.1f</string>
+    <string name="text_obd_fuel_consumption_avg2">  без простоев (л/100км): %1$.1f</string>
 </resources>

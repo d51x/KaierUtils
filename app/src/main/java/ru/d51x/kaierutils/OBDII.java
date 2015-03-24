@@ -32,6 +32,8 @@ import pt.lighthouselabs.obd.exceptions.*;
  */
 public class OBDII {
 
+    protected static final boolean newMethod = true;
+
     protected static final String OBD_BROADCAST_ACTION_STATUS_CHANGED = "ru.d51x.kaierutils.action.OBD_STATUS_CHANGED";
     protected static final String OBD_BROADCAST_ACTION_SPEED_CHANGED = "ru.d51x.kaierutils.action.OBD_SPEED_CHANGED";
     protected static final String OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED = "ru.d51x.kaierutils.action.OBD_ENGINE_RPM_CHANGED";
@@ -60,6 +62,10 @@ public class OBDII {
 
     public boolean useOBD;
     public OBDData obdData;
+
+    public TripData totalTrip;
+    public TripData oneTrip;
+
 
     public class OBDData {
         public float speed;
@@ -152,7 +158,7 @@ public class OBDII {
             // и размер бака не может быть меньше израсходованного количества?
             if ( fuel_tank >= 40 && fuel_tank >= fuel_usage_with_stops) {
                 // остаток топлива в баке
-                fuel_remain = fuel_tank - fuel_usage_with_stops;
+                fuel_remain = fuel_remain - fuel_usage_with_stops;
             } else {
                 fuel_remain = 0;
             }
@@ -177,6 +183,8 @@ public class OBDII {
         mHandler = new Handler();
         useOBD = prefs.getBoolean("ODBII_USE_BLUETOOTH", false);
         obdData = new OBDData();
+        totalTrip = new TripData("total", true);
+        oneTrip = new TripData("trip", false);
         loadFuelRemain();
         // запустить бесконечный цикл
         // если подключены, то выполняем команды
@@ -311,8 +319,10 @@ public class OBDII {
         processOBD_Speed();             // Speed:           01 0D
         processOBD_coolantTemp();       // Coolant:         01 05
         processOBD_CMVoltage();         // Voltage:         01 42
-        processOBD_MAF();               // MAF:             01 10
         processOBD_AirIntake();         // AirIntake:       01 0F
+        // к этому моменту уже должна пройти 1 сек = 5 функций с задержкой 200 мсек
+        processOBD_MAF();               // MAF:             01 10
+
 
         //Thread.sleep(500);
     }
@@ -410,9 +420,12 @@ public class OBDII {
         try {
             obdData.prevMafTime = System.currentTimeMillis();
             MAFObdCommand.run(socket.getInputStream(), socket.getOutputStream());
+            long curMafTime = System.currentTimeMillis();
             obdData.maf = MAFObdCommand.getMAF();
 
             obdData.calc_fuel_consump();
+            oneTrip.calculateData(obdData.speed, obdData.maf, curMafTime - obdData.prevMafTime);
+            totalTrip.calculateData(obdData.speed, obdData.maf, curMafTime - obdData.prevMafTime);
 
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
@@ -506,14 +519,29 @@ public class OBDII {
         obdData.distance_to_fuel_consump2 = prefs.getFloat("kaierutils_fuel_distance", 0f);
     }
 
+
+    // заправили полный бак
     public void setFullTank() {
         obdData.fuel_remain =  obdData.fuel_tank;
         obdData.fuel_usage2 = 0;
         obdData.fuel_usage_with_stops = 0;
         obdData.distance_to_fuel_consump2 = 0;
+
+        oneTrip.updateData( true, obdData.fuel_remain, obdData.fuel_tank);
         saveFuelRemain();
     }
 
+    // заправили не полный бак / коррекция значений
+    public void setCustomTank(float tank_volume, float fuel_remain) {
+        obdData.fuel_remain = fuel_remain;
+        obdData.fuel_tank = tank_volume;
+
+        obdData.fuel_usage2 = 0;
+        obdData.fuel_usage_with_stops = 0;
+        obdData.distance_to_fuel_consump2 = 0;
+        oneTrip.updateData( false, obdData.fuel_remain, obdData.fuel_tank);
+        saveFuelRemain();
+    }
 }
 /*
 * ATSP6\nATAL\nATSH7E0\nATCRA7E8\nATST32\nATSW00

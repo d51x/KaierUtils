@@ -240,6 +240,8 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
                    if ( App.obd.isConnected && App.obd.obdData.speed > 0) {
                        App.obd.obdData.distance_to_fuel_consump += location.distanceTo ( prevFuelLocation );
                        App.obd.obdData.distance_to_fuel_consump2 += location.distanceTo ( prevFuelLocation );
+                       App.obd.oneTrip.distance += location.distanceTo ( prevFuelLocation );
+                       App.obd.totalTrip.distance += location.distanceTo ( prevFuelLocation );
                    }
             // что происходит с prevLocation при зависании gps до момента первого получения спутников,
             // надо тестировать вживую руками делая сброс agps

@@ -7,6 +7,8 @@ import android.util.Log;
  */
 public class OBDThread extends Thread {
 
+    private long TimeStamp1, TimeStamp2;
+
 	public OBDThread() {
         super("OBDThread");
         isActive = true;
@@ -18,12 +20,25 @@ public class OBDThread extends Thread {
 		try {
 			Log.d ("OBDThread", "run()");
             //while (true) {
+            TimeStamp1 = System.currentTimeMillis();
+            TimeStamp2 = System.currentTimeMillis();
+
             while (!Thread.currentThread().isInterrupted() || isActive )
             {
                 if ( App.obd.isConnected) {
                     // send or process data
+
                     App.obd.processData();
                     //Thread.sleep(500);
+
+                    TimeStamp2 = System.currentTimeMillis();
+                    if ( (TimeStamp2 - TimeStamp1) > (1000*60*10)) // 10 min
+                    {
+                        App.obd.oneTrip.saveData();
+                        App.obd.totalTrip.saveData();
+                        TimeStamp1 = TimeStamp2;
+                    }
+
                 } else {
                     //try to connect
                         App.obd.isConnected = App.obd.connect();

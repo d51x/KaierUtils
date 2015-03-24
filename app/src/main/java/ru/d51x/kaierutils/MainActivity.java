@@ -821,6 +821,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         show_fuel_consumption(modeFuelConsump);
     }
 
+    // диалог с впросом о заправке (полный бак или нет)
     public void show_obd_fuel_dialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
@@ -853,6 +854,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         alertDialog.show();
     }
 
+    // диалог редактирования остатка кол-ва топлива в баке и  объема бака
     public void show_obd_fuel_detail(){
         AlertDialog.Builder fuelDialog = new AlertDialog.Builder(MainActivity.this);
         fuelDialog.setTitle(getString(R.string.text_fuel_tank_detail));
@@ -894,12 +896,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
         fuelDialog.setPositiveButton("Сохранить",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        App.obd.obdData.fuel_remain = Float.parseFloat(etFuelTankRemain.getText().toString());
-                        App.obd.obdData.fuel_tank = Float.parseFloat(etFuelTankCapacity.getText().toString());
-                        App.obd.obdData.fuel_usage2 = 0;
-                        App.obd.obdData.fuel_usage_with_stops = 0;
-                        App.obd.obdData.distance_to_fuel_consump2 = 0;
-                        App.obd.saveFuelRemain();
+                        App.obd.setCustomTank(Float.parseFloat(etFuelTankCapacity.getText().toString()),
+                                Float.parseFloat(etFuelTankRemain.getText().toString()));
                     }
                 });
 
@@ -913,6 +911,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         fuelDialog.show();
     }
 
+    // переключение режима показаний топлива в баке
     private void switch_fuel_tank_mode() {
         // режим отображения уровня топлива
         // 0 - осталось в литрах
@@ -942,6 +941,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         }
     }
 
+    // переключение режима показаний расхода
     private void switch_fuel_consump_mode() {
         // режим отображения расхода
         // 0 - мгновенный
@@ -982,40 +982,83 @@ public class MainActivity extends Activity implements View.OnClickListener,
         }
     }
 
+    // отобразить данные о текущем расходе топлива
     private void show_fuel_consumption(int mode) {
-        switch (mode) {
-            case 0:
-                tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lpk_inst) );
-                break;
-            case 1:
-                tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lpk_trip) );
-                break;
-            case 2:
-                tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lph) );
-                break;
-            case 3:
-                break;
-            default:
-                break;
+        if ( App.obd.newMethod ) {
+            switch (mode) {
+                case 0:
+                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst) );
+                    break;
+                case 1:
+                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg) );
+                    break;
+                case 2:
+                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph) );
+                    break;
+                case 3:
+                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg) );
+                    tvOBD_FuelConsump2.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst) );
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (mode) {
+                case 0:
+                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lpk_inst) );
+                    break;
+                case 1:
+                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lpk_trip) );
+                    break;
+                case 2:
+                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lph) );
+                    break;
+                case 3:
+                    tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lpk_trip) );
+                    tvOBD_FuelConsump2.setText( String.format("%1$.1f", App.obd.obdData.fuel_consump_lpk_inst) );
+                    break;
+                default:
+                    break;
+            }
         }
+
     }
 
+    // отобразить данные  о количестве топлива в баке
     private void show_fuel_tank_data(int mode) {
-        switch (mode) {
-            case 0:
-                tvOBD_FuelTank.setText( String.format("%1$.1f", App.obd.obdData.fuel_remain));
-                break;
-            case 1:
-                tvOBD_FuelTank.setText( String.format("%1$.0f", (float) ((App.obd.obdData.fuel_remain * 100) / App.obd.obdData.fuel_tank))  + "%");
-                break;
-            case 2:
-                tvOBD_FuelTank.setText( String.format("%1$.3f", App.obd.obdData.fuel_usage));
-                break;
-            default:
-                break;
+
+        if ( App.obd.newMethod ) {
+            switch (mode) {
+                case 0:
+                    tvOBD_FuelTank.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_remains));
+                    break;
+                case 1:
+                    tvOBD_FuelTank.setText( String.format("%1$.0f", (float) ((App.obd.oneTrip.fuel_remains * 100) / App.obd.obdData.fuel_tank))  + "%");
+                    break;
+                case 2:
+                    tvOBD_FuelTank.setText( String.format("%1$.3f", App.obd.oneTrip.fuel_usage_for_display));
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (mode) {
+                case 0:
+                    tvOBD_FuelTank.setText( String.format("%1$.1f", App.obd.obdData.fuel_remain));
+                    break;
+                case 1:
+                    tvOBD_FuelTank.setText( String.format("%1$.0f", (float) ((App.obd.obdData.fuel_remain * 100) / App.obd.obdData.fuel_tank))  + "%");
+                    break;
+                case 2:
+                    tvOBD_FuelTank.setText( String.format("%1$.3f", App.obd.obdData.fuel_usage));
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
+    // отобразить/спрятать второй показатель расхода при включении/выключении комбинированного режима
     private void show_hide_fuel_consump_line_2 (boolean line2) {
         if ( line2 ) {
             // show line 2

@@ -65,7 +65,8 @@
 
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/header_general_title" >
+            android:label="@string/header_general_title"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.GeneralSettings" />
 
@@ -75,7 +76,8 @@
         </activity>
         <activity
             android:name=".OBDIIActivity"
-            android:label="@string/title_activity_obdii" >
+            android:label="@string/title_activity_obdii"
+            android:launchMode="singleTop" >
         </activity>
     </application>
 
