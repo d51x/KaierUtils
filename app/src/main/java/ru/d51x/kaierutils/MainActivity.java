@@ -264,7 +264,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	}
 
 	public void updataData() {
-        updateOBD_FuelTank(App.obd.oneTrip.fuel_remains);
+        updateOBD_FuelTank(App.obd.totalTrip.fuel_remains);
 	}
 
 	public void onStart() {
@@ -541,7 +541,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 updateOBD_CoolantTemp(App.obd.obdData.coolant);
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED )) {
                 updateOBD_FuelConsump( App.obd.oneTrip.fuel_cons_lph );
-                updateOBD_FuelTank( App.obd.oneTrip.fuel_remains );
+                updateOBD_FuelTank( App.obd.totalTrip.fuel_remains );
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED )) {
 
             }
@@ -867,9 +867,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
         final TextView tvFuelPercent = (TextView) linearlayout.findViewById(R.id.tvFuelPercent);
 
         etFuelTankCapacity.setText( String.format("%1$.0f", App.obd.obdData.fuel_tank));
-        etFuelTankRemain.setText( String.format("%1$.0f", App.obd.oneTrip.fuel_remains));
+        etFuelTankRemain.setText( String.format("%1$.0f", App.obd.totalTrip.fuel_remains));
         seekBarFuel.setMax( 100 );
-        int percent = Math.round(App.obd.oneTrip.fuel_remains * 100 / App.obd.obdData.fuel_tank);
+        int percent = Math.round(App.obd.totalTrip.fuel_remains * 100 / App.obd.obdData.fuel_tank);
         seekBarFuel.setProgress( percent );
         tvFuelPercent.setText(String.valueOf(percent) + " %");
         seekBarFuel.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -898,7 +898,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     public void onClick(DialogInterface dialog, int which) {
                         App.obd.setCustomTank(Float.parseFloat(etFuelTankCapacity.getText().toString()),
                                 Float.parseFloat(etFuelTankRemain.getText().toString()));
-                        updateOBD_FuelTank(App.obd.oneTrip.fuel_remains);
+                        updateOBD_FuelTank(App.obd.totalTrip.fuel_remains);
                     }
                 });
 
@@ -1004,10 +1004,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private void show_fuel_tank_data(int mode) {
         switch (mode) {
             case 0:
-                tvOBD_FuelTank.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_remains));
+                tvOBD_FuelTank.setText( String.format("%1$.1f", App.obd.totalTrip.fuel_remains));
                 break;
             case 1:
-                tvOBD_FuelTank.setText( String.format("%1$.0f", (float) ((App.obd.oneTrip.fuel_remains * 100) / App.obd.obdData.fuel_tank))  + "%");
+                tvOBD_FuelTank.setText( String.format("%1$.0f", (float) ((App.obd.totalTrip.fuel_remains * 100) / App.obd.obdData.fuel_tank))  + "%");
                 break;
             case 2:
                 tvOBD_FuelTank.setText( String.format("%1$.3f", App.obd.oneTrip.fuel_usage));
