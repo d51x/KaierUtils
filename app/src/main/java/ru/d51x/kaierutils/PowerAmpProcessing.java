@@ -111,7 +111,7 @@ public class PowerAmpProcessing {
 		            {
 			            if ( App.GS.dontShowMusicInfoWhenMainActive &&
                                 activeWnd.equalsIgnoreCase("ru.d51x.kaierutils") &&
-                                activeActivity.equalsIgnoreCase("MainActivity")) return;
+                                activeActivity.equalsIgnoreCase("ru.d51x.kaierutils.MainActivity")) return;
 						App.mToast.cancel();
 						App.mToast.setTrackTitle (App.GS.PowerAmp_TrackTitle);
 			            App.mToast.setArtistAlbum ( App.GS.PowerAmp_AlbumArtist);

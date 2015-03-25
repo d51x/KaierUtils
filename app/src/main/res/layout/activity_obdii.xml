@@ -96,6 +96,30 @@
 
                 <LinearLayout
                     android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Текущие параметры:"
+                        android:id="@+id/textView6"
+                        android:autoText="false"
+                        android:textSize="24sp"
+                        android:layout_weight="0.5"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_obd_cmu_voltage"
+                        android:id="@+id/tvOBD_CMUVoltage"
+                        android:textSize="20sp"
+                        android:layout_gravity="bottom|right"
+                        android:gravity="right"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -116,6 +140,7 @@
                         android:textSize="20sp"
                         android:layout_gravity="right"
                         />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -135,12 +160,38 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/text_obd_cmu_voltage"
-                        android:id="@+id/tvOBD_CMUVoltage"
+                        android:text="AirIntakeTemp"
+                        android:id="@+id/tvOBD_AirIntakeTemp"
                         android:textSize="20sp"
+                        android:layout_weight="0.4"
                         android:layout_gravity="right"
-                        />
+                        android:gravity="right"/>
+
                 </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MAF"
+                        android:id="@+id/tvOBD_MAF"
+                        android:textSize="20sp"
+                        android:layout_weight="0.6"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Текущая поездка:"
+                    android:id="@+id/textView7"
+                    android:autoText="false"
+                    android:textSize="24sp"
+                    android:layout_marginTop="10dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -171,7 +222,8 @@
                         android:id="@+id/tvOBD_FuelConsumption_lph"
                         android:textSize="20sp"
                         android:layout_gravity="left"
-                        android:layout_weight="0.5"/>
+                        android:layout_weight="0.5"
+                        android:gravity="right"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -193,7 +245,8 @@
                         android:text="@string/text_obd_fuel_consumption_avg2"
                         android:id="@+id/tvOBD_FuelConsumption_avg2"
                         android:textSize="20sp"
-                        android:layout_weight="0.5"/>
+                        android:layout_weight="0.5"
+                        android:gravity="right"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -216,7 +269,40 @@
                         android:text="@string/text_obd_fuel_usage_with_stops"
                         android:id="@+id/tvOBD_FuelUsage2"
                         android:textSize="20sp"
+                        android:layout_weight="0.5"
+                        android:gravity="right"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="За все время:"
+                    android:id="@+id/textView8"
+                    android:autoText="false"
+                    android:textSize="24sp"
+                    android:layout_marginTop="10dp"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_obd_fuel_consumption_avg"
+                        android:id="@+id/tvOBD_FuelConsumption_total"
+                        android:textSize="20sp"
                         android:layout_weight="0.5"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_obd_fuel_consumption_avg2"
+                        android:id="@+id/tvOBD_FuelConsumption_total2"
+                        android:textSize="20sp"
+                        android:layout_weight="0.5"
+                        android:gravity="right"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -227,18 +313,20 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="MAF"
-                        android:id="@+id/tvOBD_MAF"
+                        android:text="@string/text_obd_fuel_usage"
+                        android:id="@+id/tvOBD_FuelUsageTotal"
                         android:textSize="20sp"
-                        android:layout_weight="0.6"/>
+                        android:layout_weight="0.5"
+                        android:layout_gravity="right"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="AirIntakeTemp"
-                        android:id="@+id/tvOBD_AirIntakeTemp"
+                        android:text="@string/text_obd_fuel_usage_with_stops"
+                        android:id="@+id/tvOBD_FuelUsageTotal2"
                         android:textSize="20sp"
-                        android:layout_weight="0.4"/>
+                        android:layout_weight="0.5"
+                        android:gravity="right"/>
                 </LinearLayout>
 
             </LinearLayout>

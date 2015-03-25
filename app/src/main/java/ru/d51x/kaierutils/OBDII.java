@@ -246,16 +246,21 @@ public class OBDII {
             obdData.rpm = engineRpmCommand.getRPM();
             SendBroadcastAction(OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED, "engineRPM", engineRpmCommand.getFormattedResult());
            // Log.d("OBDII-->processOBD_EngineRPM()", "RPM: " + engineRpmCommand.getFormattedResult());
-        } catch ( NoDataException e) {
+        } catch ( NonNumericResponseException e5) {
+            disconnect();
+            Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
+        }
+        catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_EngineRPM()", e.toString());
         } catch (UnableToConnectException e3) {
             Log.d("OBDII-->processOBD_EngineRPM()", e3.toString());
-            notify_disconnect();
+            disconnect();
         } catch (IOException e4) {
             Log.d("OBDII-->processOBD_EngineRPM()", e4.toString());
-            notify_disconnect();
+            disconnect();
         } catch ( Exception e2) {
             Log.d("OBDII-->processOBD_EngineRPM()", e2.toString());
+
         }
     }
 
@@ -265,14 +270,18 @@ public class OBDII {
             obdData.speed = speedCommand.getMetricSpeed();
             SendBroadcastAction(OBD_BROADCAST_ACTION_SPEED_CHANGED, "speed", speedCommand.getFormattedResult());
             //Log.d("OBDII-->processOBD_Speed()", "Speed: " + speedCommand.getFormattedResult());
-        } catch ( NoDataException e) {
+        }  catch ( NonNumericResponseException e5) {
+            disconnect();
+            Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
+        }
+        catch ( NoDataException e) {
             Log.d("processOBD_Speed()", e.toString());
         } catch (UnableToConnectException e3) {
             Log.d("processOBD_Speed()", e3.toString());
-            notify_disconnect();
+            disconnect();
         } catch (IOException e4) {
             Log.d("processOBD_Speed()", e4.toString());
-            notify_disconnect();
+            disconnect();
         } catch ( Exception e2) {
             Log.d("processOBD_Speed()", e2.toString());
         }
@@ -290,14 +299,18 @@ public class OBDII {
             App.getInstance ().sendBroadcast(intent);
 
             //Log.d("OBDII-->processOBD_coolantTemp()", "coolantTemp: " + coolantTempCommand.getFormattedResult());
-        } catch ( NoDataException e) {
+        }  catch ( NonNumericResponseException e5) {
+            disconnect();
+            Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
+        }
+        catch ( NoDataException e) {
             Log.d("processOBD_coolantTemp()", e.toString());
         } catch (UnableToConnectException e3) {
             Log.d("processOBD_coolantTemp()", e3.toString());
-            notify_disconnect();
+            disconnect();
         } catch (IOException e4) {
             Log.d("processOBD_coolantTemp()", e4.toString());
-            notify_disconnect();
+            disconnect();
         } catch ( Exception e2) {
             Log.d("processOBD_coolantTemp()", e2.toString());
         }
@@ -314,14 +327,18 @@ public class OBDII {
             intent.setAction(OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED);
             App.getInstance ().sendBroadcast(intent);
             //Log.d("OBDII-->processOBD_CMVoltage()", "cmuVoltage: " + cmuVoltageCommand.getFormattedResult());
-        } catch ( NoDataException e) {
+        }  catch ( NonNumericResponseException e5) {
+            disconnect();
+            Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
+        }
+        catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_CMVoltage()", e.toString());
         } catch (UnableToConnectException e3) {
             Log.d("OBDII-->processOBD_CMVoltage()", e3.toString());
-            notify_disconnect();
+            disconnect();
         } catch (IOException e4) {
             Log.d("OBDII-->processOBD_CMVoltage()", e4.toString());
-            notify_disconnect();
+            disconnect();
         } catch ( Exception e2) {
             Log.d("OBDII-->processOBD_CMVoltage()", e2.toString());
         }
@@ -342,14 +359,18 @@ public class OBDII {
             intent.setAction(OBD_BROADCAST_ACTION_MAF_CHANGED);
             App.getInstance ().sendBroadcast(intent);
             Log.d("OBDII-->processOBD_MAF()", "MAF: " + MAFObdCommand.getFormattedResult());
-        } catch ( NoDataException e) {
+        }  catch ( NonNumericResponseException e5) {
+            disconnect();
+            Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
+        }
+        catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_MAF()", e.toString());
         } catch (UnableToConnectException e3) {
             Log.d("OBDII-->processOBD_MAF()", e3.toString());
-            notify_disconnect();
+            disconnect();
         } catch (IOException e4) {
             Log.d("OBDII-->processOBD_MAF()", e4.toString());
-            notify_disconnect();
+            disconnect();
         } catch ( Exception e2) {
             Log.d("OBDII-->processOBD_MAF()", e2.toString());
         }
@@ -366,14 +387,17 @@ public class OBDII {
             intent.setAction(OBD_BROADCAST_ACTION_AIR_INTAKE_TEMP_CHANGED);
             App.getInstance ().sendBroadcast(intent);
           //  Log.d("OBDII-->processOBD_AirIntake()", "AirIntakeTemperature: " + airIntakeTemperatureObdCommand.getFormattedResult());
+        }   catch ( NonNumericResponseException e5) {
+            disconnect();
+            Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
         } catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_AirIntake()", e.toString());
         } catch (UnableToConnectException e3) {
             Log.d("OBDII-->processOBD_AirIntake()", e3.toString());
-            notify_disconnect();
+            disconnect();
         } catch (IOException e4) {
             Log.d("OBDII-->processOBD_AirIntake()", e4.toString());
-            notify_disconnect();
+            disconnect();
         } catch ( Exception e2) {
             Log.d("OBDII-->processOBD_AirIntake()", e2.toString());
         }
