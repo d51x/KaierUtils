@@ -550,12 +550,15 @@ android:longClickable="true">
             android:layout_gravity="center">
 
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/ivOBD2Status"
                 android:src="@drawable/obd_disconnected"
                 android:clickable="true"
-                />
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"/>
         </LinearLayout>
 
     </LinearLayout>
