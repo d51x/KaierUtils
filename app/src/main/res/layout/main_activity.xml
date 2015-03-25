@@ -472,9 +472,19 @@ android:longClickable="true">
                 android:text="60"
                 android:id="@+id/tvOBD_FuelTank"
                 android:layout_marginLeft="4dp"
-                android:textSize="32sp"
+                android:textSize="40sp"
                 android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"/>
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="л"
+                android:id="@+id/tvOBD_FuelTank_desc"
+                android:gravity="bottom"
+                android:layout_gravity="center_vertical"
+                android:textSize="22sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -505,9 +515,8 @@ android:longClickable="true">
                     android:text="9.7"
                     android:id="@+id/tvOBD_FuelConsump"
                     android:layout_marginLeft="4dp"
-                    android:textSize="32sp"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"/>
+                    android:textSize="40sp"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -515,11 +524,21 @@ android:longClickable="true">
                     android:text="9.7"
                     android:id="@+id/tvOBD_FuelConsump2"
                     android:layout_marginLeft="4dp"
-                    android:textSize="32sp"
+                    android:textSize="22sp"
                     android:gravity="bottom"
-                    android:visibility="gone"
-                    android:layout_gravity="bottom"/>
+                    android:layout_gravity="bottom"
+                    android:visibility="gone"/>
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="    л/\n100км"
+                android:id="@+id/tvOBD_FuelConsump_desc"
+                android:gravity="bottom"
+                android:layout_gravity="center_vertical"
+                android:textSize="16sp"/>
 
         </LinearLayout>
 

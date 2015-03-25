@@ -101,6 +101,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private TextView tvOBD_CoolantTemp;
     private ImageView ivOBD_FuelTank;
     private TextView tvOBD_FuelTank;
+    private TextView tvOBD_FuelTank_desc;
     private ImageView ivOBD_FuelConsump;
     private TextView tvOBD_FuelConsump;
     private TextView tvOBD_FuelConsump2;
@@ -188,6 +189,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         ivOBD_FuelTank = (ImageView) findViewById(R.id.ivOBD_FuelTank);
         tvOBD_FuelTank = (TextView) findViewById(R.id.tvOBD_FuelTank);
         tvOBD_FuelTank.setText("--");
+        tvOBD_FuelTank_desc = (TextView) findViewById(R.id.tvOBD_FuelTank_desc);
 
         ivOBD_FuelConsump = (ImageView) findViewById(R.id.ivOBD_FuelConsump);
         tvOBD_FuelConsump = (TextView) findViewById(R.id.tvOBD_FuelConsump);
@@ -927,14 +929,17 @@ public class MainActivity extends Activity implements View.OnClickListener,
             case 0:
                 ivOBD_FuelTank.setImageResource(R.drawable.fuel_tank_in_tank_full);
                 //Toast.makeText(this, "Остаток в баке(л) ", Toast.LENGTH_SHORT).show();
+                tvOBD_FuelTank_desc.setVisibility( View.VISIBLE);
                 break;
             case 1:
                 ivOBD_FuelTank.setImageResource(R.drawable.fuel_tank_in_tank_percent_full);
                 //Toast.makeText(this, "Остаток в баке (%)", Toast.LENGTH_SHORT).show();
+                tvOBD_FuelTank_desc.setVisibility( View.GONE);
                 break;
             case 2:
                 ivOBD_FuelTank.setImageResource(R.drawable.fuel_tank_used_full);
                 //Toast.makeText(this, "Израсходовано топлива (л)", Toast.LENGTH_SHORT).show();
+                tvOBD_FuelTank_desc.setVisibility( View.VISIBLE);
                 break;
             default:
                 ivOBD_FuelTank.setImageResource(R.drawable.fuel_tank_full);
@@ -1021,12 +1026,12 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private void show_hide_fuel_consump_line_2 (boolean line2) {
         if ( line2 ) {
             // show line 2
-            tvOBD_FuelConsump.setTextSize( 16 );
-            tvOBD_FuelConsump2.setTextSize( 12 );
+            tvOBD_FuelConsump.setTextSize( 26 );
+            tvOBD_FuelConsump2.setTextSize( 22 );
             tvOBD_FuelConsump2.setVisibility(View.VISIBLE);
         } else {
             // hide line 2
-            tvOBD_FuelConsump.setTextSize( 32 );
+            tvOBD_FuelConsump.setTextSize( 40 );
             tvOBD_FuelConsump2.setVisibility(View.GONE);
         }
     }
