@@ -29,7 +29,7 @@ public class RadioToast {
 	}
 
 	public void SetRadioText(String text1, String text2) {
-		if (text1.contentEquals ( Radio.BLANK_STATION_NAME)) { // нет названия
+		if (text1.contentEquals ( Radio.BLANK_STATION_NAME ) || text1 == null) { // нет названия
             isShowSecondLine = false;
             Text1 = String.format("%1$s MHz", text2);
             Text2 = "";
@@ -42,7 +42,7 @@ public class RadioToast {
 
 	public void showToast() {
         if ( !App.GS.radio.showToast) return;
-        if ( App.GS.radio.skipSeekingMode && ( Text1.contentEquals( Radio.BLANK_STATION_NAME))) return;
+        if ( App.GS.radio.skipSeekingMode && (( Text1.contentEquals( Radio.BLANK_STATION_NAME)) || Text1 == null)) return;
         cancel();
 
         tvRadioText1.setTextSize ( App.GS.radioToastLine1TextSize );
