@@ -32,7 +32,7 @@ public class EngineRPMObdCommand extends ObdCommand {
   /**
    * Copy ctor.
    *
-   * @param other a {@link pt.lighthouselabs.obd.commands.engine.EngineRPMObdCommand} object.
+   * @param other a {@link pt.lighthouselabs.obd.commands.can.EngineRPMObdCommand} object.
    */
   public EngineRPMObdCommand(EngineRPMObdCommand other) {
     super(other);

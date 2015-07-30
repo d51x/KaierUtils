@@ -882,17 +882,14 @@ public class MainActivity extends Activity implements View.OnClickListener,
         seekBarFuel.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-            // TODO Auto-generated method stub
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-            // TODO Auto-generated method stub
             }
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            // TODO Auto-generated method stub
                 float fltank  = Float.parseFloat(etFuelTankCapacity.getText().toString());
                 float flremain  = fltank * progress / 100;
 

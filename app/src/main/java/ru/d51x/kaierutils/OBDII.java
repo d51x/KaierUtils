@@ -11,11 +11,13 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 
-import pt.lighthouselabs.obd.commands.SpeedObdCommand;
 import pt.lighthouselabs.obd.commands.engine.EngineRPMObdCommand;
+import pt.lighthouselabs.obd.commands.SpeedObdCommand;
+import pt.lighthouselabs.obd.commands.can.CanObdCommand;
 import pt.lighthouselabs.obd.commands.engine.MassAirFlowObdCommand;
 import pt.lighthouselabs.obd.commands.temperature.EngineCoolantTemperatureObdCommand;
 import pt.lighthouselabs.obd.commands.temperature.AirIntakeTemperatureObdCommand;
@@ -43,6 +45,8 @@ public class OBDII {
     protected static final String OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED = "ru.d51x.kaierutils.action.OBD_FUEL_CONSUMPTION_CHANGED";
     protected static final String OBD_BROADCAST_ACTION_MAF_CHANGED = "ru.d51x.kaierutils.action.OBD_MAF_CHANGED";
     protected static final String OBD_BROADCAST_ACTION_AIR_INTAKE_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_AIR_INTAKE_TEMP_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_AC_STATE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_AC_STATE_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ENGINE_FAN_STATE_CHANGED";
 
     private Context mContext;
     private String deviceName;
@@ -50,6 +54,10 @@ public class OBDII {
     public boolean isConnected;
 
     private BluetoothSocket socket;
+
+    public CanObdCommand can_211E_ObdCommand;
+    public CanObdCommand can_211D_ObdCommand;
+
     public EngineRPMObdCommand engineRpmCommand;
     public SpeedObdCommand speedCommand;
     public EngineCoolantTemperatureObdCommand coolantTempCommand;
@@ -62,6 +70,8 @@ public class OBDII {
 
     public boolean useOBD;
     public OBDData obdData;
+
+    public boolean MMC_CAN;
 
     public TripData totalTrip;
     public TripData oneTrip;
@@ -99,6 +109,7 @@ public class OBDII {
         socket = null;
         mHandler = new Handler();
         useOBD = prefs.getBoolean("ODBII_USE_BLUETOOTH", false);
+        MMC_CAN = prefs.getBoolean("ODBII_USE_MMC_CAN", false);
         obdData = new OBDData();
         totalTrip = new TripData("total", true);
         oneTrip = new TripData("trip", false);
@@ -221,6 +232,10 @@ public class OBDII {
         // fuelEconomyObdCommand = new FuelEconomyObdCommand();   // not working  01 5e   n0 data
         MAFObdCommand = new MassAirFlowObdCommand();
         airIntakeTemperatureObdCommand = new AirIntakeTemperatureObdCommand();
+        can_211E_ObdCommand = new CanObdCommand("21 1E");  // реле компрессора кондея, реле вентилятора радиатора
+        can_211D_ObdCommand = new CanObdCommand("21 1D");  // выключатели компрессора кондея, вентилятора радиатора
+
+
     }
 
     public void processData() {
@@ -234,7 +249,8 @@ public class OBDII {
         // к этому моменту уже должна пройти 1 сек = 5 функций с задержкой 200 мсек
         //processOBD_MAF();               // MAF:             01 10
 
-
+        processCAN_211D();
+        processCAN_211E();
         //Thread.sleep(500);
     }
 
@@ -400,6 +416,75 @@ public class OBDII {
             disconnect();
         } catch ( Exception e2) {
             Log.d("OBDII-->processOBD_AirIntake()", e2.toString());
+        }
+    }
+
+
+    public void processCAN_211D() {
+        try {
+            can_211D_ObdCommand.run(socket.getInputStream(), socket.getOutputStream());
+
+
+            ArrayList<Integer> buffer_211D = null;
+            buffer_211D = can_211D_ObdCommand.getBuffer();
+
+            boolean EngineFan = ( buffer_211D.get(2) & 3) > 0 ? true: false;
+
+            Intent intent = new Intent();
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            intent.putExtra("EngineFan", EngineFan);
+            //intent.putExtra("dMAF", obdData.maf);
+            intent.setAction(OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED);
+            App.getInstance ().sendBroadcast(intent);
+            Log.d("OBDII-->processCAN_211D()", "EngineFan: " + Boolean.toString( EngineFan ));
+        }  catch ( NonNumericResponseException e5) {
+            disconnect();
+            Log.d("OBDII-->processCAN_211D()", e5.toString());
+        }
+        catch ( NoDataException e) {
+            Log.d("OBDII-->processCAN_211D()", e.toString());
+        } catch (UnableToConnectException e3) {
+            Log.d("OBDII-->processCAN_211D()", e3.toString());
+            disconnect();
+        } catch (IOException e4) {
+            Log.d("OBDII-->processCAN_211D()", e4.toString());
+            disconnect();
+        } catch ( Exception e2) {
+            Log.d("OBDII-->processCAN_211D()", e2.toString());
+        }
+    }
+
+    public void processCAN_211E() {
+        try {
+            can_211E_ObdCommand.run(socket.getInputStream(), socket.getOutputStream());
+
+
+            ArrayList<Integer> buffer_211E = null;
+            buffer_211E = can_211E_ObdCommand.getBuffer();
+
+            boolean AirCond = ( buffer_211E.get(2) & 3) > 0 ? true: false;
+
+            Intent intent = new Intent();
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            intent.putExtra("AirCond", AirCond);
+            //intent.putExtra("dMAF", obdData.maf);
+            intent.setAction(OBD_BROADCAST_ACTION_AC_STATE_CHANGED);
+            App.getInstance ().sendBroadcast(intent);
+            Log.d("OBDII-->processCAN_211E()", "AirCond: " + Boolean.toString( AirCond ));
+        }  catch ( NonNumericResponseException e5) {
+            disconnect();
+            Log.d("OBDII-->processCAN_211E()", e5.toString());
+        }
+        catch ( NoDataException e) {
+            Log.d("OBDII-->processCAN_211E()", e.toString());
+        } catch (UnableToConnectException e3) {
+            Log.d("OBDII-->processCAN_211E()", e3.toString());
+            disconnect();
+        } catch (IOException e4) {
+            Log.d("OBDII-->processCAN_211E()", e4.toString());
+            disconnect();
+        } catch ( Exception e2) {
+            Log.d("OBDII-->processCAN_211E()", e2.toString());
         }
     }
 

@@ -46,6 +46,8 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TextView tvOBD_FuelConsumption_total2;
     private TextView tvOBD_FuelUsageTotal;
     private TextView tvOBD_FuelUsageTotal2;
+    private TextView textView9;
+    private TextView textView10;
 
     private TextView tvOBD_MAF;
     private TextView tvOBD_AirIntakeTemp;
@@ -80,6 +82,9 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBD_FuelUsageTotal = (TextView) findViewById(R.id.tvOBD_FuelUsageTotal);
         tvOBD_FuelUsageTotal2 = (TextView) findViewById(R.id.tvOBD_FuelUsageTotal2);
 
+        textView9 = (TextView) findViewById(R.id.textView9);
+        textView10 = (TextView) findViewById(R.id.textView10);
+
         swUseOBD = (Switch) findViewById(R.id.swUseOBD);
 	    swUseOBD.setOnClickListener(this);
 	    swUseOBD.setChecked(App.obd.useOBD);
@@ -103,6 +108,9 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBD_MAF.setText("");
         tvOBD_AirIntakeTemp = (TextView) findViewById(R.id.tvOBD_AirIntakeTemp);
         tvOBD_AirIntakeTemp.setText("");
+
+        textView9.setText("Кондей: выкл");
+        textView10.setText("Вентилятор: выкл");
 
 
 
@@ -235,6 +243,18 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
             } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_AIR_INTAKE_TEMP_CHANGED)) {
                 tvOBD_AirIntakeTemp.setText( String.format( "AirIntakeTemp: %1$s", intent.getStringExtra("sAirIntakeTemp")));
+            } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED) ) {
+                boolean ac = intent.getBooleanExtra("AirCond", false);
+
+                if ( ac ) textView9.setText("Кондей: ВКЛ");
+                else textView9.setText("Кондей: ВЫКЛ");
+
+
+            } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED) ) {
+                boolean fan = intent.getBooleanExtra("EngineFan", false);
+                if ( fan ) textView10.setText("Вентилятор: ВКЛ.");
+                else textView10.setText("Вентилятор: ВЫКЛ.");
+
             }
         }
     };
