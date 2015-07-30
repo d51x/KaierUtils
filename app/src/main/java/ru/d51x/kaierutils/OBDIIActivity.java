@@ -254,7 +254,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 boolean fan = intent.getBooleanExtra("EngineFan", false);
                 if ( fan ) textView10.setText("Вентилятор: ВКЛ.");
                 else textView10.setText("Вентилятор: ВЫКЛ.");
-
+ 
             }
         }
     };
