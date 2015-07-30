@@ -100,6 +100,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
                         activeActivity.equalsIgnoreCase("ru.d51x.kaierutils.MainActivity")) return;
                 //App.rToast.isShowToastWhenActive = !((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils");
                 String title = intent.getStringExtra("Title");
+                title = (title != null) ? title : "";
 				String freq = intent.getStringExtra ("Frequency");
 				App.rToast.cancel();
 				App.rToast.SetRadioText(title, freq);

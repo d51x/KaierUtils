@@ -45,6 +45,7 @@ public class PowerAmpProcessing {
         intentFilter.addAction(TWUtilConst.TW_BROADCAST_ACTION_SHUTDOWN);
         intentFilter.addAction(TWUtilConst.TW_BROADCAST_ACTION_SLEEP);
         intentFilter.addAction(TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP);
+        intentFilter.addAction(TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED);
         context.registerReceiver(powerAmpReceiver, intentFilter);
     }
 
@@ -69,6 +70,19 @@ public class PowerAmpProcessing {
             else if (action.equals(TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED)) {
                 int key = intent.getIntExtra (TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED, -1);
                 sendPowerAmpKeyPressed(key);
+            } else if (action.equals(TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED)) {
+                int af_id = intent.getIntExtra("audio_focus_id", -1);
+                switch (af_id) {
+                    case TWUtilConst.TW_AUDIO_FOCUS_BT_ID:
+                        setPowerAmpPaused();
+                        break;
+                    case 0:
+                    case TWUtilConst.TW_AUDIO_FOCUS_MUSIC_ID:
+                        setPowerAmpPlayed();
+                        break;
+                    default:
+                        break;
+                }
             }
             else if (action.equals(PowerampAPI.ACTION_STATUS_CHANGED)) {
                 int status = intent.getIntExtra(PowerampAPI.STATUS, -1);
@@ -176,6 +190,18 @@ public class PowerAmpProcessing {
                                                     PowerampAPI.Commands.RESUME));
                 }
             }, App.GS.resumeDelayForPowerAmp);
+        }
+    }
+
+    private void setPowerAmpPlayed() {
+        if (App.GS.interactWithPowerAmp) {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    context.startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
+                            PowerampAPI.Commands.RESUME));
+                }
+            }, 500);
         }
     }
 

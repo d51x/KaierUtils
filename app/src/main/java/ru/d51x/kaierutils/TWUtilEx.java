@@ -212,6 +212,7 @@ public class TWUtilEx {
                         App.GS.curAudioFocusID = message.arg1;
                         Log.d("TWUtil.handleMessage:", "received message 769 (audiofocus) agr1 = " + String.valueOf(App.GS.curAudioFocusID));
                         SendBroadcastAction( TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED, "audio_focus_id", message.arg1);
+
                         break;
 					default:
 						break;
