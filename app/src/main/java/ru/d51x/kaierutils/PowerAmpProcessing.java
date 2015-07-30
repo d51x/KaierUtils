@@ -63,7 +63,8 @@ public class PowerAmpProcessing {
                 setPowerAmpResumed();
             }
             else if (action.equals (Intent.ACTION_BOOT_COMPLETED )) {
-                setPowerAmpStarted();
+                // FIX: если радио активити запущено, то не стартуем поверамп, чтобы не было наложений звука
+                if  (!App.GS.radio.activityRunning) setPowerAmpStarted();
             }
             else if (action.equals(TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED)) {
                 int key = intent.getIntExtra (TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED, -1);

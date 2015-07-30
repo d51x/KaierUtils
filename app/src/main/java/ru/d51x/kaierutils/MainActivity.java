@@ -91,6 +91,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private LinearLayout layout_radio_info;
     private LinearLayout layout_music_info;
 
+    private LinearLayout layout_obd2;
     private LinearLayout layout_obd_fuel;
     private LinearLayout layout_fuel_consump;
 
@@ -225,6 +226,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_music_info.setVisibility( View.GONE );
 
         layout_obd_fuel = (LinearLayout) findViewById(R.id.layout_fuel_data);
+        layout_obd2 = (LinearLayout) findViewById(R.id.layout_obd2);
         layout_obd_fuel.setOnLongClickListener (this);
         layout_obd_fuel.setOnClickListener (this);
 
@@ -263,6 +265,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst);
         ivOBD_FuelTank.setImageResource(R.drawable.fuel_tank_in_tank_full);
+
+
 	}
 
 	public void updataData() {
@@ -289,6 +293,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         Radio.checkRadioActivityStarted();
         updateOBDStatus(App.obd.isConnected);
 
+        layout_obd2.setVisibility( App.obd.useOBD ? View.VISIBLE : View.INVISIBLE );
 
 	}
 
