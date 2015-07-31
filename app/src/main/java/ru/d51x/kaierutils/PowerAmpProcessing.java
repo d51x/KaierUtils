@@ -27,7 +27,9 @@ public class PowerAmpProcessing {
         this.context = context;
         mHandler = new Handler();
 
-	    setPowerAmpStarted();
+        // FIX: если радио активити запущено, то не стартуем поверамп, чтобы не было наложений звука
+        if  (!App.GS.radio.activityRunning) setPowerAmpStarted();
+
 
         powerAmpReceiver = new BroadcastReceiver() {
             @Override

@@ -15,6 +15,7 @@ package pt.lighthouselabs.obd.commands.can;
 import java.util.ArrayList;
 
 import pt.lighthouselabs.obd.commands.ObdCommand;
+import pt.lighthouselabs.obd.commands.ObdMultiCommand;
 import pt.lighthouselabs.obd.enums.AvailableCommandNames;
 
 
@@ -26,6 +27,10 @@ public class CanObdCommand extends ObdCommand {
      * Default ctor.
      */
     public CanObdCommand(String cmd) {
+        super(cmd);
+    }
+
+    public CanObdCommand(String cmd, String header) {
         super(cmd);
     }
 
