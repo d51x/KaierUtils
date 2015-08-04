@@ -290,7 +290,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		setVolumeIcon(ivVolumeLevel, App.GS.getVolumeLevel());
         TWUtilEx.requestAudioFocusState();
         // определим, запущено ли радио
-        Radio.checkRadioActivityStarted();
+        Radio.checkRadioActivityStarted(false);
         updateOBDStatus(App.obd.isConnected);
 
         layout_obd2.setVisibility( App.obd.useOBD ? View.VISIBLE : View.INVISIBLE );

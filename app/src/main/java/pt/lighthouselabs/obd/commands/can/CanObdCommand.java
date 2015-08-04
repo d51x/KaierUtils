@@ -12,11 +12,13 @@
  */
 package pt.lighthouselabs.obd.commands.can;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import pt.lighthouselabs.obd.commands.ObdCommand;
-import pt.lighthouselabs.obd.commands.ObdMultiCommand;
 import pt.lighthouselabs.obd.enums.AvailableCommandNames;
+import pt.lighthouselabs.obd.exceptions.ObdResponseException;
 
 
 public class CanObdCommand extends ObdCommand {
@@ -30,11 +32,7 @@ public class CanObdCommand extends ObdCommand {
         super(cmd);
     }
 
-    public CanObdCommand(String cmd, String header) {
-        super(cmd);
-    }
-
-    /**
+   /**
      * Copy ctor.
      *
      * @param other a {@link CanObdCommand} object.
@@ -49,17 +47,95 @@ public class CanObdCommand extends ObdCommand {
         result = buffer;
     }
 
+    @Override
     public ArrayList<Integer> getBuffer() {
-        return result;
+        return buffer;
+    }
+
+    // get raw data
+    @Override
+    protected void readResult(InputStream in) throws IOException {
+        readRawData(in);
+    }
+
+    @Override
+    protected void readRawData(InputStream in) throws IOException {
+        byte b = 0;
+        StringBuilder res = new StringBuilder();
+
+        // read until '>' arrives
+        while ((char) (b = (byte) in.read()) != '>')
+            res.append((char) b);
+
+        // after that we have
+        /*
+        command: 21 03
+        answer:
+            012                         1st line - answer size in HEX (i.e. 18)
+            0: 61 03 02 02 1C 7F        2nd line and so on - answer with two bytes header (61 03) and data in next lines
+            1: EA 00 00 00 00 F5 73
+            2: 53 00 51 00 00 00 00
+
+            or
+
+        command: 21 10
+        answer:
+                025
+                0: 61 10 00 00 04 26
+                1: 2F 08 00 0A 00 00 2F
+                2: 34 00 00 00 06 00 15
+                3: FF 00 00 00 00 12 24
+                4: 92 00 00 DF 51 00 00
+                5: 00 00 00 00 00 00 00
+         */
+        rawData = res.toString().trim();
+
+       boolean simple = ( rawData.indexOf(":") > 0 ) ? false : true;
+
+        // get answer size
+        if ( simple ) {
+          buffer.clear();
+
+            rawData = rawData.replaceAll("\\s", "");
+            int begin = 0;
+            int end = 2;
+            String tmp = rawData;
+            while (end <= tmp.length()) {
+                String s = tmp.substring(begin, end);
+                buffer.add(Integer.decode("0x" + s));
+                //rawData += rawData.substring(begin, end) + " ";
+                begin = end;
+                end += 2;
+            }
+        } else {
+            String[] rawDataArray = rawData.split("\\r");
+            buffer.clear();
+            rawData = "";
+            int size = Integer.decode("0x" + rawDataArray[0].trim());
+            for (int i = 1; i < rawDataArray.length; i++) {
+                String tmp = rawDataArray[i].trim();
+                tmp = tmp.substring(tmp.indexOf(":") + 1);
+                tmp = tmp.trim();
+                tmp = tmp.replaceAll("\\s", "");
+                int begin = 0;
+                int end = 2;
+                while (end <= tmp.length()) {
+                    buffer.add(Integer.decode("0x" + tmp.substring(begin, end)));
+                    rawData += tmp.substring(begin, end) + " ";
+                    begin = end;
+                    end += 2;
+                }
+            }
+        }
     }
 
     @Override
     public String getName() {
-        return AvailableCommandNames.ENGINE_RPM.getValue();
+        return "CAN OBD command: " + cmd;
     }
 
     @Override
     public String getFormattedResult() {
-        return getResult();
+        return rawData;
     }
 }

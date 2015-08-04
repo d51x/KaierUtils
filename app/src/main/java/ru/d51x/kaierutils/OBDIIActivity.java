@@ -209,6 +209,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.cbCanMMC:
                 App.obd.MMC_CAN = cbCanMMC.isChecked();
+                layoutCanMMC.setVisibility( App.obd.MMC_CAN ? View.VISIBLE : View.GONE);
                 prefs.edit().putBoolean("ODBII_CAN_MMC", App.obd.MMC_CAN).apply();
                 break;
             default:
@@ -393,8 +394,8 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     }
 
     public void update_can_2110_data(ArrayList<Integer> buffer) {
-        // CVT oil degradation 2110   AC*256+AD
-        int degr = buffer.get(30)*256 + buffer.get(31);
+        // CVT oil degradation 2110   AB*6553 + AC*256+AD
+        int degr = buffer.get(29)*65536 + buffer.get(30)*256 + buffer.get(31);
         tv_can_2110_cvt_oil_degr.setText(String.format( getString( R.string.text_can_2110_cvt_oil_degr), Integer.toString( degr)));
   }
 

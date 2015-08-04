@@ -26,7 +26,7 @@ public class SelectHeaderObdCommand extends ObdProtocolCommand {
    * @param header a {@link pt.lighthouselabs.obd.enums.ObdProtocols} object.
    */
   public SelectHeaderObdCommand(String header) {
-    super("ATSH " + header);
+    super(header);
       this.header = header;
   }
 

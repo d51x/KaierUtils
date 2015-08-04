@@ -12,6 +12,9 @@
  */
 package pt.lighthouselabs.obd.commands.protocol;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * This method will reset the OBD connection.
  */
@@ -26,7 +29,8 @@ public class OdbRawCommand extends ObdProtocolCommand {
 
     @Override
     public String getFormattedResult() {
-        return getResult();
+        //return getResult();
+        return rawData;
     }
 
     @Override
@@ -34,4 +38,8 @@ public class OdbRawCommand extends ObdProtocolCommand {
         return "Custom command " + getName();
     }
 
+    @Override
+    protected void readResult(InputStream in) throws IOException {
+        readRawData(in);
+    }
 }

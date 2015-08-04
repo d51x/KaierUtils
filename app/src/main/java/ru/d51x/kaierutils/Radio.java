@@ -35,13 +35,14 @@ public class Radio {
         curDiapazon = -1;
     }
 
-    public static void checkRadioActivityStarted() {
+    public static void checkRadioActivityStarted(boolean kill) {
         App.GS.radio.activityRunning = false;
         ActivityManager activityManager = (ActivityManager) App.getInstance().getSystemService("activity");
         List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(100);
         for (ActivityManager.RunningTaskInfo task:tasks) {
             if ( task.baseActivity.getPackageName().equalsIgnoreCase( Radio.PACKAGE_NAME )) {
                 App.GS.radio.activityRunning = true;
+                if (kill ) activityManager.killBackgroundProcesses( Radio.PACKAGE_NAME );
                 return;
             }
         }

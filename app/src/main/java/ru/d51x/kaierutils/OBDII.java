@@ -21,6 +21,9 @@ import pt.lighthouselabs.obd.commands.engine.EngineRPMObdCommand;
 import pt.lighthouselabs.obd.commands.SpeedObdCommand;
 import pt.lighthouselabs.obd.commands.can.CanObdCommand;
 import pt.lighthouselabs.obd.commands.engine.MassAirFlowObdCommand;
+import pt.lighthouselabs.obd.commands.protocol.ObdProtocolCommand;
+import pt.lighthouselabs.obd.commands.protocol.ObdResetCommand;
+import pt.lighthouselabs.obd.commands.protocol.OdbRawCommand;
 import pt.lighthouselabs.obd.commands.temperature.EngineCoolantTemperatureObdCommand;
 import pt.lighthouselabs.obd.commands.temperature.AirIntakeTemperatureObdCommand;
 import pt.lighthouselabs.obd.commands.control.ControlModuleVoltageObdCommand;
@@ -193,7 +196,8 @@ public class OBDII {
 
     public void disconnect() {
         try {
-	        Log.d("OBD2->connect()", "try to close socked ");
+            new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
+            Log.d("OBD2->connect()", "try to close socked ");
             socket.close();
 	        Log.d("OBD2->connect()", "socket is closed");
 
@@ -208,6 +212,7 @@ public class OBDII {
 	    Log.d("OBD2->init()", "_");
         try {
 
+            new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
             // echo off: "AT E0"
             EchoOffObdCommand cmd1 = new EchoOffObdCommand();
             cmd1.run(socket.getInputStream(), socket.getOutputStream());
@@ -249,6 +254,8 @@ public class OBDII {
         // fuelEconomyObdCommand = new FuelEconomyObdCommand();   // not working  01 5e   n0 data
         MAFObdCommand = new MassAirFlowObdCommand();
         airIntakeTemperatureObdCommand = new AirIntakeTemperatureObdCommand();
+
+        // CAN commands
         can_211E_ObdCommand = new CanObdCommand("21 1E");
         can_211D_ObdCommand = new CanObdCommand("21 1D");
 
@@ -262,6 +269,20 @@ public class OBDII {
     public void processData() {
         if ( !isConnected ) return;
         //Log.d("OBDII-->processData()", "_");
+
+        if ( MMC_CAN )  {
+            try {
+                new SelectHeaderObdCommand("ATSH 7E0").run(socket.getInputStream(), socket.getOutputStream());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+
+            }
+
+        }
+
         processOBD_EngineRPM();         // RPM:             01 0C
         processOBD_Speed();             // Speed:           01 0D
         processOBD_coolantTemp();       // Coolant:         01 05
@@ -276,6 +297,18 @@ public class OBDII {
 
             processCAN_2103__7E1();
             processCAN_2110__7E1();
+
+//TODO need an optimization
+                try {
+                    new SelectHeaderObdCommand("ATSH 7E0").run(socket.getInputStream(), socket.getOutputStream());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+
+                }
+
         }
         //Thread.sleep(500);
     }
@@ -308,6 +341,7 @@ public class OBDII {
 
     private void processOBD_Speed() {
         try {
+
             speedCommand.run(socket.getInputStream(), socket.getOutputStream());
             obdData.speed = speedCommand.getMetricSpeed();
             SendBroadcastAction(OBD_BROADCAST_ACTION_SPEED_CHANGED, "speed", speedCommand.getFormattedResult());
@@ -430,8 +464,15 @@ public class OBDII {
             App.getInstance ().sendBroadcast(intent);
           //  Log.d("OBDII-->processOBD_AirIntake()", "AirIntakeTemperature: " + airIntakeTemperatureObdCommand.getFormattedResult());
         }   catch ( NonNumericResponseException e5) {
-            disconnect();
-            Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
+                try {
+                    new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            //disconnect();
+            //Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
         } catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_AirIntake()", e.toString());
         } catch (UnableToConnectException e3) {
@@ -448,9 +489,16 @@ public class OBDII {
 
     public void processCAN_211E() {
         try {
-            new SelectHeaderObdCommand("7E0").run(socket.getInputStream(), socket.getOutputStream());
-            can_211E_ObdCommand.run(socket.getInputStream(), socket.getOutputStream());
+            try {
+                SelectHeaderObdCommand f = new SelectHeaderObdCommand("ATSH 7E0");
+                f.run(socket.getInputStream(), socket.getOutputStream());
+                //f.getResult();
+            } finally {
 
+            }
+
+
+            can_211E_ObdCommand.run(socket.getInputStream(), socket.getOutputStream());
 
             ArrayList<Integer> buffer_211E = null;
             buffer_211E = can_211E_ObdCommand.getBuffer();
@@ -460,13 +508,19 @@ public class OBDII {
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             intent.putExtra("PID_211E", buffer_211E);
-            //intent.putExtra("dMAF", obdData.maf);
+
             intent.setAction(OBD_BROADCAST_ACTION_PID_211E_CHANGED);
             App.getInstance ().sendBroadcast(intent);
-            //Log.d("OBDII-->processCAN_211E()", "EngineFan: " + Boolean.toString(EngineFan));
             Log.d("OBDII-->processCAN_211E()", "EngineFan: " + can_211E_ObdCommand.getFormattedResult());
         }  catch ( NonNumericResponseException e5) {
-            disconnect();
+            //disconnect();
+            try {
+                new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Log.d("OBDII-->processCAN_211E()", e5.toString());
         }
         catch ( NoDataException e) {
@@ -484,7 +538,13 @@ public class OBDII {
 
     public void processCAN_211D() {
         try {
-            new SelectHeaderObdCommand("7E0").run(socket.getInputStream(), socket.getOutputStream());
+            try {
+                SelectHeaderObdCommand f = new SelectHeaderObdCommand("ATSH 7E0");
+                f.run(socket.getInputStream(), socket.getOutputStream());
+                //f.getResult();
+            } finally {
+
+            }
             can_211D_ObdCommand.run(socket.getInputStream(), socket.getOutputStream());
 
 
@@ -514,7 +574,14 @@ public class OBDII {
 
 
         }  catch ( NonNumericResponseException e5) {
-            disconnect();
+            //disconnect();
+            try {
+                new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Log.d("OBDII-->processCAN_211D()", e5.toString());
         }
         catch ( NoDataException e) {
@@ -532,8 +599,14 @@ public class OBDII {
 
     public void processCAN_2103__7E1() {
         try {
+            try {
+                SelectHeaderObdCommand f = new SelectHeaderObdCommand("ATSH 7E1");
+                f.run(socket.getInputStream(), socket.getOutputStream());
+                //f.getResult();
+            } finally {
 
-            new SelectHeaderObdCommand("7E1").run(socket.getInputStream(), socket.getOutputStream());
+            }
+
             can_2103_ObdCommand.run(socket.getInputStream(), socket.getOutputStream());
 
             ArrayList<Integer> buffer = null;
@@ -547,7 +620,14 @@ public class OBDII {
             Log.d("OBDII-->processCAN_2103__7E1()", "PID: 2103, H: 7E1: " + can_2103_ObdCommand.getFormattedResult());
 
         }  catch ( NonNumericResponseException e5) {
-            disconnect();
+            //disconnect();
+            try {
+                new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Log.d("OBDII-->processCAN_2103__7E1()", e5.toString());
         }
         catch ( NoDataException e) {
@@ -565,8 +645,14 @@ public class OBDII {
 
     public void processCAN_2110__7E1() {
         try {
+            try {
+                SelectHeaderObdCommand f = new SelectHeaderObdCommand("ATSH 7E1");
+                f.run(socket.getInputStream(), socket.getOutputStream());
+                //f.getResult();
+            } finally {
 
-            new SelectHeaderObdCommand("7E1").run(socket.getInputStream(), socket.getOutputStream());
+            }
+
             can_2110_ObdCommand.run(socket.getInputStream(), socket.getOutputStream());
 
             ArrayList<Integer> buffer = null;
@@ -580,7 +666,14 @@ public class OBDII {
             Log.d("OBDII-->processCAN_2110__7E1()", "PID: 2110, H: 7E1: " + can_2110_ObdCommand.getFormattedResult());
 
         }  catch ( NonNumericResponseException e5) {
-            disconnect();
+            //disconnect();
+            try {
+                new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Log.d("OBDII-->processCAN_2110__7E1()", e5.toString());
         }
         catch ( NoDataException e) {

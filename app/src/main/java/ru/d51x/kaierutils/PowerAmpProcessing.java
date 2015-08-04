@@ -28,7 +28,10 @@ public class PowerAmpProcessing {
         mHandler = new Handler();
 
         // FIX: если радио активити запущено, то не стартуем поверамп, чтобы не было наложений звука
-        if  (!App.GS.radio.activityRunning) setPowerAmpStarted();
+        //if  (!App.GS.radio.activityRunning) {
+            // kill radio
+            setPowerAmpStarted();
+        //}
 
 
         powerAmpReceiver = new BroadcastReceiver() {
@@ -63,11 +66,13 @@ public class PowerAmpProcessing {
                 setPowerAmpPaused();
             }
             else if (action.equals(TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP)) {
+                TWUtilEx.setAudioFocus(0);
                 setPowerAmpResumed();
             }
             else if (action.equals (Intent.ACTION_BOOT_COMPLETED )) {
                 // FIX: если радио активити запущено, то не стартуем поверамп, чтобы не было наложений звука
-                if  (!App.GS.radio.activityRunning) setPowerAmpStarted();
+                //if  (!App.GS.radio.activityRunning) setPowerAmpStarted();
+                setPowerAmpStarted();
             }
             else if (action.equals(TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED)) {
                 int key = intent.getIntExtra (TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED, -1);
@@ -219,6 +224,7 @@ public class PowerAmpProcessing {
                                                     PowerampAPI.Commands.RESUME));
                 }
             }, App.GS.startDelayForPowerAmp);
+            Radio.checkRadioActivityStarted( true );
         }
     }
 
