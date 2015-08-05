@@ -224,7 +224,7 @@ public class PowerAmpProcessing {
                                                     PowerampAPI.Commands.RESUME));
                 }
             }, App.GS.startDelayForPowerAmp);
-            Radio.checkRadioActivityStarted( true );
+           
         }
     }
 

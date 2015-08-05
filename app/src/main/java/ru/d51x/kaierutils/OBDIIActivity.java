@@ -49,18 +49,17 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TextView tvOBD_FuelUsageTotal;
     private TextView tvOBD_FuelUsageTotal2;
 
-    private TextView tv_can_211D_A2;
     private TextView tv_can_211D_A3;
     private TextView tv_can_211D_A4;
     private TextView tv_can_211D_D0;
 
     private TextView tv_can_211E_A0;
-    private TextView tv_can_211E_A3;
-    private TextView tv_can_211E_A5;
 
     private TextView tv_can_2110_cvt_oil_degr;
     private TextView tv_can_2103_cvt_temp_count;
-    private TextView tv_can_2103_cvt_temp_1;
+
+    private TextView tvFuelLevel;
+    private TextView tvOutsideTemp;
 
     private TextView tvOBD_MAF;
     private TextView tvOBD_AirIntakeTemp;
@@ -97,18 +96,18 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBD_FuelUsageTotal = (TextView) findViewById(R.id.tvOBD_FuelUsageTotal);
         tvOBD_FuelUsageTotal2 = (TextView) findViewById(R.id.tvOBD_FuelUsageTotal2);
 
-        tv_can_211D_A2 = (TextView) findViewById(R.id.tv_can_211D_A2);
         tv_can_211D_A3 = (TextView) findViewById(R.id.tv_can_211D_A3);
         tv_can_211D_A4 = (TextView) findViewById(R.id.tv_can_211D_A4);
         tv_can_211D_D0 = (TextView) findViewById(R.id.tv_can_211D_D0);
 
         tv_can_211E_A0 = (TextView) findViewById(R.id.tv_can_211E_A0);
-        tv_can_211E_A3 = (TextView) findViewById(R.id.tv_can_211E_A3);
-        tv_can_211E_A5 = (TextView) findViewById(R.id.tv_can_211E_A5);
 
         tv_can_2110_cvt_oil_degr = (TextView) findViewById(R.id.tv_can_2110_cvt_oil_degr);
         tv_can_2103_cvt_temp_count = (TextView) findViewById(R.id.tv_can_2103_cvt_temp_count);
-        tv_can_2103_cvt_temp_1 = (TextView) findViewById(R.id.tv_can_2103_cvt_temp_1);
+
+        tvFuelLevel = (TextView) findViewById(R.id.tvFuelLevel);
+        tvOutsideTemp = (TextView) findViewById(R.id.tvOutsideTemp);
+
 
         swUseOBD = (Switch) findViewById(R.id.swUseOBD);
 	    swUseOBD.setOnClickListener(this);
@@ -142,18 +141,17 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBD_AirIntakeTemp = (TextView) findViewById(R.id.tvOBD_AirIntakeTemp);
         tvOBD_AirIntakeTemp.setText("");
 
-        tv_can_211D_A2.setText(String.format( getString( R.string.text_can_211D_A2), "---"));
         tv_can_211D_A3.setText(String.format( getString( R.string.text_can_211D_A3), "---"));
         tv_can_211D_A4.setText(String.format( getString( R.string.text_can_211D_A4), "---"));
         tv_can_211D_D0.setText(String.format( getString( R.string.text_can_211D_D0), "---"));
 
         tv_can_211E_A0.setText(String.format( getString( R.string.text_can_211E_A0), "---"));
-        tv_can_211E_A3.setText(String.format( getString( R.string.text_can_211E_A3), "---"));
-        tv_can_211E_A5.setText(String.format( getString( R.string.text_can_211E_A5), "---"));
 
         tv_can_2110_cvt_oil_degr.setText(String.format( getString( R.string.text_can_2110_cvt_oil_degr), "---"));
-        tv_can_2103_cvt_temp_count.setText(String.format( getString( R.string.text_can_2103_cvt_temp_count), "---"));
-        tv_can_2103_cvt_temp_1.setText(String.format( getString( R.string.text_can_2103_cvt_temp_1), "---"));
+        tv_can_2103_cvt_temp_count.setText(String.format( getString( R.string.text_can_2103_cvt_temp_count), "---", "---"));
+
+        tvFuelLevel.setText(String.format( getString( R.string.text_obd_can_fuel_level), "---"));
+        tvOutsideTemp.setText(String.format( getString( R.string.text_obd_can_outside_temp), "---"));
 
 
 
@@ -168,10 +166,13 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AIR_INTAKE_TEMP_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED));
-        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_PID_211D_CHANGED));
-        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_PID_211E_CHANGED));
-        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_PID_2103__7E1_CHANGED));
-        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_PID_2110__7E1_CHANGED));
+
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_CVT_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_AWC_CHANGED));
+
     }
 
     public void onResume() {
@@ -316,97 +317,77 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 //                else tv_can_211D_A3.setText(String.format( getString( R.string.text_can_211D_A3), "ВЫКЛ"));
 
             } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED) ) {
-//                boolean fan = intent.getBooleanExtra("EngineFan", false);
-//                if ( fan ) tv_can_211E_A3.setText(String.format( getString( R.string.text_can_211E_A3), "ВКЛ"));
-//                else tv_can_211E_A3.setText(String.format( getString( R.string.text_can_211E_A3), "ВЫКЛ"));
 
-                //boolean AirCond = ( buffer_211D.get(2) & 0x8) == 0 ? false : true;
-            } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_PID_211D_CHANGED) ) {
-                ArrayList<Integer> buffer_211D = intent.getIntegerArrayListExtra("PID_211D");
-                update_can_211D_data(buffer_211D);
-
-            } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_PID_211E_CHANGED) ) {
-                ArrayList<Integer> buffer_211E = intent.getIntegerArrayListExtra("PID_211E");
-                update_can_211D_data(buffer_211E);
-            } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_PID_2110__7E1_CHANGED) ) {
-                ArrayList<Integer> buffer_2110 = intent.getIntegerArrayListExtra("PID_2110__7E1");
-                update_can_2110_data(buffer_2110);
-            } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_PID_2103__7E1_CHANGED) ) {
-                ArrayList<Integer> buffer_2103 = intent.getIntegerArrayListExtra("PID_2103__7E1");
-                update_can_2103_data(buffer_2103);
             }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED )) {
+                String extra = intent.getStringExtra("PID");
+                ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("Buffer");
 
+                // get "engine_aircond_state"
+                String res = App.obd.process_MMC_ECU_data( "engine_aircond_state", action, extra, buffer);
+                tv_can_211D_A3.setText(String.format(getString(R.string.text_can_211D_A3), res));
+
+                // engine_gur_state
+                res = App.obd.process_MMC_ECU_data( "engine_gur_state", action, extra, buffer);
+                tv_can_211D_A4.setText(String.format(getString(R.string.text_can_211D_A4), res));
+
+                // engine_brake_state
+                res = App.obd.process_MMC_ECU_data( "engine_brake_state", action, extra, buffer);
+                tv_can_211D_D0.setText(String.format(getString(R.string.text_can_211D_D0), res));
+
+                //engine_aircond_relay_state
+                res = App.obd.process_MMC_ECU_data( "engine_aircond_relay_state", action, extra, buffer);
+                tv_can_211E_A0.setText(String.format(getString(R.string.text_can_211E_A0), res));
+            }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_CVT_CHANGED )) {
+                String extra = intent.getStringExtra("PID");
+                ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("Buffer");
+                String res = "";
+
+                // cvt_oil_degradation
+                res = App.obd.process_MMC_ECU_data( "cvt_oil_degradation", action, extra, buffer);
+                tv_can_2110_cvt_oil_degr.setText(String.format(getString(R.string.text_can_2110_cvt_oil_degr), res));
+
+                // cvt_temp_count
+                res = App.obd.process_MMC_ECU_data( "cvt_temp_count", action, extra, buffer);
+
+                // cvt_temp_grad
+                String res2 = App.obd.process_MMC_ECU_data( "cvt_temp_grad", action, extra, buffer);
+
+                tv_can_2103_cvt_temp_count.setText(String.format( getString( R.string.text_can_2103_cvt_temp_count), res, res2));
+
+            }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED )) {
+                String extra = intent.getStringExtra("PID");
+                ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("Buffer");
+                String res = "";
+
+            }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED )) {
+                String extra = intent.getStringExtra("PID");
+                ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("Buffer");
+                String res = "";
+
+                // combine_meter_fuel_level
+                res = App.obd.process_MMC_ECU_data( "combine_meter_fuel_level", action, extra, buffer);
+                tvFuelLevel.setText(String.format( getString( R.string.text_obd_can_fuel_level), res));
+
+                // combine_meter_outside_temp
+                res = App.obd.process_MMC_ECU_data( "combine_meter_outside_temp", action, extra, buffer);
+                tvOutsideTemp.setText(String.format( getString( R.string.text_obd_can_outside_temp), res));
+
+            }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_AWC_CHANGED)) {
+                String extra = intent.getStringExtra("PID");
+                ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("Buffer");
+                String res = "";
+
+
+
+
+            }
         }
     };
 
-    public void update_can_211D_data(ArrayList<Integer> buffer) {
-        // Сигнал нагрузки кондиционера 211D {A:2}
-        if (( buffer.get(2) & 0x4) > 0 ) {
-            tv_can_211D_A2.setText(String.format(getString(R.string.text_can_211D_A2), "ВКЛ"));
-        } else {
-            tv_can_211D_A2.setText(String.format( getString( R.string.text_can_211D_A2), "ВЫКЛ"));
-        }
-
-        // Выключатель кондиционера 211D {A:3}
-        if (( buffer.get(2) & 0x8) > 0 ) {
-            tv_can_211D_A3.setText(String.format(getString(R.string.text_can_211D_A3), "ВКЛ"));
-        } else {
-            tv_can_211D_A3.setText(String.format( getString( R.string.text_can_211D_A3), "ВЫКЛ"));
-        }
-
-        // Выключатель гидроусилителя руля 211D {A:4}
-        if (( buffer.get(2) & 0x16) > 0 ) {
-            tv_can_211D_A4.setText(String.format(getString(R.string.text_can_211D_A4), "ВКЛ"));
-        } else {
-            tv_can_211D_A4.setText(String.format( getString( R.string.text_can_211D_A4), "ВЫКЛ"));
-        }
-
-        // Выключательлампы тормоза 211D {D:0}
-        // A - 2, B - 3, C - 4, В- 5
-        if (( buffer.get(5) & 0x1) > 0 ) {
-            tv_can_211D_D0.setText(String.format(getString(R.string.text_can_211D_D0), "ВКЛ"));
-        } else {
-            tv_can_211D_D0.setText(String.format( getString( R.string.text_can_211D_D0), "ВЫКЛ"));
-        }
-    }
-
-    public void update_can_211E_data(ArrayList<Integer> buffer) {
-        // Реле компрессора кондиционера 211E {A:0}
-        if (( buffer.get(2) & 0x1) > 0 ) {
-            tv_can_211E_A0.setText(String.format(getString(R.string.text_can_211E_A0), "ВКЛ"));
-        } else {
-            tv_can_211E_A0.setText(String.format( getString( R.string.text_can_211E_A0), "ВЫКЛ"));
-        }
-
-        // Реле вентилятора радиатора(низкая) 211E {A:3}
-        if (( buffer.get(2) & 0x8) > 0 ) {
-            tv_can_211E_A3.setText(String.format(getString(R.string.text_can_211E_A3), "ВКЛ"));
-        } else {
-            tv_can_211E_A3.setText(String.format( getString( R.string.text_can_211E_A3), "ВЫКЛ"));
-        }
-
-        // Реле управления двигателем 211E {A:5}
-        if (( buffer.get(2) & 32) > 0 ) {
-            tv_can_211E_A5.setText(String.format(getString(R.string.text_can_211E_A5), "ВКЛ"));
-        } else {
-            tv_can_211E_A5.setText(String.format( getString( R.string.text_can_211E_A5), "ВЫКЛ"));
-        }
-    }
-
-    public void update_can_2110_data(ArrayList<Integer> buffer) {
-        // CVT oil degradation 2110   AB*6553 + AC*256+AD
-        int degr = buffer.get(29)*65536 + buffer.get(30)*256 + buffer.get(31);
-        tv_can_2110_cvt_oil_degr.setText(String.format( getString( R.string.text_can_2110_cvt_oil_degr), Integer.toString( degr)));
-  }
-
-    public void update_can_2103_data(ArrayList<Integer> buffer) {
-        // CVT temp count 2103   N
-        int T = buffer.get(15);
-        tv_can_2103_cvt_temp_count.setText(String.format( getString( R.string.text_can_2103_cvt_temp_count), Integer.toString( T )));
-
-        // CVT temp 1 2103
-        double temp_1 = (0.000000002344*( T ^5))+(-0.000001387*(T^4))+(0.0003193*(T^3))+(-0.03501*(T^2))+(2.302*T)+(-36.6);
-        tv_can_2103_cvt_temp_1.setText(String.format(getString(R.string.text_can_2103_cvt_temp_1), Double.toString(temp_1)));
-    }
 
 }

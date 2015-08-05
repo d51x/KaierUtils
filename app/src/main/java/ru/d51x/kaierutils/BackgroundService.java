@@ -56,6 +56,10 @@ public class BackgroundService extends Service {
 		else {
 			// TODO Альтернативные действия в фоновом режиме.
 			Log.d ("BackgroundService", "First attempt ");
+            if ( App.GS.interactWithPowerAmp &&
+                    App.GS.needWatchBootUpPowerAmp ) {
+                Radio.checkRadioActivityStarted(true);
+            }
 		}
 
 		startTWUtilProcessingThread();

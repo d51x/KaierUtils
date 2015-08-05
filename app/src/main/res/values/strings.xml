@@ -185,15 +185,13 @@
     <!--<string name="text_obd_fuel_consumption_avg2">Средний расход (л/100км) с учетом простоев: %1$.1f</string>-->
     <string name="text_obd_fuel_consumption_avg2">  без простоев (л/100км): %1$.1f</string>
     <string name="cbCanMMC">Mitsubishi CAN</string>
-    <string name="text_can_211D_A2">PID: 211D, H: 7E0, Сигнал нагрузки кондиционера: %1$s</string>
-    <string name="text_can_211D_A3">PID: 211D, H: 7E0, Выключатель кондиционера (Вкл/Выкл вентилятора охлаждения): %1$s</string>
-    <string name="text_can_211D_A4">PID: 211D, H: 7E0, Выключатель гидроусилителя руля: %1$s</string>
-    <string name="text_can_211D_D0">PID: 211D, H: 7E0, Выключательлампы тормоза: %1$s</string>
+    <string name="text_can_211D_A3">Вентилятор охлаждения: %1$s</string>
+    <string name="text_can_211D_A4">ГУР: %1$s</string>
+    <string name="text_can_211D_D0">Тормоз нажат: %1$s</string>
 
-    <string name="text_can_211E_A0">PID: 211E, H: 7E0, Реле компрессора кондиционера: %1$s</string>
-    <string name="text_can_211E_A3">PID: 211E, H: 7E0, Реле вентилятора радиатора(низкая): %1$s</string>
-    <string name="text_can_211E_A5">PID: 211E, H: 7E0, Реле управления двигателем: %1$s</string>
-    <string name="text_can_2110_cvt_oil_degr">PID: 2110, H: 7E1, CVT oil degradation: %1$s</string>
-    <string name="text_can_2103_cvt_temp_count">PID: 2103, H: 7E1, CVT temp count: %1$s</string>
-    <string name="text_can_2103_cvt_temp_1">PID: 2103, H: 7E1, CVT temp 1: %1$s</string>
+    <string name="text_can_211E_A0">Компрессор кондиционера: %1$s</string>
+    <string name="text_can_2110_cvt_oil_degr">CVT oil degradation: %1$s</string>
+    <string name="text_can_2103_cvt_temp_count">CVT temp, count: %1$s, grad: %2$s</string>
+    <string name="text_obd_can_fuel_level">Остаток топлива: %1$s</string>
+    <string name="text_obd_can_outside_temp">На улице: %1$s град.</string>
 </resources>

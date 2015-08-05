@@ -15,15 +15,11 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 
-import pt.lighthouselabs.obd.commands.ObdCommand;
-import pt.lighthouselabs.obd.commands.ObdMultiCommand;
 import pt.lighthouselabs.obd.commands.engine.EngineRPMObdCommand;
 import pt.lighthouselabs.obd.commands.SpeedObdCommand;
 import pt.lighthouselabs.obd.commands.can.CanObdCommand;
 import pt.lighthouselabs.obd.commands.engine.MassAirFlowObdCommand;
-import pt.lighthouselabs.obd.commands.protocol.ObdProtocolCommand;
 import pt.lighthouselabs.obd.commands.protocol.ObdResetCommand;
-import pt.lighthouselabs.obd.commands.protocol.OdbRawCommand;
 import pt.lighthouselabs.obd.commands.temperature.EngineCoolantTemperatureObdCommand;
 import pt.lighthouselabs.obd.commands.temperature.AirIntakeTemperatureObdCommand;
 import pt.lighthouselabs.obd.commands.control.ControlModuleVoltageObdCommand;
@@ -57,6 +53,13 @@ public class OBDII {
     protected static final String OBD_BROADCAST_ACTION_PID_211E_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PID_211E_CHANGED";
     protected static final String OBD_BROADCAST_ACTION_PID_2103__7E1_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PID_2103__7E1_CHANGED";
     protected static final String OBD_BROADCAST_ACTION_PID_2110__7E1_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PID_2110__7E1_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_PID_21A3__6A0_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PID_21A3__6A0_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_PID_21A7__6A0_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PID_21A7__6A0_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_ENGINE_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_ECU_CVT_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_CVT_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_COMBINEMETER_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_AIRCOND_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_ECU_AWC_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_AWC_CHANGED";
 
     private Context mContext;
     private String deviceName;
@@ -65,12 +68,6 @@ public class OBDII {
 
     private BluetoothSocket socket;
 
-
-    /// for Mitsubishi CAN
-    public CanObdCommand can_211E_ObdCommand;
-    public CanObdCommand can_211D_ObdCommand;
-    public CanObdCommand can_2103_ObdCommand;
-    public CanObdCommand can_2110_ObdCommand;
 
     // Name: "CVT temp count",  PID: 2103, Header: 7E1, min: 0, max: 250, units: count, Equation: N
     // Name: "CVT temp 1",      PID: 2103, Header: 7E1, min: -50, max: 250, units: C*, Equation: (0.000000002344*(N^5))+(-0.000001387*(N^4))+(0.0003193*(N^3))+(-0.03501*(N^2))+(2.302*N)+(-36.6)
@@ -255,32 +252,14 @@ public class OBDII {
         MAFObdCommand = new MassAirFlowObdCommand();
         airIntakeTemperatureObdCommand = new AirIntakeTemperatureObdCommand();
 
-        // CAN commands
-        can_211E_ObdCommand = new CanObdCommand("21 1E");
-        can_211D_ObdCommand = new CanObdCommand("21 1D");
-
-        can_2103_ObdCommand = new CanObdCommand("21 03");
-        can_2110_ObdCommand = new CanObdCommand("21 10");
-
-
-
-    }
+     }
 
     public void processData() {
         if ( !isConnected ) return;
         //Log.d("OBDII-->processData()", "_");
 
         if ( MMC_CAN )  {
-            try {
-                new SelectHeaderObdCommand("ATSH 7E0").run(socket.getInputStream(), socket.getOutputStream());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-
-            }
-
+            SetHeaders("7E0", "7E8", false);
         }
 
         processOBD_EngineRPM();         // RPM:             01 0C
@@ -292,23 +271,19 @@ public class OBDII {
         //processOBD_MAF();               // MAF:             01 10
 
         if ( MMC_CAN ) {
-            processCAN_211D();
-            processCAN_211E();
 
-            processCAN_2103__7E1();
-            processCAN_2110__7E1();
 
-//TODO need an optimization
-                try {
-                    new SelectHeaderObdCommand("ATSH 7E0").run(socket.getInputStream(), socket.getOutputStream());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
+            request_MMC_ECU_ENGINE();
+            request_MMC_ECU_CVT();
+            request_MMC_ECU_COMBINATION_METER();
+            request_MMC_ECU_AIR_COND();
+            request_MMC_ECU_AWC();
 
-                }
 
+
+
+            // restore for ENGINE ECU
+            SetHeaders("7E0", "7E8", false);
         }
         //Thread.sleep(500);
     }
@@ -487,137 +462,25 @@ public class OBDII {
     }
 
 
-    public void processCAN_211E() {
+    public void request_CAN_ECU(String PID, String ReceiverAddress, String SenderAddress, boolean flowControl, String BroadcastID) {
+        String function = "processCAN_" + PID + "__" + ReceiverAddress + "()";
+
         try {
-            try {
-                SelectHeaderObdCommand f = new SelectHeaderObdCommand("ATSH 7E0");
-                f.run(socket.getInputStream(), socket.getOutputStream());
-                //f.getResult();
-            } finally {
+              SetHeaders(ReceiverAddress, SenderAddress, flowControl);
 
-            }
-
-
-            can_211E_ObdCommand.run(socket.getInputStream(), socket.getOutputStream());
-
-            ArrayList<Integer> buffer_211E = null;
-            buffer_211E = can_211E_ObdCommand.getBuffer();
-
-            //boolean EngineFan = ( buffer_211E.get(2) & 0x8) > 0 ? true: false;
-
-            Intent intent = new Intent();
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            intent.putExtra("PID_211E", buffer_211E);
-
-            intent.setAction(OBD_BROADCAST_ACTION_PID_211E_CHANGED);
-            App.getInstance ().sendBroadcast(intent);
-            Log.d("OBDII-->processCAN_211E()", "EngineFan: " + can_211E_ObdCommand.getFormattedResult());
-        }  catch ( NonNumericResponseException e5) {
-            //disconnect();
-            try {
-                new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Log.d("OBDII-->processCAN_211E()", e5.toString());
-        }
-        catch ( NoDataException e) {
-            Log.d("OBDII-->processCAN_211E()", e.toString());
-        } catch (UnableToConnectException e3) {
-            Log.d("OBDII-->processCAN_211E()", e3.toString());
-            disconnect();
-        } catch (IOException e4) {
-            Log.d("OBDII-->processCAN_211E()", e4.toString());
-            disconnect();
-        } catch ( Exception e2) {
-            Log.d("OBDII-->processCAN_211E()", e2.toString());
-        }
-    }
-
-    public void processCAN_211D() {
-        try {
-            try {
-                SelectHeaderObdCommand f = new SelectHeaderObdCommand("ATSH 7E0");
-                f.run(socket.getInputStream(), socket.getOutputStream());
-                //f.getResult();
-            } finally {
-
-            }
-            can_211D_ObdCommand.run(socket.getInputStream(), socket.getOutputStream());
-
-
-            ArrayList<Integer> buffer_211D = null;
-            buffer_211D = can_211D_ObdCommand.getBuffer();
-
-            //boolean AirCond = ( buffer_211D.get(2) & 0x8) == 0 ? false : true;
-
-            Intent intent = new Intent();
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            intent.putExtra("PID_211D", buffer_211D);
-            //intent.putExtra("dMAF", obdData.maf);
-            intent.setAction(OBD_BROADCAST_ACTION_PID_211D_CHANGED);
-            App.getInstance ().sendBroadcast(intent);
-            //Log.d("OBDII-->processCAN_211D()", "AirCond: " + Boolean.toString(AirCond));
-            Log.d("OBDII-->processCAN_211D()", "PID: 211D: " + can_211D_ObdCommand.getFormattedResult());
-            //Log.d("OBDII-->processCAN_211D()", "21 1D: bite A: " + buffer_211D.get( 2 ));
-            //Log.d("OBDII-->processCAN_211D()", "21 1D: bite A bit 0: " + (buffer_211D.get( 2 ) & 0x1));
-            //Log.d("OBDII-->processCAN_211D()", "21 1D: bite A bit 1: " + (buffer_211D.get( 2 ) & 0x2));
-            //Log.d("OBDII-->processCAN_211D()", "21 1D: bite A bit 2: " + (buffer_211D.get( 2 ) & 0x4));
-            //Log.d("OBDII-->processCAN_211D()", "21 1D: bite A bit 3: " + (buffer_211D.get( 2 ) & 0x8));
-
-            //Log.d("OBDII-->processCAN_211D()", "21 1D: bite B: " + buffer_211D.get( 3 ));
-            //Log.d("OBDII-->processCAN_211D()", "21 1D: bite C: " + buffer_211D.get( 4 ));
-            //Log.d("OBDII-->processCAN_211D()", "21 1D: bite D: " + buffer_211D.get( 5 ));
-            //Log.d("OBDII-->processCAN_211D()", "21 1D: bite E: " + buffer_211D.get( 6 ));
-
-
-        }  catch ( NonNumericResponseException e5) {
-            //disconnect();
-            try {
-                new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Log.d("OBDII-->processCAN_211D()", e5.toString());
-        }
-        catch ( NoDataException e) {
-            Log.d("OBDII-->processCAN_211D()", e.toString());
-        } catch (UnableToConnectException e3) {
-            Log.d("OBDII-->processCAN_211D()", e3.toString());
-            disconnect();
-        } catch (IOException e4) {
-            Log.d("OBDII-->processCAN_211D()", e4.toString());
-            disconnect();
-        } catch ( Exception e2) {
-            Log.d("OBDII-->processCAN_211D()", e2.toString());
-        }
-    }
-
-    public void processCAN_2103__7E1() {
-        try {
-            try {
-                SelectHeaderObdCommand f = new SelectHeaderObdCommand("ATSH 7E1");
-                f.run(socket.getInputStream(), socket.getOutputStream());
-                //f.getResult();
-            } finally {
-
-            }
-
-            can_2103_ObdCommand.run(socket.getInputStream(), socket.getOutputStream());
+            CanObdCommand cmd =  new CanObdCommand(PID);
+            cmd.run(socket.getInputStream(), socket.getOutputStream());
 
             ArrayList<Integer> buffer = null;
-            buffer = can_2103_ObdCommand.getBuffer();
+            buffer = cmd.getBuffer();
 
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            intent.putExtra("PID_2103__7E1", buffer);
-            intent.setAction(OBD_BROADCAST_ACTION_PID_2103__7E1_CHANGED);
+            intent.putExtra("PID", PID + ":" + ReceiverAddress);
+            intent.putExtra("Buffer", buffer);
+            intent.setAction(BroadcastID);
             App.getInstance ().sendBroadcast(intent);
-            Log.d("OBDII-->processCAN_2103__7E1()", "PID: 2103, H: 7E1: " + can_2103_ObdCommand.getFormattedResult());
+            Log.d("OBDII-->" + function, "PID: " + PID + ", H: " + ReceiverAddress + ": " + cmd.getFormattedResult());
 
         }  catch ( NonNumericResponseException e5) {
             //disconnect();
@@ -628,64 +491,18 @@ public class OBDII {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Log.d("OBDII-->processCAN_2103__7E1()", e5.toString());
+            Log.d("OBDII-->" + function, e5.toString());
         }
         catch ( NoDataException e) {
-            Log.d("OBDII-->processCAN_2103__7E1()", e.toString());
+            Log.d("OBDII-->" + function, e.toString());
         } catch (UnableToConnectException e3) {
-            Log.d("OBDII-->processCAN_2103__7E1()", e3.toString());
+            Log.d("OBDII-->" + function, e3.toString());
             disconnect();
         } catch (IOException e4) {
-            Log.d("OBDII-->processCAN_2103__7E1()", e4.toString());
+            Log.d("OBDII-->" + function, e4.toString());
             disconnect();
         } catch ( Exception e2) {
-            Log.d("OBDII-->processCAN_2103__7E1()", e2.toString());
-        }
-    }
-
-    public void processCAN_2110__7E1() {
-        try {
-            try {
-                SelectHeaderObdCommand f = new SelectHeaderObdCommand("ATSH 7E1");
-                f.run(socket.getInputStream(), socket.getOutputStream());
-                //f.getResult();
-            } finally {
-
-            }
-
-            can_2110_ObdCommand.run(socket.getInputStream(), socket.getOutputStream());
-
-            ArrayList<Integer> buffer = null;
-            buffer = can_2110_ObdCommand.getBuffer();
-
-            Intent intent = new Intent();
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            intent.putExtra("PID_2110__7E1", buffer);
-            intent.setAction(OBD_BROADCAST_ACTION_PID_2110__7E1_CHANGED);
-            App.getInstance ().sendBroadcast(intent);
-            Log.d("OBDII-->processCAN_2110__7E1()", "PID: 2110, H: 7E1: " + can_2110_ObdCommand.getFormattedResult());
-
-        }  catch ( NonNumericResponseException e5) {
-            //disconnect();
-            try {
-                new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Log.d("OBDII-->processCAN_2110__7E1()", e5.toString());
-        }
-        catch ( NoDataException e) {
-            Log.d("OBDII-->processCAN_2110__7E1()", e.toString());
-        } catch (UnableToConnectException e3) {
-            Log.d("OBDII-->processCAN_2110__7E1()", e3.toString());
-            disconnect();
-        } catch (IOException e4) {
-            Log.d("OBDII-->processCAN_2110__7E1()", e4.toString());
-            disconnect();
-        } catch ( Exception e2) {
-            Log.d("OBDII-->processCAN_2110__7E1()", e2.toString());
+            Log.d("OBDII-->" + function, e2.toString());
         }
     }
 
@@ -750,4 +567,176 @@ public class OBDII {
         totalTrip.updateData( false, fuel_remain, tank_volume);
         saveFuelTank();
     }
+
+    private void SetHeaders(String receiver, String sender, boolean flowControl) {
+        try {
+            new SelectHeaderObdCommand("ATSH " + receiver).run(socket.getInputStream(), socket.getOutputStream());
+            if (flowControl) {
+                new SelectHeaderObdCommand("ATFCSH " + receiver).run(socket.getInputStream(), socket.getOutputStream());
+                new SelectHeaderObdCommand("ATFCSD 30080A").run(socket.getInputStream(), socket.getOutputStream());
+                new SelectHeaderObdCommand("ATFCSM 1").run(socket.getInputStream(), socket.getOutputStream());
+            }
+            new SelectHeaderObdCommand("ATCRA " + sender).run(socket.getInputStream(), socket.getOutputStream());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+
+        }
+
+    }
+
+
+    private void request_MMC_ECU_ENGINE(){
+        // set ENGINE ECU addresses
+        //SetHeaders("7E0", "7E8");
+        request_CAN_ECU("211D", "7E0", "7E8", false, OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED);
+        request_CAN_ECU("211E", "7E0", "7E8", false, OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED);
+
+    }
+
+    private void request_MMC_ECU_CVT(){
+        // set CVT/AT ECU addresses
+        //SetHeaders("7E1", "7E9");
+        request_CAN_ECU("2103", "7E1", "7E9", false, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED);
+        request_CAN_ECU("2107", "7E1", "7E9", false, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED);
+        request_CAN_ECU("2110", "7E1", "7E9", false, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED);
+    }
+
+    private void request_MMC_ECU_COMBINATION_METER(){
+        // set COMBINE METER ECU addresses
+        //SetHeaders("6A0", "514");
+
+        request_CAN_ECU("21A3", "6A0", "514", false, OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED);
+        request_CAN_ECU("21A7", "6A0", "514", false, OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED);
+    }
+
+    private void request_MMC_ECU_AIR_COND(){
+
+        request_CAN_ECU("2111", "688", "511", true, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
+
+        //"C-Cross External temperature","Ext temp","2111","A/2-40","-40","87.5","C","688"
+    }
+
+    private void request_MMC_ECU_AWC(){
+
+        //request_CAN_ECU("2101", "784", "785", true, OBD_BROADCAST_ACTION_ECU_AWC_CHANGED);
+        //request_CAN_ECU("2101", "7B6", "7B7", true, OBD_BROADCAST_ACTION_ECU_AWC_CHANGED);
+    }
+
+    public String process_MMC_ECU_data(String param, String action, String extra, ArrayList<Integer> buffer) {
+        String res = "";
+        if ( param.isEmpty() || action.isEmpty() || extra.isEmpty() ) return res;
+
+        try {
+            if (action.equalsIgnoreCase(OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED)) {
+                if (extra.equalsIgnoreCase("211D:7E0")) {
+                    if (param.equalsIgnoreCase("engine_aircond_state")) {
+                        // Выключатель кондиционера 211D {A:3}
+                        if ((buffer.get(2) & 0x8) > 0) res = "ВКЛ";
+                        else res = "ВЫКЛ";
+                    } else if (param.equalsIgnoreCase("engine_gur_state")) {
+                        // Выключатель гидроусилителя руля 211D {A:4}
+                        if ((buffer.get(2) & 0x16) > 0) res = "ВКЛ";
+                        else res = "ВЫКЛ";
+                    } else if (param.equalsIgnoreCase("engine_brake_state")) {
+                        // Выключательлампы тормоза 211D {D:0}
+                        if ((buffer.get(5) & 0x1) > 0) res = "ДА";
+                        else res = "НЕТ";
+                    }
+
+                } else if (extra.equalsIgnoreCase("211E:7E0")) {
+                    if (param.equalsIgnoreCase("engine_aircond_relay_state")) {
+                        // Реле компрессора кондиционера 211E {A:0}
+                        if ((buffer.get(2) & 0x1) > 0) res = "ВКЛ";
+                        else res = "ВЫКЛ";
+                    }
+                }
+            } else if (action.equalsIgnoreCase(OBD_BROADCAST_ACTION_ECU_CVT_CHANGED)) {
+                if (extra.equalsIgnoreCase("2110:7E1")) {
+                    if (param.equalsIgnoreCase("cvt_oil_degradation")) {
+                        // CVT oil degradation 2110   AB*65536 + AC*256 + AD
+                        int degr = buffer.get(29) * 65536 + buffer.get(30) * 256 + buffer.get(31);
+                        res = Integer.toString(degr);
+                    }
+                } else if (extra.equalsIgnoreCase("2103:7E1")) {
+                    if (param.equalsIgnoreCase("cvt_temp_count")) {
+                        // cvt_temp_count
+                        int N = buffer.get(15);
+                        res = Integer.toString(N);
+                    } else if (param.equalsIgnoreCase("cvt_temp_grad")) {
+                        // cvt_temp_grad
+                        int N = buffer.get(15);
+                        double temp_1 = -21.592 + (1.137 * N) - (0.0063 * N * N) + (0.0000195 * N * N * N);
+                        res = String.format("%1$.0f", temp_1);
+                    }
+                }
+            } else if (action.equalsIgnoreCase(OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED)) {
+                if (extra.equalsIgnoreCase("21A3:6A0")) {
+                    if (param.equalsIgnoreCase("combine_meter_fuel_level")) {
+                        double fuel = buffer.get(4);
+                        fuel = (fuel - 16) * 0.6;
+                        res = String.format("%1.0f", fuel);
+                    }
+                } else if (extra.equalsIgnoreCase("21A7:6A0")) {
+                    if (param.equalsIgnoreCase("combine_meter_outside_temp")) {
+                        int temp = buffer.get(4);
+                        temp = (temp - 40);
+                        res = Integer.toString(temp);
+                    }
+                }
+            } else if (action.equalsIgnoreCase(OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED)) {
+                if (extra.equalsIgnoreCase("2111:688")) {
+
+                } else if (extra.equalsIgnoreCase("21110:688")) {
+
+                }
+            } else if (action.equalsIgnoreCase(OBD_BROADCAST_ACTION_ECU_AWC_CHANGED)) {
+
+            }
+        } finally {
+            return res;
+        }
+     }
 }
+
+
+
+/*
+
+
+
+"2013MY Датчик скорости ПЛ колеса","Скор ПЛ кол","2101","A*2.56+B*0.01","0","655.35","км/час ","784"
+"2013MY Датчик скорости ПП колеса","Скор ПП кол","2101","C*2.56+D*0.01","0","655.35","км/час ","784"
+"2013MY Датчик скорости ЗЛ колеса","Скор ЗЛ кол","2101","E*2.56+F*0.01","0","655.35","км/час ","784"
+"2013MY Датчик скорости ЗП колеса","Скор ЗП кол","2101","G*2.56+H*0.01","0","655.35","км/час ","784"
+
+"4WD Mode ECO","4WD-ECO","2101","{A:1}-{A:0}","0","1","off/on","7B6"
+"4WD Mode AUTO","4WD-AUTO","2101","{A:1}*{A:0}","0","1","off/on","7B6"
+"4WD Mode LOCK","4WD-LOCK","2101","{A:2}","0","1","off/on","7B6"
+
+00- SNA
+01- активирован
+02- 4WD ECO
+03- 4WD AUTO
+04- блокировка 4WD полный привод
+05- AWC ECO
+06- нормальный
+07- режим "Снег"
+08- блокировка
+09- активирован
+0А- активирован
+
+
+
+
+пид 210D
+Температура наружного воздуха(вход CAN)
+мин: -40
+мах: 87.5
+град С
+формула: I*0.5-40
+заголовок: 7B6
+
+ */

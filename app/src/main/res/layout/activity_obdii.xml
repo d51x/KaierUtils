@@ -35,7 +35,7 @@
                 android:id="@+id/btnSelectDevice"
                 android:layout_marginLeft="16dp"
                 android:layout_gravity="right"
-                android:layout_weight="0.2"/>
+                android:textSize="12dp"/>
 
             <Button
                 android:layout_width="wrap_content"
@@ -43,15 +43,21 @@
                 android:text="@string/btnOBDConnect"
                 android:id="@+id/btnOBDConnect"
                 android:layout_gravity="right"
-                android:layout_weight="0.2"/>
+                android:textSize="12dp"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/btnOBDDisconnect"
                 android:id="@+id/btnOBDDisconnect"
-                android:layout_gravity="right"
-                android:layout_weight="0.2"/>
+                android:textSize="12dp"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cbCanMMC"
+                android:id="@+id/cbCanMMC"
+                android:layout_weight="0.5"/>
 
         </LinearLayout>
 
@@ -60,12 +66,6 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cbCanMMC"
-                android:id="@+id/cbCanMMC"
-                android:layout_weight="0.5"/>
         </LinearLayout>
 
         <LinearLayout
@@ -118,7 +118,7 @@
                         android:text="Текущие параметры:"
                         android:id="@+id/textView6"
                         android:autoText="false"
-                        android:textSize="24sp"
+                        android:textSize="20sp"
                         android:layout_weight="0.5"/>
 
                     <TextView
@@ -126,7 +126,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_obd_cmu_voltage"
                         android:id="@+id/tvOBD_CMUVoltage"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_gravity="bottom|right"
                         android:gravity="right"/>
                 </LinearLayout>
@@ -141,7 +141,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_obd_speed"
                         android:id="@+id/tvOBD_Speed"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_gravity="left"
                         android:layout_weight="0.5"/>
 
@@ -150,7 +150,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_obd_engine_rpm"
                         android:id="@+id/tvOBDEngineRPM"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_gravity="right"
                         />
 
@@ -166,7 +166,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_obd_coolant_temp"
                         android:id="@+id/tvOBD_CoolantTemp"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_weight="0.5"
                         android:layout_gravity="left"/>
 
@@ -175,7 +175,7 @@
                         android:layout_height="wrap_content"
                         android:text="AirIntakeTemp"
                         android:id="@+id/tvOBD_AirIntakeTemp"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_weight="0.4"
                         android:layout_gravity="right"
                         android:gravity="right"/>
@@ -192,7 +192,7 @@
                         android:layout_height="wrap_content"
                         android:text="MAF"
                         android:id="@+id/tvOBD_MAF"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_weight="0.6"/>
 
                 </LinearLayout>
@@ -203,74 +203,99 @@
                     android:layout_height="fill_parent"
                     android:id="@+id/layoutCanMMC">
 
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_can_211D_A3"
+                            android:id="@+id/tv_can_211D_A3"
+                            android:textSize="16sp"
+                            android:layout_weight="0.5"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_can_211E_A0"
+                            android:id="@+id/tv_can_211E_A0"
+                            android:textSize="16sp"
+                            android:layout_weight="0.5"
+                            android:gravity="right"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_can_211D_D0"
+                            android:id="@+id/tv_can_211D_D0"
+                            android:textSize="16sp"
+                            android:layout_weight="0.5"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_can_211D_A4"
+                            android:id="@+id/tv_can_211D_A4"
+                            android:textSize="16sp"
+                            android:layout_weight="0.5"
+                            android:gravity="right"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_can_2110_cvt_oil_degr"
+                            android:id="@+id/tv_can_2110_cvt_oil_degr"
+                            android:textSize="16sp"
+                            android:layout_weight="0.5"
+                            android:layout_gravity="left"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_can_2103_cvt_temp_count"
+                            android:id="@+id/tv_can_2103_cvt_temp_count"
+                            android:textSize="16sp"
+                            android:layout_weight="0.5"
+                            android:gravity="right"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/text_can_211D_A3"
-                        android:id="@+id/tv_can_211D_A3"
+                        android:text="@string/text_obd_can_fuel_level"
+                        android:id="@+id/tvFuelLevel"
+                        android:layout_weight="0.5"
                         android:textSize="16sp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/text_can_211D_A2"
-                        android:id="@+id/tv_can_211D_A2"
-                        android:textSize="16sp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_can_211D_A4"
-                        android:id="@+id/tv_can_211D_A4"
-                        android:textSize="16sp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_can_211D_D0"
-                        android:id="@+id/tv_can_211D_D0"
-                        android:textSize="16sp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_can_211E_A0"
-                        android:id="@+id/tv_can_211E_A0"
-                        android:textSize="16sp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_can_211E_A3"
-                        android:id="@+id/tv_can_211E_A3"
-                        android:textSize="16sp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_can_211E_A5"
-                        android:id="@+id/tv_can_211E_A5"
-                        android:textSize="16sp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_can_2110_cvt_oil_degr"
-                        android:id="@+id/tv_can_2110_cvt_oil_degr"
-                        android:textSize="16sp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_can_2103_cvt_temp_count"
-                        android:id="@+id/tv_can_2103_cvt_temp_count"
-                        android:textSize="16sp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_can_2103_cvt_temp_1"
-                        android:id="@+id/tv_can_2103_cvt_temp_1"
+                        android:text="@string/text_obd_can_outside_temp"
+                        android:id="@+id/tvOutsideTemp"
+                        android:layout_weight="0.5"
                         android:textSize="16sp"/>
                 </LinearLayout>
 
@@ -280,7 +305,7 @@
                     android:text="Текущая поездка:"
                     android:id="@+id/textView7"
                     android:autoText="false"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:layout_marginTop="10dp"/>
 
                 <TextView
@@ -288,7 +313,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/text_obd_distanse"
                     android:id="@+id/tvGPS_Distanse"
-                    android:textSize="20sp"/>
+                    android:textSize="16sp"/>
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -301,16 +326,17 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_obd_fuel_consumption_mpg"
                         android:id="@+id/tvOBD_FuelConsumption_mpg"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_gravity="left"
-                        android:layout_weight="0.5"/>
+                        android:layout_weight="0.5"
+                        android:textIsSelectable="false"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/text_obd_fuel_consumption_lph"
                         android:id="@+id/tvOBD_FuelConsumption_lph"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_gravity="left"
                         android:layout_weight="0.5"
                         android:gravity="right"/>
@@ -326,7 +352,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_obd_fuel_consumption_avg"
                         android:id="@+id/tvOBD_FuelConsumption_avg"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_weight="0.5"/>
 
                     <TextView
@@ -334,7 +360,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_obd_fuel_consumption_avg2"
                         android:id="@+id/tvOBD_FuelConsumption_avg2"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_weight="0.5"
                         android:gravity="right"/>
                 </LinearLayout>
@@ -349,7 +375,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_obd_fuel_usage"
                         android:id="@+id/tvOBD_FuelUsage"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_weight="0.5"
                         android:layout_gravity="right"/>
 
@@ -358,7 +384,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_obd_fuel_usage_with_stops"
                         android:id="@+id/tvOBD_FuelUsage2"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_weight="0.5"
                         android:gravity="right"/>
                 </LinearLayout>
@@ -369,7 +395,7 @@
                     android:text="За все время:"
                     android:id="@+id/textView8"
                     android:autoText="false"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:layout_marginTop="10dp"/>
 
                 <LinearLayout
@@ -382,7 +408,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_obd_fuel_consumption_avg"
                         android:id="@+id/tvOBD_FuelConsumption_total"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_weight="0.5"/>
 
                     <TextView
@@ -390,7 +416,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_obd_fuel_consumption_avg2"
                         android:id="@+id/tvOBD_FuelConsumption_total2"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_weight="0.5"
                         android:gravity="right"/>
                 </LinearLayout>
@@ -405,7 +431,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_obd_fuel_usage"
                         android:id="@+id/tvOBD_FuelUsageTotal"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_weight="0.5"
                         android:layout_gravity="right"/>
 
@@ -414,7 +440,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_obd_fuel_usage_with_stops"
                         android:id="@+id/tvOBD_FuelUsageTotal2"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:layout_weight="0.5"
                         android:gravity="right"/>
                 </LinearLayout>
