@@ -28,6 +28,7 @@ public abstract class ObdCommand {
   protected String cmd = null;
   protected boolean useImperialUnits = false;
   protected String rawData = null;
+  protected int timeout = 50;
 
   /**
    * Error classes to be tested in order
@@ -109,7 +110,8 @@ public abstract class ObdCommand {
      * 200ms.
      */
     //Thread.sleep(200);
-    Thread.sleep(50);
+    //Thread.sleep(50);
+      Thread.sleep(timeout);
   }
 
   /**
@@ -259,4 +261,7 @@ public abstract class ObdCommand {
    */
   public abstract String getName();
 
+    public void setTimeout(int tm) {
+        timeout = tm;
+    }
 }

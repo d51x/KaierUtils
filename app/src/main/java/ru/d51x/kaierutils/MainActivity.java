@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.content.DialogInterface;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import java.util.TimeZone;
@@ -106,6 +107,14 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private ImageView ivOBD_FuelConsump;
     private TextView tvOBD_FuelConsump;
     private TextView tvOBD_FuelConsump2;
+
+    private ImageView iv_air_fan_speed;
+    private ImageView iv_air_direction;
+    private ImageView iv_air_ac_state;
+    private ImageView iv_air_recirculation;
+    private ImageView iv_air_defogger;
+
+    private TextView tv_air_cond_temp;
 
 	private Button btnTest2, btnTest1;
 	private SharedPreferences prefs;
@@ -220,6 +229,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         ivAlbumArt = (ImageView) findViewById(R.id.ivAlbumArt);
 
+
+
         layout_radio_info = (LinearLayout) findViewById(R.id.layout_radio_info);
         layout_music_info = (LinearLayout) findViewById(R.id.layout_music_info);
         layout_radio_info.setVisibility( View.GONE );
@@ -229,6 +240,23 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_obd2 = (LinearLayout) findViewById(R.id.layoutCanMMC);
         layout_obd_fuel.setOnLongClickListener (this);
         layout_obd_fuel.setOnClickListener (this);
+
+        iv_air_fan_speed = (ImageView) findViewById(R.id.iv_air_fan_speed);
+        iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0);
+
+        iv_air_direction = (ImageView) findViewById(R.id.iv_air_direction);
+        iv_air_direction.setImageResource(R.drawable.air_wind_seat_my_to_face);
+
+        iv_air_ac_state = (ImageView) findViewById(R.id.iv_air_ac_state);
+        iv_air_ac_state.setVisibility( View.INVISIBLE );
+
+        iv_air_recirculation = (ImageView) findViewById(R.id.iv_air_recirculation);
+        iv_air_recirculation.setVisibility( View.INVISIBLE );
+
+        iv_air_defogger = (ImageView) findViewById(R.id.iv_air_defogger);
+        iv_air_defogger.setVisibility( View.INVISIBLE );
+
+        tv_air_cond_temp = (TextView) findViewById(R.id.tv_air_cond_temp);
 
         layout_fuel_consump = (LinearLayout) findViewById(R.id.layout_fuel_consump);
         layout_fuel_consump.setOnClickListener (this);
@@ -552,6 +580,56 @@ public class MainActivity extends Activity implements View.OnClickListener,
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED )) {
 
             }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED )) {
+                String extra = intent.getStringExtra("PID");
+                ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("Buffer");
+                String res = "";
+
+                if ( extra.equalsIgnoreCase( "2111:688" ) ) {
+                    // air_cond_external_temp
+                    res = App.obd.process_MMC_ECU_data( "air_cond_external_temp", action, extra, buffer);
+                }
+                else if ( extra.equalsIgnoreCase( "2161:688" ) ) {
+                    // air_cond_request_indicator_light
+                    res = App.obd.process_MMC_ECU_data( "air_cond_fan_speed_state", action, extra, buffer);
+
+                    res = App.obd.process_MMC_ECU_data( "air_cond_blow_direction_state", action, extra, buffer);
+
+                    res = App.obd.process_MMC_ECU_data( "air_cond_recirculation_state", action, extra, buffer);
+
+                    res = App.obd.process_MMC_ECU_data( "air_cond_state", action, extra, buffer);
+
+                    res = App.obd.process_MMC_ECU_data( "air_cond_defogger_state", action, extra, buffer);
+
+                }
+                else if ( extra.equalsIgnoreCase( "2160:688" ) ) {
+                    // air_cond_oper_state
+                    res = App.obd.process_MMC_ECU_data( "air_cond_fan_speed_position", action, extra, buffer);
+
+                    res = App.obd.process_MMC_ECU_data( "air_cond_blow_direction_position", action, extra, buffer);
+
+                    res = App.obd.process_MMC_ECU_data( "air_cond_set_temperature", action, extra, buffer);
+                }
+            }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED )) {
+                updateOBD_air_cond_fan_speed();
+            }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED )) {
+                updateOBD_air_cond_temperature();
+            }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED )) {
+                updateOBD_air_cond_blow_direction();
+            }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED )) {
+                updateOBD_air_cond_defogger();
+            }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED )) {
+                updateOBD_air_cond_recirculation();
+            }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED )) {
+                updateOBD_air_cond_state();
+            }
+
 		}
 	};
 
@@ -739,6 +817,16 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED));
 		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED));
 		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED));
+
+
+		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED));
+
+		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED));
+		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED));
+		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED));
+		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED));
+		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED));
+		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED));
 	}
 
 
@@ -1036,6 +1124,60 @@ public class MainActivity extends Activity implements View.OnClickListener,
             tvOBD_FuelConsump.setTextSize( 40 );
             tvOBD_FuelConsump2.setVisibility(View.GONE);
         }
+    }
+
+    private void updateOBD_air_cond_fan_speed() {
+        iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0);
+
+        switch ( App.obd.climateData.fan_speed ) {
+            case 0x0: break;
+            case 0x1: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0); break;
+            case 0x2: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_1); break;
+            case 0x3: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_2); break;
+            case 0x4: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_3); break;
+            case 0x5: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_4); break;
+            case 0x6: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_5); break;
+            case 0x7: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_6); break;
+            case 0x8: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_7); break;
+            case 0x9: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_8); break;
+            default:  break;
+        }
+
+    }
+
+    private void updateOBD_air_cond_temperature(){
+        tv_air_cond_temp.setText( String.format("%1$.1f гр.", App.obd.climateData.temperature ));
+    }
+
+    private void updateOBD_air_cond_blow_direction(){
+
+        switch ( App.obd.climateData.blow_direction ) {
+            case 0x0: break;
+            case 0x1: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_face); break;
+            case 0x3: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_feet_and_face_and_feet); break;
+            case 0x4: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_face_and_feet); break;
+            case 0x5: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_face); break;
+            case 0x7: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_feet); break;
+            case 0x9: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_window); break;
+            case 0xA: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_feet_and_window); break;
+            case 0xB: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_window_and_feet_and_window); break;
+            case 0xD: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_window); break;
+            default:  break;
+        }
+
+    }
+
+    private void updateOBD_air_cond_defogger(){
+        iv_air_defogger.setVisibility( App.obd.climateData.defogger_state  ? View.VISIBLE : View.INVISIBLE );
+    }
+
+    private void updateOBD_air_cond_recirculation(){
+        iv_air_recirculation.setVisibility( App.obd.climateData.recirculation_state  ? View.VISIBLE : View.INVISIBLE );
+    }
+
+    private void updateOBD_air_cond_state() {
+
+        iv_air_ac_state.setVisibility( App.obd.climateData.ac_state ? View.VISIBLE : View.INVISIBLE );
     }
 }
 

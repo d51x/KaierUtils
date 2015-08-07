@@ -22,7 +22,7 @@ public class OBDThread extends Thread {
         @Override
         public void run() {
                 App.obd.processOBD_MAF();
-                App.obd.processData();
+               App.obd.processData();
 
 
             }
@@ -53,8 +53,13 @@ public class OBDThread extends Thread {
                         firstStart = false;
                     }
                     // получим остальные данные, все кроме MAF
+                    // долбим постоянно
+
                     //App.obd.processData();
-                    //Thread.sleep(500);
+                    //Thread.sleep(50);
+
+
+
 
                     TimeStamp2 = System.currentTimeMillis();
                     if ( (TimeStamp2 - TimeStamp1) > (1000*60*10)) // 10 min
