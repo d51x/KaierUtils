@@ -382,83 +382,6 @@ android:longClickable="true">
                 android:gravity="right" android:layout_weight="1" android:layout_gravity="right"/>
         </LinearLayout>
 
-        <FrameLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_bg_seat"
-                    android:src="@drawable/air_wind_seat_my"
-                    android:adjustViewBounds="false"
-                    android:baselineAlignBottom="false"
-                    />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_air_direction"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:src="@drawable/air_wind_seat_my_to_beetwen_window_and_feet_and_window"
-                    />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_air_recirculation"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:src="@drawable/air_wind_seat_my_air_looper"
-                    android:visibility="visible"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_air_defogger"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:src="@drawable/air_wind_seat_my_defogger"
-                    />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_air_ac_state"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:src="@drawable/air_wind_seat_my_ac"
-                    />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_air_fan_speed"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:src="@drawable/air_wind_seat_my_fan_8"
-                    android:layout_marginTop="20dp"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_air_temp"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:src="@drawable/air_wind_seat_my_temp"
-                    android:layout_marginTop="15dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="19.5"
-                    android:id="@+id/tv_air_cond_temp"
-                    android:gravity="center"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="70dp"/>
-            </RelativeLayout>
-        </FrameLayout>
-
     </LinearLayout>
 
     <LinearLayout
@@ -506,7 +429,8 @@ android:longClickable="true">
             android:layout_marginLeft="20dp"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            android:id="@+id/layout_temp_data">
 
             <ImageView
                 android:layout_width="40dp"
@@ -639,6 +563,83 @@ android:longClickable="true">
         </LinearLayout>
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="false"
+        android:layout_marginTop="180dp"
+        android:id="@+id/layout_MMC_climate"
+        android:visibility="visible"
+        android:layout_marginLeft="500dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_bg_seat"
+            android:src="@drawable/air_wind_seat_my"
+            android:adjustViewBounds="false"
+            android:baselineAlignBottom="false"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_air_direction"
+            android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/air_wind_seat_my_to_beetwen_window_and_feet_and_window"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_air_recirculation"
+            android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/air_wind_seat_my_air_looper"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_air_defogger"
+            android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/air_wind_seat_my_defogger"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_air_ac_state"
+            android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/air_wind_seat_my_ac"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_air_fan_speed"
+            android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/air_wind_seat_my_fan_8"
+            android:layout_marginTop="20dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_air_temp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/air_wind_seat_my_temp"
+            android:layout_marginTop="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="19.5"
+            android:id="@+id/tv_air_cond_temp"
+            android:gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="70dp"/>
+    </RelativeLayout>
 
     <FrameLayout
 		android:layout_width="match_parent"

@@ -260,7 +260,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    public void show_odb_device_select_dialog(Context context) {
+    public static void show_odb_device_select_dialog(Context context) {
         ArrayList<String> deviceStrs = new ArrayList<String>();
         final ArrayList<String> devices = new ArrayList<String>();
         final ArrayList<String> devicesName = new ArrayList<String>();
@@ -278,7 +278,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         // show list
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder( context );
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_singlechoice,
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.select_dialog_singlechoice,
                 deviceStrs.toArray(new String[deviceStrs.size()]));
 
         alertDialog.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener()

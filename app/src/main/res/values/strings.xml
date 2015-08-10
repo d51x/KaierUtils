@@ -11,6 +11,7 @@
 	<string name="header_poweramp_title">PowerAmp</string>
 	<string name="header_radio_title">Радио</string>
 	<string name="header_dynamic_volume_title">Динамическая громкость</string>
+	<string name="header_obd_settings_title">Настройки OBD</string>
 	<string name="header_popup_title">Всплывающее окно</string>
 
 	<!-- general menu -->
@@ -88,6 +89,9 @@
 	<string name="menu_music_toast_picture_width_title">Ширина картинки</string>
 	<string name="menu_music_toast_picture_height_title">Высота картинки</string>
 
+
+    <!-- OBD II Settings -->
+    <string name="menu_obd_use_obd">Подключаться к адаптеру OBD (ELM 327)</string>
 
 
 	<string name="menu_item_fixed_volume_level_at_startup_title">Уровень громкости</string>
@@ -202,4 +206,13 @@
     <string name="text_air_cond_state">A/C: %1$s</string>
     <string name="text_air_cond_defogger_state">Обогрев зеркал/стекла: %1$s</string>
     <string name="text_air_cond_set_temperature">Температура: %1$s</string>
+    <string name="cbOBD_show_battery">Отображать заряд аккумулятора</string>
+    <string name="cbOBD_show_engine_temp">Отображать теммпературу охлаждающей жидкости</string>
+    <string name="cbOBD_show_fuel_detail">Отображать данные о количестве топлива (в баке / потрачено)</string>
+    <string name="cbOBD_show_fuel_consump_detail">Отображать данные о расходе топлива (мгновенный расход ; л/100км мгновенный; л/100км средний)</string>
+    <string name="cbCanMMC_show_fuel">Остаток топлива по CAN</string>
+    <string name="cbCanMMC_show_CVT_temp">Отображать температуру CVT вместе с температурой ОЖ</string>
+    <string name="cbCanMMC_cvt_oil_degradation">Отображать степень деградации масла CVT вместе с температурой ОЖ</string>
+    <string name="text_update_time_min">Период обновления, мин:</string>
+    <string name="cbCanMMC_show_climate_data">Отображать данные климат-контроля</string>
 </resources>

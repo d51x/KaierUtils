@@ -89,6 +89,7 @@ public class OBDII {
     public TripData totalTrip;
     public TripData oneTrip;
     public ClimateData climateData;
+    public CanMmcData canMmcData;
 
 
     public class OBDData {
@@ -129,6 +130,7 @@ public class OBDII {
         oneTrip = new TripData("trip", false);
         climateData = new ClimateData();
 
+        canMmcData = new CanMmcData(mContext);
         loadFuelTank();
         // запустить бесконечный цикл
         // если подключены, то выполняем команды
@@ -258,7 +260,7 @@ public class OBDII {
             // переходим на режим работы MMC CAN и пиды 21хх
             request_MMC_ECU_ENGINE();
 
-           // request_MMC_ECU_CVT();
+            request_MMC_ECU_CVT();
             request_MMC_ECU_COMBINATION_METER();
             request_MMC_ECU_AIR_COND();
             //request_MMC_ECU_AWC();
@@ -624,12 +626,16 @@ public class OBDII {
     private void request_MMC_ECU_CVT(){
         if ( activeMAF ) return;
         // set CVT/AT ECU addresses
-        SetHeaders("7E1", "7E9", true);
-        request_CAN_ECU("2103", "7E1", "7E9", true, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED); // // cvt_temp_count
-        // request_CAN_ECU("2107", "7E1", "7E9", false, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED);  // selector position
+        if ( canMmcData.can_mmc_cvt_temp_show || canMmcData.can_mmc_cvt_degr_show) {
+            SetHeaders("7E1", "7E9", true);
+            if ( canMmcData.can_mmc_cvt_temp_show )
+                request_CAN_ECU("2103", "7E1", "7E9", true, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED); // // cvt_temp_count
+            // request_CAN_ECU("2107", "7E1", "7E9", false, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED);  // selector position
 
-        // TODO: можно выполнять не часто, раз в 10 сек вполне достаточно или даже реже
-        request_CAN_ECU("2110", "7E1", "7E9", true, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED); // cvt_oil_degradation
+            // TODO: можно выполнять не часто, раз в 10 сек вполне достаточно или даже реже
+            if ( canMmcData.can_mmc_cvt_degr_show )
+            request_CAN_ECU("2110", "7E1", "7E9", true, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED); // cvt_oil_degradation
+        }
     }
 
     private void request_MMC_ECU_COMBINATION_METER(){
@@ -641,15 +647,16 @@ public class OBDII {
 
     private void request_MMC_ECU_AIR_COND(){
         if ( activeMAF ) return;
-        SetHeaders( "688", "511", false);
-        // внешняя температура
-        request_CAN_ECU("2111", "688", "511", false, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
-        //request_CAN_ECU("2123", "688", "511", true, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
-        // положения крутилок
-        request_CAN_ECU("2160", "688", "511", false, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
-        // состояния индикаторов
-        request_CAN_ECU("2161", "688", "511", false, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
-
+        if (App.obd.canMmcData.can_mmc_ac_data_show) {
+            SetHeaders("688", "511", false);
+            // внешняя температура
+            request_CAN_ECU("2111", "688", "511", false, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
+            //request_CAN_ECU("2123", "688", "511", true, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
+            // положения крутилок
+            request_CAN_ECU("2160", "688", "511", false, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
+            // состояния индикаторов
+            request_CAN_ECU("2161", "688", "511", false, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
+        }
     }
 
     private void request_MMC_ECU_AWC(){
@@ -891,6 +898,7 @@ public class OBDII {
             if (param.equalsIgnoreCase("cvt_oil_degradation")) {
                 // CVT oil degradation 2110   AB*65536 + AC*256 + AD
                 int degr = buffer.get(29) * 65536 + buffer.get(30) * 256 + buffer.get(31);
+                canMmcData.can_mmc_cvt_degradation_level = degr;
                 res = Integer.toString(degr);
             }
         } else if (PID.equalsIgnoreCase("2103:7E1")) {
@@ -902,6 +910,7 @@ public class OBDII {
                 // cvt_temp_grad
                 int N = buffer.get(15);
                 double temp_1 = -21.592 + (1.137 * N) - (0.0063 * N * N) + (0.0000195 * N * N * N);
+                canMmcData.can_mmc_cvt_temp = (int) temp_1;
                 res = String.format("%1$.0f", temp_1);
             }
         }

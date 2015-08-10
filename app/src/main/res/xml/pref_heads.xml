@@ -38,6 +38,13 @@
 		android:title="@string/header_dynamic_volume_title">
 	</header>
 	-->
+
+    <header
+        android:fragment="ru.d51x.kaierutils.SettingsOBDFragment"
+        android:icon="@drawable/menu_obd_settings"
+        android:title="@string/header_obd_settings_title">
+    </header>
+
 	<header
 		android:fragment="ru.d51x.kaierutils.SettingsToastsFragment"
 		android:icon="@drawable/menu_popup"

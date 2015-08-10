@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.EditText;
@@ -49,6 +50,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private LinearLayout layout_tracktime;
 
     private int modeFuelTank = 0;
+    private int modeEngineTemp = 0;
     private int modeFuelConsump = 0;
 
 	private TextView tvGPSDistance;
@@ -95,6 +97,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private LinearLayout layout_obd2;
     private LinearLayout layout_obd_fuel;
     private LinearLayout layout_fuel_consump;
+    private LinearLayout layout_temp_data;
 
     private ImageView ivOBD2Status;
     private ImageView ivOBD_CarBattery;
@@ -118,6 +121,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 	private Button btnTest2, btnTest1;
 	private SharedPreferences prefs;
+
+    private RelativeLayout layout_MMC_climate;
+
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -260,6 +266,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         layout_fuel_consump = (LinearLayout) findViewById(R.id.layout_fuel_consump);
         layout_fuel_consump.setOnClickListener (this);
+
+        layout_temp_data = (LinearLayout) findViewById(R.id.layout_temp_data);
+        layout_temp_data.setOnClickListener (this);
+
+
+        layout_MMC_climate = (RelativeLayout) findViewById(R.id.layout_MMC_climate);
+
 	}
 
 	public void setInitData() {
@@ -322,7 +335,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         updateOBDStatus(App.obd.isConnected);
 
         layout_obd2.setVisibility( App.obd.useOBD ? View.VISIBLE : View.INVISIBLE );
-
+        layout_MMC_climate.setVisibility( ( App.obd.canMmcData.can_mmc_ac_data_show) ? View.VISIBLE : View.INVISIBLE );
 	}
 
     @Override
@@ -419,6 +432,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 break;
             case R.id.layout_fuel_consump:
                 switch_fuel_consump_mode();
+                break;
+            case R.id.layout_temp_data:
+                switch_temp_mode();
                 break;
             default:
                 break;
@@ -573,7 +589,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED )) {
                 updateOBD_CarBattery(App.obd.obdData.voltage);
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED )) {
-                updateOBD_CoolantTemp(App.obd.obdData.coolant);
+                updateOBD_CoolantTemp(modeEngineTemp);
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED )) {
                 updateOBD_FuelConsump( App.obd.oneTrip.fuel_cons_lph );
                 updateOBD_FuelTank( App.obd.totalTrip.fuel_remains );
@@ -884,15 +900,35 @@ public class MainActivity extends Activity implements View.OnClickListener,
         tvOBD_CarBattery.setText( String.format("%1$.1f", voltage));
     }
 
-    public void updateOBD_CoolantTemp(float temp){
-        if ( temp < 80 ) {
-            ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_min);
-        } else if (temp < 99) {
-            ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_norm);
-        } else {
-            ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_hot);
+    public void updateOBD_CoolantTemp(int mode){
+        float temp = App.obd.obdData.coolant;
+        switch (mode) {
+            case 0:
+                if (  temp < 80 ) {
+                    ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_min);
+                } else if (temp < 99) {
+                    ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_norm);
+                } else {
+                    ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_hot);
+                }
+                tvOBD_CoolantTemp.setText( String.format("%1$.0f", temp));
+                break;
+            case 1:
+
+                ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_norm); // TODO: change icon to CVT
+                tvOBD_CoolantTemp.setText( Integer.toString( App.obd.canMmcData.can_mmc_cvt_temp ));
+                break;
+
+            case 2:
+                ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_norm);  // TODO: change icon to CVT
+                tvOBD_CoolantTemp.setText( Integer.toString( App.obd.canMmcData.can_mmc_cvt_degradation_level ));
+                break;
+            default:
+                ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_norm);
+                tvOBD_CoolantTemp.setText( String.format("%1$.0f", temp));
+                break;
         }
-        tvOBD_CoolantTemp.setText( String.format("%1$.0f", temp));
+
     }
 
     public void updateOBD_FuelTank(float remain){
@@ -1037,6 +1073,19 @@ public class MainActivity extends Activity implements View.OnClickListener,
         }
     }
 
+    // переключение режима показаний температуры
+    private void switch_temp_mode() {
+        // режим отображения уровня топлива
+        // 0 - движок
+        // 1 - коробка
+        // 2 - деградация
+        modeEngineTemp++;
+        if ( modeEngineTemp > 2) modeEngineTemp = 0;
+
+        updateOBD_CoolantTemp(modeEngineTemp);
+
+    }
+
     // переключение режима показаний расхода
     private void switch_fuel_consump_mode() {
         // режим отображения расхода
@@ -1111,6 +1160,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 break;
         }
     }
+
 
     // отобразить/спрятать второй показатель расхода при включении/выключении комбинированного режима
     private void show_hide_fuel_consump_line_2 (boolean line2) {
