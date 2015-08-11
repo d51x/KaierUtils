@@ -36,11 +36,11 @@ public class CanMmcData {
       can_mmc_fuel_remain_update_time = -1;
       can_mmc_fuel_remain_show = false;
 
-      can_mmc_cvt_temp = -1;
+      can_mmc_cvt_temp = -255;
       can_mmc_cvt_temp_update_time = -1;
       can_mmc_cvt_temp_show = false;
 
-      can_mmc_cvt_degradation_level = -1;
+      can_mmc_cvt_degradation_level = -255;
       can_mmc_cvt_degradation_update_time = -1;
       can_mmc_cvt_degr_show = false;
 

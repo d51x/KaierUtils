@@ -455,6 +455,35 @@ android:longClickable="true">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:baselineAligned="false"
+            android:id="@+id/layout_cvt_data">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/ivOBD_CVT_Data"
+                android:src="@drawable/cvt_temp_min"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="90"
+                android:id="@+id/tvOBD_CVT_Data"
+                android:textSize="32sp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="-4dp"
+                android:gravity="center_vertical"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:id="@+id/layout_fuel_data"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"

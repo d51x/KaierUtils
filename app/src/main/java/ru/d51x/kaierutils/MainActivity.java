@@ -51,6 +51,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private int modeFuelTank = 0;
     private int modeEngineTemp = 0;
+    private int modeCVT = 0;
     private int modeFuelConsump = 0;
 
 	private TextView tvGPSDistance;
@@ -98,12 +99,18 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private LinearLayout layout_obd_fuel;
     private LinearLayout layout_fuel_consump;
     private LinearLayout layout_temp_data;
+    private LinearLayout layout_cvt_data;
 
     private ImageView ivOBD2Status;
     private ImageView ivOBD_CarBattery;
     private TextView tvOBD_CarBattery;
     private ImageView ivOBD_CoolantTemp;
     private TextView tvOBD_CoolantTemp;
+
+    private ImageView ivOBD_CVT_Data;
+    private TextView tvOBD_CVT_Data;
+
+
     private ImageView ivOBD_FuelTank;
     private TextView tvOBD_FuelTank;
     private TextView tvOBD_FuelTank_desc;
@@ -201,6 +208,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
         tvOBD_CoolantTemp = (TextView) findViewById(R.id.tvOBD_CoolantTemp);
         tvOBD_CoolantTemp.setText("--");
 
+        ivOBD_CVT_Data = (ImageView) findViewById(R.id.ivOBD_CVT_Data);
+        tvOBD_CVT_Data = (TextView) findViewById(R.id.tvOBD_CVT_Data);
+        tvOBD_CVT_Data.setText("--");
+
 
         ivOBD_FuelTank = (ImageView) findViewById(R.id.ivOBD_FuelTank);
         tvOBD_FuelTank = (TextView) findViewById(R.id.tvOBD_FuelTank);
@@ -269,6 +280,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         layout_temp_data = (LinearLayout) findViewById(R.id.layout_temp_data);
         layout_temp_data.setOnClickListener (this);
+
+        layout_cvt_data = (LinearLayout) findViewById(R.id.layout_cvt_data);
+        layout_cvt_data.setOnClickListener (this);
 
 
         layout_MMC_climate = (RelativeLayout) findViewById(R.id.layout_MMC_climate);
@@ -436,6 +450,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
             case R.id.layout_temp_data:
                 switch_temp_mode();
                 break;
+            case R.id.layout_cvt_data:
+                switch_cvt_mode();
+                break;
+
             default:
                 break;
         }
@@ -596,6 +614,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED )) {
 
             }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED )) { updateOBD_CVT_data(modeCVT); }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED )) { updateOBD_CVT_data(modeCVT); }
             else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED )) {
                 String extra = intent.getStringExtra("PID");
                 ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("Buffer");
@@ -835,7 +855,16 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED));
 
 
-		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED));
+
+
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_CVT_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED));
+
+
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED));
 
 		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED));
 		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED));
@@ -913,22 +942,40 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 }
                 tvOBD_CoolantTemp.setText( String.format("%1$.0f", temp));
                 break;
-            case 1:
-
-                ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_norm); // TODO: change icon to CVT
-                tvOBD_CoolantTemp.setText( Integer.toString( App.obd.canMmcData.can_mmc_cvt_temp ));
-                break;
-
-            case 2:
-                ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_norm);  // TODO: change icon to CVT
-                tvOBD_CoolantTemp.setText( Integer.toString( App.obd.canMmcData.can_mmc_cvt_degradation_level ));
-                break;
             default:
                 ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_norm);
                 tvOBD_CoolantTemp.setText( String.format("%1$.0f", temp));
                 break;
         }
 
+    }
+
+    public void updateOBD_CVT_data(int mode) {
+        int temp = -255;
+        switch (mode) {
+            case 0:
+                temp = App.obd.canMmcData.can_mmc_cvt_temp;
+                if ( temp > -255 ) tvOBD_CVT_Data.setText( Integer.toString(temp )); else tvOBD_CVT_Data.setText( "---");
+                if (  temp < 71 ) {
+                    ivOBD_CVT_Data.setImageResource( R.drawable.cvt_temp_min);
+                } else if (temp < 91) {
+                    ivOBD_CVT_Data.setImageResource( R.drawable.cvt_temp_nom_green);
+                } else if (temp < 103) {
+                    ivOBD_CVT_Data.setImageResource( R.drawable.cvt_temp_nom_yellow);
+                } else {
+                    ivOBD_CVT_Data.setImageResource( R.drawable.cvt_temp_nom_orange);
+                }
+                break;
+            case 1:
+                temp = App.obd.canMmcData.can_mmc_cvt_degradation_level;
+                ivOBD_CVT_Data.setImageResource( R.drawable.cvt_degr_nom);
+                tvOBD_CVT_Data.setText( Integer.toString(temp ));
+                break;
+            default:
+                ivOBD_CVT_Data.setImageResource( R.drawable.cvt_temp_nom);
+                tvOBD_CVT_Data.setText( "---");
+                break;
+        }
     }
 
     public void updateOBD_FuelTank(float remain){
@@ -1080,9 +1127,21 @@ public class MainActivity extends Activity implements View.OnClickListener,
         // 1 - коробка
         // 2 - деградация
         modeEngineTemp++;
-        if ( modeEngineTemp > 2) modeEngineTemp = 0;
+        if ( modeEngineTemp > 0) modeEngineTemp = 0;
 
         updateOBD_CoolantTemp(modeEngineTemp);
+
+    }
+
+    // переключение режима показаний данных cvt
+    private void switch_cvt_mode() {
+        // режим отображения уровня топлива
+        // 0 - коробка
+        // 1 - деградация
+        modeCVT++;
+        if ( modeCVT > 1) modeCVT = 0;
+
+        updateOBD_CVT_data(modeCVT);
 
     }
 
@@ -1229,6 +1288,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         iv_air_ac_state.setVisibility( App.obd.climateData.ac_state ? View.VISIBLE : View.INVISIBLE );
     }
+
 }
 
 

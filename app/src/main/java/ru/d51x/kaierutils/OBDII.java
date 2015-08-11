@@ -34,7 +34,7 @@ import pt.lighthouselabs.obd.exceptions.*;
 /**
  * Created by pyatyh_ds on 18.03.2015.
  */
-public class OBDII {
+public class OBDII  {
 
     protected static final boolean newMethod = true;
 
@@ -49,7 +49,15 @@ public class OBDII {
 
     protected static final String OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ENGINE_FAN_STATE_CHANGED";
     protected static final String OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_ENGINE_CHANGED";
+
+
     protected static final String OBD_BROADCAST_ACTION_ECU_CVT_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_CVT_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED = "ru.d51x.kaierutils.action.OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED";
+
+
+
+
     protected static final String OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_COMBINEMETER_CHANGED";
     protected static final String OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_AIRCOND_CHANGED";
     protected static final String OBD_BROADCAST_ACTION_ECU_AWC_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_AWC_CHANGED";
@@ -89,7 +97,9 @@ public class OBDII {
     public TripData totalTrip;
     public TripData oneTrip;
     public ClimateData climateData;
+    public ClimateData climateDataPrev;
     public CanMmcData canMmcData;
+    public CanMmcData canMmcDataPrev;
 
 
     public class OBDData {
@@ -129,8 +139,10 @@ public class OBDII {
         totalTrip = new TripData("total", true);
         oneTrip = new TripData("trip", false);
         climateData = new ClimateData();
+        climateDataPrev = new ClimateData();
 
         canMmcData = new CanMmcData(mContext);
+        canMmcDataPrev = new CanMmcData(mContext);
         loadFuelTank();
         // запустить бесконечный цикл
         // если подключены, то выполняем команды
@@ -534,6 +546,18 @@ public class OBDII {
         App.getInstance ().sendBroadcast(intent);
     }
 
+
+    private void SendBroadcastAction(String action, String key, int value) {
+        // Log.d ("OBDII", "SendBroadcastAction " + action + " key = " + key + " value = " + value);
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        if ( key != null ) {
+            intent.putExtra(key, value);
+        }
+        intent.setAction(action);
+        App.getInstance ().sendBroadcast(intent);
+    }
+
     private void SendBroadcastAction(String action, String key, boolean value) {
         // Log.d ("OBDII", "SendBroadcastAction " + action + " key = " + key + " value = " + value);
         Intent intent = new Intent();
@@ -899,6 +923,11 @@ public class OBDII {
                 // CVT oil degradation 2110   AB*65536 + AC*256 + AD
                 int degr = buffer.get(29) * 65536 + buffer.get(30) * 256 + buffer.get(31);
                 canMmcData.can_mmc_cvt_degradation_level = degr;
+                if ( canMmcData.can_mmc_cvt_degradation_level != canMmcDataPrev.can_mmc_cvt_degradation_level) {
+                    // send broadcast
+                    SendBroadcastAction(OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED, "can_mmc_cvt_degradation_level", canMmcData.can_mmc_cvt_degradation_level);
+                    canMmcDataPrev.can_mmc_cvt_degradation_level = canMmcData.can_mmc_cvt_degradation_level;
+                }
                 res = Integer.toString(degr);
             }
         } else if (PID.equalsIgnoreCase("2103:7E1")) {
@@ -911,6 +940,11 @@ public class OBDII {
                 int N = buffer.get(15);
                 double temp_1 = -21.592 + (1.137 * N) - (0.0063 * N * N) + (0.0000195 * N * N * N);
                 canMmcData.can_mmc_cvt_temp = (int) temp_1;
+                if ( canMmcData.can_mmc_cvt_temp != canMmcDataPrev.can_mmc_cvt_temp) {
+                    // send broadcast
+                    SendBroadcastAction(OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED, "can_mmc_cvt_temp", canMmcData.can_mmc_cvt_temp);
+                    canMmcDataPrev.can_mmc_cvt_temp = canMmcData.can_mmc_cvt_temp;
+                }
                 res = String.format("%1$.0f", temp_1);
             }
         }
