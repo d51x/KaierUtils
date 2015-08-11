@@ -3,10 +3,13 @@ package ru.d51x.kaierutils;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
+import android.os.Message;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -21,7 +24,6 @@ import pt.lighthouselabs.obd.commands.can.CanObdCommand;
 import pt.lighthouselabs.obd.commands.engine.MassAirFlowObdCommand;
 import pt.lighthouselabs.obd.commands.protocol.ObdResetCommand;
 import pt.lighthouselabs.obd.commands.temperature.EngineCoolantTemperatureObdCommand;
-import pt.lighthouselabs.obd.commands.temperature.AirIntakeTemperatureObdCommand;
 import pt.lighthouselabs.obd.commands.control.ControlModuleVoltageObdCommand;
 
 
@@ -31,6 +33,8 @@ import pt.lighthouselabs.obd.commands.protocol.SelectProtocolObdCommand;
 import pt.lighthouselabs.obd.commands.protocol.SelectHeaderObdCommand;
 import pt.lighthouselabs.obd.enums.ObdProtocols;
 import pt.lighthouselabs.obd.exceptions.*;
+import ru.d51x.kaierutils.utils.OBDCalculations;
+
 /**
  * Created by pyatyh_ds on 18.03.2015.
  */
@@ -59,15 +63,42 @@ public class OBDII  {
 
 
     protected static final String OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_COMBINEMETER_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_AIRCOND_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_COMBINEMETER_FUEL_TANK_CHANGED";
+
     protected static final String OBD_BROADCAST_ACTION_ECU_AWC_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_AWC_CHANGED";
 
     protected static final String OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_FAN_SPEED_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_FAN_MODE_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_EXT_TEMP_CHANGED";
     protected static final String OBD_BROADCAST_ACTION_AC_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_TEMP_CHANGED";
     protected static final String OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_BLOW_DIRECTION_CHANGED";
+    protected static final String OBD_BROADCAST_ACTION_AC_BLOW_MODE_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_BLOW_MODE_CHANGED";
     protected static final String OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_DEFOGGER_CHANGED";
     protected static final String OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_RECIRCULATION_CHANGED";
     protected static final String OBD_BROADCAST_ACTION_AC_STATE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_STATE_CHANGED";
+
+
+    protected static final int MESSAGE_OBD_CAN_ENGINE = 0x07E00000;
+    protected static final int MESSAGE_OBD_CAN_ENGINE_FAN_STATE = 0x07E00001;
+
+    public static final int MESSAGE_OBD_CAN_CVT = 0x07E10000;
+    public static final int MESSAGE_OBD_CAN_CVT_OIL_DEGR = 0x07E10001;
+    public static final int MESSAGE_OBD_CAN_CVT_OIL_TEMP = 0x07E10002;
+
+    public static final int MESSAGE_OBD_CAN_AIR_COND = 0x06880000;
+    public static final int MESSAGE_OBD_CAN_AIR_COND_STATE = 0x06880001;
+    public static final int MESSAGE_OBD_CAN_AIR_COND_FAN_MODE = 0x06880002;
+    public static final int MESSAGE_OBD_CAN_AIR_COND_FAN_SPEED = 0x06880003;
+    public static final int MESSAGE_OBD_CAN_AIR_COND_BLOW_MODE = 0x06880004;
+    public static final int MESSAGE_OBD_CAN_AIR_COND_BLOW_DIRECTION = 0x06880005;
+    public static final int MESSAGE_OBD_CAN_AIR_COND_TEMPERATURE = 0x06880006;
+    public static final int MESSAGE_OBD_CAN_AIR_COND_EXTERNAL_TEMPERATURE = 0x06880007;
+    public static final int MESSAGE_OBD_CAN_AIR_COND_RECIRCULATION_STATE = 0x06880008;
+    public static final int MESSAGE_OBD_CAN_AIR_COND_DEFOGGER_STATE = 0x06880009;
+
+
+    public static final int MESSAGE_OBD_CAN_COMBINE_METER = 0x06A00000;
+    public static final int MESSAGE_OBD_CAN_COMBINE_METER_FUEL_TANK = 0x06A00001;
 
 
     private Context mContext;
@@ -76,15 +107,20 @@ public class OBDII  {
     public boolean isConnected;
     protected int timeout;
 
+    private Handler mHandler = new Handler();
+
     private BluetoothSocket socket;
 
+    public boolean battery_show = false;
+    public boolean engine_temp_show = false;
+    public boolean fuel_data_show = false;
+    public boolean fuel_consump_show = false;
 
     public EngineRPMObdCommand engineRpmCommand;
     public SpeedObdCommand speedCommand;
     public EngineCoolantTemperatureObdCommand coolantTempCommand;
     public ControlModuleVoltageObdCommand cmuVoltageCommand;
     public MassAirFlowObdCommand MAFObdCommand;
-    private Handler mHandler;
 
     public boolean useOBD;
     public OBDData obdData;
@@ -101,6 +137,7 @@ public class OBDII  {
     public CanMmcData canMmcData;
     public CanMmcData canMmcDataPrev;
 
+    private long MAF_TimeStamp1, MAF_TimeStamp2;
 
     public class OBDData {
         public float speed;
@@ -135,6 +172,12 @@ public class OBDII  {
         mHandler = new Handler();
         useOBD = prefs.getBoolean("ODBII_USE_BLUETOOTH", false);
         MMC_CAN = prefs.getBoolean("ODBII_USE_MMC_CAN", false);
+
+        battery_show = prefs.getBoolean("ODBII_BATTERY_SHOW", false);
+        engine_temp_show = prefs.getBoolean("ODBII_ENGINE_TEMP_SHOW", false);
+        fuel_data_show = prefs.getBoolean("ODBII_FUEL_DATA_SHOW", false);
+        fuel_consump_show = prefs.getBoolean("ODBII_FUEL_CONSUMP_SHOW", false);
+
         obdData = new OBDData();
         totalTrip = new TripData("total", true);
         oneTrip = new TripData("trip", false);
@@ -148,6 +191,15 @@ public class OBDII  {
         // если подключены, то выполняем команды
         // если не подключены, то пытаемся подключиться
 
+        MAF_TimeStamp1 = System.currentTimeMillis();
+        MAF_TimeStamp2 = System.currentTimeMillis();
+
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message message) {
+                process_handler(message);
+            }
+        };
     }
 
     public String getDeviceName() {
@@ -358,6 +410,7 @@ public class OBDII  {
 
     private void processOBD_coolantTemp() {
         if ( activeMAF ) return;
+        if ( !engine_temp_show ) return;
         activeOther = true;
         try {
             coolantTempCommand.run(socket.getInputStream(), socket.getOutputStream());
@@ -394,6 +447,7 @@ public class OBDII  {
 
     private void processOBD_CMVoltage() {
         if ( activeMAF ) return;
+        if ( ! battery_show ) return;
         activeOther = true;
         try {
             cmuVoltageCommand.run(socket.getInputStream(), socket.getOutputStream());
@@ -438,6 +492,7 @@ public class OBDII  {
             MAFObdCommand.run(socket.getInputStream(), socket.getOutputStream());
             obdData.maf = MAFObdCommand.getMAF();
 
+
             oneTrip.calculateData(obdData.speed, obdData.maf, 0);
             totalTrip.calculateData(obdData.speed, obdData.maf, 0);
 
@@ -473,10 +528,12 @@ public class OBDII  {
             activeMAF = false;
         }
 
+
     }
 
-    public void request_CAN_ECU(String PID, String ReceiverAddress, String SenderAddress, boolean flowControl, String BroadcastID) {
-        if ( activeMAF ) return;
+    public ArrayList<Integer> request_CAN_ECU(String PID, String ReceiverAddress, String SenderAddress, boolean flowControl) {
+        ArrayList<Integer> buffer = null;
+        if ( activeMAF ) return buffer;
         activeOther = true;
         String function = "processCAN_" + PID + "__" + ReceiverAddress + "()";
 
@@ -486,17 +543,12 @@ public class OBDII  {
             CanObdCommand cmd =  new CanObdCommand(PID);
             cmd.run(socket.getInputStream(), socket.getOutputStream());
 
-            ArrayList<Integer> buffer = null;
+
             buffer = cmd.getBuffer();
 
-            Intent intent = new Intent();
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            intent.putExtra("PID", PID + ":" + ReceiverAddress);
-            intent.putExtra("Buffer", buffer);
-            intent.setAction(BroadcastID);
-            App.getInstance ().sendBroadcast(intent);
             Log.d("OBDII-->" + function, "PID: " + PID + ", H: " + ReceiverAddress + ": " + cmd.getFormattedResult());
             activeOther = false;
+
         }  catch ( NonNumericResponseException e5) {
             activeOther = false;
             //disconnect();
@@ -525,6 +577,7 @@ public class OBDII  {
             Log.d("OBDII-->" + function, e2.toString());
         }
         activeOther = false;
+        return buffer;
     }
 
 
@@ -534,6 +587,7 @@ public class OBDII  {
         socket = null;
         SendBroadcastAction(OBD_BROADCAST_ACTION_STATUS_CHANGED, "Status", false);
     }
+
 
     private void SendBroadcastAction(String action, String key, String value) {
        // Log.d ("OBDII", "SendBroadcastAction " + action + " key = " + key + " value = " + value);
@@ -635,9 +689,11 @@ public class OBDII  {
         processOBD_coolantTemp();       // Coolant:         01 05
         processOBD_CMVoltage();         // Voltage:         01 42
 
-        request_CAN_ECU("211D", "7E0", "7E8", false, OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED);
-        request_CAN_ECU("211E", "7E0", "7E8", false, OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED);
-
+        ArrayList<Integer> buffer = null;
+        buffer = request_CAN_ECU("211D", "7E0", "7E8", false);
+        sendObdMessage("211D", "7E0", buffer);
+        buffer = request_CAN_ECU("211E", "7E0", "7E8", false);
+        sendObdMessage("211E", "7E0", buffer);
         // TODO брать данные для:
         // RPM (01 0C)
         // Speed (01 0D)            Speed	2101	B*2
@@ -650,326 +706,171 @@ public class OBDII  {
     private void request_MMC_ECU_CVT(){
         if ( activeMAF ) return;
         // set CVT/AT ECU addresses
+        ArrayList<Integer> buffer = null;
         if ( canMmcData.can_mmc_cvt_temp_show || canMmcData.can_mmc_cvt_degr_show) {
             SetHeaders("7E1", "7E9", true);
-            if ( canMmcData.can_mmc_cvt_temp_show )
-                request_CAN_ECU("2103", "7E1", "7E9", true, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED); // // cvt_temp_count
+            if ( canMmcData.can_mmc_cvt_temp_show ) {
+                buffer = request_CAN_ECU("2103", "7E1", "7E9", true); // // cvt_temp_count
+                sendObdMessage("2103", "7E1", buffer);
+            }
+
             // request_CAN_ECU("2107", "7E1", "7E9", false, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED);  // selector position
 
             // TODO: можно выполнять не часто, раз в 10 сек вполне достаточно или даже реже
-            if ( canMmcData.can_mmc_cvt_degr_show )
-            request_CAN_ECU("2110", "7E1", "7E9", true, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED); // cvt_oil_degradation
+            if ( canMmcData.can_mmc_cvt_degr_show ) {
+                buffer = request_CAN_ECU("2110", "7E1", "7E9", true); // cvt_oil_degradation
+                sendObdMessage("2110", "7E1", buffer);
+            }
         }
     }
 
     private void request_MMC_ECU_COMBINATION_METER(){
         if ( activeMAF ) return;
-        // set COMBINE METER ECU addresses
-        SetHeaders("6A0", "514", false);
-        request_CAN_ECU("21A3", "6A0", "514", false, OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED);
+        if ( App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_fuel_remain_show ) {
+            ArrayList<Integer> buffer = null;
+            // set COMBINE METER ECU addresses
+            SetHeaders("6A0", "514", false);
+            buffer = request_CAN_ECU("21A3", "6A0", "514", false);
+            sendObdMessage("21A3", "6A0", buffer);
+        }
     }
 
     private void request_MMC_ECU_AIR_COND(){
         if ( activeMAF ) return;
+        ArrayList<Integer> buffer = null;
         if (App.obd.canMmcData.can_mmc_ac_data_show) {
             SetHeaders("688", "511", false);
             // внешняя температура
-            request_CAN_ECU("2111", "688", "511", false, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
+            buffer = request_CAN_ECU("2111", "688", "511", false);
+            sendObdMessage("2111", "688", buffer);
             //request_CAN_ECU("2123", "688", "511", true, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
             // положения крутилок
-            request_CAN_ECU("2160", "688", "511", false, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
+            buffer = request_CAN_ECU("2160", "688", "511", false);
+            sendObdMessage("2160", "688", buffer);
             // состояния индикаторов
-            request_CAN_ECU("2161", "688", "511", false, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
+            buffer = request_CAN_ECU("2161", "688", "511", false);
+            sendObdMessage("2161", "688", buffer);
         }
     }
 
     private void request_MMC_ECU_AWC(){
         if ( activeMAF ) return;
+        ArrayList<Integer> buffer = null;
         SetHeaders( "7B6", "7B7", true);
-        request_CAN_ECU("2130", "7B6", "7B7", true, OBD_BROADCAST_ACTION_ECU_AWC_CHANGED);
+        buffer = request_CAN_ECU("2130", "7B6", "7B7", true);
+        sendObdMessage("2130", "7B6", buffer);
     }
 
-    public String process_MMC_ECU_data(String param, String action, String extra, ArrayList<Integer> buffer) {
-        String res = "";
-        if ( param.isEmpty() || action.isEmpty() || extra.isEmpty() ) return res;
 
-        try {
-            if (action.equalsIgnoreCase(OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED)) {
-                res = process_ENGINE_data(extra, param, buffer);
-            } else if (action.equalsIgnoreCase(OBD_BROADCAST_ACTION_ECU_CVT_CHANGED)) {
-                res = process_CVT_data(extra, param, buffer);
-            } else if (action.equalsIgnoreCase(OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED)) {
-                res = process_combine_meter_data( extra, param, buffer);
-            } else if (action.equalsIgnoreCase(OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED)) {
-                res = process_AC_data( extra, param, buffer);
-            } else if (action.equalsIgnoreCase(OBD_BROADCAST_ACTION_ECU_AWC_CHANGED)) {
-                res = process_awc_data( extra, param, buffer);
-            }
-        } finally {
-            return res;
-        }
-     }
+    public void process_handler(Message message) {
+         switch ( message.what ) {
+             // ENGINE
+             case MESSAGE_OBD_CAN_ENGINE_FAN_STATE:
+                 CanMmcData.State fanState = CanMmcData.State.values()[ message.arg1 ];
+                 SendBroadcastAction(OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED, "can_mmc_engine_fan_state", fanState.ordinal());
+                 break;
 
+             // CVT
+             case MESSAGE_OBD_CAN_CVT_OIL_DEGR:
+                 SendBroadcastAction(OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED, "can_mmc_cvt_degradation_level", message.arg1);
+                 break;
+             case MESSAGE_OBD_CAN_CVT_OIL_TEMP:
+                 SendBroadcastAction(OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED, "can_mmc_cvt_temp", message.arg1);
+                 break;
 
-    protected String process_awc_data(String PID, String param, ArrayList<Integer> buffer) {
-       String res ="";
-        if ( PID.equalsIgnoreCase( "2130:7B6" ) ) {
-            if (param.equalsIgnoreCase("awc_4wd_mode")) {
-                int a = buffer.get(2);
-                switch ( a ) {
-                    case 0x00: res = "SNA"; break;
-                    case 0x01: res = "active"; break;
-                    case 0x02: res = "4WD ECO"; break;
-                    case 0x03: res = "4WD AUTO"; break;
-                    case 0x04: res = "4WD FULL BLOCK"; break;
-                    case 0x05: res = "AWC ECO"; break;
-                    case 0x06: res = "normal"; break;
-                    case 0x07: res = "snow"; break;
-                    case 0x08: res = "block"; break;
-                    case 0x09: res = "active"; break;
-                    case 0x0A: res = "active"; break;
-                } // switch
-            }
-        }
-        return res;
+             // AIR CONDITIONER
+             case MESSAGE_OBD_CAN_AIR_COND_EXTERNAL_TEMPERATURE:
+                 SendBroadcastAction(OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED, "air_cond_external_temp", message.arg1);
+                 break;
+             case MESSAGE_OBD_CAN_AIR_COND_TEMPERATURE:
+                 String s = (String) message.obj;
+                 SendBroadcastAction(OBD_BROADCAST_ACTION_AC_TEMP_CHANGED, "air_cond_set_temperature", s);
+                 break;
+             case MESSAGE_OBD_CAN_AIR_COND_FAN_MODE:
+                 ClimateData.FanMode fanMode = ClimateData.FanMode.values()[ message.arg1 ];
+                 SendBroadcastAction(OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED, "air_cond_fan_mode", fanMode.ordinal());
+                 break;
+             case MESSAGE_OBD_CAN_AIR_COND_BLOW_MODE:
+                 ClimateData.BlowMode blowMode = ClimateData.BlowMode.values()[ message.arg1 ];
+                 SendBroadcastAction(OBD_BROADCAST_ACTION_AC_BLOW_MODE_CHANGED, "air_cond_blow_mode", blowMode.ordinal());
+                 break;
+             case MESSAGE_OBD_CAN_AIR_COND_BLOW_DIRECTION:
+                 ClimateData.BlowDirection blowDirection = ClimateData.BlowDirection.values()[ message.arg1 ];
+                 SendBroadcastAction(OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED, "air_cond_blow_direction_position", blowDirection.ordinal());
+                 break;
+             case MESSAGE_OBD_CAN_AIR_COND_FAN_SPEED:
+                 ClimateData.FanSpeed fanSpeed = ClimateData.FanSpeed.values()[ message.arg1 ];
+                 SendBroadcastAction(OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED, "air_cond_fan_speed_position", fanSpeed.ordinal());
+                 break;
+             case MESSAGE_OBD_CAN_AIR_COND_STATE:
+                 ClimateData.State ac_state = ClimateData.State.values()[ message.arg1 ];
+                 SendBroadcastAction(OBD_BROADCAST_ACTION_AC_STATE_CHANGED, "air_cond_state", ac_state.ordinal() );
+                 break;
+             case MESSAGE_OBD_CAN_AIR_COND_RECIRCULATION_STATE:
+                 ClimateData.State recirculation_state = ClimateData.State.values()[ message.arg1 ];
+                 SendBroadcastAction(OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED, "air_cond_recirculation_state", recirculation_state.ordinal());
+                 break;
+             case MESSAGE_OBD_CAN_AIR_COND_DEFOGGER_STATE:
+                 ClimateData.State defogger_state = ClimateData.State.values()[ message.arg1 ];
+                 SendBroadcastAction(OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED, "air_cond_defogger_state", defogger_state.ordinal());
+                 break;
+             case MESSAGE_OBD_CAN_COMBINE_METER_FUEL_TANK:
+                 SendBroadcastAction(OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED, "combine_meter_fuel_level", message.arg1);
+                 break;
+             default:
+                 break;
+         }
     }
 
-    protected String process_AC_data(String PID, String param, ArrayList<Integer> buffer) {
-        String res ="";
-        if (PID.equalsIgnoreCase("2111:688")) {
-            // "C-Cross External temperature","Ext temp","2111","A/2-40","-40","87.5"," grad C","688"
-            if (param.equalsIgnoreCase("air_cond_external_temp")) {
-                int temp = buffer.get(2)/2 - 40;
-                res = Integer.toString(temp);
+    public void sendObdMessage(String PID, String Addr, ArrayList<Integer> buffer) {
+        Message msg = new Message();
+        if ( Addr.equalsIgnoreCase("7E0")) {
+            // process engine
+            if ( PID.equalsIgnoreCase("2101")) {
+                //OBDCalculations.sendOBD_CVT_Temp(MESSAGE_OBD_CAN_CVT_OIL_TEMP, mHandler, buffer);
             }
-        }
+            else if ( PID.equalsIgnoreCase("2102")) {
+                //OBDCalculations.sendOBD_CVT_Temp(MESSAGE_OBD_CAN_CVT_OIL_TEMP, mHandler, buffer);
+            }
+            else if ( PID.equalsIgnoreCase("211D")) {
+                OBDCalculations.sendOBD_ENGINE_Fan_State(MESSAGE_OBD_CAN_ENGINE_FAN_STATE, mHandler, buffer);
+            }
+            else if ( PID.equalsIgnoreCase("211E")) {
+                //OBDCalculations.sendOBD_CVT_Temp(MESSAGE_OBD_CAN_CVT_OIL_TEMP, mHandler, buffer);
+            }
+        } else if (Addr.equalsIgnoreCase("7E1")) {
+            //process CVT
+            if ( PID.equalsIgnoreCase("2103")) {
+                // CVT Temp Count
+                OBDCalculations.sendOBD_CVT_Temp(MESSAGE_OBD_CAN_CVT_OIL_TEMP, mHandler, buffer);
+            } else if ( PID.equalsIgnoreCase("2110")) {
+                // CVT oil degradation 2110
+                OBDCalculations.sendOBD_CVT_Degradation(MESSAGE_OBD_CAN_CVT_OIL_DEGR,  mHandler, buffer);
+            }
+        } else if ( Addr.equalsIgnoreCase("688")) {
+            // process Air Condition
+            if ( PID.equalsIgnoreCase( "2111") ) {
+                // external value
+                OBDCalculations.sendOBD_AC_ExtTemp(MESSAGE_OBD_CAN_AIR_COND_EXTERNAL_TEMPERATURE, mHandler, buffer);
+            }
+            else if ( PID.equalsIgnoreCase("2160")) {
+               // buttons & knob positions
+                OBDCalculations.sendOBD_AC_Fan_Mode(MESSAGE_OBD_CAN_AIR_COND_FAN_MODE, mHandler, buffer);
+                OBDCalculations.sendOBD_AC_Blow_Mode(MESSAGE_OBD_CAN_AIR_COND_BLOW_MODE, mHandler, buffer);
+                OBDCalculations.sendOBD_AC_Temp(MESSAGE_OBD_CAN_AIR_COND_TEMPERATURE, mHandler, buffer);
+            }
+            else if ( PID.equalsIgnoreCase("2161")) {
+              // ac indications
+                OBDCalculations.sendOBD_AC_Blow_direction(MESSAGE_OBD_CAN_AIR_COND_BLOW_DIRECTION,  mHandler, buffer);
+                OBDCalculations.sendOBD_AC_Fan_Speed(MESSAGE_OBD_CAN_AIR_COND_FAN_SPEED, mHandler, buffer);
+                OBDCalculations.sendOBD_AC_State(MESSAGE_OBD_CAN_AIR_COND_STATE, mHandler, buffer);
+                OBDCalculations.sendOBD_AC_Recirculation_State(MESSAGE_OBD_CAN_AIR_COND_RECIRCULATION_STATE, mHandler, buffer);
+                OBDCalculations.sendOBD_AC_Defogger_State(MESSAGE_OBD_CAN_AIR_COND_DEFOGGER_STATE, mHandler, buffer);
+            }
+        } else if (Addr.equalsIgnoreCase("6A0")) {
+            // process Combination Meter
+            OBDCalculations.sendOBD_CombineMeter_FuelLevel(MESSAGE_OBD_CAN_COMBINE_METER_FUEL_TANK, mHandler, buffer);
 
-        else if (PID.equalsIgnoreCase("2161:688")) {
-            if (param.equalsIgnoreCase("air_cond_request_indicator_light")) {
-                // индикации
-
-            }
-            else if (param.equalsIgnoreCase("air_cond_state")) {
-                // A/C state: On/Off
-                int A = buffer.get(2);
-                Log.d("OBDII-->process_AC_data() --- A/C state:", Integer.toString( A ));
-                //A = A & 0x20;   // А:5
-                A = A & 0x10;   // А:5
-                if ( A > 0) {
-                    res = "ВКЛ";
-                    climateData.ac_state = true;
-                } else {
-                    res = "ВЫКЛ";
-                    climateData.ac_state = false;
-                }
-
-                Intent intent = new Intent();
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                intent.setAction(OBD_BROADCAST_ACTION_AC_STATE_CHANGED);
-                App.getInstance ().sendBroadcast(intent);
-            }
-            else if (param.equalsIgnoreCase("air_cond_defogger_state")) {
-                // Defogger state: On/Off
-                //int A = buffer.get(2) & 0x2;   // А:1
-                int A = buffer.get(2) & 0x1;   // А:1
-                if ( A > 0) {
-                    res = "ВКЛ";
-                    climateData.defogger_state = true;
-                } else {
-                    res = "ВЫКЛ";
-                    climateData.defogger_state = false;
-                }
-                Intent intent = new Intent();
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                intent.setAction(OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED);
-                App.getInstance ().sendBroadcast(intent);
-            }
-            else if (param.equalsIgnoreCase("air_cond_recirculation_state")) {
-                // Re-circulation state: On/Off
-                //int A = buffer.get(2) & 0x80;   // А:7
-                int A = buffer.get(2) & 0x40;   // А:7
-                if ( A > 0) {
-                    res = "ВКЛ";
-                    climateData.recirculation_state = true;
-                } else {
-                    res = "ВЫКЛ";
-                    climateData.recirculation_state = false;
-                }
-                Intent intent = new Intent();
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                intent.setAction(OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED);
-                App.getInstance ().sendBroadcast(intent);
-            }
-            else if (param.equalsIgnoreCase("air_cond_blow_direction_state")) {
-                // Blow direction
-                res = getBlowValue( buffer.get(3) );
-                Intent intent = new Intent();
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                intent.setAction(OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED);
-                App.getInstance ().sendBroadcast(intent);
-            }
-            else if (param.equalsIgnoreCase("air_cond_fan_speed_state")) {
-                // fan speed
-                res = getFanValue( buffer.get(3) );
-                Intent intent = new Intent();
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                intent.setAction(OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED);
-                App.getInstance ().sendBroadcast(intent);
-            }
         }
-        else if (PID.equalsIgnoreCase("2160:688")) {
-            // положение переключателей
-            if (param.equalsIgnoreCase("air_cond_set_temperature")) {
-                double A = buffer.get(2)/2f;
-                A = A - 50;
-                res = String.format("%1$.1f гр.", A);
-                climateData.temperature = A;
-                Intent intent = new Intent();
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                intent.setAction(OBD_BROADCAST_ACTION_AC_TEMP_CHANGED);
-                App.getInstance ().sendBroadcast(intent);
-            }
-            else if (param.equalsIgnoreCase("air_cond_fan_speed_position")) {
-                // fan speed
-                res = getFanValue( buffer.get(3) );
-            }
-            else if (param.equalsIgnoreCase("air_cond_blow_direction_position")) {
-                // Blow direction
-                res = getBlowValue2( buffer.get(3) );
-            }
-        }
-        return res;
     }
-
-    private String getFanValue(int value) {
-        String res = "---";
-        int B = value & 0xF; // bits 1-4, mask 0xF
-        climateData.fan_speed = B;
-        switch ( B ) {
-            case 0x0: res = "АВТО"; break;
-            case 0x1: res = "ВЫКЛ"; break;
-            case 0x2: res = "поз. 1"; break;
-            case 0x3: res = "поз. 2"; break;
-            case 0x4: res = "поз. 3"; break;
-            case 0x5: res = "поз. 4"; break;
-            case 0x6: res = "поз. 5"; break;
-            case 0x7: res = "поз. 6"; break;
-            case 0x8: res = "поз. 7"; break;
-            case 0x9: res = "поз. 8"; break;
-            default: res = "---"; break;
-        }
-        return res;
-    }
-
-    private String getBlowValue(int value) {
-
-        String res = "---";
-        int B = value >> 4; // bits 5-8
-        climateData.blow_direction = B;
-        switch ( B ) {
-            case 0x0: res = "ВЫКЛ"; break;
-            case 0x1: res = "в лицо"; break;
-            case 0x3: res = "лицо | ноги-лицо"; break;
-            case 0x4: res = "ноги-лицо"; break;
-            case 0x5: res = "ноги-лицо | ноги"; break;
-            case 0x7: res = "ноги"; break;
-            case 0x9: res = "ноги | ноги-стекло"; break;
-            case 0xA: res = "ноги-стекло"; break;
-            case 0xB: res = "ноги-стекло | стекло"; break;
-            case 0xD: res = "стекло"; break;
-            default: res = "---"; break;
-        }
-        return res;
-    }
-
-    private String getBlowValue2(int value) {
-
-        String res = "---";
-        int B = value >> 4; // bits 5-8
-
-
-        switch ( B ) {
-            case 0x0: res = "АТВО"; break;
-            case 0x1: res = "в лицо"; break;
-            case 0x3: res = "лицо | ноги-лицо"; break;
-            case 0x4: res = "ноги-лицо"; break;
-            case 0x5: res = "ноги-лицо | ноги"; break;
-            case 0x7: res = "ноги"; break;
-            case 0x9: res = "ноги | ноги-стекло"; break;
-            case 0xA: res = "ноги-стекло"; break;
-            case 0xB: res = "ноги-стекло | стекло"; break;
-            case 0xD: res = "стекло"; break;
-            default: res = "---"; break;
-        }
-        return res;
-    }
-
-    protected String process_combine_meter_data(String PID, String param, ArrayList<Integer> buffer) {
-        String res ="";
-        if (PID.equalsIgnoreCase("21A3:6A0")) {
-            if (param.equalsIgnoreCase("combine_meter_fuel_level")) {
-                double fuel = buffer.get(4);
-                fuel = (fuel - 16) * 0.6;
-                res = String.format("%1$.0f", fuel);
-            }
-        }
-        return res;
-    }
-
-    protected String process_CVT_data(String PID, String param, ArrayList<Integer> buffer) {
-        String res ="";
-        if (PID.equalsIgnoreCase("2110:7E1")) {
-            if (param.equalsIgnoreCase("cvt_oil_degradation")) {
-                // CVT oil degradation 2110   AB*65536 + AC*256 + AD
-                int degr = buffer.get(29) * 65536 + buffer.get(30) * 256 + buffer.get(31);
-                canMmcData.can_mmc_cvt_degradation_level = degr;
-                if ( canMmcData.can_mmc_cvt_degradation_level != canMmcDataPrev.can_mmc_cvt_degradation_level) {
-                    // send broadcast
-                    SendBroadcastAction(OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED, "can_mmc_cvt_degradation_level", canMmcData.can_mmc_cvt_degradation_level);
-                    canMmcDataPrev.can_mmc_cvt_degradation_level = canMmcData.can_mmc_cvt_degradation_level;
-                }
-                res = Integer.toString(degr);
-            }
-        } else if (PID.equalsIgnoreCase("2103:7E1")) {
-            if (param.equalsIgnoreCase("cvt_temp_count")) {
-                // cvt_temp_count
-                int N = buffer.get(15);
-                res = Integer.toString(N);
-            } else if (param.equalsIgnoreCase("cvt_temp_grad")) {
-                // cvt_temp_grad
-                int N = buffer.get(15);
-                double temp_1 = -21.592 + (1.137 * N) - (0.0063 * N * N) + (0.0000195 * N * N * N);
-                canMmcData.can_mmc_cvt_temp = (int) temp_1;
-                if ( canMmcData.can_mmc_cvt_temp != canMmcDataPrev.can_mmc_cvt_temp) {
-                    // send broadcast
-                    SendBroadcastAction(OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED, "can_mmc_cvt_temp", canMmcData.can_mmc_cvt_temp);
-                    canMmcDataPrev.can_mmc_cvt_temp = canMmcData.can_mmc_cvt_temp;
-                }
-                res = String.format("%1$.0f", temp_1);
-            }
-        }
-        return res;
-    }
-
-    protected String process_ENGINE_data(String PID, String param, ArrayList<Integer> buffer) {
-        String res ="";
-        if (PID.equalsIgnoreCase("211D:7E0")) {
-            if (param.equalsIgnoreCase("engine_aircond_state")) {
-                // Выключатель кондиционера 211D {A:3}
-                if ((buffer.get(2) & 0x8) > 0) res = "ВКЛ";
-                else res = "ВЫКЛ";
-            }
-//            else if (param.equalsIgnoreCase("engine_gur_state")) {
-//                // Выключатель гидроусилителя руля 211D {A:4}
-//                if ((buffer.get(2) & 0x10) > 0) res = "ВКЛ";
-//                else res = "ВЫКЛ";
-//            }
-//            else if (param.equalsIgnoreCase("engine_brake_state")) {
-//                // Выключательлампы тормоза 211D {D:0}
-//                if ((buffer.get(5) & 0x1) > 0) res = "ДА";
-//                else res = "НЕТ";
-//            }
-        }
-        return res;
-    }
-}
+ }

@@ -61,10 +61,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private TextView tvGPSSatellitesGoodQACount;
     private TextView tvGPSSatellitesInUse;
 
-    private TextView tvGPSAccuracy;
-    private TextView tvGPSAltitude;
-    private TextView tvGPSLatitude;
-    private TextView tvGPSLongitude;
+    //private TextView tvGPSAccuracy;
+    //private TextView tvGPSAltitude;
+    //private TextView tvGPSLatitude;
+//    private TextView tvGPSLongitude;
     private TextView tvGPSSpeed;
     private TextView tvTrackTime;
     private TextView tvTrackTime2;
@@ -100,11 +100,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private LinearLayout layout_fuel_consump;
     private LinearLayout layout_temp_data;
     private LinearLayout layout_cvt_data;
+    private LinearLayout layout_battery;
 
     private ImageView ivOBD2Status;
     private ImageView ivOBD_CarBattery;
     private TextView tvOBD_CarBattery;
     private ImageView ivOBD_CoolantTemp;
+    private ImageView ivOBD_CoolantTempFan;
     private TextView tvOBD_CoolantTemp;
 
     private ImageView ivOBD_CVT_Data;
@@ -124,12 +126,18 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private ImageView iv_air_recirculation;
     private ImageView iv_air_defogger;
 
+    private ImageView iv_ac_blow_auto;
+    private ImageView iv_ac_fan_mode;
+    private ImageView iv_air_temp;
+
     private TextView tv_air_cond_temp;
 
 	private Button btnTest2, btnTest1;
 	private SharedPreferences prefs;
 
     private RelativeLayout layout_MMC_climate;
+    private LinearLayout layout_ac_indicators;
+    private LinearLayout layout_ac_blow_direction;
 
 
 	@Override
@@ -173,11 +181,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvGPSSatellitesTotal = (TextView) findViewById(R.id.text_satellites_total);
 		tvGPSSatellitesGoodQACount = (TextView) findViewById(R.id.text_satellites_good);
 		tvGPSSatellitesInUse = (TextView) findViewById(R.id.text_satellites_inuse);
-		tvGPSAccuracy = (TextView) findViewById(R.id.text_gps_accuracy);
-		tvGPSAltitude = (TextView) findViewById(R.id.text_gps_altitude);
-		tvGPSLatitude = (TextView) findViewById(R.id.text_gps_latitude);
-		tvGPSLongitude = (TextView) findViewById(R.id.text_gps_longitude);
-		tvGPSSpeed = (TextView) findViewById(R.id.text_gps_speed_value);
+		//tvGPSAccuracy = (TextView) findViewById(R.id.text_gps_accuracy);
+		//tvGPSAltitude = (TextView) findViewById(R.id.text_gps_altitude);
+		//tvGPSLatitude = (TextView) findViewById(R.id.text_gps_latitude);
+		//tvGPSLongitude = (TextView) findViewById(R.id.text_gps_longitude);
+		//tvGPSSpeed = (TextView) findViewById(R.id.text_gps_speed_value);
 
 		// track distance
 		tvTrackTime = (TextView) findViewById(R.id.tvTrackTime);
@@ -205,6 +213,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         tvOBD_CarBattery.setText("--");
 
         ivOBD_CoolantTemp = (ImageView) findViewById(R.id.ivOBD_CoolantTemp);
+        ivOBD_CoolantTempFan = (ImageView) findViewById(R.id.ivOBD_CoolantTempFan);
         tvOBD_CoolantTemp = (TextView) findViewById(R.id.tvOBD_CoolantTemp);
         tvOBD_CoolantTemp.setText("--");
 
@@ -265,13 +274,21 @@ public class MainActivity extends Activity implements View.OnClickListener,
         iv_air_direction.setImageResource(R.drawable.air_wind_seat_my_to_face);
 
         iv_air_ac_state = (ImageView) findViewById(R.id.iv_air_ac_state);
-        iv_air_ac_state.setVisibility( View.INVISIBLE );
+        //iv_air_ac_state.setVisibility( View.INVISIBLE );
 
         iv_air_recirculation = (ImageView) findViewById(R.id.iv_air_recirculation);
         iv_air_recirculation.setVisibility( View.INVISIBLE );
 
         iv_air_defogger = (ImageView) findViewById(R.id.iv_air_defogger);
         iv_air_defogger.setVisibility( View.INVISIBLE );
+
+        iv_ac_blow_auto = (ImageView) findViewById(R.id.iv_ac_blow_auto);
+        iv_ac_blow_auto.setVisibility( View.INVISIBLE );
+
+        iv_ac_fan_mode = (ImageView) findViewById(R.id.iv_ac_fan_mode);
+        iv_ac_fan_mode.setVisibility( View.INVISIBLE );
+
+        iv_air_temp = (ImageView) findViewById(R.id.iv_air_temp);
 
         tv_air_cond_temp = (TextView) findViewById(R.id.tv_air_cond_temp);
 
@@ -281,11 +298,15 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_temp_data = (LinearLayout) findViewById(R.id.layout_temp_data);
         layout_temp_data.setOnClickListener (this);
 
+        layout_battery = (LinearLayout) findViewById(R.id.layout_battery);
+
         layout_cvt_data = (LinearLayout) findViewById(R.id.layout_cvt_data);
         layout_cvt_data.setOnClickListener (this);
 
 
         layout_MMC_climate = (RelativeLayout) findViewById(R.id.layout_MMC_climate);
+        layout_ac_indicators = (LinearLayout) findViewById(R.id.layout_ac_indicators);
+        layout_ac_blow_direction = (LinearLayout) findViewById(R.id.layout_ac_blow_direction);
 
 	}
 
@@ -296,10 +317,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvGPSSatellitesTotal.setText( "--");
 		tvGPSSatellitesInUse.setText( "--");
 		tvGPSSatellitesGoodQACount.setText( "--" );
-		tvGPSAccuracy.setText( "---" );
-		tvGPSAltitude.setText( "---" );
-		tvGPSLatitude.setText( "--.-----" );
-		tvGPSLongitude.setText( "--.-----" );
+		//tvGPSAccuracy.setText( "---" );
+		//tvGPSAltitude.setText( "---" );
+		//tvGPSLatitude.setText( "--.-----" );
+		//tvGPSLongitude.setText( "--.-----" );
 		tvGPSSpeed.setText( "---" );
 
 		//track distance
@@ -320,7 +341,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst);
         ivOBD_FuelTank.setImageResource(R.drawable.fuel_tank_in_tank_full);
-
 
 	}
 
@@ -349,7 +369,12 @@ public class MainActivity extends Activity implements View.OnClickListener,
         updateOBDStatus(App.obd.isConnected);
 
         layout_obd2.setVisibility( App.obd.useOBD ? View.VISIBLE : View.INVISIBLE );
-        layout_MMC_climate.setVisibility( ( App.obd.canMmcData.can_mmc_ac_data_show) ? View.VISIBLE : View.INVISIBLE );
+        layout_battery.setVisibility( (App.obd.battery_show) ? View.VISIBLE : View.GONE);
+        layout_obd_fuel.setVisibility( (App.obd.fuel_data_show) ? View.VISIBLE : View.GONE);
+        layout_fuel_consump.setVisibility( (App.obd.fuel_consump_show) ? View.VISIBLE : View.GONE);
+        layout_cvt_data.setVisibility( (App.obd.MMC_CAN && (App.obd.canMmcData.can_mmc_cvt_degr_show || App.obd.canMmcData.can_mmc_cvt_temp_show)) ? View.VISIBLE : View.GONE);
+        layout_MMC_climate.setVisibility( (App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_ac_data_show) ? View.VISIBLE : View.GONE);
+        layout_temp_data.setVisibility( App.obd.engine_temp_show ? View.VISIBLE : View.GONE);
 	}
 
     @Override
@@ -466,7 +491,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 			String action = intent.getAction();
 			if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED))
 			{
-				int vol = intent.getIntExtra (TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED, 0);
+				int vol = intent.getIntExtra(TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED, 0);
 				tvCurrentVolume.setText (String.format( Integer.toString(vol)));
                 setVolumeIcon(ivVolumeLevel, vol);
 			}
@@ -530,7 +555,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 processDynamicVoume (speed, grow);
             }
             else if (action.equals(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED)) {
-                double latitude = intent.getDoubleExtra("Latitude", 0);
+                //double latitude = intent.getDoubleExtra("Latitude", 0);
+                /*
                 if ( latitude < 0 ) {
                     //S - south latitude
                     tvGPSLatitude.setText( String.format("S %1$.5f", latitude*(-1)).replace(",", ".") );
@@ -538,8 +564,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     //N - north latitude
                     tvGPSLatitude.setText( String.format("N %1$.5f", latitude).replace(",", ".") );
                 }
+                */
 
-                double longitude = intent.getDoubleExtra("Longitude", 0);
+                //double longitude = intent.getDoubleExtra("Longitude", 0);
+                /*
                 if ( longitude < 0 ) {
                     //W - west longitude
                     tvGPSLongitude.setText( String.format("W %1$.5f", longitude*(-1)).replace(",", ".") );
@@ -547,8 +575,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     //E - east longitude
                     tvGPSLongitude.setText( String.format("E %1$.5f", longitude).replace(",", ".") );
                 }
-                tvGPSAccuracy.setText( String.format(getString(R.string.text_gps_accuracy), intent.getStringExtra("Accuracy")) );
-                tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), intent.getStringExtra("Altitude")).replace(",", ".") );
+                */
+                //tvGPSAccuracy.setText( String.format(getString(R.string.text_gps_accuracy), intent.getStringExtra("Accuracy")) );
+                //tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), intent.getStringExtra("Altitude")).replace(",", ".") );
 
 				int speed = intent.getIntExtra("Speed", 0);
                 if ( speed > 80) {
@@ -607,64 +636,26 @@ public class MainActivity extends Activity implements View.OnClickListener,
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED )) {
                 updateOBD_CarBattery(App.obd.obdData.voltage);
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED )) {
-                updateOBD_CoolantTemp(modeEngineTemp);
+                updateOBD_CoolantTemp(modeEngineTemp, App.obd.canMmcData.fan_state);
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED )) {
                 updateOBD_FuelConsump( App.obd.oneTrip.fuel_cons_lph );
                 updateOBD_FuelTank( App.obd.totalTrip.fuel_remains );
             } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED )) {
 
             }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED )) { updateOBD_CoolantTemp(modeEngineTemp, App.obd.canMmcData.fan_state); }
             else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED )) { updateOBD_CVT_data(modeCVT); }
             else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED )) { updateOBD_CVT_data(modeCVT); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED )) {
-                String extra = intent.getStringExtra("PID");
-                ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("Buffer");
-                String res = "";
 
-                if ( extra.equalsIgnoreCase( "2111:688" ) ) {
-                    // air_cond_external_temp
-                    res = App.obd.process_MMC_ECU_data( "air_cond_external_temp", action, extra, buffer);
-                }
-                else if ( extra.equalsIgnoreCase( "2161:688" ) ) {
-                    // air_cond_request_indicator_light
-                    res = App.obd.process_MMC_ECU_data( "air_cond_fan_speed_state", action, extra, buffer);
-
-                    res = App.obd.process_MMC_ECU_data( "air_cond_blow_direction_state", action, extra, buffer);
-
-                    res = App.obd.process_MMC_ECU_data( "air_cond_recirculation_state", action, extra, buffer);
-
-                    res = App.obd.process_MMC_ECU_data( "air_cond_state", action, extra, buffer);
-
-                    res = App.obd.process_MMC_ECU_data( "air_cond_defogger_state", action, extra, buffer);
-
-                }
-                else if ( extra.equalsIgnoreCase( "2160:688" ) ) {
-                    // air_cond_oper_state
-                    res = App.obd.process_MMC_ECU_data( "air_cond_fan_speed_position", action, extra, buffer);
-
-                    res = App.obd.process_MMC_ECU_data( "air_cond_blow_direction_position", action, extra, buffer);
-
-                    res = App.obd.process_MMC_ECU_data( "air_cond_set_temperature", action, extra, buffer);
-                }
-            }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED )) {
-                updateOBD_air_cond_fan_speed();
-            }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED )) {
-                updateOBD_air_cond_temperature();
-            }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED )) {
-                updateOBD_air_cond_blow_direction();
-            }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED )) {
-                updateOBD_air_cond_defogger();
-            }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED )) {
-                updateOBD_air_cond_recirculation();
-            }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED )) {
-                updateOBD_air_cond_state();
-            }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED )) { updateOBD_air_cond_fan_speed(ClimateData.FanSpeed.values()[intent.getIntExtra("air_cond_fan_speed_position", -1)]); }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED )) { updateOBD_air_cond_fan_mode(ClimateData.FanMode.values()[intent.getIntExtra("air_cond_fan_mode", -1)]);}
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED )) { updateOBD_air_cond_temperature(intent.getStringExtra("air_cond_set_temperature"));  }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED )) { updateOBD_air_cond_ext_temperature(intent.getIntExtra("air_cond_external_temp", -255)); }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED )) { updateOBD_air_cond_blow_direction(ClimateData.BlowDirection.values()[intent.getIntExtra("air_cond_blow_direction_position", -1)]); }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_BLOW_MODE_CHANGED )) { updateOBD_air_cond_blow_mode(ClimateData.BlowMode.values()[intent.getIntExtra("air_cond_blow_mode", -1)]); }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED )) { updateOBD_air_cond_defogger(ClimateData.State.values()[intent.getIntExtra("air_cond_defogger_state", -1)]); }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED )) { updateOBD_air_cond_recirculation(ClimateData.State.values()[intent.getIntExtra("air_cond_recirculation_state", -1)]); }
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED )) { updateOBD_air_cond_state( ClimateData.State.values()[ intent.getIntExtra("air_cond_state", -1) ] ); }
 
 		}
 	};
@@ -856,6 +847,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
         registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED));
 
 
         registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_CVT_CHANGED));
@@ -864,14 +856,21 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
         registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED));
-        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED));
 
-		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED));
-		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED));
+
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED));
+		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED));
+
+		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_BLOW_MODE_CHANGED));
 		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED));
+
 		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED));
 		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED));
 		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED));
+
+		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED));
 	}
 
 
@@ -920,60 +919,85 @@ public class MainActivity extends Activity implements View.OnClickListener,
         }
     }
 
-    public void updateOBD_CarBattery(double voltage){
-        if ( voltage < 12 ) {
-            ivOBD_CarBattery.setImageResource( R.drawable.car_battery_bad);
+    public void updateOBD_CarBattery(double voltage) {
+        if (App.obd.battery_show) {
+            layout_battery.setVisibility(View.VISIBLE);
+            if (voltage < 12) {
+                ivOBD_CarBattery.setImageResource(R.drawable.car_battery_bad);
+            } else {
+                ivOBD_CarBattery.setImageResource(R.drawable.car_battery_good);
+            }
+            tvOBD_CarBattery.setText(String.format("%1$.1f", voltage));
         } else {
-            ivOBD_CarBattery.setImageResource( R.drawable.car_battery_good);
+            layout_battery.setVisibility(View.GONE);
         }
-        tvOBD_CarBattery.setText( String.format("%1$.1f", voltage));
     }
 
-    public void updateOBD_CoolantTemp(int mode){
-        float temp = App.obd.obdData.coolant;
-        switch (mode) {
-            case 0:
-                if (  temp < 80 ) {
-                    ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_min);
-                } else if (temp < 99) {
-                    ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_norm);
-                } else {
-                    ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_hot);
-                }
-                tvOBD_CoolantTemp.setText( String.format("%1$.0f", temp));
-                break;
-            default:
-                ivOBD_CoolantTemp.setImageResource( R.drawable.coolant_temp_norm);
-                tvOBD_CoolantTemp.setText( String.format("%1$.0f", temp));
-                break;
-        }
+    public void updateOBD_CoolantTemp(int mode, CanMmcData.State state){
+        if ( App.obd.engine_temp_show ) {
+            layout_temp_data.setVisibility( View.VISIBLE );
 
+            float temp = App.obd.obdData.coolant;
+            switch (mode) {
+                case 0:
+                    ivOBD_CoolantTempFan.setVisibility(((state == CanMmcData.State.on) &&
+                            App.obd.MMC_CAN && App.obd.canMmcData.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
+                    if (temp < 80) {
+                        ivOBD_CoolantTemp.setImageResource(R.drawable.coolant_temp_min);
+                    } else if (temp < 99) {
+                        ivOBD_CoolantTemp.setImageResource(R.drawable.coolant_temp_norm);
+                    } else {
+                        ivOBD_CoolantTemp.setImageResource(R.drawable.coolant_temp_hot);
+                    }
+                    tvOBD_CoolantTemp.setText(String.format("%1$.0f", temp));
+                    break;
+                default:
+                    ivOBD_CoolantTemp.setImageResource(R.drawable.coolant_temp_norm);
+                    tvOBD_CoolantTemp.setText(String.format("%1$.0f", temp));
+                    break;
+            }
+        } else {
+            layout_temp_data.setVisibility( View.GONE );
+        }
     }
 
     public void updateOBD_CVT_data(int mode) {
+        if ( App.obd.MMC_CAN && (App.obd.canMmcData.can_mmc_cvt_degr_show || App.obd.canMmcData.can_mmc_cvt_temp_show)) {
+            layout_cvt_data.setVisibility( View.VISIBLE);
+        } else {
+            layout_cvt_data.setVisibility( View.GONE);
+            return;
+        }
+
         int temp = -255;
         switch (mode) {
             case 0:
-                temp = App.obd.canMmcData.can_mmc_cvt_temp;
-                if ( temp > -255 ) tvOBD_CVT_Data.setText( Integer.toString(temp )); else tvOBD_CVT_Data.setText( "---");
-                if (  temp < 71 ) {
-                    ivOBD_CVT_Data.setImageResource( R.drawable.cvt_temp_min);
-                } else if (temp < 91) {
-                    ivOBD_CVT_Data.setImageResource( R.drawable.cvt_temp_nom_green);
-                } else if (temp < 103) {
-                    ivOBD_CVT_Data.setImageResource( R.drawable.cvt_temp_nom_yellow);
-                } else {
-                    ivOBD_CVT_Data.setImageResource( R.drawable.cvt_temp_nom_orange);
+                if ( App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_cvt_temp_show) {
+
+                    temp = App.obd.canMmcData.can_mmc_cvt_temp;
+                    if (temp > -255) tvOBD_CVT_Data.setText(Integer.toString(temp));
+                    else tvOBD_CVT_Data.setText("--");
+                    if (temp < 71) {
+                        ivOBD_CVT_Data.setImageResource(R.drawable.cvt_temp_min);
+                    } else if (temp < 91) {
+                        ivOBD_CVT_Data.setImageResource(R.drawable.cvt_temp_nom_green);
+                    } else if (temp < 103) {
+                        ivOBD_CVT_Data.setImageResource(R.drawable.cvt_temp_nom_yellow);
+                    } else {
+                        ivOBD_CVT_Data.setImageResource(R.drawable.cvt_temp_nom_orange);
+                    }
                 }
                 break;
             case 1:
-                temp = App.obd.canMmcData.can_mmc_cvt_degradation_level;
-                ivOBD_CVT_Data.setImageResource( R.drawable.cvt_degr_nom);
-                tvOBD_CVT_Data.setText( Integer.toString(temp ));
+                if ( App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_cvt_degr_show) {
+                    temp = App.obd.canMmcData.can_mmc_cvt_degradation_level;
+                    ivOBD_CVT_Data.setImageResource(R.drawable.cvt_degr_nom);
+                    tvOBD_CVT_Data.setText(Integer.toString(temp));
+                }
                 break;
             default:
                 ivOBD_CVT_Data.setImageResource( R.drawable.cvt_temp_nom);
-                tvOBD_CVT_Data.setText( "---");
+                tvOBD_CVT_Data.setText( "--");
                 break;
         }
     }
@@ -1087,7 +1111,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         fuelDialog.show();
     }
 
-    // переключение режима показаний топлива в баке
+    // TODO: переключение режима показаний топлива в баке (учесть показания с приборки)
     private void switch_fuel_tank_mode() {
         // режим отображения уровня топлива
         // 0 - осталось в литрах
@@ -1120,7 +1144,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         }
     }
 
-    // переключение режима показаний температуры
+    // TODO: переключение режима показаний температуры (учесть включение вентилятора)
     private void switch_temp_mode() {
         // режим отображения уровня топлива
         // 0 - движок
@@ -1129,7 +1153,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         modeEngineTemp++;
         if ( modeEngineTemp > 0) modeEngineTemp = 0;
 
-        updateOBD_CoolantTemp(modeEngineTemp);
+        updateOBD_CoolantTemp(modeEngineTemp, App.obd.canMmcData.fan_state);
 
     }
 
@@ -1203,92 +1227,161 @@ public class MainActivity extends Activity implements View.OnClickListener,
         }
     }
 
-    // отобразить данные  о количестве топлива в баке
+    // TODO: отобразить данные  о количестве топлива в баке (учесть показания с приборки)
     private void show_fuel_tank_data(int mode) {
-        switch (mode) {
-            case 0:
-                tvOBD_FuelTank.setText( String.format("%1$.1f", App.obd.totalTrip.fuel_remains));
-                break;
-            case 1:
-                tvOBD_FuelTank.setText( String.format("%1$.0f", (float) ((App.obd.totalTrip.fuel_remains * 100) / App.obd.obdData.fuel_tank))  + "%");
-                break;
-            case 2:
-                tvOBD_FuelTank.setText( String.format("%1$.2f", App.obd.oneTrip.fuel_usage));
-                break;
-            default:
-                break;
+        if ( ! App.obd.fuel_data_show ) {
+            layout_obd_fuel.setVisibility( View.GONE );
+        } else {
+            layout_obd_fuel.setVisibility( View.VISIBLE );
+            switch (mode) {
+                case 0:
+                    if (App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_fuel_remain_show) {
+                        // по кан
+                        if ( App.obd.canMmcData.can_mmc_fuel_remain > 0 )
+                            tvOBD_FuelTank.setText(String.format("%1$s", Integer.toString(App.obd.canMmcData.can_mmc_fuel_remain)));
+                            else tvOBD_FuelTank.setText(String.format("%1$s", "--"));
+                    } else {
+                        // вычисляем
+                        tvOBD_FuelTank.setText(String.format("%1$.1f", App.obd.totalTrip.fuel_remains));
+                    }
+
+                    break;
+                case 1:
+
+                    if (App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_fuel_remain_show) {
+                        // по кан
+                        if ( App.obd.canMmcData.can_mmc_fuel_remain < 0 )
+                        tvOBD_FuelTank.setText(String.format("%1$s", "--"));
+                        else tvOBD_FuelTank.setText(String.format("%1$s", Integer.toString(Math.round(App.obd.canMmcData.can_mmc_fuel_remain / (App.obd.obdData.fuel_tank / 100)))));
+                    } else {
+                        // вычисляем
+                        tvOBD_FuelTank.setText(String.format("%1$.0f", (float) ((App.obd.totalTrip.fuel_remains * 100) / App.obd.obdData.fuel_tank)) + "%");
+                    }
+
+
+                    break;
+                case 2:
+                    tvOBD_FuelTank.setText(String.format("%1$.2f", App.obd.oneTrip.fuel_usage));
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
 
     // отобразить/спрятать второй показатель расхода при включении/выключении комбинированного режима
     private void show_hide_fuel_consump_line_2 (boolean line2) {
-        if ( line2 ) {
-            // show line 2
-            tvOBD_FuelConsump.setTextSize( 26 );
-            tvOBD_FuelConsump2.setTextSize( 22 );
-            tvOBD_FuelConsump2.setVisibility(View.VISIBLE);
+        if ( ! App.obd.fuel_consump_show ) {
+            layout_fuel_consump.setVisibility( View.GONE );
         } else {
-            // hide line 2
-            tvOBD_FuelConsump.setTextSize( 40 );
-            tvOBD_FuelConsump2.setVisibility(View.GONE);
+            layout_fuel_consump.setVisibility( View.VISIBLE );
+            if (line2) {
+                // show line 2
+                tvOBD_FuelConsump.setTextSize(26);
+                tvOBD_FuelConsump2.setTextSize(22);
+                tvOBD_FuelConsump2.setVisibility(View.VISIBLE);
+            } else {
+                // hide line 2
+                tvOBD_FuelConsump.setTextSize(40);
+                tvOBD_FuelConsump2.setVisibility(View.GONE);
+            }
         }
     }
 
-    private void updateOBD_air_cond_fan_speed() {
+    private void updateOBD_air_cond_fan_speed(ClimateData.FanSpeed fanSpeed) {
         iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0);
 
-        switch ( App.obd.climateData.fan_speed ) {
-            case 0x0: break;
-            case 0x1: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0); break;
-            case 0x2: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_1); break;
-            case 0x3: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_2); break;
-            case 0x4: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_3); break;
-            case 0x5: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_4); break;
-            case 0x6: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_5); break;
-            case 0x7: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_6); break;
-            case 0x8: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_7); break;
-            case 0x9: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_8); break;
+        //switch ( App.obd.climateData.fan_speed ) {
+        switch ( fanSpeed ) {
+            case off:       iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0); break;
+            case speed1:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_1); break;
+            case speed2:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_2); break;
+            case speed3:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_3); break;
+            case speed4:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_4); break;
+            case speed5:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_5); break;
+            case speed6:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_6); break;
+            case speed7:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_7); break;
+            case speed8:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_8); break;
             default:  break;
         }
 
     }
 
-    private void updateOBD_air_cond_temperature(){
-        tv_air_cond_temp.setText( String.format("%1$.1f гр.", App.obd.climateData.temperature ));
+    private void updateOBD_air_cond_fan_mode( ClimateData.FanMode fanMode) {
+//        iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0);
+//
+//        switch ( App.obd.climateData.fan_speed ) {
+//            case 0x0: break;
+//            case 0x1: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0); break;
+//            case 0x2: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_1); break;
+//            case 0x3: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_2); break;
+//            case 0x4: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_3); break;
+//            case 0x5: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_4); break;
+//            case 0x6: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_5); break;
+//            case 0x7: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_6); break;
+//            case 0x8: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_7); break;
+//            case 0x9: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_8); break;
+//            default:  break;
+//        }
+        iv_ac_fan_mode.setVisibility( (fanMode == ClimateData.FanMode.auto) ? View.VISIBLE : View.INVISIBLE);
     }
 
-    private void updateOBD_air_cond_blow_direction(){
+    private void updateOBD_air_cond_temperature(String temp){
+        //tv_air_cond_temp.setText( String.format("%1$.1f", App.obd.climateData.temperature ));
+        tv_air_cond_temp.setText( temp );
+        if ( App.obd.climateData.temperature < 19f )
+            iv_air_temp.setImageResource(R.drawable.ac_temp_blue);
+        else if ( App.obd.climateData.temperature < 21f )
+            iv_air_temp.setImageResource(R.drawable.ac_temp_green);
+        else if ( App.obd.climateData.temperature < 23f )
+            iv_air_temp.setImageResource(R.drawable.ac_temp_orange);
+        else
+            iv_air_temp.setImageResource(R.drawable.ac_temp_red);
 
-        switch ( App.obd.climateData.blow_direction ) {
-            case 0x0: break;
-            case 0x1: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_face); break;
-            case 0x3: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_feet_and_face_and_feet); break;
-            case 0x4: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_face_and_feet); break;
-            case 0x5: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_face); break;
-            case 0x7: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_feet); break;
-            case 0x9: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_window); break;
-            case 0xA: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_feet_and_window); break;
-            case 0xB: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_window_and_feet_and_window); break;
-            case 0xD: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_window); break;
+    }
+
+    private void updateOBD_air_cond_blow_direction(ClimateData.BlowDirection blowDirection){
+
+        switch ( blowDirection ) {
+            case face:  iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_face); break;
+            case from_face_to_feet_and_face: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_feet_and_face_and_feet); break;
+            case feet_and_face: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_face_and_feet); break;
+            case from_feet_and_face_to_feet: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_face); break;
+            case feet: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_feet); break;
+            case from_feet_to_feet_and_window: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_window); break;
+            case feet_and_window: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_feet_and_window); break;
+            case from_feet_and_window_to_window: iv_air_direction.setImageResource(R.drawable.air_wind_seat_my_to_beetwen_window_and_feet_and_window); break;
+            case window: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_window); break;
             default:  break;
         }
 
     }
 
-    private void updateOBD_air_cond_defogger(){
-        iv_air_defogger.setVisibility( App.obd.climateData.defogger_state  ? View.VISIBLE : View.INVISIBLE );
+    private void updateOBD_air_cond_defogger( ClimateData.State state){
+        //iv_air_defogger.setVisibility( (App.obd.climateData.defogger_state == ClimateData.State.on)  ? View.VISIBLE : View.INVISIBLE );
+        iv_air_defogger.setVisibility( (state == ClimateData.State.on)  ? View.VISIBLE : View.INVISIBLE );
     }
 
-    private void updateOBD_air_cond_recirculation(){
-        iv_air_recirculation.setVisibility( App.obd.climateData.recirculation_state  ? View.VISIBLE : View.INVISIBLE );
+    private void updateOBD_air_cond_recirculation( ClimateData.State state){
+        //iv_air_recirculation.setVisibility( (App.obd.climateData.recirculation_state == ClimateData.State.on)  ? View.VISIBLE : View.INVISIBLE );
+        iv_air_recirculation.setVisibility( (state == ClimateData.State.on)  ? View.VISIBLE : View.INVISIBLE );
     }
 
-    private void updateOBD_air_cond_state() {
+    private void updateOBD_air_cond_state( ClimateData.State state) {
 
-        iv_air_ac_state.setVisibility( App.obd.climateData.ac_state ? View.VISIBLE : View.INVISIBLE );
+        //iv_air_ac_state.setVisibility( (App.obd.climateData.ac_state == ClimateData.State.on) ? View.VISIBLE : View.INVISIBLE );
+        iv_air_ac_state.setImageResource( (state == ClimateData.State.on) ? R.drawable.air_cond__state_on : R.drawable.air_cond__state_off );
+
     }
 
+    private void updateOBD_air_cond_ext_temperature (int temp) {
+        // TODO
+    }
+
+    private void updateOBD_air_cond_blow_mode( ClimateData.BlowMode blowMode){
+        iv_ac_blow_auto.setVisibility( (blowMode == ClimateData.BlowMode.auto) ? View.VISIBLE : View.INVISIBLE);
+    }
 }
 
 

@@ -49,6 +49,11 @@ public class BackgroundService extends Service {
         Notification notification = notifyData.show();
         startForeground( NotifyData.NOTIFY_ID, notification);
 
+        if ( App.GS.interactWithPowerAmp &&
+                App.GS.needWatchBootUpPowerAmp ) {
+            Radio.checkRadioActivityStarted(true);
+        }
+
 		if ((flags & START_FLAG_RETRY) == 0) {
 			// TODO Если это повторный запуск, выполнить какие-то действия.
 			Log.d ("BackgroundService", "Second attempt or more...");
@@ -56,10 +61,7 @@ public class BackgroundService extends Service {
 		else {
 			// TODO Альтернативные действия в фоновом режиме.
 			Log.d ("BackgroundService", "First attempt ");
-            if ( App.GS.interactWithPowerAmp &&
-                    App.GS.needWatchBootUpPowerAmp ) {
-                Radio.checkRadioActivityStarted(true);
-            }
+
 		}
 
 		startTWUtilProcessingThread();

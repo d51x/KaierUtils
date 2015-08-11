@@ -49,7 +49,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TextView tvOBD_FuelUsageTotal;
     private TextView tvOBD_FuelUsageTotal2;
 
-    private TextView tv_can_211D_A3;
 
 
 
@@ -59,16 +58,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
     private TextView tv_air_cond_external_temp;
 
-    private TextView tv_air_cond_fan_speed_state;
-    private TextView tv_air_cond_fan_speed_position;
-    private TextView tv_air_cond_blow_direction_state;
-    private TextView tv_air_cond_blow_direction_position;
-    private TextView tv_air_cond_set_temperature;
-    private TextView tv_air_cond_recirculation_state;
-    private TextView tv_air_cond_state;
-    private TextView tv_air_cond_defogger_state;
-
-    private TextView tv_awc_4wd_mode;
 
     private TextView tvFuelLevel;
 
@@ -106,7 +95,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBD_FuelUsageTotal = (TextView) findViewById(R.id.tvOBD_FuelUsageTotal);
         tvOBD_FuelUsageTotal2 = (TextView) findViewById(R.id.tvOBD_FuelUsageTotal2);
 
-        tv_can_211D_A3 = (TextView) findViewById(R.id.tv_can_211D_A3);
 
 
         tv_can_2110_cvt_oil_degr = (TextView) findViewById(R.id.tv_can_2110_cvt_oil_degr);
@@ -114,16 +102,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
         tv_air_cond_external_temp = (TextView) findViewById(R.id.tv_air_cond_external_temp);
 
-        tv_air_cond_fan_speed_state = (TextView) findViewById(R.id.tv_air_cond_fan_speed_state);
-        tv_air_cond_fan_speed_position = (TextView) findViewById(R.id.tv_air_cond_fan_speed_position);
-        tv_air_cond_blow_direction_state = (TextView) findViewById(R.id.tv_air_cond_blow_direction_state);
-        tv_air_cond_blow_direction_position = (TextView) findViewById(R.id.tv_air_cond_blow_direction_position);
-        tv_air_cond_set_temperature = (TextView) findViewById(R.id.tv_air_cond_set_temperature);
-        tv_air_cond_recirculation_state = (TextView) findViewById(R.id.tv_air_cond_recirculation_state);
-        tv_air_cond_state = (TextView) findViewById(R.id.tv_air_cond_state);
-        tv_air_cond_defogger_state = (TextView) findViewById(R.id.tv_air_cond_defogger_state);
 
-        tv_awc_4wd_mode = (TextView) findViewById(R.id.tv_awc_4wd_mode);
 
         tvFuelLevel = (TextView) findViewById(R.id.tvFuelLevel);
 
@@ -159,7 +138,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBD_MAF.setText("");
 
 
-        tv_can_211D_A3.setText(String.format( getString( R.string.text_can_211D_A3), "---"));
 
 
         tv_can_2110_cvt_oil_degr.setText(String.format( getString( R.string.text_can_2110_cvt_oil_degr), "---"));
@@ -167,21 +145,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
         tv_air_cond_external_temp.setText(String.format( getString( R.string.text_air_cond_external_temp), "---"));
 
-
-
-        tv_air_cond_fan_speed_state.setText(String.format( getString( R.string.text_air_cond_fan_speed), "---"));
-        tv_air_cond_fan_speed_position.setText(String.format( getString( R.string.text_air_cond_fan_speed), "---"));
-        tv_air_cond_blow_direction_state.setText(String.format( getString( R.string.text_air_cond_blow_direction), "---"));
-        tv_air_cond_blow_direction_position.setText(String.format( getString( R.string.text_air_cond_blow_direction), "---"));
-        tv_air_cond_set_temperature.setText(String.format( getString( R.string.text_air_cond_set_temperature), "---"));
-        tv_air_cond_recirculation_state.setText(String.format( getString( R.string.text_air_cond_recirculation_state), "---"));
-        tv_air_cond_state.setText(String.format( getString( R.string.text_air_cond_state), "---"));
-        tv_air_cond_defogger_state.setText(String.format( getString( R.string.text_air_cond_defogger_state), "---"));
-
-
-
-
-        tv_awc_4wd_mode.setText(String.format( getString( R.string.text_awc_4wd_mode), "---"));
 
         tvFuelLevel.setText(String.format( getString( R.string.text_obd_can_fuel_level), "---"));
 
@@ -200,9 +163,13 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
         registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_CVT_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED));
-        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_AWC_CHANGED));
+
+
+        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED));
 
     }
 
@@ -218,6 +185,24 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         } catch (Exception e) {
             Log.d("ODBActivity->OnResume", e.toString());
         }
+
+        int i = App.obd.canMmcData.can_mmc_fuel_remain;
+        String s = ( i > -1 ) ? Integer.toString(i) : "---";
+        tvFuelLevel.setText(String.format( getString( R.string.text_obd_can_fuel_level), s));
+
+
+        i = App.obd.climateData.ext_temperature;
+        s = ( i > -255 ) ? Integer.toString(i) : "---";
+        tv_air_cond_external_temp.setText(String.format( getString( R.string.text_air_cond_external_temp), s));
+
+        i = App.obd.canMmcData.can_mmc_cvt_temp;
+        s = ( i > -255 ) ? Integer.toString(i) : "---";
+        tv_can_2103_cvt_temp_count.setText(String.format( getString( R.string.text_can_2103_cvt_temp_count), s));
+
+        i = App.obd.canMmcData.can_mmc_cvt_degradation_level;
+        s = ( i > -255 ) ? Integer.toString(i) : "---";
+        tv_can_2110_cvt_oil_degr.setText(String.format(getString(R.string.text_can_2110_cvt_oil_degr), s));
+
     }
 
     @Override
@@ -340,104 +325,34 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 tvOBD_FuelUsageTotal.setText(String.format(getString(R.string.text_obd_fuel_usage), App.obd.totalTrip.fuel_usage));
                 tvOBD_FuelUsageTotal2.setText(String.format(getString(R.string.text_obd_fuel_usage_with_stops), App.obd.totalTrip.fuel_usage_wo_stops));
 
-            } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED) ) {
-
-
-            } else if ( action.equals(OBDII.OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED) ) {
-
             }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED )) {
-                String extra = intent.getStringExtra("PID");
-                ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("Buffer");
-                String res = "";
 
-                if ( extra.equalsIgnoreCase( "211D:7E0" ) ) {
-                    // get "engine_aircond_state"
-                    res = App.obd.process_MMC_ECU_data( "engine_aircond_state", action, extra, buffer);
-                    tv_can_211D_A3.setText(String.format(getString(R.string.text_can_211D_A3), res));
-
-                }
+            // ----------------------------------------------------------------------------
+            // CVT: Oil Degradation Level
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED )) {
+                int i = App.obd.canMmcData.can_mmc_cvt_degradation_level;
+                String s = ( i > -255 ) ? Integer.toString(i) : "---";
+                tv_can_2110_cvt_oil_degr.setText(String.format(getString(R.string.text_can_2110_cvt_oil_degr), s));
             }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_CVT_CHANGED )) {
-                String extra = intent.getStringExtra("PID");
-                ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("Buffer");
-                String res = "";
-
-                if ( extra.equalsIgnoreCase( "2110:7E1" ) ) {
-                    // cvt_oil_degradation
-                    res = App.obd.process_MMC_ECU_data( "cvt_oil_degradation", action, extra, buffer);
-                    tv_can_2110_cvt_oil_degr.setText(String.format(getString(R.string.text_can_2110_cvt_oil_degr), res));
-                }
-                else if ( extra.equalsIgnoreCase( "2103:7E1" ) ) {
-                    // cvt_temp_count
-                    res = App.obd.process_MMC_ECU_data( "cvt_temp_count", action, extra, buffer);
-
-                    // cvt_temp_grad
-                    String res2 = App.obd.process_MMC_ECU_data( "cvt_temp_grad", action, extra, buffer);
-
-                    tv_can_2103_cvt_temp_count.setText(String.format( getString( R.string.text_can_2103_cvt_temp_count), res, res2));
-                }
+            // CVT: Oil Temperature
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED )) {
+                int i = App.obd.canMmcData.can_mmc_cvt_temp;
+                String s = ( i > -255 ) ? Integer.toString(i) : "---";
+                tv_can_2103_cvt_temp_count.setText(String.format( getString( R.string.text_can_2103_cvt_temp_count), s));
             }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED )) {
-                String extra = intent.getStringExtra("PID");
-                ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("Buffer");
-                String res = "";
-
-                if ( extra.equalsIgnoreCase( "2111:688" ) ) {
-                    // air_cond_external_temp
-                    res = App.obd.process_MMC_ECU_data( "air_cond_external_temp", action, extra, buffer);
-                    tv_air_cond_external_temp.setText(String.format( getString( R.string.text_air_cond_external_temp), res));
-                }
-                else if ( extra.equalsIgnoreCase( "2161:688" ) ) {
-                    // air_cond_request_indicator_light
-                    res = App.obd.process_MMC_ECU_data( "air_cond_fan_speed_state", action, extra, buffer);
-                    tv_air_cond_fan_speed_state.setText(String.format( getString( R.string.text_air_cond_fan_speed), res));
-
-                    res = App.obd.process_MMC_ECU_data( "air_cond_blow_direction_state", action, extra, buffer);
-                    tv_air_cond_blow_direction_state.setText(String.format( getString( R.string.text_air_cond_blow_direction), res));
-
-                    res = App.obd.process_MMC_ECU_data( "air_cond_recirculation_state", action, extra, buffer);
-                    tv_air_cond_recirculation_state.setText(String.format( getString( R.string.text_air_cond_recirculation_state), res));
-
-                    res = App.obd.process_MMC_ECU_data( "air_cond_state", action, extra, buffer);
-                    tv_air_cond_state.setText(String.format( getString( R.string.text_air_cond_state), res));
-
-                    res = App.obd.process_MMC_ECU_data( "air_cond_defogger_state", action, extra, buffer);
-                    tv_air_cond_defogger_state.setText(String.format( getString( R.string.text_air_cond_defogger_state), res));
-
-                }
-                else if ( extra.equalsIgnoreCase( "2160:688" ) ) {
-                    // air_cond_oper_state
-                    res = App.obd.process_MMC_ECU_data( "air_cond_fan_speed_position", action, extra, buffer);
-                    tv_air_cond_fan_speed_position.setText(String.format( getString( R.string.text_air_cond_fan_speed), res));
-
-                    res = App.obd.process_MMC_ECU_data( "air_cond_blow_direction_position", action, extra, buffer);
-                    tv_air_cond_blow_direction_position.setText(String.format( getString( R.string.text_air_cond_blow_direction), res));
-
-                    res = App.obd.process_MMC_ECU_data( "air_cond_set_temperature", action, extra, buffer);
-                    tv_air_cond_set_temperature.setText(String.format( getString( R.string.text_air_cond_set_temperature), res));
-                }
+            // ----------------------------------------------------------------------------
+            //Air Conditioner: external temperature
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED )) {
+                int i = App.obd.climateData.ext_temperature;
+                String s = ( i > -255 ) ? Integer.toString(i) : "---";
+                tv_air_cond_external_temp.setText(String.format( getString( R.string.text_air_cond_external_temp), s));
             }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED )) {
-                String extra = intent.getStringExtra("PID");
-                ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("Buffer");
-                String res = "";
-
-                if ( extra.equalsIgnoreCase( "21A3:6A0" ) ) {
-                    // combine_meter_fuel_level
-                    res = App.obd.process_MMC_ECU_data( "combine_meter_fuel_level", action, extra, buffer);
-                    tvFuelLevel.setText(String.format( getString( R.string.text_obd_can_fuel_level), res));
-                }
-            }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_AWC_CHANGED)) {
-                String extra = intent.getStringExtra("PID");
-                ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("Buffer");
-                String res = "";
-
-                if ( extra.equalsIgnoreCase( "2130:7B6" ) ) {
-                    res = App.obd.process_MMC_ECU_data( "awc_4wd_mode", action, extra, buffer);
-                    tv_awc_4wd_mode.setText(String.format(getString(R.string.text_awc_4wd_mode), res));
-                }
+            // ----------------------------------------------------------------------------
+            //Combination meter: fuel level
+            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED )) {
+                int i = App.obd.canMmcData.can_mmc_fuel_remain;
+                String s = ( i > -1 ) ? Integer.toString(i) : "---";
+                tvFuelLevel.setText(String.format( getString( R.string.text_obd_can_fuel_level), s));
             }
         }
     };

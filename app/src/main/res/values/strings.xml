@@ -119,10 +119,8 @@
     <string name="text_statistic_title">Статистика с момента включения:</string>
     <string name="text_working_start">Работает с %1$s</string>
 
-    <string name="text_gps_info_title">GPS информация</string>
-
-    <string name="text_gps_altitude">Высота: %1$s м</string>
-    <string name="text_gps_accuracy">Точность: %1$s м</string>
+    <!-- <string name="text_gps_altitude">Высота: %1$s м</string> -->
+    <!-- <string name="text_gps_accuracy">Точность: %1$s м</string> -->
     <string name="text_gps_speed_value">%1$d</string>
     <string name="text_gps_track_time">%1$s</string>
 
@@ -192,27 +190,16 @@
     <string name="text_can_211D_A3">Вентилятор охлаждения: %1$s</string>
 
     <string name="text_can_2110_cvt_oil_degr">CVT oil degradation: %1$s</string>
-    <string name="text_can_2103_cvt_temp_count">CVT temp, count: %1$s, grad: %2$s</string>
+    <string name="text_can_2103_cvt_temp_count">CVT temp: %1$s</string>
     <string name="text_obd_can_fuel_level">Остаток топлива: %1$s</string>
     <string name="text_air_cond_external_temp">A/C External temperature: %1$s</string>
-    <string name="text_air_cond_request_indicator_light">A/C request ind light: %1$s</string>
-    <string name="text_air_cond_oper_state">A/C operation status: %1$s</string>
-    <string name="text_awc_4wd_mode">4WD Mode: %1$s</string>
-    <string name="text_air_cond_fan_speed_setting">A/C fan speed: %1$s</string>
-    <string name="text_air_cond_mixer_motor_position">A/C mixer position: %1$s</string>
-    <string name="text_air_cond_fan_speed">Мощьность обдува: %1$s</string>
-    <string name="text_air_cond_blow_direction">Направление обдува: %1$s</string>
-    <string name="text_air_cond_recirculation_state">Рециркуляция: %1$s</string>
-    <string name="text_air_cond_state">A/C: %1$s</string>
-    <string name="text_air_cond_defogger_state">Обогрев зеркал/стекла: %1$s</string>
-    <string name="text_air_cond_set_temperature">Температура: %1$s</string>
     <string name="cbOBD_show_battery">Отображать заряд аккумулятора</string>
     <string name="cbOBD_show_engine_temp">Отображать теммпературу охлаждающей жидкости</string>
     <string name="cbOBD_show_fuel_detail">Отображать данные о количестве топлива (в баке / потрачено)</string>
     <string name="cbOBD_show_fuel_consump_detail">Отображать данные о расходе топлива (мгновенный расход ; л/100км мгновенный; л/100км средний)</string>
     <string name="cbCanMMC_show_fuel">Остаток топлива по CAN</string>
-    <string name="cbCanMMC_show_CVT_temp">Отображать температуру CVT вместе с температурой ОЖ</string>
-    <string name="cbCanMMC_cvt_oil_degradation">Отображать степень деградации масла CVT вместе с температурой ОЖ</string>
+    <string name="cbCanMMC_show_CVT_temp">Отображать температуру CVT</string>
+    <string name="cbCanMMC_cvt_oil_degradation">Отображать степень деградации масла CVT</string>
     <string name="text_update_time_min">Период обновления, мин:</string>
     <string name="cbCanMMC_show_climate_data">Отображать данные климат-контроля</string>
 </resources>

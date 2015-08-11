@@ -26,10 +26,17 @@ public class CanMmcData {
 
     public boolean can_mmc_ac_data_show;            // отображать и читать данные климата
 
+    public boolean engine_fan_show;
 
+public enum State {off, on};
+
+    public State fan_state;
 
   public CanMmcData(Context context) {
       mContext = context;
+
+      fan_state = State.off;
+
       can_mmc_speed = -1;
       can_mmc_rpm = -1;
       can_mmc_fuel_remain = -1;
@@ -46,6 +53,7 @@ public class CanMmcData {
 
       can_mmc_engine_temp = -1;
 
+      engine_fan_show = true;
       can_mmc_ac_data_show = false;
 
       SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);

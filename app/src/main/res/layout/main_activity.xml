@@ -232,158 +232,6 @@ android:longClickable="true">
 		</LinearLayout>
 	</LinearLayout>
 
-	<LinearLayout
-        android:orientation="vertical"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout_gps_info"
-        android:layout_alignTop="@+id/layout_general_info"
-        android:layout_alignParentRight="true">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/text_gps_info_title"
-            android:id="@+id/text_gps_info_title"
-            android:paddingBottom="5dp" android:gravity="center_horizontal"
-            android:layout_gravity="right"/>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:id="@+id/layout_satellites" android:layout_gravity="right">
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:gravity="center|right"
-                android:layout_gravity="right">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="match_parent"
-                    android:id="@+id/imageView3"
-                    android:src="@drawable/satellite"
-                    android:baselineAlignBottom="true"
-                    android:layout_marginLeft="-10dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="10"
-                    android:id="@+id/text_satellites_total"
-                    android:textSize="20dp"
-                    android:paddingLeft="10dp"
-                    android:gravity="center_vertical"/>
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="match_parent"
-                    android:id="@+id/imageView"
-                    android:src="@drawable/satellite_good"
-                    android:baselineAlignBottom="true"
-                    android:layout_marginLeft="10dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="2"
-                    android:id="@+id/text_satellites_inuse"
-                    android:textSize="20dp"
-                    android:paddingLeft="10dp"
-                    android:gravity="center_vertical"/>
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="match_parent"
-                    android:id="@+id/imageView4"
-                    android:src="@drawable/satellites_inuse"
-                    android:baselineAlignBottom="true"
-                    android:layout_marginLeft="10dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="2"
-                    android:id="@+id/text_satellites_good"
-                    android:textSize="20dp"
-                    android:paddingLeft="10dp"
-                    android:gravity="center_vertical"/>
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1"
-            android:paddingBottom="5dp"
-            android:id="@+id/layout_coordinates" android:layout_gravity="right"
-            android:gravity="right">
-
-            <ImageView
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:id="@+id/ivGPSStatus"
-                android:src="@drawable/gps_coordinates"
-                android:baselineAlignBottom="false" android:layout_gravity="right"/>
-
-	        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical|fill_vertical|right"
-                android:baselineAligned="true"
-                android:paddingLeft="10dp" android:layout_gravity="right">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="65.56874"
-                    android:id="@+id/text_gps_latitude"
-                    android:gravity="center_vertical"
-                    android:textSize="20sp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="43.73620"
-                    android:id="@+id/text_gps_longitude"
-                    android:textSize="20sp"
-                    android:gravity="center_vertical"/>
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:showDividers="middle">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_gps_altitude"
-                android:id="@+id/text_gps_altitude"
-                android:singleLine="true" android:layout_gravity="right"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_gps_accuracy"
-                android:id="@+id/text_gps_accuracy"
-                android:singleLine="true"
-                android:gravity="right" android:layout_weight="1" android:layout_gravity="right"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -401,7 +249,8 @@ android:longClickable="true">
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            android:id="@+id/layout_battery">
 
             <ImageView
                 android:layout_width="40dp"
@@ -438,6 +287,16 @@ android:longClickable="true">
                 android:id="@+id/ivOBD_CoolantTemp"
                 android:src="@drawable/coolant_temp_min"
                 android:layout_gravity="center_vertical"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivOBD_CoolantTempFan"
+                android:layout_marginLeft="-40dp"
+                android:src="@drawable/engine_fan_yellow"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:visibility="invisible"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -594,80 +453,141 @@ android:longClickable="true">
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="false"
-        android:layout_marginTop="180dp"
+        android:layout_marginTop="0dp"
         android:id="@+id/layout_MMC_climate"
         android:visibility="visible"
-        android:layout_marginLeft="500dp">
+        android:layout_alignTop="@+id/layout_general_info"
+        android:layout_alignRight="@+id/layout_radio_music_info">
 
-        <ImageView
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/iv_bg_seat"
-            android:src="@drawable/air_wind_seat_my"
-            android:adjustViewBounds="false"
-            android:baselineAlignBottom="false"
-            />
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/iv_air_direction"
-            android:layout_gravity="center_horizontal|bottom"
-            android:src="@drawable/air_wind_seat_my_to_beetwen_window_and_feet_and_window"
-            />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="240dp"
+                android:layout_height="24dp"
+                android:id="@+id/layout_ac_indicators"
+                >
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/iv_air_recirculation"
-            android:layout_gravity="center_horizontal|bottom"
-            android:src="@drawable/air_wind_seat_my_air_looper"
-            android:visibility="visible"/>
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="24dp"
+                    android:id="@+id/iv_air_ac_state"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/air_cond__state_off"
+                    android:layout_weight="0.4"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/iv_air_defogger"
-            android:layout_gravity="center_horizontal|bottom"
-            android:src="@drawable/air_wind_seat_my_defogger"
-            />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:id="@+id/iv_air_recirculation"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/air_flag_inner_loop"
+                    android:visibility="visible"
+                    android:layout_weight="0.3"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/iv_air_ac_state"
-            android:layout_gravity="center_horizontal|bottom"
-            android:src="@drawable/air_wind_seat_my_ac"
-            />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:id="@+id/iv_air_defogger"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:src="@drawable/air_flag_rear"
+                    android:layout_weight="0.3"
+                    android:visibility="visible"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/iv_air_fan_speed"
-            android:layout_gravity="center_horizontal|bottom"
-            android:src="@drawable/air_wind_seat_my_fan_8"
-            android:layout_marginTop="20dp"/>
+            </LinearLayout>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/iv_air_temp"
-            android:layout_gravity="center_horizontal|bottom"
-            android:src="@drawable/air_wind_seat_my_temp"
-            android:layout_marginTop="15dp"/>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="false"
+                android:id="@+id/layout_ac_blow_direction">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="19.5"
-            android:id="@+id/tv_air_cond_temp"
-            android:gravity="center"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="70dp"/>
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/iv_bg_seat"
+                    android:src="@drawable/air_wind_seat_my"
+                    android:adjustViewBounds="false"
+                    android:baselineAlignBottom="false"
+                    android:layout_marginLeft="40dp"/>
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/iv_air_direction"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/air_wind_seat_my_to_beetwen_window_and_feet_and_window"
+                    android:layout_marginTop="-147dp"/>
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/iv_ac_blow_auto"
+                    android:src="@drawable/ac_mode_auto"
+                    android:layout_marginTop="-130dp"
+                    android:layout_marginLeft="10dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_fan_speed"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="-25dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/iv_air_fan_speed"
+                    android:src="@drawable/air_wind_seat_my_fan_8"
+                    />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/iv_ac_fan_mode"
+                    android:src="@drawable/ac_mode_auto"
+                    android:layout_marginTop="-20dp"
+                    android:layout_gravity="right"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_ac_temp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center|center_vertical">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/iv_air_temp"
+                    android:src="@drawable/ac_temp_green"
+                    android:adjustViewBounds="false"
+                    android:layout_gravity="right"
+                    android:baselineAlignBottom="false"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="19.5"
+                    android:id="@+id/tv_air_cond_temp"
+                    android:gravity="center"
+                    android:textSize="34sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
+
     </RelativeLayout>
 
     <FrameLayout
@@ -700,7 +620,8 @@ android:longClickable="true">
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/linearLayout"
         android:layout_above="@+id/layout_test"
-        android:id="@+id/layout_radio_music_info" android:layout_marginTop="12dp">
+        android:id="@+id/layout_radio_music_info" android:layout_marginTop="12dp"
+        >
 
         <LinearLayout
             android:orientation="vertical"
@@ -797,8 +718,88 @@ android:longClickable="true">
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"/>
             </LinearLayout>
+
         </LinearLayout>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout3"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="-40dp"
+        android:layout_alignTop="@+id/layoutCanMMC"
+        android:layout_alignLeft="@+id/layoutCanMMC">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:id="@+id/layout_satellites"
+            android:layout_marginTop="-10dp">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:layout_gravity="left">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imageView3"
+                    android:src="@drawable/satellite"
+                    android:baselineAlignBottom="true"
+                    android:layout_marginLeft="-10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="10"
+                    android:id="@+id/text_satellites_total"
+                    android:textSize="20dp"
+                    android:paddingLeft="10dp"
+                    android:gravity="center_vertical"/>
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imageView"
+                    android:src="@drawable/satellite_good"
+                    android:baselineAlignBottom="true"
+                    android:layout_marginLeft="10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="2"
+                    android:id="@+id/text_satellites_inuse"
+                    android:textSize="20dp"
+                    android:paddingLeft="10dp"
+                    android:gravity="center_vertical"/>
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imageView4"
+                    android:src="@drawable/satellites_inuse"
+                    android:baselineAlignBottom="true"
+                    android:layout_marginLeft="10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="2"
+                    android:id="@+id/text_satellites_good"
+                    android:textSize="20dp"
+                    android:paddingLeft="10dp"
+                    android:gravity="center_vertical"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

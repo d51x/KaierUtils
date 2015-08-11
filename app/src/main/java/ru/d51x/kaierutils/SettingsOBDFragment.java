@@ -1,19 +1,27 @@
 package ru.d51x.kaierutils;
 
 
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.app.Fragment;
+
+import java.util.ArrayList;
+import java.util.Set;
 
 public class SettingsOBDFragment extends  Fragment  implements View.OnClickListener {
 
@@ -25,6 +33,10 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     private CheckBox cbCanMMC_show_CVT_temp;
     private CheckBox cbCanMMC_cvt_oil_degradation;
     private CheckBox cbCanMMC_show_climate_data;
+    private CheckBox cbOBD_show_battery;
+    private CheckBox cbOBD_show_engine_temp;
+    private CheckBox cbOBD_show_fuel_detail;
+    private CheckBox cbOBD_show_fuel_consump_detail;
 
     private EditText edtCanMMC_fueltank_update_time;
     private EditText edtCVT_temp_update_time;
@@ -75,6 +87,22 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         cbCanMMC_show_climate_data = (CheckBox) mV.findViewById(R.id.cbCanMMC_show_climate_data);
         cbCanMMC_show_climate_data.setOnClickListener(this);
         cbCanMMC_show_climate_data.setChecked(App.obd.canMmcData.can_mmc_ac_data_show);
+
+        cbOBD_show_battery = (CheckBox) mV.findViewById(R.id.cbOBD_show_battery);
+        cbOBD_show_battery.setOnClickListener(this);
+        cbOBD_show_battery.setChecked(App.obd.battery_show);
+
+        cbOBD_show_engine_temp = (CheckBox) mV.findViewById(R.id.cbOBD_show_engine_temp);
+        cbOBD_show_engine_temp.setOnClickListener(this);
+        cbOBD_show_engine_temp.setChecked(App.obd.engine_temp_show);
+
+        cbOBD_show_fuel_detail = (CheckBox) mV.findViewById(R.id.cbOBD_show_fuel_detail);
+        cbOBD_show_fuel_detail.setOnClickListener(this);
+        cbOBD_show_fuel_detail.setChecked(App.obd.fuel_data_show);
+
+        cbOBD_show_fuel_consump_detail = (CheckBox) mV.findViewById(R.id.cbOBD_show_fuel_consump_detail);
+        cbOBD_show_fuel_consump_detail.setOnClickListener(this);
+        cbOBD_show_fuel_consump_detail.setChecked(App.obd.fuel_consump_show);
 
         edtCanMMC_fueltank_update_time = (EditText) mV.findViewById(R.id.edtCanMMC_fueltank_update_time);
         edtCanMMC_fueltank_update_time.setText(Integer.toString(App.obd.canMmcData.can_mmc_fuel_remain_update_time));
@@ -154,7 +182,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
                 break;
 
             case R.id.btnSelectDevice2:
-                OBDIIActivity.show_odb_device_select_dialog( App.getInstance() );
+                show_odb_device_select_dialog( App.getInstance () );
                 break;
             case R.id.btnOBDConnect2:
                 if ( !App.obd.isConnected) BackgroundService.startOBDThread();
@@ -162,7 +190,22 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
             case R.id.btnOBDDisconnect2:
                 BackgroundService.stopOBDThread();
                 break;
-
+            case R.id.cbOBD_show_battery:
+                App.obd.battery_show = cbOBD_show_battery.isChecked();
+                prefs.edit().putBoolean("ODBII_BATTERY_SHOW", App.obd.battery_show).apply();
+                break;
+            case R.id.cbOBD_show_engine_temp:
+                App.obd.engine_temp_show = cbOBD_show_engine_temp.isChecked();
+                prefs.edit().putBoolean("ODBII_ENGINE_TEMP_SHOW", App.obd.engine_temp_show).apply();
+                break;
+            case R.id.cbOBD_show_fuel_detail:
+                App.obd.fuel_data_show = cbOBD_show_fuel_detail.isChecked();
+                prefs.edit().putBoolean("ODBII_FUEL_DATA_SHOW", App.obd.fuel_data_show).apply();
+                break;
+            case R.id.cbOBD_show_fuel_consump_detail:
+                App.obd.fuel_consump_show = cbOBD_show_fuel_consump_detail.isChecked();
+                prefs.edit().putBoolean("ODBII_FUEL_CONSUMP_SHOW", App.obd.fuel_consump_show).apply();
+                break;
             default:
                 break;
         }
@@ -178,5 +221,46 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
             //off
             if ( App.obd.isConnected) BackgroundService.stopOBDThread();
         }
+    }
+
+    public  void show_odb_device_select_dialog(Context context) {
+        ArrayList<String> deviceStrs = new ArrayList<String>();
+        final ArrayList<String> devices = new ArrayList<String>();
+        final ArrayList<String> devicesName = new ArrayList<String>();
+        BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+        Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
+        if (pairedDevices.size() > 0)
+        {
+            for (BluetoothDevice device : pairedDevices)
+            {
+                deviceStrs.add(device.getName() + "\n" + device.getAddress());
+                devices.add(device.getAddress());
+                devicesName.add(device.getName());
+            }
+        }
+        // show list
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder( context );
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.select_dialog_singlechoice,
+                deviceStrs.toArray(new String[deviceStrs.size()]));
+
+        alertDialog.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                dialog.dismiss();
+                int position = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                App.obd.setDeviceAddress(devices.get(position));
+                App.obd.setDeviceName( devicesName.get(position));
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+                prefs.edit().putString("ODBII_DEVICE_ADDRESS", App.obd.getDeviceAddress()).commit();
+                prefs.edit().putString("ODBII_DEVICE_NAME", App.obd.getDeviceName()).commit();
+            }
+        });
+
+        alertDialog.setTitle("Choose Bluetooth device");
+        alertDialog.show();
+
     }
 }

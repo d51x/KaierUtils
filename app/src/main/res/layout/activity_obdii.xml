@@ -195,15 +195,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/text_can_211D_A3"
-                        android:id="@+id/tv_can_211D_A3"
-                        android:textSize="16sp"
-                        android:layout_weight="0.5"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="@string/text_air_cond_external_temp"
                         android:id="@+id/tv_air_cond_external_temp"
                         android:layout_weight="0.5"
@@ -264,15 +255,6 @@
                             android:layout_weight="0.2"
                             android:gravity="center|center_vertical|center_horizontal"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_awc_4wd_mode"
-                            android:id="@+id/tv_awc_4wd_mode"
-                            android:layout_weight="0.2"
-                            android:textSize="16sp"
-                            android:gravity="center_vertical|center_horizontal|right"/>
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -295,59 +277,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Климат (индикация):"
-                            android:id="@+id/textView12"
-                            android:layout_weight="0.5"
-                            android:textSize="16sp"
-                            />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_air_cond_fan_speed"
-                            android:id="@+id/tv_air_cond_fan_speed_state"
-                            android:layout_weight="0.25"
-                            android:textSize="16sp"
-                            android:gravity="center_vertical|center_horizontal|right"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_air_cond_blow_direction"
-                            android:id="@+id/tv_air_cond_blow_direction_state"
-                            android:layout_weight="0.25"
-                            android:textSize="16sp"
-                            android:gravity="center_vertical|center_horizontal|right"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_air_cond_recirculation_state"
-                            android:id="@+id/tv_air_cond_recirculation_state"
-                            android:layout_weight="0.25"
-                            android:textSize="16sp"
-                            android:gravity="center_vertical|center_horizontal|right"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_air_cond_state"
-                            android:id="@+id/tv_air_cond_state"
-                            android:layout_weight="0.25"
-                            android:textSize="16sp"
-                            android:gravity="center_vertical|center_horizontal|right"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_air_cond_defogger_state"
-                            android:id="@+id/tv_air_cond_defogger_state"
-                            android:layout_weight="0.25"
-                            android:textSize="16sp"
-                            android:gravity="center_vertical|center_horizontal|right"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -356,41 +285,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Климат (параметры)"
-                            android:id="@+id/textView13"
-                            android:layout_weight="0.5"
-                            android:textSize="16sp"
-                            />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_air_cond_fan_speed"
-                            android:id="@+id/tv_air_cond_fan_speed_position"
-                            android:layout_weight="0.5"
-                            android:textSize="16sp"
-                            android:gravity="center_vertical|center_horizontal|right"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_air_cond_blow_direction"
-                            android:id="@+id/tv_air_cond_blow_direction_position"
-                            android:layout_weight="0.25"
-                            android:textSize="16sp"
-                            android:gravity="center_vertical|center_horizontal|right"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_air_cond_set_temperature"
-                            android:id="@+id/tv_air_cond_set_temperature"
-                            android:layout_weight="0.25"
-                            android:textSize="16sp"
-                            android:gravity="center_vertical|center_horizontal|right"/>
                     </LinearLayout>
 
                 </LinearLayout>
