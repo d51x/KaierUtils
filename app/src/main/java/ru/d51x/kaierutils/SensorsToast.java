@@ -1,6 +1,7 @@
 package ru.d51x.kaierutils;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -59,7 +60,10 @@ public class SensorsToast {
         set_sensor(iv_sensor_rear_left_outer, rear_outer_left );
         set_sensor(iv_sensor_rear_right_outer, rear_outer_right );
         set_sensor(iv_sensor_rear_right_inner, rear_inner_right );
-	}
+
+        Log.d("SENSORS: ", String.format("LO: %1$d     LI: %2$d     RI: %3$d     RO: %4$d",
+                rear_outer_left, rear_inner_left, rear_inner_right, rear_outer_right));
+    }
 
 
     private void set_sensor(ImageView iv, int value){

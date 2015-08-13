@@ -62,6 +62,7 @@
                 <action android:name="ru.d51x.kaierutils.action.REVERSE_ACTIVITY_START" />
                 <action android:name="ru.d51x.kaierutils.action.REVERSE_ACTIVITY_FINISH" />
                 <action android:name="ru.d51x.kaierutils.action.RADIO_CHANGED" />
+                <action android:name="ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_CHANGED" />
             </intent-filter>
         </receiver>
 

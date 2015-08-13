@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
@@ -1380,7 +1381,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 //        //tv_air_cond_temp.setText( temp );
 //        tv_air_cond_temp.setText( ss );
 
-        TextViewToSpans(tv_air_cond_temp, temp, 50, 12);
+        TextViewToSpans(tv_air_cond_temp, temp, 42, 12);
 
         if ( App.obd.climateData.temperature < 19f )
             iv_air_temp.setImageResource(R.drawable.ac_temp_blue);
@@ -1441,7 +1442,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
         updateOBD_air_cond_recirculation( climateData.recirculation_state);
         updateOBD_air_cond_defogger( climateData.defogger_state );
         updateOBD_air_cond_blow_direction( climateData.blow_direction);
-        updateOBD_air_cond_temperature( String.format("%1$.1f", climateData.temperature) ) ;
+        if ( climateData.temperature == -255 )
+            updateOBD_air_cond_temperature( "--.-" ) ;
+            else updateOBD_air_cond_temperature( String.format("%1$.1f", climateData.temperature) ) ;
         updateOBD_air_cond_fan_mode( climateData.fan_mode);
         updateOBD_air_cond_fan_speed(climateData.fan_speed);
 
@@ -1451,8 +1454,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
         String s = value.replace(",", ".");
         SpannableString ss =  new SpannableString(s);
         int dot = s.indexOf(".");
-        ss.setSpan(new AbsoluteSizeSpan( size1 ), 0, dot-1, 0);
-        ss.setSpan(new AbsoluteSizeSpan( size2 ), dot, s.length()-1, 0);
+        if ( dot > -1 ) {
+            ss.setSpan(new AbsoluteSizeSpan(size1), 0, dot, 0);
+            ss.setSpan(new AbsoluteSizeSpan(size2), dot + 1, s.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        }
         tv.setText(ss);
     }
 }
