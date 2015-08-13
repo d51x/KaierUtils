@@ -11,9 +11,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,7 +35,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.content.DialogInterface;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import java.util.TimeZone;
@@ -40,7 +44,7 @@ import android.widget.PopupWindow;
 import com.maxmpz.poweramp.player.PowerampAPI;
 
 public class MainActivity extends Activity implements View.OnClickListener,
-													  OnLongClickListener {
+													  OnLongClickListener{
 
 	private Handler mHandler;
 	private PopupWindow pwindo;
@@ -48,6 +52,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private LinearLayout layout_gps_speed;
     private LinearLayout layout_waypoints;
     private LinearLayout layout_tracktime;
+    private LinearLayout layout_gps_info;
 
     private int modeFuelTank = 0;
     private int modeEngineTemp = 0;
@@ -76,6 +81,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
 	private LinearLayout layout_eq_data;
+	private LinearLayout layout_radio_music_info;
 
 	private TextView tv_eq_bass;
 	private TextView tv_eq_mid;
@@ -144,7 +150,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate (savedInstanceState);
         // Убираем заголовок
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        if ( App.GS.isHideHeader ) this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         // Убираем панель уведомлений
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView (R.layout.main_activity);
@@ -171,11 +178,15 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
 
-		layout_eq_data = (LinearLayout) findViewById (R.id.layout_eq_data);
+        layout_radio_music_info = (LinearLayout) findViewById (R.id.layout_radio_music_info);
+        //layout_radio_music_info.setOnTouchListener(this);
+
+        layout_eq_data = (LinearLayout) findViewById (R.id.layout_eq_data);
 		tv_eq_bass = (TextView) findViewById (R.id.tv_eq_bass);
 		tv_eq_mid = (TextView) findViewById (R.id.tv_eq_mid);
 		tv_eq_tre = (TextView) findViewById (R.id.tv_eq_tre);
 
+        layout_gps_info = (LinearLayout) findViewById(R.id.layout_gps_info);
 
 		// gps info
 		tvGPSSatellitesTotal = (TextView) findViewById(R.id.text_satellites_total);
@@ -185,7 +196,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		//tvGPSAltitude = (TextView) findViewById(R.id.text_gps_altitude);
 		//tvGPSLatitude = (TextView) findViewById(R.id.text_gps_latitude);
 		//tvGPSLongitude = (TextView) findViewById(R.id.text_gps_longitude);
-		//tvGPSSpeed = (TextView) findViewById(R.id.text_gps_speed_value);
+		tvGPSSpeed = (TextView) findViewById(R.id.text_gps_speed_value);
 
 		// track distance
 		tvTrackTime = (TextView) findViewById(R.id.tvTrackTime);
@@ -375,6 +386,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_cvt_data.setVisibility( (App.obd.MMC_CAN && (App.obd.canMmcData.can_mmc_cvt_degr_show || App.obd.canMmcData.can_mmc_cvt_temp_show)) ? View.VISIBLE : View.GONE);
         layout_MMC_climate.setVisibility( (App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_ac_data_show) ? View.VISIBLE : View.GONE);
         layout_temp_data.setVisibility( App.obd.engine_temp_show ? View.VISIBLE : View.GONE);
+        layout_gps_info.setVisibility( App.GS.isShowGPSSAtellities ? View.VISIBLE : View.INVISIBLE);
+        // обновить данные OBD
+        updateOBD_climate_data(App.obd.climateData);
 	}
 
     @Override
@@ -420,6 +434,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         }
 
 
+
     // анализируем, какая кнопка была нажата. Всего один метод для всех кнопок
     @Override
     public void onClick(View v){
@@ -427,14 +442,16 @@ public class MainActivity extends Activity implements View.OnClickListener,
         switch (v.getId()) {
 	        case R.id.btnTest1:
                 // radio audio focus
-                if (App.GS.curAudioFocusID > 0) TWUtilEx.setAudioFocus(128 & App.GS.curAudioFocusID);
+                //if (App.GS.curAudioFocusID > 0) TWUtilEx.setAudioFocus(128 & App.GS.curAudioFocusID);
                 TWUtilEx.setAudioFocus(1);
                 startService(new Intent( Radio.PACKAGE_NAME ));
+                startService(new Intent( "com.tw.radio:RadioService" ));
                 TWUtilEx.requestRadioInfo();
+
 		        break;
             case R.id.btnTest2:
                 // music audio focus
-                if (App.GS.curAudioFocusID > 0) TWUtilEx.setAudioFocus(128 & App.GS.curAudioFocusID);
+                //if (App.GS.curAudioFocusID > 0) TWUtilEx.setAudioFocus(128 & App.GS.curAudioFocusID);
                 TWUtilEx.setAudioFocus(3);
                 startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
                         PowerampAPI.Commands.TOGGLE_PLAY_PAUSE));
@@ -927,7 +944,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
             } else {
                 ivOBD_CarBattery.setImageResource(R.drawable.car_battery_good);
             }
-            tvOBD_CarBattery.setText(String.format("%1$.1f", voltage));
+           TextViewToSpans(tvOBD_CarBattery, String.format("%1$.1f", voltage), 40, 12);
         } else {
             layout_battery.setVisibility(View.GONE);
         }
@@ -1210,17 +1227,23 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private void show_fuel_consumption(int mode) {
         switch (mode) {
             case 0:
-                tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst) );
+                //tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst) );
+                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst), 40, 12);
                 break;
             case 1:
-                tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg) );
+                //tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg) );
+                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg), 40, 12);
                 break;
             case 2:
-                tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph) );
+                //tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph) );
+                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph), 40, 12);
                 break;
             case 3:
-                tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg) );
-                tvOBD_FuelConsump2.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst) );
+                //tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg) );
+                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg), 26, 12);
+
+                //tvOBD_FuelConsump2.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst) );
+                TextViewToSpans(tvOBD_FuelConsump2, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst), 22, 12);
                 break;
             default:
                 break;
@@ -1242,7 +1265,15 @@ public class MainActivity extends Activity implements View.OnClickListener,
                             else tvOBD_FuelTank.setText(String.format("%1$s", "--"));
                     } else {
                         // вычисляем
-                        tvOBD_FuelTank.setText(String.format("%1$.1f", App.obd.totalTrip.fuel_remains));
+//                        String s = String.format("%1$.1f", App.obd.totalTrip.fuel_remains).replace(",", ".");
+//                        SpannableString ss =  new SpannableString(s);
+//                        int dot = s.indexOf(".");
+//                        ss.setSpan(new AbsoluteSizeSpan( 32 ), 0, dot, 0);
+//                        ss.setSpan(new AbsoluteSizeSpan( 16 ), dot+1, s.length()-1, 0);
+//
+//
+//                        tvOBD_FuelTank.setText(ss);
+                        TextViewToSpans(tvOBD_FuelTank, String.format("%1$.1f", App.obd.totalTrip.fuel_remains), 40, 12);
                     }
 
                     break;
@@ -1255,13 +1286,23 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         else tvOBD_FuelTank.setText(String.format("%1$s", Integer.toString(Math.round(App.obd.canMmcData.can_mmc_fuel_remain / (App.obd.obdData.fuel_tank / 100)))));
                     } else {
                         // вычисляем
-                        tvOBD_FuelTank.setText(String.format("%1$.0f", (float) ((App.obd.totalTrip.fuel_remains * 100) / App.obd.obdData.fuel_tank)) + "%");
+                        tvOBD_FuelTank.setText(String.format("%1$.0f", (float) ((App.obd.totalTrip.fuel_remains * 100) / App.obd.obdData.fuel_tank)) + "\\%");
                     }
 
 
                     break;
                 case 2:
-                    tvOBD_FuelTank.setText(String.format("%1$.2f", App.obd.oneTrip.fuel_usage));
+
+//                    String s = String.format("%1$.2f", App.obd.oneTrip.fuel_usage).replace(",", ".");
+//                    SpannableString ss =  new SpannableString(s);
+//                    int dot = s.indexOf(".");
+//                    ss.setSpan(new AbsoluteSizeSpan( 32 ), 0, dot, 0);
+//                    ss.setSpan(new AbsoluteSizeSpan( 16 ), dot+1, s.length()-1, 0);
+//
+//
+//                    tvOBD_FuelTank.setText(ss);
+
+                    TextViewToSpans(tvOBD_FuelTank, String.format("%1$.2f", App.obd.oneTrip.fuel_usage), 40, 12);
                     break;
                 default:
                     break;
@@ -1278,12 +1319,12 @@ public class MainActivity extends Activity implements View.OnClickListener,
             layout_fuel_consump.setVisibility( View.VISIBLE );
             if (line2) {
                 // show line 2
-                tvOBD_FuelConsump.setTextSize(26);
-                tvOBD_FuelConsump2.setTextSize(22);
+                ////tvOBD_FuelConsump.setTextSize(26);
+                //tvOBD_FuelConsump2.setTextSize(22);
                 tvOBD_FuelConsump2.setVisibility(View.VISIBLE);
             } else {
                 // hide line 2
-                tvOBD_FuelConsump.setTextSize(40);
+                //tvOBD_FuelConsump.setTextSize(40);
                 tvOBD_FuelConsump2.setVisibility(View.GONE);
             }
         }
@@ -1328,8 +1369,19 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
     private void updateOBD_air_cond_temperature(String temp){
-        //tv_air_cond_temp.setText( String.format("%1$.1f", App.obd.climateData.temperature ));
-        tv_air_cond_temp.setText( temp );
+//        //tv_air_cond_temp.setText( String.format("%1$.1f", App.obd.climateData.temperature ));
+//        String s = temp.replace(",", ".");
+//        SpannableString ss =  new SpannableString(s);
+//        int dot = s.indexOf(".");
+//        ss.setSpan(new AbsoluteSizeSpan( 40 ), 0, dot, 0);
+//        ss.setSpan(new AbsoluteSizeSpan( 16 ), dot+1, s.length()-1, 0);
+//
+//
+//        //tv_air_cond_temp.setText( temp );
+//        tv_air_cond_temp.setText( ss );
+
+        TextViewToSpans(tv_air_cond_temp, temp, 50, 12);
+
         if ( App.obd.climateData.temperature < 19f )
             iv_air_temp.setImageResource(R.drawable.ac_temp_blue);
         else if ( App.obd.climateData.temperature < 21f )
@@ -1381,6 +1433,27 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private void updateOBD_air_cond_blow_mode( ClimateData.BlowMode blowMode){
         iv_ac_blow_auto.setVisibility( (blowMode == ClimateData.BlowMode.auto) ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private void updateOBD_climate_data(ClimateData climateData) {
+        updateOBD_air_cond_state( climateData.ac_state );
+        updateOBD_air_cond_blow_mode( climateData.blow_mode);
+        updateOBD_air_cond_recirculation( climateData.recirculation_state);
+        updateOBD_air_cond_defogger( climateData.defogger_state );
+        updateOBD_air_cond_blow_direction( climateData.blow_direction);
+        updateOBD_air_cond_temperature( String.format("%1$.1f", climateData.temperature) ) ;
+        updateOBD_air_cond_fan_mode( climateData.fan_mode);
+        updateOBD_air_cond_fan_speed(climateData.fan_speed);
+
+    }
+
+    private void TextViewToSpans(TextView tv, String value, int size1, int size2) {
+        String s = value.replace(",", ".");
+        SpannableString ss =  new SpannableString(s);
+        int dot = s.indexOf(".");
+        ss.setSpan(new AbsoluteSizeSpan( size1 ), 0, dot-1, 0);
+        ss.setSpan(new AbsoluteSizeSpan( size2 ), dot, s.length()-1, 0);
+        tv.setText(ss);
     }
 }
 

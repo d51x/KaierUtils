@@ -217,6 +217,7 @@ public class PowerAmpProcessing {
         if ( App.GS.interactWithPowerAmp &&
              App.GS.needWatchBootUpPowerAmp )
         {
+            TWUtilEx.setAudioFocus( 3 );
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {

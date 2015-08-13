@@ -17,9 +17,11 @@
 	<!-- general menu -->
 	<string name="menu_general_show_notification_icon_title">Иконка статуса</string>
 	<string name="menu_general_auto_start">Показывать главное окно при включении</string>
+	<string name="menu_general_hide_header">Скрывать заголовок окна</string>
 	<string name="menu_general_color_speed_title">Цветная скорость</string>
 	<string name="menu_general_show_statistics_title">Отображать статистику</string>
 	<string name="menu_general_show_eq_title">Отображать данные эквалайзера под громкостью</string>
+	<string name="menu_general_show_gps_satellities_title">Отображать данные о спутниках GPS</string>
 	<string name="menu_general_show_eq_summary">Под громкостью отображаются уровни низких, средних, высоких частот</string>
 
 	<!-- reverse menu -->

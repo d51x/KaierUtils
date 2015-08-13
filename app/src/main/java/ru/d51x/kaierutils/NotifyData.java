@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.Context;
 
 /**
- * Created by pyatyh_ds on 26.02.2015.
  */
 public class NotifyData {
 

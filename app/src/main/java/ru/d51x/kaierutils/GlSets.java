@@ -36,7 +36,9 @@ public class GlSets {
 
     public boolean isNotificationIconShow;
     public boolean isAutoStart;
+    public boolean isHideHeader;
 	public boolean isShowStatistics;
+	public boolean isShowGPSSAtellities;
 	public boolean isShowEQData;
     public boolean isVolumeShowOnNotificationIcon;
 	public boolean isColorSpeed = false;
@@ -182,7 +184,9 @@ public class GlSets {
 			// load general settings
 			isNotificationIconShow = prefs.getBoolean ("kaierutils_show_notification_icon", true);
 			isAutoStart = prefs.getBoolean ("kaierutils_auto_start", false);
+			isHideHeader = prefs.getBoolean ("kaierutils_hide_header", false);
 			isColorSpeed = prefs.getBoolean ("kaierutils_show_color_speed", false);
+            isShowGPSSAtellities = prefs.getBoolean ("kaierutils_show_gps_satellities", false);
 			isShowStatistics = prefs.getBoolean ("kaierutils_show_statistics", true);
 			isShowEQData = prefs.getBoolean ("kaierutils_show_eq", false);
 

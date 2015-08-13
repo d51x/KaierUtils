@@ -28,6 +28,11 @@ public class CanMmcData {
 
     public boolean engine_fan_show;
 
+    public long FuelLevel_TimeStamp1, FuelLevel_TimeStamp2;
+    public long CVT_oil_degr_TimeStamp1, CVT_oil_degr_TimeStamp2;
+    public long CVT_oil_temp_TimeStamp1, CVT_oil_temp_TimeStamp2;
+
+
 public enum State {off, on};
 
     public State fan_state;
@@ -68,6 +73,10 @@ public enum State {off, on};
 
 
      can_mmc_ac_data_show = prefs.getBoolean("ODBII_CAN_MMC_AC_DATA_SHOW", false);
+
+      FuelLevel_TimeStamp1  =  FuelLevel_TimeStamp2  = System.currentTimeMillis();
+      CVT_oil_degr_TimeStamp1 = CVT_oil_degr_TimeStamp2 = System.currentTimeMillis();
+      CVT_oil_temp_TimeStamp1 = CVT_oil_temp_TimeStamp2 = System.currentTimeMillis();
   }
 
 

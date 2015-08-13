@@ -10,6 +10,10 @@
 	                    android:title="@string/menu_general_auto_start"
 	                    android:defaultValue="false"
 	/>
+    <SwitchPreference   android:key="kaierutils_hide_header"
+                        android:title="@string/menu_general_hide_header"
+                        android:defaultValue="false"
+        />
 	<SwitchPreference   android:key="kaierutils_show_color_speed"
 	                    android:title="@string/menu_general_color_speed_title"
 	                    android:defaultValue="false"
@@ -22,6 +26,10 @@
 	                    android:title="@string/menu_general_show_eq_title"
 	                    android:summary="@string/menu_general_show_eq_summary"
 	                    android:defaultValue="false"
+		/>
+	<SwitchPreference   android:key="kaierutils_show_gps_satellities"
+	                    android:title="@string/menu_general_show_gps_satellities_title"
+	                    android:defaultValue="true"
 		/>
 </PreferenceScreen>
 

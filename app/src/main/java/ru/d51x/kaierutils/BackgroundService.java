@@ -51,7 +51,8 @@ public class BackgroundService extends Service {
 
         if ( App.GS.interactWithPowerAmp &&
                 App.GS.needWatchBootUpPowerAmp ) {
-            Radio.checkRadioActivityStarted(true);
+            Radio.checkRadioActivityStarted(false);
+            if ( App.GS.isRadioActivityRunning ) TWUtilEx.setAudioFocus( 3 );
         }
 
 		if ((flags & START_FLAG_RETRY) == 0) {

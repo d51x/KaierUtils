@@ -6,7 +6,6 @@ import android.content.Context;
 import java.util.List;
 
 /**
- * Created by pyatyh_ds on 18.03.2015.
  */
 public class Radio {
 

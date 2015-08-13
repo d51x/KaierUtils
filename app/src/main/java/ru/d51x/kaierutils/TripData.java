@@ -96,7 +96,10 @@ public class TripData {
         float fuel_consump_lpsec = ( maf / 14.7f) / 720;
         // литры в час
         fuel_cons_lph = fuel_consump_lpsec * 3600;
-        float usedmaf = fuel_consump_lpsec;
+        //float usedmaf = fuel_consump_lpsec;
+
+        // учетом того, что получаем данные с MAF не раз в секунду, а реже
+        float usedmaf = fuel_consump_lpsec * deltaTime / 1000f; //TODO: check this calculation
 
         // использовано топлива
         fuel_usage += usedmaf; // с учетом порстоя

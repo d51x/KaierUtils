@@ -97,6 +97,7 @@ public class TWUtilEx {
 						if ( message.arg1 == 0 ) {
 							SendBroadcastAction( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH);
                             App.GS.isReverseMode = false;
+                            App.sensorsToast.cancel();
 						} else {
 							if ( !App.GS.isReverseMode ) {
 								SendBroadcastAction( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_START);

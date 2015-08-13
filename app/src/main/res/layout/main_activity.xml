@@ -475,12 +475,13 @@ android:longClickable="true">
                 >
 
                 <ImageView
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="24dp"
-                    android:id="@+id/iv_air_ac_state"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/air_cond__state_off"
-                    android:layout_weight="0.4"/>
+                    android:id="@+id/iv_air_defogger"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:src="@drawable/air_flag_rear"
+                    android:layout_weight="0.3"
+                    android:visibility="visible"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -492,13 +493,12 @@ android:longClickable="true">
                     android:layout_weight="0.3"/>
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="24dp"
-                    android:id="@+id/iv_air_defogger"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:src="@drawable/air_flag_rear"
-                    android:layout_weight="0.3"
-                    android:visibility="visible"/>
+                    android:id="@+id/iv_air_ac_state"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/air_cond__state_off"
+                    android:layout_weight="0.4"/>
 
             </LinearLayout>
 
@@ -564,8 +564,7 @@ android:longClickable="true">
                 android:layout_width="240dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/layout_ac_temp"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center|center_vertical">
+                android:gravity="right">
 
                 <ImageView
                     android:layout_width="50dp"
@@ -580,22 +579,27 @@ android:longClickable="true">
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="19.5"
+                    android:text="--.-"
                     android:id="@+id/tv_air_cond_temp"
-                    android:gravity="center"
-                    android:textSize="34sp"
-                    android:textStyle="bold"/>
+                    android:textSize="50sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="right"
+                    android:gravity="center_vertical|right"/>
             </LinearLayout>
         </LinearLayout>
 
     </RelativeLayout>
 
     <FrameLayout
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/layout_test"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="false"
+        android:layout_marginBottom="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignWithParentIfMissing="true">
 		<LinearLayout
 			android:orientation="horizontal"
 			android:layout_width="wrap_content"
@@ -618,9 +622,7 @@ android:longClickable="true">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/linearLayout"
-        android:layout_above="@+id/layout_test"
-        android:id="@+id/layout_radio_music_info" android:layout_marginTop="12dp"
+        android:id="@+id/layout_radio_music_info" android:layout_marginTop="80dp"
         >
 
         <LinearLayout
@@ -721,13 +723,24 @@ android:longClickable="true">
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="144dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:id="@+id/tvCurrentTime"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_marginTop="-200dp"
+            android:visibility="invisible"/>
+
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout3"
+        android:id="@+id/layout_gps_info"
         android:layout_alignParentRight="true"
         android:layout_marginTop="-40dp"
         android:layout_alignTop="@+id/layoutCanMMC"

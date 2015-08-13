@@ -15,6 +15,7 @@ public class App extends Application {
     public static OBDII obd;
 	public static RadioToast rToast;
 	public static MusicToast mToast;
+	public static SensorsToast sensorsToast;
 
 	private WindowManager.LayoutParams mWindowManagerLayoutParams = new WindowManager.LayoutParams();
 	public WindowManager.LayoutParams getWindowManagerLayoutParams() {
@@ -35,6 +36,7 @@ public class App extends Application {
 		this.startService (new Intent (this, BackgroundService.class));
 		rToast = new RadioToast( self );
 		mToast = new MusicToast( self );
+        sensorsToast = new SensorsToast( self );
 	}
 
 }

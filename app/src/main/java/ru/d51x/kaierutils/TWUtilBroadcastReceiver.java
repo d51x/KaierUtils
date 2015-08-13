@@ -3,9 +3,12 @@ package ru.d51x.kaierutils;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.util.Log;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class TWUtilBroadcastReceiver extends BroadcastReceiver {
@@ -16,8 +19,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 
 
     public TWUtilBroadcastReceiver () {
-
-    }
+   }
 
 	@Override
 	public void onReceive (Context context, Intent intent) {
@@ -109,6 +111,20 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 
 
 		}
+        else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_PARKING_SENSORS_CHANGED )) {
+//            int rear_inner_left = intent.getIntExtra("parking_sensors_rear_left_inner", -1);
+//            int rear_outer_left = intent.getIntExtra("parking_sensors_rear_left_outer", -1);
+//            int rear_inner_right = intent.getIntExtra("parking_sensors_rear_right_inner", -1);
+//            int rear_outer_right = intent.getIntExtra("parking_sensors_rear_right_outer", -1);
+           ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("parking_sensors");
+
+            if ( App.GS.isReverseMode ) {
+                App.sensorsToast.cancel();
+                App.sensorsToast.SetSensors( buffer );
+                App.sensorsToast.showToast();
+            }
+
+        }
 	}
 
 	private void changeVolumeAtReverse() {

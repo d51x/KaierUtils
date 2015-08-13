@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ import android.app.Fragment;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class SettingsOBDFragment extends  Fragment  implements View.OnClickListener {
+public class SettingsOBDFragment extends  Fragment  implements View.OnClickListener, View.OnFocusChangeListener {
 
     private Switch swUseOBD2;
     private TextView tvOBDDevice;
@@ -41,6 +42,8 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     private EditText edtCanMMC_fueltank_update_time;
     private EditText edtCVT_temp_update_time;
     private EditText edtCanMMC_oil_degr_update_time;
+    private EditText edtOBD_voltage_update_time;
+    private EditText edtOBD_engine_temp_update_time;
 
     private Button btnOBDSelectDevice2;
     private Button btnOBDConnect2;
@@ -106,13 +109,24 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
 
         edtCanMMC_fueltank_update_time = (EditText) mV.findViewById(R.id.edtCanMMC_fueltank_update_time);
         edtCanMMC_fueltank_update_time.setText(Integer.toString(App.obd.canMmcData.can_mmc_fuel_remain_update_time));
+        edtCanMMC_fueltank_update_time.setOnFocusChangeListener( this );
 
         edtCVT_temp_update_time = (EditText) mV.findViewById(R.id.edtCVT_temp_update_time);
         edtCVT_temp_update_time.setText( Integer.toString(App.obd.canMmcData.can_mmc_cvt_temp_update_time));
-
+        edtCVT_temp_update_time.setOnFocusChangeListener( this );
 
         edtCanMMC_oil_degr_update_time = (EditText) mV.findViewById(R.id.edtCanMMC_oil_degr_update_time);
         edtCanMMC_oil_degr_update_time.setText(Integer.toString(App.obd.canMmcData.can_mmc_cvt_degradation_update_time));
+        edtCanMMC_oil_degr_update_time.setOnFocusChangeListener( this );
+
+
+        edtOBD_voltage_update_time = (EditText) mV.findViewById(R.id.edtOBD_voltage_update_time);
+        edtOBD_voltage_update_time.setText(Integer.toString(App.obd.voltage_update_time));
+        edtOBD_voltage_update_time.setOnFocusChangeListener( this );
+
+        edtOBD_engine_temp_update_time = (EditText) mV.findViewById(R.id.edtOBD_engine_temp_update_time);
+        edtOBD_engine_temp_update_time.setText(Integer.toString(App.obd.engine_temp_update_time));
+        edtOBD_engine_temp_update_time.setOnFocusChangeListener( this );
 
         btnOBDSelectDevice2 = (Button) mV.findViewById(R.id.btnSelectDevice2);
         btnOBDSelectDevice2.setOnClickListener(this);
@@ -211,6 +225,48 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         }
     }
 
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        switch (v.getId()) {
+            case R.id.edtCanMMC_fueltank_update_time:
+                    // show dialog slider
+                if ( hasFocus ) {
+                    // появился фокус?
+                } else {
+                    App.obd.canMmcData.can_mmc_fuel_remain_update_time = Integer.parseInt( edtCanMMC_fueltank_update_time.getText().toString() );
+                    prefs.edit().putInt("ODBII_CAN_MMC_FUEL_REMAIN_UPDATE_TIME", App.obd.canMmcData.can_mmc_fuel_remain_update_time).apply();
+                }
+                break;
+            case R.id.edtCanMMC_oil_degr_update_time:
+                if ( ! hasFocus ) {
+                    App.obd.canMmcData.can_mmc_cvt_degradation_update_time = Integer.parseInt( edtCanMMC_oil_degr_update_time.getText().toString() );
+                    prefs.edit().putInt("ODBII_CAN_MMC_CVT_DEGR_UPDATE_TIME", App.obd.canMmcData.can_mmc_cvt_degradation_update_time).apply();
+                }
+                break;
+            case R.id.edtCVT_temp_update_time:
+                if ( ! hasFocus ) {
+                    App.obd.canMmcData.can_mmc_cvt_temp_update_time= Integer.parseInt( edtCVT_temp_update_time.getText().toString() );
+                    prefs.edit().putInt("ODBII_CAN_MMC_CVT_TEMP_UPDATE_TIME", App.obd.canMmcData.can_mmc_cvt_temp_update_time).apply();
+                }
+                break;
+            case R.id.edtOBD_engine_temp_update_time:
+                if ( ! hasFocus ) {
+                    App.obd.engine_temp_update_time = Integer.parseInt( edtOBD_engine_temp_update_time.getText().toString() );
+                    prefs.edit().putInt("ODBII_ENGINE_TEMP_UPDATE_TIME", App.obd.engine_temp_update_time).apply();
+                }
+                break;
+            case R.id.edtOBD_voltage_update_time:
+                if ( ! hasFocus ) {
+                    App.obd.voltage_update_time = Integer.parseInt( edtOBD_voltage_update_time.getText().toString() );
+                    prefs.edit().putInt("ODBII_VOLTAGE_UPDATE_TIME", App.obd.voltage_update_time).apply();
+                }
+                break;
+            default:
+                break;
+
+        }
+    }
 
     public void setOnOffOBD(boolean state) {
         if ( state )

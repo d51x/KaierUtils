@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#dc040404"
+                android:padding="16dp"
+                android:clickable="true"
+                android:id="@+id/popup_element"
+                android:alpha="1">
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:alpha="0.99">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="50sp"
+                android:id="@+id/iv_sensor_rear_left_outer"
+                android:layout_weight="0.25"
+                android:src="@drawable/sensor_0"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="50sp"
+                android:id="@+id/iv_sensor_rear_left_inner"
+                android:layout_weight="0.25"
+                android:src="@drawable/sensor_0"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="50sp"
+                android:id="@+id/iv_sensor_rear_right_inner"
+                android:layout_weight="0.25"
+                android:src="@drawable/sensor_0"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="50sp"
+                android:id="@+id/iv_sensor_rear_right_outer"
+                android:layout_weight="0.25"
+                android:src="@drawable/sensor_0"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
