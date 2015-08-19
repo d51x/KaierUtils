@@ -4,6 +4,9 @@ package ru.d51x.kaierutils;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class TripData {
 
     public float fuel_remains;                  // остаток топлива в баке
@@ -19,6 +22,7 @@ public class TripData {
     public float trip_time_wo_stops;            // время за поездку без остановок
     private String mPrefix;
     private boolean isStoreData;
+    private long timeStamp;
 
     public TripData(String prefix, boolean isStoreData) {
         mPrefix = prefix;
@@ -45,7 +49,20 @@ public class TripData {
         distance = prefs.getFloat("distance_" + mPrefix, 0f);
         trip_time = prefs.getFloat("trip_time_" + mPrefix, 0f);
         trip_time_wo_stops = prefs.getFloat("trip_time_wo_stops_" + mPrefix, 0f);
+        timeStamp = prefs.getLong("timestamp_" + mPrefix, 0);
 
+        if ( mPrefix.equals( "today" )) {
+            Calendar calendar_old = Calendar.getInstance();
+            Calendar calendar_new = Calendar.getInstance();
+            calendar_old.setTimeInMillis(timeStamp);
+
+            int d_old = calendar_old.get(Calendar.DAY_OF_YEAR );
+            int d_new = calendar_new.get(Calendar.DAY_OF_YEAR );
+
+            if ( (timeStamp == 0) ||
+                 ( d_new - d_old > 0 ) )
+                    resetData();
+        }
 
     }
 
@@ -62,6 +79,8 @@ public class TripData {
         prefs.edit().putFloat("distance_" + mPrefix, distance).apply();
         prefs.edit().putFloat("trip_time_" + mPrefix, trip_time).apply();
         prefs.edit().putFloat("trip_time_wo_stops_" + mPrefix, trip_time_wo_stops).apply();
+        timeStamp = System.currentTimeMillis();
+        prefs.edit().putLong("timestamp_" + mPrefix, timeStamp).apply();
     }
 
     public void resetData() {

@@ -45,9 +45,12 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TextView tvOBD_FuelConsumption_avg;
     private TextView tvOBD_FuelConsumption_avg2;
     private TextView tvOBD_FuelConsumption_total;
-    private TextView tvOBD_FuelConsumption_total2;
     private TextView tvOBD_FuelUsageTotal;
-    private TextView tvOBD_FuelUsageTotal2;
+
+    private TextView tvOBD_FuelConsumption_today;
+    private TextView tvOBD_FuelUsageToday;
+    private TextView tvGPS_Distanse_Today;
+    private TextView tvGPS_Distanse_Total;
 
 
 
@@ -56,7 +59,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TextView tv_can_2103_cvt_temp_count;
 
 
-    private TextView tv_air_cond_external_temp;
 
 
     private TextView tvFuelLevel;
@@ -91,16 +93,18 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBD_FuelConsumption_avg = (TextView) findViewById(R.id.tvOBD_FuelConsumption_avg);
         tvOBD_FuelConsumption_avg2 = (TextView) findViewById(R.id.tvOBD_FuelConsumption_avg2);
         tvOBD_FuelConsumption_total = (TextView) findViewById(R.id.tvOBD_FuelConsumption_total);
-        tvOBD_FuelConsumption_total2 = (TextView) findViewById(R.id.tvOBD_FuelConsumption_total2);
         tvOBD_FuelUsageTotal = (TextView) findViewById(R.id.tvOBD_FuelUsageTotal);
-        tvOBD_FuelUsageTotal2 = (TextView) findViewById(R.id.tvOBD_FuelUsageTotal2);
 
+
+        tvOBD_FuelConsumption_today = (TextView) findViewById(R.id.tvOBD_FuelConsumption_today);
+        tvOBD_FuelUsageToday = (TextView) findViewById(R.id.tvOBD_FuelUsageToday);
+        tvGPS_Distanse_Today = (TextView) findViewById(R.id.tvGPS_Distanse_Today);
+        tvGPS_Distanse_Total = (TextView) findViewById(R.id.tvGPS_Distanse_Total);
 
 
         tv_can_2110_cvt_oil_degr = (TextView) findViewById(R.id.tv_can_2110_cvt_oil_degr);
         tv_can_2103_cvt_temp_count = (TextView) findViewById(R.id.tv_can_2103_cvt_temp_count);
 
-        tv_air_cond_external_temp = (TextView) findViewById(R.id.tv_air_cond_external_temp);
 
 
 
@@ -130,9 +134,18 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBD_FuelConsumption_avg.setText( String.format( getString( R.string.text_obd_fuel_consumption_avg), 0.0f));
         tvOBD_FuelConsumption_avg2.setText( String.format( getString( R.string.text_obd_fuel_consumption_avg2), 0.0f));
         tvOBD_FuelConsumption_total.setText( String.format( getString( R.string.text_obd_fuel_consumption_avg), 0.0f));
-        tvOBD_FuelConsumption_total2.setText( String.format( getString( R.string.text_obd_fuel_consumption_avg2), 0.0f));
         tvOBD_FuelUsageTotal.setText(String.format(getString(R.string.text_obd_fuel_usage), 0.0f));
-        tvOBD_FuelUsageTotal2.setText(String.format(getString(R.string.text_obd_fuel_usage_with_stops), 0.0f));
+
+        tvOBD_FuelConsumption_today.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg), 0.0f));
+        tvOBD_FuelUsageToday.setText(String.format(getString(R.string.text_obd_fuel_usage), 0.0f));
+        tvGPS_Distanse_Today.setText(String.format(getString(R.string.text_distance_today), 0.0f));
+        tvGPS_Distanse_Total.setText(String.format(getString(R.string.text_distance_today), 0.0f));
+
+
+
+
+
+
 
         tvOBD_MAF = (TextView) findViewById(R.id.tvOBD_MAF);
         tvOBD_MAF.setText("");
@@ -143,7 +156,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tv_can_2110_cvt_oil_degr.setText(String.format( getString( R.string.text_can_2110_cvt_oil_degr), "---"));
         tv_can_2103_cvt_temp_count.setText(String.format( getString( R.string.text_can_2103_cvt_temp_count), "---", "---"));
 
-        tv_air_cond_external_temp.setText(String.format( getString( R.string.text_air_cond_external_temp), "---"));
 
 
         tvFuelLevel.setText(String.format( getString( R.string.text_obd_can_fuel_level), "---"));
@@ -190,10 +202,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         String s = ( i > -1 ) ? Integer.toString(i) : "---";
         tvFuelLevel.setText(String.format( getString( R.string.text_obd_can_fuel_level), s));
 
-
-        i = App.obd.climateData.ext_temperature;
-        s = ( i > -255 ) ? Integer.toString(i) : "---";
-        tv_air_cond_external_temp.setText(String.format( getString( R.string.text_air_cond_external_temp), s));
 
         i = App.obd.canMmcData.can_mmc_cvt_temp;
         s = ( i > -255 ) ? Integer.toString(i) : "---";
@@ -321,10 +329,12 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 tvGPS_Distanse.setText(String.format(getString(R.string.text_obd_distanse), App.obd.oneTrip.distance / 1000f));
 
                 tvOBD_FuelConsumption_total.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg), App.obd.totalTrip.fuel_cons_lp100km_avg));
-                tvOBD_FuelConsumption_total2.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg2), App.obd.totalTrip.fuel_cons_lp100km_avg_wo_stops));
                 tvOBD_FuelUsageTotal.setText(String.format(getString(R.string.text_obd_fuel_usage), App.obd.totalTrip.fuel_usage));
-                tvOBD_FuelUsageTotal2.setText(String.format(getString(R.string.text_obd_fuel_usage_with_stops), App.obd.totalTrip.fuel_usage_wo_stops));
 
+                tvOBD_FuelConsumption_today.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg), App.obd.todayTrip.fuel_cons_lp100km_avg));
+                tvOBD_FuelUsageToday.setText(String.format(getString(R.string.text_obd_fuel_usage), App.obd.todayTrip.fuel_usage));
+                tvGPS_Distanse_Today.setText(String.format(getString(R.string.text_distance_today), App.obd.todayTrip.distance / 1000f));
+                tvGPS_Distanse_Total.setText(String.format(getString(R.string.text_distance_today), App.obd.totalTrip.distance / 1000f));
             }
 
             // ----------------------------------------------------------------------------
@@ -342,11 +352,11 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
             }
             // ----------------------------------------------------------------------------
             //Air Conditioner: external temperature
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED )) {
-                int i = App.obd.climateData.ext_temperature;
-                String s = ( i > -255 ) ? Integer.toString(i) : "---";
-                tv_air_cond_external_temp.setText(String.format( getString( R.string.text_air_cond_external_temp), s));
-            }
+//            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED )) {
+//                int i = App.obd.climateData.ext_temperature;
+//                String s = ( i > -255 ) ? Integer.toString(i) : "---";
+//                tv_air_cond_external_temp.setText(String.format( getString( R.string.text_air_cond_external_temp), s));
+//            }
             // ----------------------------------------------------------------------------
             //Combination meter: fuel level
             else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED )) {

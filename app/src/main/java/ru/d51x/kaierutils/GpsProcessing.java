@@ -239,6 +239,7 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
                    App.GS.totalDistanceForAverageSpeed += location.distanceTo ( prevLocation );
                    if ( App.obd.isConnected && App.obd.obdData.speed > 0) {
                        App.obd.oneTrip.distance += location.distanceTo ( prevFuelLocation );
+                       App.obd.todayTrip.distance += location.distanceTo ( prevFuelLocation );
                        App.obd.totalTrip.distance += location.distanceTo ( prevFuelLocation );
                    }
             // что происходит с prevLocation при зависании gps до момента первого получения спутников,

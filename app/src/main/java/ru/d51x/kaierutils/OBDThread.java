@@ -69,6 +69,7 @@ public class OBDThread extends Thread {
                     if ( (TimeStamp2 - TimeStamp1) > (1000*60)) // 1 min
                     {
                         App.obd.oneTrip.saveData();
+                        App.obd.todayTrip.saveData();
                         App.obd.totalTrip.saveData();
                         TimeStamp1 = TimeStamp2;
                     }

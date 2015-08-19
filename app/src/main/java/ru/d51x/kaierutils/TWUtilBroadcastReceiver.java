@@ -49,6 +49,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 			SetVolumeAtStartUp();
             App.obd.saveFuelTank();
             App.obd.oneTrip.saveData();
+            App.obd.todayTrip.saveData();
             App.obd.totalTrip.saveData();
 		}
         // устройство засыпает
@@ -60,6 +61,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             App.GS.isStopedAfterWakeUp = false;
             App.obd.saveFuelTank();
             App.obd.oneTrip.saveData();
+            App.obd.todayTrip.saveData();
             App.obd.totalTrip.saveData();
 		}
         // устройство проснулось (вышло из SleepMode)
@@ -70,6 +72,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             App.GS.wakeUpTime =  System.currentTimeMillis();
             App.obd.loadFuelTank();
             App.obd.oneTrip.loadData();
+            App.obd.todayTrip.loadData();
             App.obd.totalTrip.loadData();
 		}
         // включился задний ход

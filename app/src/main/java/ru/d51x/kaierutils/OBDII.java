@@ -142,6 +142,8 @@ public class OBDII  {
 
     public TripData totalTrip;
     public TripData oneTrip;
+    public TripData todayTrip;
+
     public ClimateData climateData;
     public ClimateData climateDataPrev;
     public CanMmcData canMmcData;
@@ -197,6 +199,8 @@ public class OBDII  {
         obdData = new OBDData();
         totalTrip = new TripData("total", true);
         oneTrip = new TripData("trip", false);
+        todayTrip = new TripData("today", true);
+
         climateData = new ClimateData();
         climateDataPrev = new ClimateData();
 
@@ -541,6 +545,7 @@ public class OBDII  {
 
 
             oneTrip.calculateData(obdData.speed, obdData.maf, t);
+            todayTrip.calculateData(obdData.speed, obdData.maf, t);
             totalTrip.calculateData(obdData.speed, obdData.maf, t);
 
 
@@ -691,6 +696,7 @@ public class OBDII  {
     public void setFullTank() {
 
         oneTrip.updateData( true, obdData.fuel_tank, obdData.fuel_tank);
+        todayTrip.updateData( true, obdData.fuel_tank, obdData.fuel_tank);
         totalTrip.updateData( true, obdData.fuel_tank, obdData.fuel_tank);
         saveFuelTank();
     }
@@ -700,6 +706,7 @@ public class OBDII  {
         obdData.fuel_tank = tank_volume;
 
         oneTrip.updateData( false, fuel_remain, tank_volume);
+        todayTrip.updateData( false, fuel_remain, tank_volume);
         totalTrip.updateData( false, fuel_remain, tank_volume);
         saveFuelTank();
     }
@@ -986,12 +993,13 @@ public class OBDII  {
 
     private void request_MMC_ECU_PARKING_SENSORS(){
         if ( !App.GS.isReverseMode ) return;
+        if (App.obd.canMmcData.can_mmc_parking_data_show) {
+            ArrayList<Integer> buffer = null;
 
-        ArrayList<Integer> buffer = null;
+            SetHeaders("763", "764", false);
 
-        SetHeaders("763", "764", false);
-
-        buffer = request_CAN_ECU("2101", "763", "764", false);
-        sendObdMessage("2101", "763", buffer);
+            buffer = request_CAN_ECU("2101", "763", "764", false);
+            sendObdMessage("2101", "763", buffer);
+        }
     }
  }

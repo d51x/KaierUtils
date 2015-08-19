@@ -297,6 +297,20 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+
+                        <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cbCanMMC_show_parking_data"
+                            android:id="@+id/cbCanMMC_show_parking_data"
+                            android:layout_weight="0.5"
+                            android:textSize="16sp"/>
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>

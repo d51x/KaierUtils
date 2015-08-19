@@ -204,4 +204,6 @@
     <string name="cbCanMMC_cvt_oil_degradation">Отображать степень деградации масла CVT</string>
     <string name="text_update_time_min">Период обновления, сек:</string>
     <string name="cbCanMMC_show_climate_data">Отображать данные климат-контроля</string>
+    <string name="cbCanMMC_show_parking_data">Отображать данные с парковочных сенсоров (только задние родные)</string>
+    <string name="text_distance_today">Пройдено (км): %1$.3f</string>
 </resources>

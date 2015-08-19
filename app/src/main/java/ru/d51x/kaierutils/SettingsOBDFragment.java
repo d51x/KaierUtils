@@ -34,6 +34,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     private CheckBox cbCanMMC_show_CVT_temp;
     private CheckBox cbCanMMC_cvt_oil_degradation;
     private CheckBox cbCanMMC_show_climate_data;
+    private CheckBox cbCanMMC_show_parking_data;
     private CheckBox cbOBD_show_battery;
     private CheckBox cbOBD_show_engine_temp;
     private CheckBox cbOBD_show_fuel_detail;
@@ -90,6 +91,10 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         cbCanMMC_show_climate_data = (CheckBox) mV.findViewById(R.id.cbCanMMC_show_climate_data);
         cbCanMMC_show_climate_data.setOnClickListener(this);
         cbCanMMC_show_climate_data.setChecked(App.obd.canMmcData.can_mmc_ac_data_show);
+
+        cbCanMMC_show_parking_data = (CheckBox) mV.findViewById(R.id.cbCanMMC_show_parking_data);
+        cbCanMMC_show_parking_data.setOnClickListener(this);
+        cbCanMMC_show_parking_data.setChecked(App.obd.canMmcData.can_mmc_parking_data_show);
 
         cbOBD_show_battery = (CheckBox) mV.findViewById(R.id.cbOBD_show_battery);
         cbOBD_show_battery.setOnClickListener(this);
@@ -193,6 +198,10 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
             case R.id.cbCanMMC_show_climate_data:
                 App.obd.canMmcData.can_mmc_ac_data_show = cbCanMMC_show_climate_data.isChecked();
                 prefs.edit().putBoolean("ODBII_CAN_MMC_AC_DATA_SHOW", App.obd.canMmcData.can_mmc_ac_data_show).apply();
+                break;
+            case R.id.cbCanMMC_show_parking_data:
+                App.obd.canMmcData.can_mmc_parking_data_show = cbCanMMC_show_parking_data.isChecked();
+                prefs.edit().putBoolean("ODBII_CAN_MMC_PARKING_DATA_SHOW", App.obd.canMmcData.can_mmc_parking_data_show).apply();
                 break;
 
             case R.id.btnSelectDevice2:

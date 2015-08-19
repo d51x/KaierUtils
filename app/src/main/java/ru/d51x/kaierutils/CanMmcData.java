@@ -25,6 +25,7 @@ public class CanMmcData {
     public int can_mmc_engine_temp;                  // температура ОЖ
 
     public boolean can_mmc_ac_data_show;            // отображать и читать данные климата
+    public boolean can_mmc_parking_data_show;            // отображать и читать данные парковочных сенсоров
 
     public boolean engine_fan_show;
 
@@ -60,6 +61,7 @@ public enum State {off, on};
 
       engine_fan_show = true;
       can_mmc_ac_data_show = false;
+      can_mmc_parking_data_show = false;
 
       SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
       can_mmc_fuel_remain_update_time = prefs.getInt("ODBII_CAN_MMC_FUEL_REMAIN_UPDATE_TIME", 5);
@@ -73,6 +75,7 @@ public enum State {off, on};
 
 
      can_mmc_ac_data_show = prefs.getBoolean("ODBII_CAN_MMC_AC_DATA_SHOW", false);
+     can_mmc_parking_data_show = prefs.getBoolean("ODBII_CAN_MMC_PARKING_DATA_SHOW", false);
 
       FuelLevel_TimeStamp1  =  FuelLevel_TimeStamp2  = System.currentTimeMillis();
       CVT_oil_degr_TimeStamp1 = CVT_oil_degr_TimeStamp2 = System.currentTimeMillis();
