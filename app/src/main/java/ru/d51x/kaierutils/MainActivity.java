@@ -47,6 +47,12 @@ import com.maxmpz.poweramp.player.PowerampAPI;
 public class MainActivity extends Activity implements View.OnClickListener,
 													  OnLongClickListener{
 
+    private static int TEXT_SIZE_BEFORE_DOT = 40;
+    private static int TEXT_SIZE_BEFORE_DOT_2 = 26;
+    private static int TEXT_SIZE_BEFORE_DOT_3 = 2;
+    private static int TEXT_SIZE_BEFORE_DOT_4 = 44;
+    private static int TEXT_SIZE_AFTER_DOT = 16;
+
 	private Handler mHandler;
 	private PopupWindow pwindo;
     private TextView tvCurrentVolume;
@@ -945,7 +951,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
             } else {
                 ivOBD_CarBattery.setImageResource(R.drawable.car_battery_good);
             }
-           TextViewToSpans(tvOBD_CarBattery, String.format("%1$.1f", voltage), 40, 12);
+           TextViewToSpans(tvOBD_CarBattery, String.format("%1$.1f", voltage), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
         } else {
             layout_battery.setVisibility(View.GONE);
         }
@@ -1229,22 +1235,22 @@ public class MainActivity extends Activity implements View.OnClickListener,
         switch (mode) {
             case 0:
                 //tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst) );
-                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst), 40, 12);
+                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                 break;
             case 1:
                 //tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg) );
-                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg), 40, 12);
+                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                 break;
             case 2:
                 //tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph) );
-                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph), 40, 12);
+                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                 break;
             case 3:
                 //tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg) );
-                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg), 26, 12);
+                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg), TEXT_SIZE_BEFORE_DOT_2, TEXT_SIZE_AFTER_DOT);
 
                 //tvOBD_FuelConsump2.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst) );
-                TextViewToSpans(tvOBD_FuelConsump2, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst), 22, 12);
+                TextViewToSpans(tvOBD_FuelConsump2, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst), TEXT_SIZE_BEFORE_DOT_3, TEXT_SIZE_AFTER_DOT);
                 break;
             default:
                 break;
@@ -1274,7 +1280,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 //
 //
 //                        tvOBD_FuelTank.setText(ss);
-                        TextViewToSpans(tvOBD_FuelTank, String.format("%1$.1f", App.obd.totalTrip.fuel_remains), 40, 12);
+                        TextViewToSpans(tvOBD_FuelTank, String.format("%1$.1f", App.obd.totalTrip.fuel_remains), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                     }
 
                     break;
@@ -1303,7 +1309,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 //
 //                    tvOBD_FuelTank.setText(ss);
 
-                    TextViewToSpans(tvOBD_FuelTank, String.format("%1$.2f", App.obd.oneTrip.fuel_usage), 40, 12);
+                    TextViewToSpans(tvOBD_FuelTank, String.format("%1$.2f", App.obd.oneTrip.fuel_usage), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                     break;
                 default:
                     break;
@@ -1381,7 +1387,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 //        //tv_air_cond_temp.setText( temp );
 //        tv_air_cond_temp.setText( ss );
 
-        TextViewToSpans(tv_air_cond_temp, temp, 42, 12);
+        TextViewToSpans(tv_air_cond_temp, temp, TEXT_SIZE_BEFORE_DOT_4, TEXT_SIZE_AFTER_DOT);
 
         if ( App.obd.climateData.temperature < 19f )
             iv_air_temp.setImageResource(R.drawable.ac_temp_blue);
@@ -1455,8 +1461,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
         SpannableString ss =  new SpannableString(s);
         int dot = s.indexOf(".");
         if ( dot > -1 ) {
-            ss.setSpan(new AbsoluteSizeSpan(size1), 0, dot, 0);
-            ss.setSpan(new AbsoluteSizeSpan(size2), dot + 1, s.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            ss.setSpan(new AbsoluteSizeSpan(size1), 0, dot-1, 0);
+            ss.setSpan(new AbsoluteSizeSpan(size2), dot, s.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         tv.setText(ss);
     }

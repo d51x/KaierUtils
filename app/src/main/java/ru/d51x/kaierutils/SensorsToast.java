@@ -44,17 +44,17 @@ public class SensorsToast {
 
 	public void SetSensors(ArrayList<Integer> buffer) {
 
-        int front_outer_left = buffer.get(2) >> 4;
-        int front_outer_right = buffer.get(2);
+        //int front_outer_left = buffer.get(2) >> 4;
+       // int front_outer_right = buffer.get(2);
 
-        int front_inner_left = buffer.get(3) >> 4;
-        int front_inner_right = buffer.get(3);
+        //int front_inner_left = buffer.get(3) >> 4;
+        //int front_inner_right = buffer.get(3);
 
         int rear_outer_left = buffer.get(4) >> 4;
         int rear_outer_right = buffer.get(4);
 
-        int rear_inner_left = buffer.get(5) >> 4;
-        int rear_inner_right = buffer.get(5);
+        int rear_inner_left = buffer.get(6) >> 4;
+        int rear_inner_right = buffer.get(6);
 
         set_sensor(iv_sensor_rear_left_inner, rear_inner_left );
         set_sensor(iv_sensor_rear_left_outer, rear_outer_left );
@@ -72,6 +72,9 @@ public class SensorsToast {
             case 1: iv.setImageResource(R.drawable.sensor_1); break;
             case 2: iv.setImageResource(R.drawable.sensor_2); break;
             case 3: iv.setImageResource(R.drawable.sensor_3); break;
+            case 4: iv.setImageResource(R.drawable.sensor_4); break;
+            case 5: iv.setImageResource(R.drawable.sensor_5); break;
+            case 6: iv.setImageResource(R.drawable.sensor_6); break;
             default: iv.setImageResource(R.drawable.sensor_0); break;
         }
     }

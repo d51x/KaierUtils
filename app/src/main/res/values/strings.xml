@@ -202,6 +202,6 @@
     <string name="cbCanMMC_show_fuel">Остаток топлива по CAN</string>
     <string name="cbCanMMC_show_CVT_temp">Отображать температуру CVT</string>
     <string name="cbCanMMC_cvt_oil_degradation">Отображать степень деградации масла CVT</string>
-    <string name="text_update_time_min">Период обновления, мин:</string>
+    <string name="text_update_time_min">Период обновления, сек:</string>
     <string name="cbCanMMC_show_climate_data">Отображать данные климат-контроля</string>
 </resources>

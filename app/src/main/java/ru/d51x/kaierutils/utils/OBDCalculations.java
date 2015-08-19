@@ -223,45 +223,10 @@ public class OBDCalculations {
     public static void sendOBD_ParkingSensors(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
         Message message = new Message();
 
-        /*
-        1 - 0-25 см
-        2 - 25-40 см
-        3 - 40-60 см
-
-            передний левый 1 - байт 1 - 10, 20, 30   внешний???
-            передний правый 1 - байт 1 - 01, 02, 03  внешний???
-
-            передний левый 2 - байт 2 - 10, 20, 30  внутренний???
-            передний правый 2 - байт 2 - 01, 02, 03 внутренний???
-
-            задний левый 1 - байт 3 - 10, 20, 30    внешний ???
-            задний правый 1 - байт 3 - 01, 02, 03   внешний ???
-
-            задний левый 2 - байт 4 - 10, 20, 30    внутренний ???
-            задний правый 2 - байт 5 - 01, 02, 03   внутреннний???
-
-
-        */
-
-
-
-
-        int front_outer_left = buffer.get(2) >> 4;
-        int front_outer_right = buffer.get(2);
-
-        int front_inner_left = buffer.get(3) >> 4;
-        int front_inner_right = buffer.get(3);
-
-        int rear_outer_left = buffer.get(4) >> 4;
-        int rear_outer_right = buffer.get(4);
-
-        int rear_inner_left = buffer.get(5) >> 4;
-        int rear_inner_right = buffer.get(5);
-
          // send message
          message.what = msg_id;
          message.arg1 = buffer.get(4);
-         message.arg2 = buffer.get(5);
+         message.arg2 = buffer.get(6);
          message.obj = buffer;
          mHandler.sendMessage(message);
 

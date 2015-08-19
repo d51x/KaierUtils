@@ -21,11 +21,10 @@ public class OBDThread extends Thread {
     class MAF_TimerTask extends TimerTask {
         @Override
         public void run() {
-
-                App.obd.processOBD_MAF();
-
-               App.obd.processData();
-
+                if ( ! App.GS.isReverseMode ) {
+                    App.obd.processOBD_MAF();
+                    App.obd.processData();
+                }
 
             }
         }
@@ -60,6 +59,7 @@ public class OBDThread extends Thread {
                     //App.obd.processData();
                     //Thread.sleep(50);
                     if ( App.GS.isReverseMode ) {
+
                         App.obd.process_parking_sensors();
                     }
 
