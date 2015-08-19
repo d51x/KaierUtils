@@ -29,7 +29,11 @@
 		/>
 	<SwitchPreference   android:key="kaierutils_show_gps_satellities"
 	                    android:title="@string/menu_general_show_gps_satellities_title"
-	                    android:defaultValue="true"
+	                    android:defaultValue="false"
 		/>
+    <SwitchPreference   android:key="kaierutils_show_buttons"
+                        android:title="@string/menu_general_show_buttons_title"
+                        android:defaultValue="false"
+        />
 </PreferenceScreen>
 

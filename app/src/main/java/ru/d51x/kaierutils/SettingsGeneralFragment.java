@@ -52,6 +52,9 @@ public class SettingsGeneralFragment extends PreferenceFragment implements Share
 		else if ( key.equals ( "kaierutils_show_eq" )  ) {
 			App.GS.isShowEQData = sharedPreferences.getBoolean ( key, false);
 		}
+        else if ( key.equals ( "kaierutils_show_buttons" )  ) {
+            App.GS.isShowButtons = sharedPreferences.getBoolean ( key, false);
+        }
         else if ( key.equals ( "kaierutils_hide_header" )  ) {
 			App.GS.isHideHeader = sharedPreferences.getBoolean ( key, false);
 		}

@@ -89,6 +89,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 	private LinearLayout layout_eq_data;
 	private LinearLayout layout_radio_music_info;
+	private LinearLayout layout_buttons;
 
 	private TextView tv_eq_bass;
 	private TextView tv_eq_mid;
@@ -152,6 +153,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private LinearLayout layout_ac_indicators;
     private LinearLayout layout_ac_blow_direction;
 
+    private ImageView ivBtnRadio;
+    private ImageView ivBtnMusic;
+
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -188,6 +192,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_radio_music_info = (LinearLayout) findViewById (R.id.layout_radio_music_info);
         //layout_radio_music_info.setOnTouchListener(this);
 
+        layout_buttons = (LinearLayout) findViewById (R.id.layout_buttons);
         layout_eq_data = (LinearLayout) findViewById (R.id.layout_eq_data);
 		tv_eq_bass = (TextView) findViewById (R.id.tv_eq_bass);
 		tv_eq_mid = (TextView) findViewById (R.id.tv_eq_mid);
@@ -326,6 +331,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_ac_indicators = (LinearLayout) findViewById(R.id.layout_ac_indicators);
         layout_ac_blow_direction = (LinearLayout) findViewById(R.id.layout_ac_blow_direction);
 
+        ivBtnRadio = (ImageView) findViewById(R.id.ivBtnRadio);
+        ivBtnRadio.setOnClickListener (this);
+        ivBtnMusic = (ImageView) findViewById(R.id.ivBtnMusic);
+        ivBtnMusic.setOnClickListener (this);
+
 	}
 
 	public void setInitData() {
@@ -379,6 +389,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		super.onResume();
 
 		tvCurrentVolume.setText(Integer.toString (App.GS.getVolumeLevel ()) );
+		layout_buttons.setVisibility ( App.GS.isShowButtons ? View.VISIBLE : View.INVISIBLE );
 		layout_eq_data.setVisibility ( App.GS.isShowEQData ? View.VISIBLE : View.INVISIBLE );
 		setVolumeIcon(ivVolumeLevel, App.GS.getVolumeLevel());
         TWUtilEx.requestAudioFocusState();
@@ -450,18 +461,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	        case R.id.btnTest1:
                 // radio audio focus
                 //if (App.GS.curAudioFocusID > 0) TWUtilEx.setAudioFocus(128 & App.GS.curAudioFocusID);
-                TWUtilEx.setAudioFocus(1);
-                startService(new Intent( Radio.PACKAGE_NAME ));
-                startService(new Intent( "com.tw.radio:RadioService" ));
-                TWUtilEx.requestRadioInfo();
+
 
 		        break;
             case R.id.btnTest2:
                 // music audio focus
                 //if (App.GS.curAudioFocusID > 0) TWUtilEx.setAudioFocus(128 & App.GS.curAudioFocusID);
-                TWUtilEx.setAudioFocus(3);
-                startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
-                        PowerampAPI.Commands.TOGGLE_PLAY_PAUSE));
+
 
 	            break;
             case R.id.layout_gps_speed:
@@ -502,7 +508,17 @@ public class MainActivity extends Activity implements View.OnClickListener,
             case R.id.layout_cvt_data:
                 switch_cvt_mode();
                 break;
-
+            case R.id.ivBtnRadio:
+                TWUtilEx.setAudioFocus(1);
+                startService(new Intent( Radio.PACKAGE_NAME ));
+                startService(new Intent( "com.tw.radio:RadioService" ));
+                TWUtilEx.requestRadioInfo();
+                break;
+            case R.id.ivBtnMusic:
+                TWUtilEx.setAudioFocus(3);
+                startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
+                        PowerampAPI.Commands.TOGGLE_PLAY_PAUSE));
+                break;
             default:
                 break;
         }

@@ -40,6 +40,7 @@ public class GlSets {
 	public boolean isShowStatistics;
 	public boolean isShowGPSSAtellities;
 	public boolean isShowEQData;
+	public boolean isShowButtons;
     public boolean isVolumeShowOnNotificationIcon;
 	public boolean isColorSpeed = false;
 
@@ -189,6 +190,7 @@ public class GlSets {
             isShowGPSSAtellities = prefs.getBoolean ("kaierutils_show_gps_satellities", false);
 			isShowStatistics = prefs.getBoolean ("kaierutils_show_statistics", true);
 			isShowEQData = prefs.getBoolean ("kaierutils_show_eq", false);
+			isShowButtons = prefs.getBoolean ("kaierutils_show_buttons", false);
 
 			// load reverse settings
 			isNeedSoundDecreaseAtStartUp = prefs.getBoolean ("CAR_SETTINGS__VOLUME_AT_START_UP__DO_CHANGE", false);
