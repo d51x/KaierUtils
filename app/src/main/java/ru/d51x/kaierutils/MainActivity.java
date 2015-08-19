@@ -1,6 +1,7 @@
 package ru.d51x.kaierutils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +39,7 @@ import android.content.DialogInterface;
 
 import java.util.Date;
 
+import java.util.List;
 import java.util.TimeZone;
 import java.util.Calendar;
 import android.widget.PopupWindow;
@@ -510,9 +512,26 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 break;
             case R.id.ivBtnRadio:
                 TWUtilEx.setAudioFocus(1);
-                startService(new Intent( Radio.PACKAGE_NAME ));
+
                 startService(new Intent( "com.tw.radio:RadioService" ));
-                TWUtilEx.requestRadioInfo();
+
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(Radio.PACKAGE_NAME + ".RadioActivity"));
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        TWUtilEx.requestRadioInfo();
+
+                        startActivity(new Intent("ru.d51x.kaierutils.MainActivity"));
+
+                    }
+                }, 500);
+
+
                 break;
             case R.id.ivBtnMusic:
                 TWUtilEx.setAudioFocus(3);

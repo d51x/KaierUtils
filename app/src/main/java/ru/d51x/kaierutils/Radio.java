@@ -42,7 +42,7 @@ public class Radio {
             if ( task.baseActivity.getPackageName().equalsIgnoreCase( Radio.PACKAGE_NAME )) {
                 App.GS.radio.activityRunning = true;
                 if ( kill ) {
-                    activityManager.killBackgroundProcesses("com.tw.radio");
+                    activityManager.forceStopPackage("com.tw.radio");
                     activityManager.killBackgroundProcesses("com.tw.radio:RadioService");
 
                 }
