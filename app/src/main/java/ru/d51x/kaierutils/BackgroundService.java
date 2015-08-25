@@ -40,6 +40,7 @@ public class BackgroundService extends Service {
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
 		App.GS.isNotificationIconShow = prefs.getBoolean ("kaierutils_show_notification_icon", true);
+        App.GS.curAudioFocusID = prefs.getInt("last_audio_focus_id", -1);
 
         NotifyData notifyData = new  NotifyData( getApplicationContext() );
         notifyData.NotifyID = NotifyData.NOTIFY_ID;
@@ -49,11 +50,11 @@ public class BackgroundService extends Service {
         Notification notification = notifyData.show();
         startForeground( NotifyData.NOTIFY_ID, notification);
 
-        if ( App.GS.interactWithPowerAmp &&
-                App.GS.needWatchBootUpPowerAmp ) {
-            Radio.checkRadioActivityStarted(false);
-            if ( App.GS.isRadioActivityRunning ) TWUtilEx.setAudioFocus( 3 );
-        }
+        //if ( App.GS.interactWithPowerAmp &&
+        //        App.GS.needWatchBootUpPowerAmp ) {
+            //Radio.checkRadioActivityStarted(false);
+            //if ( App.GS.isRadioActivityRunning ) TWUtilEx.setAudioFocus( 3 );
+        //}
 
 		if ((flags & START_FLAG_RETRY) == 0) {
 			// TODO Если это повторный запуск, выполнить какие-то действия.

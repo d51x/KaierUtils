@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 /**
  * Created by Dmitriy on 18.02.2015.
@@ -16,6 +17,7 @@ public class App extends Application {
 	public static RadioToast rToast;
 	public static MusicToast mToast;
 	public static SensorsToast sensorsToast;
+	public static Toast gToast;
 
 	private WindowManager.LayoutParams mWindowManagerLayoutParams = new WindowManager.LayoutParams();
 	public WindowManager.LayoutParams getWindowManagerLayoutParams() {
@@ -37,6 +39,7 @@ public class App extends Application {
 		rToast = new RadioToast( self );
 		mToast = new MusicToast( self );
         sensorsToast = new SensorsToast( self );
+        gToast = new Toast( self );
 	}
 
 }

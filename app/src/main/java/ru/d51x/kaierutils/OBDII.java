@@ -383,6 +383,11 @@ public class OBDII  {
             disconnect();
             Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
         }
+        catch ( StoppedException e6) {
+            activeOther = false;
+            Log.d("OBDII-->processOBD_EngineRPM()", e6.toString());
+        }
+
         catch ( NoDataException e) {
             activeOther = false;
             Log.d("OBDII-->processOBD_EngineRPM()", e.toString());
@@ -415,7 +420,11 @@ public class OBDII  {
         }  catch ( NonNumericResponseException e5) {
             activeOther = false;
             disconnect();
-            Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
+            Log.d("OBDII-->processOBD_Speed()", e5.toString());
+        }
+        catch ( StoppedException e6) {
+            activeOther = false;
+            Log.d("OBDII-->processOBD_Speed()", e6.toString());
         }
         catch ( NoDataException e) {
             activeOther = false;
@@ -465,6 +474,10 @@ public class OBDII  {
             disconnect();
             Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
         }
+        catch ( StoppedException e6) {
+            activeOther = false;
+            Log.d("OBDII-->processOBD_coolantTemp()", e6.toString());
+        }
         catch ( NoDataException e) {
             activeOther = false;
             Log.d("processOBD_coolantTemp()", e.toString());
@@ -509,6 +522,10 @@ public class OBDII  {
             disconnect();
             Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
         }
+        catch ( StoppedException e6) {
+            activeOther = false;
+            Log.d("OBDII-->processOBD_CMVoltage()", e6.toString());
+        }
         catch ( NoDataException e) {
             activeOther = false;
             Log.d("OBDII-->processOBD_CMVoltage()", e.toString());
@@ -541,7 +558,7 @@ public class OBDII  {
             long t = MAF_TimeStamp2 - MAF_TimeStamp1;
             MAF_TimeStamp1 = MAF_TimeStamp2;
 
-            Log.d("OBDII-->processOBD_MAF()", "MAF time: " + Float.toString( t / 1000f ) + " сек");
+            //Log.d("OBDII-->processOBD_MAF()", "MAF time: " + Float.toString( t / 1000f ) + " сек");
 
 
             oneTrip.calculateData(obdData.speed, obdData.maf, t);
@@ -563,6 +580,10 @@ public class OBDII  {
             activeMAF = false;
             disconnect();
             Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
+        }
+        catch ( StoppedException e6) {
+            activeOther = false;
+            Log.d("OBDII-->processOBD_EngineRPM()", e6.toString());
         }
         catch ( NoDataException e) {
             Log.d("OBDII-->processOBD_MAF()", e.toString());
@@ -614,6 +635,10 @@ public class OBDII  {
                 e.printStackTrace();
             }
             Log.d("OBDII-->" + function, e5.toString());
+        }
+        catch ( StoppedException e6) {
+            activeOther = false;
+            Log.d("OBDII-->" + function, e6.toString());
         }
         catch ( NoDataException e) {
             activeOther = false;
@@ -723,12 +748,27 @@ public class OBDII  {
             }
             new SelectHeaderObdCommand("ATCRA " + sender).run(socket.getInputStream(), socket.getOutputStream());
             activeOther = false;
-        } catch (InterruptedException e) {
+        }
+
+        catch ( NonNumericResponseException e1) {
             activeOther = false;
-            e.printStackTrace();
-        } catch (IOException e) {
+            Log.d("OBDII-->SetHeaders()", e1.toString());
+        }
+        catch ( StoppedException e2) {
             activeOther = false;
-            e.printStackTrace();
+            Log.d("OBDII-->SetHeaders()", e2.toString());
+        }
+        catch ( NoDataException e3) {
+            activeOther = false;
+            Log.d("OBDII-->SetHeaders()", e3.toString());
+        }
+
+        catch (InterruptedException e4) {
+            activeOther = false;
+            e4.printStackTrace();
+        } catch (IOException e5) {
+            activeOther = false;
+            e5.printStackTrace();
         } finally {
             activeOther = false;
         }
@@ -737,6 +777,7 @@ public class OBDII  {
 
     private void request_MMC_ECU_ENGINE(){
         if ( activeMAF ) return;
+        if ( App.GS.isReverseMode ) return;
         // set ENGINE ECU addresses
         SetHeaders("7E0", "7E8", false);
 
@@ -782,6 +823,7 @@ public class OBDII  {
                 return;
             }
 
+            activeOther = true;
             SetHeaders("7E1", "7E9", true);
             if ( canMmcData.can_mmc_cvt_temp_show ) {
                 if ( t_temp < (canMmcData.can_mmc_cvt_temp_update_time * 1000) ) return; //время не вышло
@@ -799,6 +841,7 @@ public class OBDII  {
                 sendObdMessage("2110", "7E1", buffer);
                 canMmcData.CVT_oil_degr_TimeStamp1 = canMmcData.CVT_oil_degr_TimeStamp2;
             }
+            activeOther = false;
         }
     }
 
@@ -811,12 +854,15 @@ public class OBDII  {
             long t = App.obd.canMmcData.FuelLevel_TimeStamp2- App.obd.canMmcData.FuelLevel_TimeStamp1;
 
             if ( t < (canMmcData.can_mmc_fuel_remain_update_time * 1000) ) { return; }
+
+            activeOther = true;
             ArrayList<Integer> buffer = null;
             // set COMBINE METER ECU addresses
             SetHeaders("6A0", "514", false);
             buffer = request_CAN_ECU("21A3", "6A0", "514", false);
             sendObdMessage("21A3", "6A0", buffer);
             canMmcData.FuelLevel_TimeStamp1 = canMmcData.FuelLevel_TimeStamp2;
+            activeOther = false;
         }
     }
 
@@ -826,6 +872,7 @@ public class OBDII  {
 
         ArrayList<Integer> buffer = null;
         if (App.obd.canMmcData.can_mmc_ac_data_show) {
+            activeOther = true;
             SetHeaders("688", "511", false);
             // внешняя температура
             buffer = request_CAN_ECU("2111", "688", "511", false);
@@ -837,6 +884,7 @@ public class OBDII  {
             // состояния индикаторов
             buffer = request_CAN_ECU("2161", "688", "511", false);
             sendObdMessage("2161", "688", buffer);
+            activeOther = false;
         }
     }
 
@@ -992,13 +1040,29 @@ public class OBDII  {
     }
 
     private void request_MMC_ECU_PARKING_SENSORS(){
-        if ( !App.GS.isReverseMode ) return;
+        Log.d("request_MMC_ECU_PARKING_SENSORS: --->", "start function...");
+        if ( activeOther ) {
+            Log.d("request_MMC_ECU_PARKING_SENSORS: --->", "exit function...   activeOther...");
+            return;
+        }
+        if ( activeMAF) {
+            Log.d("request_MMC_ECU_PARKING_SENSORS: --->", "exit function...   activeMAF...");
+            return;
+        }
+        if ( !App.GS.isReverseMode ) {
+            Log.d("request_MMC_ECU_PARKING_SENSORS: --->", "exit function...   not reverse mode...");
+            return;
+        }
         if (App.obd.canMmcData.can_mmc_parking_data_show) {
             ArrayList<Integer> buffer = null;
 
+            Log.d("request_MMC_ECU_PARKING_SENSORS: --->", "SetHeaders...   763, 764");
             SetHeaders("763", "764", false);
 
+            Log.d("request_MMC_ECU_PARKING_SENSORS: --->", "send command...   2101");
             buffer = request_CAN_ECU("2101", "763", "764", false);
+
+            Log.d("request_MMC_ECU_PARKING_SENSORS: --->", "buffer:  " + buffer.toString());
             sendObdMessage("2101", "763", buffer);
         }
     }

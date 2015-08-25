@@ -18,12 +18,27 @@ import java.util.ArrayList;
 
 import pt.lighthouselabs.obd.commands.ObdCommand;
 import pt.lighthouselabs.obd.enums.AvailableCommandNames;
+import pt.lighthouselabs.obd.exceptions.BusInitException;
+import pt.lighthouselabs.obd.exceptions.MisunderstoodCommandException;
+import pt.lighthouselabs.obd.exceptions.NoDataException;
 import pt.lighthouselabs.obd.exceptions.ObdResponseException;
+import pt.lighthouselabs.obd.exceptions.StoppedException;
+import pt.lighthouselabs.obd.exceptions.UnableToConnectException;
+import pt.lighthouselabs.obd.exceptions.UnknownObdErrorException;
 
 
 public class CanObdCommand extends ObdCommand {
 
     private ArrayList<Integer> result = null;
+
+    private Class[] ERROR_CLASSES = {
+            UnableToConnectException.class,
+            BusInitException.class,
+            MisunderstoodCommandException.class,
+            NoDataException.class,
+            StoppedException.class,
+            UnknownObdErrorException.class
+    };
 
     /**
      * Default ctor.
@@ -56,6 +71,8 @@ public class CanObdCommand extends ObdCommand {
     @Override
     protected void readResult(InputStream in) throws IOException {
         readRawData(in);
+        // new.... try to fix crashes when IG Off
+        checkForErrors();
     }
 
     @Override
@@ -125,6 +142,26 @@ public class CanObdCommand extends ObdCommand {
                     begin = end;
                     end += 2;
                 }
+            }
+        }
+    }
+
+    @Override
+    protected void checkForErrors() {
+        for (Class<? extends ObdResponseException> errorClass : ERROR_CLASSES) {
+            ObdResponseException messageError;
+
+            try {
+                messageError = errorClass.newInstance();
+                messageError.setCommand(this.cmd);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (messageError.isError(rawData)) {
+                throw messageError;
             }
         }
     }

@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
@@ -51,6 +53,10 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             App.obd.oneTrip.saveData();
             App.obd.todayTrip.saveData();
             App.obd.totalTrip.saveData();
+
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+			prefs.edit().putInt("last_audio_focus_id", App.GS.curAudioFocusID).apply();
+
 		}
         // устройство засыпает
 		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_SLEEP))
@@ -63,6 +69,10 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             App.obd.oneTrip.saveData();
             App.obd.todayTrip.saveData();
             App.obd.totalTrip.saveData();
+
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+			prefs.edit().putInt("last_audio_focus_id", App.GS.curAudioFocusID).apply();
+
 		}
         // устройство проснулось (вышло из SleepMode)
 		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP))
@@ -74,6 +84,9 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             App.obd.oneTrip.loadData();
             App.obd.todayTrip.loadData();
             App.obd.totalTrip.loadData();
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+			App.GS.curAudioFocusID = prefs.getInt("last_audio_focus_id", -1);
+
 		}
         // включился задний ход
 		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_START))

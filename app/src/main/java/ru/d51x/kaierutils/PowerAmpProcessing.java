@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.os.Bundle;
 import android.graphics.Bitmap;
@@ -27,12 +29,7 @@ public class PowerAmpProcessing {
         this.context = context;
         mHandler = new Handler();
 
-        // FIX: если радио активити запущено, то не стартуем поверамп, чтобы не было наложений звука
-        //if  (!App.GS.radio.activityRunning) {
-            // kill radio
-            setPowerAmpStarted();
-        //}
-
+        if ( App.GS.curAudioFocusID != TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID ) setPowerAmpStarted();
 
         powerAmpReceiver = new BroadcastReceiver() {
             @Override
@@ -66,13 +63,10 @@ public class PowerAmpProcessing {
                 setPowerAmpPaused();
             }
             else if (action.equals(TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP)) {
-                TWUtilEx.setAudioFocus(0);
-                setPowerAmpResumed();
+                if ( App.GS.curAudioFocusID != TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID ) setPowerAmpResumed();
             }
             else if (action.equals (Intent.ACTION_BOOT_COMPLETED )) {
-                // FIX: если радио активити запущено, то не стартуем поверамп, чтобы не было наложений звука
-                //if  (!App.GS.radio.activityRunning) setPowerAmpStarted();
-                setPowerAmpStarted();
+                if ( App.GS.curAudioFocusID != TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID ) setPowerAmpStarted();
             }
             else if (action.equals(TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED)) {
                 int key = intent.getIntExtra (TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED, -1);
@@ -217,7 +211,7 @@ public class PowerAmpProcessing {
         if ( App.GS.interactWithPowerAmp &&
              App.GS.needWatchBootUpPowerAmp )
         {
-            TWUtilEx.setAudioFocus( 3 );
+            //TWUtilEx.setAudioFocus( 3 );
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {

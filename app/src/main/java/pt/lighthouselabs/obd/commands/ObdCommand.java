@@ -201,7 +201,7 @@ public abstract class ObdCommand {
     rawData = rawData.substring(rawData.lastIndexOf(13) + 1);
   }
 
-  void checkForErrors() {
+  protected void checkForErrors() {
     for (Class<? extends ObdResponseException> errorClass : ERROR_CLASSES) {
       ObdResponseException messageError;
 

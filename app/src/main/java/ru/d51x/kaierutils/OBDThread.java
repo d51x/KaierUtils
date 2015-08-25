@@ -58,15 +58,17 @@ public class OBDThread extends Thread {
 
                     //App.obd.processData();
                     //Thread.sleep(50);
-                    if ( App.GS.isReverseMode ) {
+                    if ( App.GS.isReverseMode && (! App.obd.activeMAF) && (! App.obd.activeOther)) {
 
                         App.obd.process_parking_sensors();
+                        Thread.sleep(50);
                     }
 
 
 
                     TimeStamp2 = System.currentTimeMillis();
-                    if ( (TimeStamp2 - TimeStamp1) > (1000*60)) // 1 min
+                    //if ( (TimeStamp2 - TimeStamp1) > (1000*60)) // 1 min
+                    if ( (TimeStamp2 - TimeStamp1) > (1000*30)) // 30 sec
                     {
                         App.obd.oneTrip.saveData();
                         App.obd.todayTrip.saveData();
