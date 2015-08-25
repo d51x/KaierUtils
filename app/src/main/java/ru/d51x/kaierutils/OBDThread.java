@@ -58,9 +58,10 @@ public class OBDThread extends Thread {
 
                     //App.obd.processData();
                     //Thread.sleep(50);
-                    if ( App.GS.isReverseMode ) {
+                    if ( App.GS.isReverseMode && (! App.obd.activeMAF) && (! App.obd.activeOther)) {
 
                         App.obd.process_parking_sensors();
+                        Thread.sleep(50);
                     }
 
 

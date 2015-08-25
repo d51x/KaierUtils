@@ -513,25 +513,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
             case R.id.ivBtnRadio:
                 TWUtilEx.setAudioFocus(1);
 
-                startService(new Intent( "com.tw.radio:RadioService" ));
-
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        startActivity(new Intent(Radio.PACKAGE_NAME + ".RadioActivity"));
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        TWUtilEx.requestRadioInfo();
-
-                        startActivity(new Intent("ru.d51x.kaierutils.MainActivity"));
-
-                    }
-                }, 500);
-
-
+                startService(new Intent("com.tw.radio:RadioService"));
+                startActivity(new Intent(Radio.PACKAGE_NAME + ".RadioActivity"));
+                TWUtilEx.requestRadioInfo();
+                startActivity(new Intent("ru.d51x.kaierutils.MainActivity"));
                 break;
             case R.id.ivBtnMusic:
                 TWUtilEx.setAudioFocus(3);
@@ -1496,8 +1481,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
         SpannableString ss =  new SpannableString(s);
         int dot = s.indexOf(".");
         if ( dot > -1 ) {
-            ss.setSpan(new AbsoluteSizeSpan(size1), 0, dot-1, 0);
-            ss.setSpan(new AbsoluteSizeSpan(size2), dot, s.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            ss.setSpan(new AbsoluteSizeSpan(size1), 0, dot, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ss.setSpan(new AbsoluteSizeSpan(size2), dot, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         tv.setText(ss);
     }

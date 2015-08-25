@@ -2,6 +2,7 @@ package ru.d51x.kaierutils.utils;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -225,11 +226,23 @@ public class OBDCalculations {
 
          // send message
          message.what = msg_id;
-         message.arg1 = buffer.get(4);
-         message.arg2 = buffer.get(6);
+//         message.arg1 = buffer.get(4);
+//         message.arg2 = buffer.get(6);
+
+
+
          message.obj = buffer;
          mHandler.sendMessage(message);
 
+//        Log.d("PARKING DATA: ", "buffer: " + buffer.toString());
+
+//        try {
+//            for (int k = 0; k < buffer.size() - 1; k++) {
+//                Log.d("PARKING DATA: ", String.format("buffer[%1$d]: %2$s", k, Integer.toHexString(buffer.get(k))));
+//            }
+//        } catch (Exception e) {
+//
+//        }
     }
 
     public static void sendOBD_CombineMeter_FuelLevel(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {

@@ -51,18 +51,18 @@ public class SensorsToast {
         //int front_inner_right = buffer.get(3);
 
         int rear_outer_left = buffer.get(4) >> 4;
-        int rear_outer_right = buffer.get(4);
+        int rear_outer_right = buffer.get(4) & 0xF;
 
         int rear_inner_left = buffer.get(6) >> 4;
-        int rear_inner_right = buffer.get(6);
+        int rear_inner_right = buffer.get(6) & 0xF;
 
         set_sensor(iv_sensor_rear_left_inner, rear_inner_left );
         set_sensor(iv_sensor_rear_left_outer, rear_outer_left );
         set_sensor(iv_sensor_rear_right_outer, rear_outer_right );
         set_sensor(iv_sensor_rear_right_inner, rear_inner_right );
 
-        Log.d("SENSORS: ", String.format("LO: %1$d     LI: %2$d     RI: %3$d     RO: %4$d",
-                rear_outer_left, rear_inner_left, rear_inner_right, rear_outer_right));
+//        Log.d("SENSORS: ", String.format("LO: %1$d     LI: %2$d     RI: %3$d     RO: %4$d",
+//                rear_outer_left, rear_inner_left, rear_inner_right, rear_outer_right));
     }
 
 
