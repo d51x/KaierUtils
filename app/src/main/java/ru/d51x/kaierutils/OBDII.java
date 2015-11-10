@@ -973,6 +973,8 @@ public class OBDII  {
     }
 
     public void sendObdMessage(String PID, String Addr, ArrayList<Integer> buffer) {
+        if ( buffer == null ) return;
+
         Message msg = new Message();
         // BLOCK: INGINE
         if ( Addr.equalsIgnoreCase("7E0")) {

@@ -3,10 +3,14 @@
     <option name="myName" value="Project Default" />
     <option name="myLocal" value="false" />
     <inspection_tool class="AndroidLintButtonStyle" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="AndroidLintDeprecated" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="AndroidLintDuplicateIds" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="AndroidLintExtraText" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="AndroidLintLongLogTag" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="AndroidLintNestedWeights" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="AndroidLintNotSibling" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="AndroidLintRelativeOverlap" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="AndroidLintTextViewEdits" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="AndroidLintTooManyViews" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="AndroidLintUseCompoundDrawables" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="AndroidLintUselessParent" enabled="false" level="WARNING" enabled_by_default="false" />
