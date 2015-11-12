@@ -37,12 +37,13 @@
         />
 	<SwitchPreference   android:key="kaierutils_show_clock"
                         android:title="@string/menu_general_show_clock_title"
+						android:summary="@string/menu_general_show_clock_summary"
                         android:defaultValue="false"
         />
 	<ru.d51x.kaierutils.SeekBarPreference android:key="kaierutils_clock_size"
 		android:title="@string/menu_general_clock_size_title"
-		android:summary="@string/menu_wakeup_volume_level_summary"
-		android:dialogTitle="@string/menu_general_clock_size_summary"
+		android:summary="@string/menu_general_clock_size_summary"
+		android:dialogTitle="@string/menu_general_clock_size_title"
 		android:defaultValue="60"
 		seekbar:maxValue="100"
 		seekbar:minValue="20"

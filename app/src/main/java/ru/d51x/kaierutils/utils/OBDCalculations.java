@@ -48,7 +48,7 @@ public class OBDCalculations {
 
     public static void sendOBD_CVT_Degradation(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
         // AB*65536 + AC*256 + AD
-        if ( (buffer.size() < 30) || buffer.isEmpty() ) return;
+        if ( (buffer.size() < 32) || buffer.isEmpty() ) return;
         int degr = buffer.get(29) * 65536 + buffer.get(30) * 256 + buffer.get(31);
         Message message = new Message();
         App.obd.canMmcData.can_mmc_cvt_degradation_level = degr;
@@ -95,7 +95,7 @@ public class OBDCalculations {
 
     public static void sendOBD_AC_Blow_Mode(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
         Message message = new Message();
-        if ( (buffer.size() < 3) || buffer.isEmpty() ) return;
+        if ( (buffer.size() < 4) || buffer.isEmpty() ) return;
         int blow_mode = buffer.get(3)  >> 4; // bits 5-8  (getBlowValue2)
         if ( blow_mode == 0x0 ) App.obd.climateData.blow_mode = ClimateData.BlowMode.auto;
         else App.obd.climateData.blow_mode = ClimateData.BlowMode.manual;

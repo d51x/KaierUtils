@@ -712,6 +712,7 @@ android:longClickable="true">
                 android:src="@drawable/toast_music"
                 android:layout_gravity="center_horizontal"/>
 
+
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -765,6 +766,13 @@ android:longClickable="true">
         </LinearLayout>
 
     </LinearLayout>
+
+    <DigitalClock
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/digitalClock"
+        android:layout_gravity="center_horizontal"
+        />
 
     <LinearLayout
         android:orientation="vertical"

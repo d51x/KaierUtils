@@ -197,7 +197,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         layout_radio_music_info = (LinearLayout) findViewById (R.id.layout_radio_music_info);
         layout_clock = (LinearLayout) findViewById (R.id.layout_clock);
+
         //layout_radio_music_info.setOnTouchListener(this);
+        layout_radio_music_info.setOnLongClickListener(this);
 
         digitalClock = (DigitalClock) findViewById(R.id.digitalClock);
         digitalClock.setTextSize( App.GS.ClockSize );
@@ -412,9 +414,14 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 		tvCurrentVolume.setText(Integer.toString(App.GS.getVolumeLevel()));
 		layout_buttons.setVisibility(App.GS.isShowButtons ? View.VISIBLE : View.INVISIBLE);
-		layout_eq_data.setVisibility ( App.GS.isShowEQData ? View.VISIBLE : View.INVISIBLE );
-        layout_clock.setVisibility ( App.GS.isShowClock ? View.VISIBLE : View.INVISIBLE );
-		setVolumeIcon(ivVolumeLevel, App.GS.getVolumeLevel());
+		layout_eq_data.setVisibility(App.GS.isShowEQData ? View.VISIBLE : View.INVISIBLE);
+
+
+
+        show_hide_clock();
+
+
+        setVolumeIcon(ivVolumeLevel, App.GS.getVolumeLevel());
         TWUtilEx.requestAudioFocusState();
         // определим, запущено ли радио
         Radio.checkRadioActivityStarted(false);
@@ -470,6 +477,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     return true;
                 case R.id.ivOBD2Status:
                     show_obdii_activity(MainActivity.this);
+                    return true;
+                case R.id.layout_radio_music_info:
+                    show_hide_clock();
                     return true;
                 default:
                     return false;
@@ -539,8 +549,18 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
                 startService(new Intent("com.tw.radio:RadioService"));
                 TWUtilEx.requestRadioInfo();
-                startActivity(new Intent(Radio.PACKAGE_NAME + ".RadioActivity"));
 
+                startActivity( getPackageManager().getLaunchIntentForPackage(Radio.PACKAGE_NAME) );
+                //startActivity(new Intent(Radio.PACKAGE_NAME + ".RadioActivity"));
+/*
+
+или так
+
+intent = new Intent();
+                    intent.setClassName("com.tw.eq", "com.tw.eq.EQActivity");
+                    intent.setFlags(268435456);
+                    startActivity(intent);
+ */
                 break;
             case R.id.ivBtnMusic:
                 TWUtilEx.setAudioFocus(3);
@@ -654,13 +674,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     ivSpeed.setImageResource(R.drawable.speedo_1);
                 }
 				tvGPSSpeed.setText( speed > 0 ? String.format(getString(R.string.text_gps_speed_value), speed) : "---" );
-
-                NotifyData notifyData2 = new  NotifyData( App.getInstance() );
-                notifyData2.NotifyID = NotifyData.NOTIFY_SPEED_ID;
-                notifyData2.Text = Integer.toString( App.GS.curAudioFocusID);
-                notifyData2.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-                notifyData2.show();
-
 				color_speed(tvGPSSpeed, speed);
 
                 tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), Integer.toString( App.GS.gpsAverageSpeed)));
@@ -896,7 +909,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
             tvTrackTime.setText(  String.format("%1$02d", cal.get(Calendar.MINUTE)) );
             tvTrackTime2.setText(String.format("%1$02d", cal.get(Calendar.SECOND)));
             tvTrackTimeMinOrSec.setText( getString(R.string.text_gps_track_time_format_sec));
-            tvTrackTimeHourOrMin.setText( getString(R.string.text_gps_track_time_format_min));
+            tvTrackTimeHourOrMin.setText(getString(R.string.text_gps_track_time_format_min));
 
         }
     }
@@ -1155,7 +1168,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         etFuelTankRemain.setText( String.format("%1$.0f", App.obd.totalTrip.fuel_remains));
         seekBarFuel.setMax( 100 );
         int percent = Math.round(App.obd.totalTrip.fuel_remains * 100 / App.obd.obdData.fuel_tank);
-        seekBarFuel.setProgress( percent );
+        seekBarFuel.setProgress(percent);
         tvFuelPercent.setText(String.valueOf(percent) + " %");
         seekBarFuel.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -1168,11 +1181,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float fltank  = Float.parseFloat(etFuelTankCapacity.getText().toString());
-                float flremain  = fltank * progress / 100;
+                float fltank = Float.parseFloat(etFuelTankCapacity.getText().toString());
+                float flremain = fltank * progress / 100;
 
                 etFuelTankRemain.setText(String.format("%1$.0f", flremain));
-                tvFuelPercent.setText( String.valueOf(progress) + " %");
+                tvFuelPercent.setText(String.valueOf(progress) + " %");
             }
         });
         fuelDialog.setPositiveButton("Сохранить",
@@ -1273,22 +1286,22 @@ public class MainActivity extends Activity implements View.OnClickListener,
         switch ( modeFuelConsump ) {
             case 0:
                 ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst);
-                show_hide_fuel_consump_line_2( modeFuelConsump == 3);
+                show_hide_fuel_consump_line_2(modeFuelConsump == 3);
                 break;
             case 1:
                 ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lpk_avg);
-                show_hide_fuel_consump_line_2( modeFuelConsump == 3);
+                show_hide_fuel_consump_line_2(modeFuelConsump == 3);
                 break;
             case 2:
                 ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lph);
-                show_hide_fuel_consump_line_2( modeFuelConsump == 3);
+                show_hide_fuel_consump_line_2(modeFuelConsump == 3);
                 break;
             case 3:
                 ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst_avg);
-                show_hide_fuel_consump_line_2( modeFuelConsump == 3);
+                show_hide_fuel_consump_line_2(modeFuelConsump == 3);
                 break;
             default:
-                show_hide_fuel_consump_line_2( modeFuelConsump == 3);
+                show_hide_fuel_consump_line_2(modeFuelConsump == 3);
                 ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump);
                 break;
         }
@@ -1436,7 +1449,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 //            case 0x9: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_8); break;
 //            default:  break;
 //        }
-        iv_ac_fan_mode.setVisibility( (fanMode == ClimateData.FanMode.auto) ? View.VISIBLE : View.INVISIBLE);
+        iv_ac_fan_mode.setVisibility((fanMode == ClimateData.FanMode.auto) ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void updateOBD_air_cond_temperature(String temp){
@@ -1488,13 +1501,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private void updateOBD_air_cond_recirculation( ClimateData.State state){
         //iv_air_recirculation.setVisibility( (App.obd.climateData.recirculation_state == ClimateData.State.on)  ? View.VISIBLE : View.INVISIBLE );
-        iv_air_recirculation.setVisibility( (state == ClimateData.State.on)  ? View.VISIBLE : View.INVISIBLE );
+        iv_air_recirculation.setVisibility((state == ClimateData.State.on) ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void updateOBD_air_cond_state( ClimateData.State state) {
 
         //iv_air_ac_state.setVisibility( (App.obd.climateData.ac_state == ClimateData.State.on) ? View.VISIBLE : View.INVISIBLE );
-        iv_air_ac_state.setImageResource( (state == ClimateData.State.on) ? R.drawable.air_cond__state_on : R.drawable.air_cond__state_off );
+        iv_air_ac_state.setImageResource((state == ClimateData.State.on) ? R.drawable.air_cond__state_on : R.drawable.air_cond__state_off);
 
     }
 
@@ -1503,7 +1516,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
     private void updateOBD_air_cond_blow_mode( ClimateData.BlowMode blowMode){
-        iv_ac_blow_auto.setVisibility( (blowMode == ClimateData.BlowMode.auto) ? View.VISIBLE : View.INVISIBLE);
+        iv_ac_blow_auto.setVisibility((blowMode == ClimateData.BlowMode.auto) ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void updateOBD_climate_data(ClimateData climateData) {
@@ -1529,6 +1542,33 @@ public class MainActivity extends Activity implements View.OnClickListener,
             ss.setSpan(new AbsoluteSizeSpan(size2), dot, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         tv.setText(ss);
+    }
+
+
+    private void show_hide_clock()
+    {
+        if ( App.GS.isShowClock )
+        {
+            if (App.GS.radio.showInfo || (App.GS.interactWithPowerAmp && App.GS.isShowMusicInfo))
+            {
+                App.GS.clock_show_mode++;
+                if (App.GS.clock_show_mode > 1) App.GS.clock_show_mode = 0;
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+                prefs.edit().putInt("kaierutils_clock_show_mode", App.GS.clock_show_mode).apply();
+
+
+                if ( App.GS.clock_show_mode == 1 ) {
+                    layout_radio_music_info.setVisibility(View.INVISIBLE);
+                    layout_clock.setVisibility(View.VISIBLE);
+                } else {
+                    layout_clock.setVisibility(View.INVISIBLE);
+                    layout_radio_music_info.setVisibility(View.VISIBLE);
+                }
+            } else {
+                layout_clock.setVisibility(View.VISIBLE);
+            }
+        } else
+            layout_clock.setVisibility(View.INVISIBLE);
     }
 }
 
