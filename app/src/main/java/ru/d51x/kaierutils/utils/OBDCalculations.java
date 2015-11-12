@@ -19,6 +19,7 @@ public class OBDCalculations {
     public static void sendOBD_ENGINE_Fan_State(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
         Message message = new Message();
         // Выключатель кондиционера 211D {A:3}
+        if ( (buffer.size() < 3) || buffer.isEmpty() ) return;
         App.obd.canMmcData.fan_state = ( (buffer.get(2) & 0x8) > 0 ) ? CanMmcData.State.on : CanMmcData.State.off;
 
         if ( App.obd.canMmcData.fan_state != App.obd.canMmcDataPrev.fan_state) {
@@ -31,6 +32,7 @@ public class OBDCalculations {
     }
 
     public static void sendOBD_CVT_Temp(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
+        if ( (buffer.size() < 16) || buffer.isEmpty() ) return;
         int N = buffer.get(15);
         int temp_1 = Math.round( -21.592f + (1.137f * N) - (0.0063f * N * N) + (0.0000195f * N * N * N));
         App.obd.canMmcData.can_mmc_cvt_temp = temp_1;
@@ -46,6 +48,7 @@ public class OBDCalculations {
 
     public static void sendOBD_CVT_Degradation(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
         // AB*65536 + AC*256 + AD
+        if ( (buffer.size() < 30) || buffer.isEmpty() ) return;
         int degr = buffer.get(29) * 65536 + buffer.get(30) * 256 + buffer.get(31);
         Message message = new Message();
         App.obd.canMmcData.can_mmc_cvt_degradation_level = degr;
@@ -60,6 +63,7 @@ public class OBDCalculations {
 
     public static void sendOBD_AC_ExtTemp(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
         // "C-Cross External temperature","Ext temp","2111","A/2-40","-40","87.5"," grad C","688"
+        if ( (buffer.size() < 3) || buffer.isEmpty() ) return;
         Message message = new Message();
         int temp = buffer.get(2)/2 - 40;
         App.obd.climateData.ext_temperature = temp;
@@ -74,6 +78,7 @@ public class OBDCalculations {
 
     public static void sendOBD_AC_Fan_Mode(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
         Message message = new Message();
+        if ( (buffer.size() < 4) || buffer.isEmpty() ) return;
         int fan_mode = buffer.get(3) & 0xF; // bits 1-4, mask 0xF
         if ( fan_mode == 0x0 ) App.obd.climateData.fan_mode = ClimateData.FanMode.auto;
         else if ( fan_mode == 0x1 ) App.obd.climateData.fan_mode = ClimateData.FanMode.off;
@@ -90,7 +95,7 @@ public class OBDCalculations {
 
     public static void sendOBD_AC_Blow_Mode(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
         Message message = new Message();
-
+        if ( (buffer.size() < 3) || buffer.isEmpty() ) return;
         int blow_mode = buffer.get(3)  >> 4; // bits 5-8  (getBlowValue2)
         if ( blow_mode == 0x0 ) App.obd.climateData.blow_mode = ClimateData.BlowMode.auto;
         else App.obd.climateData.blow_mode = ClimateData.BlowMode.manual;
@@ -105,7 +110,7 @@ public class OBDCalculations {
 
     public static void sendOBD_AC_Temp(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
         Message message = new Message();
-
+        if ( (buffer.size() < 3) || buffer.isEmpty() ) return;
         double A = buffer.get(2)/2f - 50f;
         App.obd.climateData.temperature = A;
         if ( App.obd.climateData.temperature != App.obd.climateDataPrev.temperature) {
@@ -120,7 +125,7 @@ public class OBDCalculations {
     public static void sendOBD_AC_Blow_direction(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
         Message message = new Message();
 
-
+        if ( (buffer.size() < 4) || buffer.isEmpty() ) return;
         switch ( buffer.get(3) >> 4  ) // bits 5-8
         {
             case 0x0:  App.obd.climateData.blow_direction = ClimateData.BlowDirection.off; break;
@@ -149,7 +154,7 @@ public class OBDCalculations {
 
     public static void sendOBD_AC_Fan_Speed(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
         Message message = new Message();
-
+        if ( (buffer.size() < 4) || buffer.isEmpty() ) return;
         // fan speed
         switch (buffer.get(3) & 0xF )   // bits 1-4, mask 0xF
         {
@@ -181,7 +186,7 @@ public class OBDCalculations {
 
 
         // A/C state: On/Off  // А:5
-
+        if ( (buffer.size() < 3) || buffer.isEmpty() ) return;
         App.obd.climateData.ac_state = ( (buffer.get(2) & 0x10) > 0 ) ? ClimateData.State.on : ClimateData.State.off;
         if ( App.obd.climateData.ac_state != App.obd.climateDataPrev.ac_state) {
             // send message
@@ -195,7 +200,7 @@ public class OBDCalculations {
 
     public static void sendOBD_AC_Recirculation_State(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
         Message message = new Message();
-
+        if ( (buffer.size() < 3) || buffer.isEmpty() ) return;
         // recirculation state  А:7
         App.obd.climateData.recirculation_state = ( ( buffer.get(2) & 0x40 ) > 0 ) ? ClimateData.State.on : ClimateData.State.off;
         if ( App.obd.climateData.recirculation_state != App.obd.climateDataPrev.recirculation_state) {
@@ -210,6 +215,7 @@ public class OBDCalculations {
     public  static void sendOBD_AC_Defogger_State(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
         Message message = new Message();
         // defogger state А:1
+        if ( (buffer.size() < 3) || buffer.isEmpty() ) return;
         App.obd.climateData.defogger_state = ( ( buffer.get(2) & 0x1 ) > 0 ) ? ClimateData.State.on : ClimateData.State.off;
         if ( App.obd.climateData.defogger_state != App.obd.climateDataPrev.defogger_state) {
             // send message
@@ -247,6 +253,7 @@ public class OBDCalculations {
 
     public static void sendOBD_CombineMeter_FuelLevel(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
         Message message = new Message();
+        if ( (buffer.size() < 5) || buffer.isEmpty() ) return;
         //App.obd.canMmcData.can_mmc_fuel_remain = Math.round(( buffer.get(4) - 16) * 0.6f);
         if ( App.obd.obdData.fuel_tank > 0 )
                 App.obd.canMmcData.can_mmc_fuel_remain = Math.round(( buffer.get(4) - 16) * (App.obd.obdData.fuel_tank / 100));
