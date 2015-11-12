@@ -22,6 +22,7 @@ import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
+import android.widget.DigitalClock;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -95,6 +96,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	private LinearLayout layout_clock;
 	private LinearLayout layout_buttons;
 
+    private DigitalClock digitalClock;
 	private TextView tv_eq_bass;
 	private TextView tv_eq_mid;
 	private TextView tv_eq_tre;
@@ -188,7 +190,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 		// track time
 		layout_tracktime = (LinearLayout) findViewById(R.id.layout_tracktime);
-		layout_tracktime.setOnLongClickListener (this);
+		layout_tracktime.setOnLongClickListener(this);
 		layout_tracktime.setOnClickListener(this);
 
 
@@ -196,6 +198,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_radio_music_info = (LinearLayout) findViewById (R.id.layout_radio_music_info);
         layout_clock = (LinearLayout) findViewById (R.id.layout_clock);
         //layout_radio_music_info.setOnTouchListener(this);
+
+        digitalClock = (DigitalClock) findViewById(R.id.digitalClock);
+        digitalClock.setTextSize( App.GS.ClockSize );
 
         layout_buttons = (LinearLayout) findViewById (R.id.layout_buttons);
         layout_eq_data = (LinearLayout) findViewById (R.id.layout_eq_data);
@@ -362,7 +367,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvTrackTimeMinOrSec.setText(getString(R.string.text_gps_track_time_format_sec));
 		tvTrackTimeHourOrMin.setText( getString(R.string.text_gps_track_time_format_min));
 		tvGPSDistance.setText( "----.-" );
-		tvMaxSpeed.setText( String.format( getString(R.string.text_max_speed), "---"));
+		tvMaxSpeed.setText( String.format(getString(R.string.text_max_speed), "---"));
 		tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), "---"));
 
 		setEQData(App.GS.eqData);
@@ -372,12 +377,22 @@ public class MainActivity extends Activity implements View.OnClickListener,
         tvMusicInfo2.setText("");
         ivAlbumArt.setImageResource(R.drawable.toast_music);
 
+
+
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        modeFuelTank = prefs.getInt("kaierutils_modeFuelTank", 0);
+        modeFuelConsump = prefs.getInt("kaierutils_modeFuelConsump", 0);
+
         ivOBD_FuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst);
         ivOBD_FuelTank.setImageResource(R.drawable.fuel_tank_in_tank_full);
 
-	}
+        switch_fuel_consump_mode(false);
+        switch_fuel_tank_mode(false);
 
-	public void updataData() {
+    }
+
+    public void updataData() {
         updateOBD_FuelTank(App.obd.totalTrip.fuel_remains);
 
 
@@ -409,12 +424,15 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_battery.setVisibility( (App.obd.battery_show) ? View.VISIBLE : View.GONE);
         layout_obd_fuel.setVisibility( (App.obd.fuel_data_show) ? View.VISIBLE : View.GONE);
         layout_fuel_consump.setVisibility( (App.obd.fuel_consump_show) ? View.VISIBLE : View.GONE);
+
         layout_cvt_data.setVisibility( (App.obd.MMC_CAN && (App.obd.canMmcData.can_mmc_cvt_degr_show || App.obd.canMmcData.can_mmc_cvt_temp_show)) ? View.VISIBLE : View.GONE);
         layout_MMC_climate.setVisibility( (App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_ac_data_show) ? View.VISIBLE : View.GONE);
         layout_temp_data.setVisibility( App.obd.engine_temp_show ? View.VISIBLE : View.GONE);
         layout_gps_info.setVisibility( App.GS.isShowGPSSAtellities ? View.VISIBLE : View.INVISIBLE);
         // обновить данные OBD
         updateOBD_climate_data(App.obd.climateData);
+
+        digitalClock.setTextSize(App.GS.ClockSize);
 	}
 
     @Override
@@ -505,10 +523,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 }
                 break;
             case R.id.layout_fuel_data:
-                switch_fuel_tank_mode();
+                switch_fuel_tank_mode(true);
                 break;
             case R.id.layout_fuel_consump:
-                switch_fuel_consump_mode();
+                switch_fuel_consump_mode(true);
                 break;
             case R.id.layout_temp_data:
                 switch_temp_mode();
@@ -840,7 +858,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 			else if ( speed < 120 ) tv.setTextColor( Color.rgb(155,106,0));
 			else tv.setTextColor( Color.rgb(255,0,0));
 		} else {
-            tv.setTextColor( Color.LTGRAY);
+            tv.setTextColor(Color.LTGRAY);
         }
 	}
 
@@ -967,9 +985,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
     public void updateOBDStatus(boolean status){
         //
         if ( status ) {
-            ivOBD2Status.setImageResource( R.drawable.obd_connected);
+            ivOBD2Status.setImageResource(R.drawable.obd_connected);
         } else {
-            ivOBD2Status.setImageResource( R.drawable.obd_disconnected);
+            ivOBD2Status.setImageResource(R.drawable.obd_disconnected);
         }
     }
 
@@ -1065,6 +1083,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
         //tvOBD_FuelTank.setText( String.format("%1$.1f", tank));
         //tvOBD_FuelTank.setText( String.format("%1$.1f", remain));
         show_fuel_tank_data(modeFuelTank);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        prefs.edit().putInt("kaierutils_modeFuelTank", modeFuelTank).apply();
+
     }
 
     public void updateOBD_FuelConsump(float consump){
@@ -1075,6 +1096,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 //        }
         //tvOBD_FuelConsump.setText( String.format("%1$.1f", consump));
         show_fuel_consumption(modeFuelConsump);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        prefs.edit().putInt("kaierutils_modeFuelConsump", modeFuelConsump).apply();
     }
 
     // диалог с впросом о заправке (полный бак или нет)
@@ -1082,7 +1105,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
         alertDialogBuilder.setTitle(getString(R.string.text_fuel_tank_title));
-        alertDialogBuilder.setMessage( getString(R.string.text_fuel_tank_full));
+        alertDialogBuilder.setMessage(getString(R.string.text_fuel_tank_full));
         alertDialogBuilder.setIcon(R.drawable.fuel_tank_full);
 
         alertDialogBuilder.setPositiveButton("Отмена", new DialogInterface.OnClickListener() {
@@ -1166,14 +1189,17 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
     // TODO: переключение режима показаний топлива в баке (учесть показания с приборки)
-    private void switch_fuel_tank_mode() {
+    private void switch_fuel_tank_mode(boolean increase) {
         // режим отображения уровня топлива
         // 0 - осталось в литрах
         // 1 - осталось в процентах
         // 2 - микс-режим (первая строка - литры, вторая строка - проценты
         // 3 - потрачено за поездку (л)
-        modeFuelTank++;
-        if ( modeFuelTank > 2) modeFuelTank = 0;
+       if ( increase ) {
+           modeFuelTank++;
+           if (modeFuelTank > 2) modeFuelTank = 0;
+       }
+
         show_fuel_tank_data(modeFuelTank);
 
         switch ( modeFuelTank ) {
@@ -1224,14 +1250,16 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
     // переключение режима показаний расхода
-    private void switch_fuel_consump_mode() {
+    private void switch_fuel_consump_mode(boolean increase) {
         // режим отображения расхода
         // 0 - мгновенный
         // 1 - средний за поездку с учетом sleep
         // 2 - отображаем литры в час
         // 3 - комбинированный режим, первая строка - средний, вторая мгновенный
-        modeFuelConsump++;
-        if ( modeFuelConsump > 3) modeFuelConsump = 0;
+        if ( increase ) {
+            modeFuelConsump++;
+            if (modeFuelConsump > 3) modeFuelConsump = 0;
+        }
 
         show_fuel_consumption(modeFuelConsump);
 

@@ -42,6 +42,7 @@ public class GlSets {
 	public boolean isShowEQData;
 	public boolean isShowButtons;
 	public boolean isShowClock;
+	public int ClockSize;
     public boolean isVolumeShowOnNotificationIcon;
 	public boolean isColorSpeed = false;
 
@@ -149,6 +150,7 @@ public class GlSets {
 		VolumeLevelAtStartUp = 3;
 		VolumeLevelAtWakeUp = 3;
 
+        ClockSize = 60;
 		isNeedSoundDecreaseAtReverse = false;
 		isFixedVolumeAtReverse = false;
 		isPercentVolumeAtReverse = false;
@@ -193,6 +195,7 @@ public class GlSets {
 			isShowEQData = prefs.getBoolean ("kaierutils_show_eq", false);
 			isShowButtons = prefs.getBoolean ("kaierutils_show_buttons", false);
             isShowClock = prefs.getBoolean ("kaierutils_show_clock", false);
+            ClockSize = prefs.getInt("kaierutils_clock_size", 60);
 
 			// load reverse settings
 			isNeedSoundDecreaseAtStartUp = prefs.getBoolean ("CAR_SETTINGS__VOLUME_AT_START_UP__DO_CHANGE", false);

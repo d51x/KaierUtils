@@ -24,6 +24,8 @@
 	<string name="menu_general_show_gps_satellities_title">Отображать данные о спутниках GPS</string>
 	<string name="menu_general_show_buttons_title">Отображать кнопки Radio и Music</string>
 	<string name="menu_general_show_clock_title">Отображать часы</string>
+	<string name="menu_general_clock_size_title">Размер часов</string>
+	<string name="menu_general_clock_size_summary">Текущее значение %1$d</string>
 	<string name="menu_general_show_eq_summary">Под громкостью отображаются уровни низких, средних, высоких частот</string>
 
 	<!-- reverse menu -->
