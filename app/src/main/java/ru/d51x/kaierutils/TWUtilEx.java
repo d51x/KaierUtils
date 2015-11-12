@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -219,6 +220,11 @@ public class TWUtilEx {
 						SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
 						prefs.edit().putInt("last_audio_focus_id", App.GS.curAudioFocusID).apply();
 
+						NotifyData notifyData = new  NotifyData( App.getInstance() );
+						notifyData.NotifyID = NotifyData.NOTIFY_AUDIO_FOCUS_ID;
+						notifyData.Text = Integer.toString( App.GS.curAudioFocusID);
+						notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
+						Notification notification = notifyData.show();
                         break;
 					default:
 						break;

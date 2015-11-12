@@ -608,7 +608,7 @@ android:longClickable="true">
 		<LinearLayout
 			android:orientation="horizontal"
 			android:layout_width="wrap_content"
-			android:layout_height="fill_parent" android:visibility="visible"
+			android:layout_height="wrap_content" android:visibility="visible"
             android:id="@+id/layout_buttons">
 			<Button android:layout_width="wrap_content" android:layout_height="wrap_content"
 			        android:text="Radio" android:id="@+id/btnTest1"
@@ -625,13 +625,16 @@ android:longClickable="true">
                 android:layout_width="80dp"
                 android:layout_height="48dp"
                 android:id="@+id/ivBtnRadio"
-                android:src="@drawable/btn_radio"/>
+                android:src="@drawable/toast_radio"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp" />
 
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="48dp"
                 android:id="@+id/ivBtnMusic"
-                android:src="@drawable/btn_music"/>
+                android:src="@drawable/toast_music"
+                android:layout_gravity="center" />
 
         </LinearLayout>
 

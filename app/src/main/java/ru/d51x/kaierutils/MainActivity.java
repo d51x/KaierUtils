@@ -655,6 +655,12 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 }
 				tvGPSSpeed.setText( speed > 0 ? String.format(getString(R.string.text_gps_speed_value), speed) : "---" );
 
+                NotifyData notifyData2 = new  NotifyData( App.getInstance() );
+                notifyData2.NotifyID = NotifyData.NOTIFY_SPEED_ID;
+                notifyData2.Text = Integer.toString( App.GS.curAudioFocusID);
+                notifyData2.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
+                notifyData2.show();
+
 				color_speed(tvGPSSpeed, speed);
 
                 tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), Integer.toString( App.GS.gpsAverageSpeed)));
@@ -668,9 +674,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 tvGPSDistance.setText(dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-");
                 showFormatedTrackTime(App.GS.gpsTimeAtWay_Type);
 
-                NotifyData notifyData = new NotifyData( App.getInstance () );
-                notifyData.line_inway_distance = dist > 0 ? "Пройдено: " + String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-";
-                notifyData.show();
+//                NotifyData notifyData = new NotifyData( App.getInstance () );
+//                notifyData.line_inway_distance = dist > 0 ? "Пройдено: " + String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-";
+//                notifyData.show();
             }
 			else if ( action.equals( TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED)) {
 				String title = intent.getStringExtra("Title");

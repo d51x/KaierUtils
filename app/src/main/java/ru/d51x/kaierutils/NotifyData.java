@@ -11,6 +11,8 @@ import android.content.Context;
 public class NotifyData {
 
     public static final int NOTIFY_ID = 1;
+    public static final int NOTIFY_SPEED_ID = 2;
+    public static final int NOTIFY_AUDIO_FOCUS_ID = 3;
     public static final int NOTIFY_VOLUME_CHANGED_ID = 2;
     public static final String NOTIFICATION_TITLE = "KaierUtils";
     public static final String OPTION_SHOW_NOTIFICATION_ICON = "kaierutils_show_notification_icon";
