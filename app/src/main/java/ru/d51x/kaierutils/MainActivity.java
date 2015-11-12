@@ -2,6 +2,7 @@ package ru.d51x.kaierutils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -91,6 +92,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 	private LinearLayout layout_eq_data;
 	private LinearLayout layout_radio_music_info;
+	private LinearLayout layout_clock;
 	private LinearLayout layout_buttons;
 
 	private TextView tv_eq_bass;
@@ -192,6 +194,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
         layout_radio_music_info = (LinearLayout) findViewById (R.id.layout_radio_music_info);
+        layout_clock = (LinearLayout) findViewById (R.id.layout_clock);
         //layout_radio_music_info.setOnTouchListener(this);
 
         layout_buttons = (LinearLayout) findViewById (R.id.layout_buttons);
@@ -376,6 +379,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 	public void updataData() {
         updateOBD_FuelTank(App.obd.totalTrip.fuel_remains);
+
+
 	}
 
 	public void onStart() {
@@ -390,9 +395,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	public void onResume() {
 		super.onResume();
 
-		tvCurrentVolume.setText(Integer.toString (App.GS.getVolumeLevel ()) );
-		layout_buttons.setVisibility ( App.GS.isShowButtons ? View.VISIBLE : View.INVISIBLE );
+		tvCurrentVolume.setText(Integer.toString(App.GS.getVolumeLevel()));
+		layout_buttons.setVisibility(App.GS.isShowButtons ? View.VISIBLE : View.INVISIBLE);
 		layout_eq_data.setVisibility ( App.GS.isShowEQData ? View.VISIBLE : View.INVISIBLE );
+        layout_clock.setVisibility ( App.GS.isShowClock ? View.VISIBLE : View.INVISIBLE );
 		setVolumeIcon(ivVolumeLevel, App.GS.getVolumeLevel());
         TWUtilEx.requestAudioFocusState();
         // определим, запущено ли радио
@@ -634,15 +640,19 @@ public class MainActivity extends Activity implements View.OnClickListener,
 				color_speed(tvGPSSpeed, speed);
 
                 tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), Integer.toString( App.GS.gpsAverageSpeed)));
-                tvMaxSpeed.setText( String.format( getString(R.string.text_max_speed), Integer.toString( App.GS.gpsMaxSpeed)));
+                tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), Integer.toString(App.GS.gpsMaxSpeed)));
 
                 if ( !App.GS.dsc_isAvailable ) {
                     ivSpeedChange.setVisibility(View.INVISIBLE);
                 }
                 float dist = App.GS.totalDistance / 1000;
 
-                tvGPSDistance.setText (  dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-" );
-                showFormatedTrackTime( App.GS.gpsTimeAtWay_Type );
+                tvGPSDistance.setText(dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-");
+                showFormatedTrackTime(App.GS.gpsTimeAtWay_Type);
+
+                NotifyData notifyData = new NotifyData( App.getInstance () );
+                notifyData.line_inway_distance = dist > 0 ? "Пройдено: " + String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-";
+                notifyData.show();
             }
 			else if ( action.equals( TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED)) {
 				String title = intent.getStringExtra("Title");
@@ -1310,7 +1320,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         // по кан
                         if ( App.obd.canMmcData.can_mmc_fuel_remain < 0 )
                         tvOBD_FuelTank.setText(String.format("%1$s", "--"));
-                        else tvOBD_FuelTank.setText(String.format("%1$s", Integer.toString(Math.round(App.obd.canMmcData.can_mmc_fuel_remain / (App.obd.obdData.fuel_tank / 100)))));
+                        else tvOBD_FuelTank.setText(String.format("%1$s", Integer.toString(Math.round(App.obd.canMmcData.can_mmc_fuel_remain / (App.obd.obdData.fuel_tank / 100))))  + "\\%");
                     } else {
                         // вычисляем
                         tvOBD_FuelTank.setText(String.format("%1$.0f", (float) ((App.obd.totalTrip.fuel_remains * 100) / App.obd.obdData.fuel_tank)) + "\\%");

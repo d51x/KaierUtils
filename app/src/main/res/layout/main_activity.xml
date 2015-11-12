@@ -739,20 +739,27 @@ android:longClickable="true">
                     android:textColor="@android:color/holo_blue_dark"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"/>
+
             </LinearLayout>
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="144dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
-            android:id="@+id/tvCurrentTime"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_marginTop="-200dp"
-            android:visibility="invisible"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/layout_clock">
+
+            <DigitalClock
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/digitalClock"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:textSize="60sp"
+                android:textColor="@android:color/holo_blue_light" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

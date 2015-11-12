@@ -26,15 +26,24 @@ public class NotifyData {
     public int number;
     private Context context;
 
+    public String line_inway_time;
+    public String line_inway_distance;
+
+
     public NotifyData(Context context ) {
         NotifyID = NOTIFY_ID;
         smallIcon = R.drawable.notify_auto;
         Title = NOTIFICATION_TITLE;
         Text = "";
         volumeLevel = -1;
-        flags =  0;
+        //flags =  0;
+        flags =  Notification.FLAG_ONGOING_EVENT;;
         ActivityClass = MainActivity.class;
         number = 0;
+
+        line_inway_time = "";
+        line_inway_distance = "";
+
         this.context = context;
     }
 
@@ -43,12 +52,20 @@ public class NotifyData {
 
         notificationManager.cancel(this.NotifyID);
         Notification.Builder builder = new Notification.Builder(context);
-        builder.setContentTitle( this.Title );
-        builder.setContentText( this.Text );
+        builder.setContentTitle(this.Title);
+        builder.setContentText(this.Text);
         builder.setAutoCancel(false);
+
+       // builder.addAction();
+
         //builder.setWhen( App.GS.startDate);
         if ( this.smallIcon > 0 ) builder.setSmallIcon( this.smallIcon );
-        Notification notification = builder.build();
+        //Notification notification = builder.build();
+        Notification notification = new Notification.InboxStyle(builder)
+                .addLine(line_inway_time)
+                .addLine(line_inway_distance)
+                .build();
+
         notification.flags |= this.flags;
         notification.number =  this.number;
         if ( this.ActivityClass != null) {

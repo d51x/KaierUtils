@@ -421,7 +421,7 @@ public class TWUtilEx {
 						PowerampAPI.Commands.RESUME));
 			}
 		}, 500);
-        Radio.checkRadioActivityStarted( true );
+       // Radio.checkRadioActivityStarted( true );
 	}
 
 	public static void initEqData() {
