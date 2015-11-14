@@ -1520,14 +1520,14 @@ intent = new Intent();
     }
 
     private void updateOBD_climate_data(ClimateData climateData) {
-        updateOBD_air_cond_state( climateData.ac_state );
-        updateOBD_air_cond_blow_mode( climateData.blow_mode);
-        updateOBD_air_cond_recirculation( climateData.recirculation_state);
-        updateOBD_air_cond_defogger( climateData.defogger_state );
-        updateOBD_air_cond_blow_direction( climateData.blow_direction);
-        if ( climateData.temperature == -255 )
+        updateOBD_air_cond_state(climateData.ac_state);
+        updateOBD_air_cond_blow_mode(climateData.blow_mode);
+        updateOBD_air_cond_recirculation(climateData.recirculation_state);
+        updateOBD_air_cond_defogger(climateData.defogger_state);
+        updateOBD_air_cond_blow_direction(climateData.blow_direction);
+        if (( climateData.temperature < 15 ) || ( climateData.temperature > 27 ) )
             updateOBD_air_cond_temperature( "--.-" ) ;
-            else updateOBD_air_cond_temperature( String.format("%1$.1f", climateData.temperature) ) ;
+        else updateOBD_air_cond_temperature(String.format("%1$.1f", climateData.temperature) ) ;
         updateOBD_air_cond_fan_mode( climateData.fan_mode);
         updateOBD_air_cond_fan_speed(climateData.fan_speed);
 
@@ -1558,11 +1558,22 @@ intent = new Intent();
 
 
                 if ( App.GS.clock_show_mode == 1 ) {
-                    layout_radio_music_info.setVisibility(View.INVISIBLE);
+                    layout_music_info.setVisibility(View.INVISIBLE);
+                    layout_radio_info.setVisibility(View.INVISIBLE);
                     layout_clock.setVisibility(View.VISIBLE);
                 } else {
                     layout_clock.setVisibility(View.INVISIBLE);
-                    layout_radio_music_info.setVisibility(View.VISIBLE);
+                    switch ( App.GS.curAudioFocusID ) {
+                        case TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID:
+                                layout_radio_info.setVisibility(View.VISIBLE);
+                                break;
+                        case TWUtilConst.TW_AUDIO_FOCUS_MUSIC_ID:
+                        case 0:
+                                layout_radio_music_info.setVisibility(View.VISIBLE);
+                                break;
+                        default:
+                                break;
+                    }
                 }
             } else {
                 layout_clock.setVisibility(View.VISIBLE);
