@@ -4,17 +4,20 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.graphics.Bitmap;
 
+import ru.d51x.kaierutils.Radio.Radio;
+import ru.d51x.kaierutils.TWUtils.TWUtilEx;
+
 /**
  * Created by Dmitriy on 21.02.2015.
  */
 public class GlSets {
 
-    protected static final String GPS_BROADCAST_ACTION_LOCATION_CHANGED = "ru.d51x.kaierutils.action.LOCATION_CHANGED";
-    protected static final String GPS_BROADCAST_ACTION_SPEED_CHANGED = "ru.d51x.kaierutils.action.SPEED_CHANGED";
-    protected static final String GPS_BROADCAST_ACTION_FIRST_FIX = "ru.d51x.kaierutils.action.GPS_EVENT_FIRST_FIX";
-    protected static final String GPS_BROADCAST_ACTION_SATELLITE_STATUS = "ru.d51x.kaierutils.action.GPS_EVENT_SATELLITE_STATUS";
-    protected static final String GPS_BROADCAST_ACTION_AGPS_RESET = "ru.d51x.kaierutils.action.GPS_EVENT_AGPS_RESET";
-    protected static final String PWRAMP_BROADCAST_ACTION_TRACK_CHANGED = "ru.d51x.kaierutils.action.TRACK_CHANGED";
+    public static final String GPS_BROADCAST_ACTION_LOCATION_CHANGED = "ru.d51x.kaierutils.action.LOCATION_CHANGED";
+    public static final String GPS_BROADCAST_ACTION_SPEED_CHANGED = "ru.d51x.kaierutils.action.SPEED_CHANGED";
+    public static final String GPS_BROADCAST_ACTION_FIRST_FIX = "ru.d51x.kaierutils.action.GPS_EVENT_FIRST_FIX";
+    public static final String GPS_BROADCAST_ACTION_SATELLITE_STATUS = "ru.d51x.kaierutils.action.GPS_EVENT_SATELLITE_STATUS";
+    public static final String GPS_BROADCAST_ACTION_AGPS_RESET = "ru.d51x.kaierutils.action.GPS_EVENT_AGPS_RESET";
+    public static final String PWRAMP_BROADCAST_ACTION_TRACK_CHANGED = "ru.d51x.kaierutils.action.TRACK_CHANGED";
 
 
 	public static final String GLOBAL_SETTINGS_COLOR_SPEED = "kaierutils_show_color_speed";
@@ -270,7 +273,7 @@ public class GlSets {
 			Volume = level;
 			return true;
 		}
-		if ( TWUtilEx.setVolumeLevel( level )) {
+		if ( TWUtilEx.setVolumeLevel(level)) {
 			Volume = level;
 			return true;
 		} else { return false;}

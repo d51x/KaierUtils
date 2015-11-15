@@ -9,12 +9,20 @@ import android.util.Log;
 import android.widget.Toast;
 import android.app.Notification;
 
+import ru.d51x.kaierutils.Data.NotifyData;
+import ru.d51x.kaierutils.GPS.GpsProcessingThread;
+import ru.d51x.kaierutils.OBD2.OBDThread;
+import ru.d51x.kaierutils.PowerAmp.PowerAmpProcessingThread;
+import ru.d51x.kaierutils.TWUtils.TWUtilProcessingThread;
+
 public class BackgroundService extends Service {
 
 	private TWUtilProcessingThread twUtilProcessingThread;
     private PowerAmpProcessingThread powerAmpProcessingThread;
     private GpsProcessingThread gpsProcessingThread;
     public static OBDThread obdiiThread;
+
+	private int startCount = -1;
 
 	public BackgroundService () {
 		twUtilProcessingThread = null;
@@ -37,6 +45,8 @@ public class BackgroundService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d ("BackgroundService", "onStartCommand");
+
+		startCount = startId;
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
 		App.GS.isNotificationIconShow = prefs.getBoolean ("kaierutils_show_notification_icon", true);
@@ -92,7 +102,7 @@ public class BackgroundService extends Service {
 	private synchronized void startPowerAmpProcessingThread(){
         Log.d ("BackgroundService", "startPowerAmpProcessingThread");
         if ( powerAmpProcessingThread != null ) return;
-        powerAmpProcessingThread = new PowerAmpProcessingThread ();
+        powerAmpProcessingThread = new PowerAmpProcessingThread ( startCount );
         powerAmpProcessingThread.start();
     }
 

@@ -1,21 +1,21 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.Settings;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.os.Build.VERSION;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+import ru.d51x.kaierutils.App;
+import ru.d51x.kaierutils.BuildConfig;
+import ru.d51x.kaierutils.R;
+import ru.d51x.kaierutils.TWUtils.TWUtilEx;
+
+
 public class AboutFragment extends Fragment {
 
     private TextView tvReverseCount;

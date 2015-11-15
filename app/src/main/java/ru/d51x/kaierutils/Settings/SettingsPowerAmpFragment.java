@@ -1,4 +1,4 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.Settings;
 
 
 import android.content.Context;
@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
+import ru.d51x.kaierutils.App;
+import ru.d51x.kaierutils.R;
+
 public class SettingsPowerAmpFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
 
@@ -15,7 +18,7 @@ public class SettingsPowerAmpFragment extends PreferenceFragment implements OnSh
 		super.onCreate (savedInstanceState);
 		addPreferencesFromResource (R.xml.poweramp);
 
-		Context context = App.getInstance ();
+		Context context = App.getInstance();
 		SharedPreferences prefs =
 				PreferenceManager.getDefaultSharedPreferences(context);
 		prefs.registerOnSharedPreferenceChangeListener(this);

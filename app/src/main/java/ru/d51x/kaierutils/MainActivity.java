@@ -48,6 +48,14 @@ import android.widget.PopupWindow;
 
 import com.maxmpz.poweramp.player.PowerampAPI;
 
+import ru.d51x.kaierutils.Data.CanMmcData;
+import ru.d51x.kaierutils.Data.ClimateData;
+import ru.d51x.kaierutils.GPS.GpsProcessing;
+import ru.d51x.kaierutils.OBD2.OBDII;
+import ru.d51x.kaierutils.Radio.Radio;
+import ru.d51x.kaierutils.TWUtils.TWUtilConst;
+import ru.d51x.kaierutils.TWUtils.TWUtilEx;
+
 public class MainActivity extends Activity implements View.OnClickListener,
 													  OnLongClickListener{
 
@@ -175,7 +183,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		Log.d ("MainActivity", "onCreate");
 		prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance ());
 		startService(new Intent(this, BackgroundService.class));
-		TWUtilEx.initEqData ();
+		TWUtilEx.initEqData();
 		initComponents();
 		setInitData();
 		registerReceivers(receiver);

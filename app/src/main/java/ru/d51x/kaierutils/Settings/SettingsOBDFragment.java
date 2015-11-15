@@ -1,4 +1,4 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.Settings;
 
 
 import android.app.AlertDialog;
@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,10 @@ import android.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.Set;
+
+import ru.d51x.kaierutils.App;
+import ru.d51x.kaierutils.BackgroundService;
+import ru.d51x.kaierutils.R;
 
 public class SettingsOBDFragment extends  Fragment  implements View.OnClickListener, View.OnFocusChangeListener {
 
@@ -62,7 +65,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         View mV = inflater.inflate(R.layout.fragment_obdii, container, false);
         // statistics
        // tvReverseCount = (TextView) mV.findViewById(R.id.tv_reverse_count);
-        Context context = App.getInstance ();
+        Context context = App.getInstance();
 
         swUseOBD2 = (Switch) mV.findViewById(R.id.swUseOBD2);
         swUseOBD2.setOnClickListener(this);

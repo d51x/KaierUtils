@@ -1,4 +1,4 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.Settings;
 
 
 import android.app.Notification;
@@ -7,7 +7,10 @@ import android.content.SharedPreferences;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceFragment;
-import android.util.Log;
+
+import ru.d51x.kaierutils.App;
+import ru.d51x.kaierutils.Data.NotifyData;
+import ru.d51x.kaierutils.R;
 
 public class SettingsGeneralFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -16,7 +19,7 @@ public class SettingsGeneralFragment extends PreferenceFragment implements Share
 		super.onCreate (savedInstanceState);
 		addPreferencesFromResource (R.xml.settings_general);
 
-		Context context = App.getInstance ();
+		Context context = App.getInstance();
 		SharedPreferences prefs =
 				PreferenceManager.getDefaultSharedPreferences(context);
 		prefs.registerOnSharedPreferenceChangeListener(this);

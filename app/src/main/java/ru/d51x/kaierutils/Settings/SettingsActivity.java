@@ -1,7 +1,9 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.Settings;
 
 import java.util.List;
 import android.preference.PreferenceActivity;
+
+import ru.d51x.kaierutils.R;
 
 public class SettingsActivity extends PreferenceActivity {
 
