@@ -1,4 +1,4 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.GPS;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,6 +15,10 @@ import android.location.GpsSatellite;
 import android.widget.Toast;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import ru.d51x.kaierutils.App;
+import ru.d51x.kaierutils.GlSets;
+import ru.d51x.kaierutils.TWUtils.TWUtilConst;
 
 public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
