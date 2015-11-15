@@ -8,7 +8,7 @@ android {
 		minSdkVersion 16
 		targetSdkVersion 16
 		versionCode 1
-		versionName '1.9.16'
+		versionName '1.9.17'
 		archivesBaseName = "KaierUtils-$versionName"
 	}
 	buildTypes {

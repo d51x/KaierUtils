@@ -176,13 +176,15 @@
     <string name="text_obd_speed">Скорость: %1$s</string>
     <string name="text_obd_engine_rpm">Обороты двигателя: %1$s</string>
     <string name="text_obd_coolant_temp">Температура охл. жид.: %1$s</string>
-    <string name="text_obd_fuel_usage">Потрачено топлива: %1$.3f</string>
+	<string name="text_obd_fuel_usage">Потрачено топлива (л):</string>
+	<string name="text_obd_fuel_usage_f">%1$.3f</string>
     <string name="text_obd_cmu_voltage">Напряжение: %1$s</string>
     <string name="text_obd_use">Bluetooth OBD (ELM327)</string>
     <!--<string name="text_obd_fuel_consumption_lph">Мгновенный расход (л/ч): %1$.1f</string>-->
     <string name="text_obd_fuel_consumption_lph"> (л/ч): %1$.1f</string>
     <string name="text_obd_fuel_consumption_mpg">Мгновенный расход (л/100км): %1$.1f</string>
-    <string name="text_obd_fuel_consumption_avg">Средний расход (л/100км): %1$.1f</string>
+	<string name="text_obd_fuel_consumption_avg">Средний расход (л/100км):</string>
+	<string name="text_obd_fuel_consumption_avg_f">%1$.1f</string>
     <string name="text_fuel_tank_full">Бак заправлен полностью?</string>
     <string name="text_fuel_tank_capacity">Объем бака</string>
     <string name="text_fuel_tank_remain">Осталось топлива (л)</string>
@@ -190,7 +192,8 @@
     <string name="text_fuel_tank_detail">Параметры бака</string>
     <!--<string name="text_obd_fuel_usage_with_stops">Потрачено топлива с учетом простоев: %1$.3f</string>-->
     <string name="text_obd_fuel_usage_with_stops"> без простоев: %1$.3f</string>
-    <string name="text_obd_distanse">Пройдено за поездку (км): %1$.3f</string>
+	<string name="text_obd_distanse">Пройдено (км): </string>
+	<string name="text_obd_distanse_f">%1$.3f км</string>
     <!--<string name="text_obd_fuel_consumption_avg2">Средний расход (л/100км) с учетом простоев: %1$.1f</string>-->
     <string name="text_obd_fuel_consumption_avg2">  без простоев (л/100км): %1$.1f</string>
     <string name="cbCanMMC">Mitsubishi CAN</string>
