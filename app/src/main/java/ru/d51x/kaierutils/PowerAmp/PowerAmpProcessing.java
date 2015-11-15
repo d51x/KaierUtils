@@ -1,4 +1,4 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.PowerAmp;
 
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
@@ -17,12 +17,16 @@ import com.maxmpz.poweramp.player.PowerampAPI.Track;
 
 import java.util.List;
 
+import ru.d51x.kaierutils.App;
+import ru.d51x.kaierutils.GlSets;
+import ru.d51x.kaierutils.TWUtils.TWUtilConst;
+
 public class PowerAmpProcessing {
     private BroadcastReceiver powerAmpReceiver;
     private Context context;
     private Handler mHandler;
 
-    public PowerAmpProcessing(Context context) {
+    public PowerAmpProcessing(Context context, int startId) {
         Log.d("PowerAmpProcessing", "PowerAmpProcessing");
 
 
@@ -31,7 +35,10 @@ public class PowerAmpProcessing {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
         int status = prefs.getInt("kaierutils_power_amp_status", -1);
-        if ( ( App.GS.curAudioFocusID != TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID ) && ( status == PowerampAPI.Status.TRACK_PLAYING))
+        if ( ( App.GS.curAudioFocusID != TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID ) &&
+                ( status == PowerampAPI.Status.TRACK_PLAYING) &&
+                ( startId == 1)
+                )
             setPowerAmpStarted();
 
         powerAmpReceiver = new BroadcastReceiver() {
