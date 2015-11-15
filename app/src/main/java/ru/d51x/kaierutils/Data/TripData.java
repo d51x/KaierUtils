@@ -1,4 +1,4 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.Data;
 
 
 import android.content.SharedPreferences;
@@ -6,6 +6,8 @@ import android.preference.PreferenceManager;
 
 import java.util.Calendar;
 import java.util.Date;
+
+import ru.d51x.kaierutils.App;
 
 public class TripData {
 
@@ -37,7 +39,7 @@ public class TripData {
 
     public void loadData() {
         if ( !isStoreData ) return;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance());
         fuel_remains = prefs.getFloat("fuel_remains_" + mPrefix, 0f);
         fuel_usage = prefs.getFloat("fuel_usage_" + mPrefix, 0f);
         fuel_usage_for_display = fuel_usage;
