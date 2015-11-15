@@ -1,16 +1,18 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.Radio;
 
 import android.app.ActivityManager;
 import android.content.Context;
 
 import java.util.List;
 
+import ru.d51x.kaierutils.App;
+
 /**
  */
 public class Radio {
 
-    protected static final CharSequence BLANK_STATION_NAME = "        ";
-    protected static final String PACKAGE_NAME = "com.tw.radio";
+    public static final CharSequence BLANK_STATION_NAME = "        ";
+    public static final String PACKAGE_NAME = "com.tw.radio";
 
     public boolean showToast;
     public boolean showInfo;
