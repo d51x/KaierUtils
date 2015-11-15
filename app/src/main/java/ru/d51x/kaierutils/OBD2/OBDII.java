@@ -15,33 +15,31 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-
-import pt.lighthouselabs.obd.commands.engine.EngineRPMObdCommand;
 import pt.lighthouselabs.obd.commands.SpeedObdCommand;
 import pt.lighthouselabs.obd.commands.can.CanObdCommand;
-import pt.lighthouselabs.obd.commands.engine.MassAirFlowObdCommand;
-import pt.lighthouselabs.obd.commands.protocol.ObdResetCommand;
-import pt.lighthouselabs.obd.commands.temperature.EngineCoolantTemperatureObdCommand;
 import pt.lighthouselabs.obd.commands.control.ControlModuleVoltageObdCommand;
-
-
+import pt.lighthouselabs.obd.commands.engine.EngineRPMObdCommand;
+import pt.lighthouselabs.obd.commands.engine.MassAirFlowObdCommand;
 import pt.lighthouselabs.obd.commands.protocol.EchoOffObdCommand;
 import pt.lighthouselabs.obd.commands.protocol.LineFeedOffObdCommand;
-import pt.lighthouselabs.obd.commands.protocol.SelectProtocolObdCommand;
+import pt.lighthouselabs.obd.commands.protocol.ObdResetCommand;
 import pt.lighthouselabs.obd.commands.protocol.SelectHeaderObdCommand;
+import pt.lighthouselabs.obd.commands.protocol.SelectProtocolObdCommand;
+import pt.lighthouselabs.obd.commands.temperature.EngineCoolantTemperatureObdCommand;
 import pt.lighthouselabs.obd.enums.ObdProtocols;
-import pt.lighthouselabs.obd.exceptions.*;
+import pt.lighthouselabs.obd.exceptions.NoDataException;
+import pt.lighthouselabs.obd.exceptions.NonNumericResponseException;
+import pt.lighthouselabs.obd.exceptions.StoppedException;
+import pt.lighthouselabs.obd.exceptions.UnableToConnectException;
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.Data.CanMmcData;
 import ru.d51x.kaierutils.Data.ClimateData;
 import ru.d51x.kaierutils.Data.TripData;
-import ru.d51x.kaierutils.Utils.OBDCalculations;
+import ru.d51x.kaierutils.utils.OBDCalculations;
 
 /**
  */
 public class OBDII  {
-
-    protected static final boolean newMethod = true;
 
     public static final String OBD_BROADCAST_ACTION_STATUS_CHANGED = "ru.d51x.kaierutils.action.OBD_STATUS_CHANGED";
     public static final String OBD_BROADCAST_ACTION_SPEED_CHANGED = "ru.d51x.kaierutils.action.OBD_SPEED_CHANGED";
@@ -51,23 +49,14 @@ public class OBDII  {
     public static final String OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED = "ru.d51x.kaierutils.action.OBD_CMU_VOLTAGE_CHANGED";
     public static final String OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED = "ru.d51x.kaierutils.action.OBD_FUEL_CONSUMPTION_CHANGED";
     public static final String OBD_BROADCAST_ACTION_MAF_CHANGED = "ru.d51x.kaierutils.action.OBD_MAF_CHANGED";
-
     public static final String OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ENGINE_FAN_STATE_CHANGED";
     public static final String OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_ENGINE_CHANGED";
-
-
     public static final String OBD_BROADCAST_ACTION_ECU_CVT_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_CVT_CHANGED";
     public static final String OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED = "ru.d51x.kaierutils.action.OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED";
     public static final String OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED";
-
-
-
-
     public static final String OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_COMBINEMETER_CHANGED";
     public static final String OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_COMBINEMETER_FUEL_TANK_CHANGED";
-
     public static final String OBD_BROADCAST_ACTION_ECU_AWC_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_AWC_CHANGED";
-
     public static final String OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_FAN_SPEED_CHANGED";
     public static final String OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_FAN_MODE_CHANGED";
     public static final String OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_EXT_TEMP_CHANGED";
@@ -77,21 +66,16 @@ public class OBDII  {
     public static final String OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_DEFOGGER_CHANGED";
     public static final String OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_RECIRCULATION_CHANGED";
     public static final String OBD_BROADCAST_ACTION_AC_STATE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_STATE_CHANGED";
-
     public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_CHANGED";
     public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_LEFT_INNER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_LEFT_INNER_CHANGED";
     public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_LEFT_OUTER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_LEFT_OUTER_CHANGED";
     public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_RIGHT_INNER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_RIGHT_INNER_CHANGED";
     public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_RIGHT_OUTER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_RIGHT_OUTER_CHANGED";
-
-
     public static final int MESSAGE_OBD_CAN_ENGINE = 0x07E00000;
     public static final int MESSAGE_OBD_CAN_ENGINE_FAN_STATE = 0x07E00001;
-
     public static final int MESSAGE_OBD_CAN_CVT = 0x07E10000;
     public static final int MESSAGE_OBD_CAN_CVT_OIL_DEGR = 0x07E10001;
     public static final int MESSAGE_OBD_CAN_CVT_OIL_TEMP = 0x07E10002;
-
     public static final int MESSAGE_OBD_CAN_AIR_COND = 0x06880000;
     public static final int MESSAGE_OBD_CAN_AIR_COND_STATE = 0x06880001;
     public static final int MESSAGE_OBD_CAN_AIR_COND_FAN_MODE = 0x06880002;
@@ -102,79 +86,43 @@ public class OBDII  {
     public static final int MESSAGE_OBD_CAN_AIR_COND_EXTERNAL_TEMPERATURE = 0x06880007;
     public static final int MESSAGE_OBD_CAN_AIR_COND_RECIRCULATION_STATE = 0x06880008;
     public static final int MESSAGE_OBD_CAN_AIR_COND_DEFOGGER_STATE = 0x06880009;
-
-
     public static final int MESSAGE_OBD_CAN_COMBINE_METER = 0x06A00000;
     public static final int MESSAGE_OBD_CAN_COMBINE_METER_FUEL_TANK = 0x06A00001;
-
     public static final int MESSAGE_OBD_CAN_PARKING_SENSORS = 0x07630000;
-
-    private Context mContext;
-    private String deviceName;
-    private String deviceAddress;
+    protected static final boolean newMethod = true;
     public boolean isConnected;
-    protected int timeout;
-
-    private Handler mHandler = new Handler();
-
-    private BluetoothSocket socket;
-
     public boolean battery_show = false;
     public boolean engine_temp_show = false;
     public boolean fuel_data_show = false;
     public boolean fuel_consump_show = false;
-
     public int voltage_update_time = 5; // сек
     public int engine_temp_update_time = 5; // сек
-
-
     public EngineRPMObdCommand engineRpmCommand;
     public SpeedObdCommand speedCommand;
     public EngineCoolantTemperatureObdCommand coolantTempCommand;
     public ControlModuleVoltageObdCommand cmuVoltageCommand;
     public MassAirFlowObdCommand MAFObdCommand;
-
     public boolean useOBD;
     public OBDData obdData;
-
     public boolean activeMAF = false;
     public boolean activeOther = true;
-
     public boolean MMC_CAN;
-
     public TripData totalTrip;
     public TripData oneTrip;
     public TripData todayTrip;
-
     public ClimateData climateData;
     public ClimateData climateDataPrev;
     public CanMmcData canMmcData;
     public CanMmcData canMmcDataPrev;
-
+    protected int timeout;
+    private Context mContext;
+    private String deviceName;
+    private String deviceAddress;
+    private Handler mHandler = new Handler();
+    private BluetoothSocket socket;
     private long MAF_TimeStamp1, MAF_TimeStamp2;
     private long Voltage_TimeStamp1, Voltage_TimeStamp2;
     private long Coolant_TimeStamp1, Coolant_TimeStamp2;
-
-    public class OBDData {
-        public float speed;
-        public float rpm;
-        public float coolant;
-        public float maf;
-        public float voltage;
-        public float fuel_tank; // читаем из преференсов
-
-
-
-        public OBDData() {
-            speed = 0;
-            rpm = 0;
-            coolant = 0;
-            maf = 0;
-            voltage = 0;
-            fuel_tank = 0;
-        }
-    };
-
 
     public OBDII(Context context) {
         mContext = context;
@@ -228,6 +176,8 @@ public class OBDII  {
             }
         };
     }
+
+    ;
 
     public String getDeviceName() {
         return deviceName;
@@ -368,8 +318,6 @@ public class OBDII  {
             //processOBD_MAF();               // MAF:             01 10
         }
     }
-
-
 
     private void processOBD_EngineRPM() {
         if ( activeMAF ) return;
@@ -661,14 +609,12 @@ public class OBDII  {
         return buffer;
     }
 
-
     private void notify_disconnect() {
         isConnected = false;
         //App.obd.isConnected = false;
         socket = null;
         SendBroadcastAction(OBD_BROADCAST_ACTION_STATUS_CHANGED, "Status", false);
     }
-
 
     private void SendBroadcastAction(String action, String key, String value) {
        // Log.d ("OBDII", "SendBroadcastAction " + action + " key = " + key + " value = " + value);
@@ -680,7 +626,6 @@ public class OBDII  {
         intent.setAction(action);
         App.getInstance ().sendBroadcast(intent);
     }
-
 
     private void SendBroadcastAction(String action, String key, int value) {
         // Log.d ("OBDII", "SendBroadcastAction " + action + " key = " + key + " value = " + value);
@@ -704,7 +649,6 @@ public class OBDII  {
         App.getInstance ().sendBroadcast(intent);
     }
 
-
     public void saveFuelTank() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
         prefs.edit().putFloat("kaierutils_fuel_tank", obdData.fuel_tank).apply();
@@ -717,7 +661,6 @@ public class OBDII  {
         obdData.fuel_tank = prefs.getFloat("kaierutils_fuel_tank", 60f);
         //obdData.fuel_usage2 = prefs.getFloat("kaierutils_fuel_usage", 0f);
     }
-
 
     // заправили полный бак
     public void setFullTank() {
@@ -898,7 +841,6 @@ public class OBDII  {
         sendObdMessage("2130", "7B6", buffer);
     }
 
-
     public void process_handler(Message message) {
          switch ( message.what ) {
              // ENGINE
@@ -1068,6 +1010,25 @@ public class OBDII  {
 
             Log.d("request_MMC_ECU_PARKING_SENSORS: --->", "buffer:  " + buffer.toString());
             sendObdMessage("2101", "763", buffer);
+        }
+    }
+
+    public class OBDData {
+        public float speed;
+        public float rpm;
+        public float coolant;
+        public float maf;
+        public float voltage;
+        public float fuel_tank; // читаем из преференсов
+
+
+        public OBDData() {
+            speed = 0;
+            rpm = 0;
+            coolant = 0;
+            maf = 0;
+            voltage = 0;
+            fuel_tank = 0;
         }
     }
  }
