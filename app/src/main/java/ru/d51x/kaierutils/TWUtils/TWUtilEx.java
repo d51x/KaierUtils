@@ -1,6 +1,5 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.TWUtils;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +12,8 @@ import android.util.Log;
 import com.maxmpz.poweramp.player.PowerampAPI;
 
 import java.lang.reflect.Type;
+
+import ru.d51x.kaierutils.App;
 
 /**
  * Created by Dmitriy on 18.02.2015.

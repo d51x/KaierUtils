@@ -1,9 +1,8 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.TWUtils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -12,6 +11,13 @@ import android.app.ActivityManager.RunningTaskInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ru.d51x.kaierutils.App;
+import ru.d51x.kaierutils.BackgroundService;
+import ru.d51x.kaierutils.DebugLogger;
+import ru.d51x.kaierutils.MainActivity;
+import ru.d51x.kaierutils.OBD2.OBDII;
+import ru.d51x.kaierutils.Radio.Radio;
 
 public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 
@@ -31,7 +37,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 		Log.d ("TWUtilBroadcastReceiver", "onReceive ");
 
 		String action = intent.getAction();
-		DebugLogger.ToLog (TAG, String.format("onReceive(), action %s", action));
+		DebugLogger.ToLog(TAG, String.format("onReceive(), action %s", action));
 
         // устройство загрузилось, запустим фоновый сервис
 		if ( action.equals (Intent.ACTION_BOOT_COMPLETED ) ) {
@@ -98,7 +104,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
         // задний ход выключился
 		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH))
 		{
-			TWUtilEx.setVolumeLevel( prevVolume );  // вернем громкость обратно, которая была до включения заднего хода
+			TWUtilEx.setVolumeLevel(prevVolume);  // вернем громкость обратно, которая была до включения заднего хода
 			App.GS.getVolumeLevel ();
 		}
 		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED))
