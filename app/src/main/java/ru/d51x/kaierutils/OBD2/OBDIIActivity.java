@@ -1,4 +1,4 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.OBD2;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,6 +23,11 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Set;
 import android.util.Log;
+
+import ru.d51x.kaierutils.App;
+import ru.d51x.kaierutils.BackgroundService;
+import ru.d51x.kaierutils.OBD2.OBDII;
+import ru.d51x.kaierutils.R;
 
 
 public class OBDIIActivity extends Activity implements View.OnClickListener {

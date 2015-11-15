@@ -1,15 +1,13 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.OBD2;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -33,7 +31,11 @@ import pt.lighthouselabs.obd.commands.protocol.SelectProtocolObdCommand;
 import pt.lighthouselabs.obd.commands.protocol.SelectHeaderObdCommand;
 import pt.lighthouselabs.obd.enums.ObdProtocols;
 import pt.lighthouselabs.obd.exceptions.*;
-import ru.d51x.kaierutils.utils.OBDCalculations;
+import ru.d51x.kaierutils.App;
+import ru.d51x.kaierutils.Data.CanMmcData;
+import ru.d51x.kaierutils.Data.ClimateData;
+import ru.d51x.kaierutils.Data.TripData;
+import ru.d51x.kaierutils.Utils.OBDCalculations;
 
 /**
  */
@@ -41,50 +43,50 @@ public class OBDII  {
 
     protected static final boolean newMethod = true;
 
-    protected static final String OBD_BROADCAST_ACTION_STATUS_CHANGED = "ru.d51x.kaierutils.action.OBD_STATUS_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_SPEED_CHANGED = "ru.d51x.kaierutils.action.OBD_SPEED_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED = "ru.d51x.kaierutils.action.OBD_ENGINE_RPM_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_COOLANT_TEMP_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_FUEL_LEVEL_CHANGED = "ru.d51x.kaierutils.action.OBD_FUEL_LEVEL_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED = "ru.d51x.kaierutils.action.OBD_CMU_VOLTAGE_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED = "ru.d51x.kaierutils.action.OBD_FUEL_CONSUMPTION_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_MAF_CHANGED = "ru.d51x.kaierutils.action.OBD_MAF_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_STATUS_CHANGED = "ru.d51x.kaierutils.action.OBD_STATUS_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_SPEED_CHANGED = "ru.d51x.kaierutils.action.OBD_SPEED_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED = "ru.d51x.kaierutils.action.OBD_ENGINE_RPM_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_COOLANT_TEMP_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_FUEL_LEVEL_CHANGED = "ru.d51x.kaierutils.action.OBD_FUEL_LEVEL_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED = "ru.d51x.kaierutils.action.OBD_CMU_VOLTAGE_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED = "ru.d51x.kaierutils.action.OBD_FUEL_CONSUMPTION_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_MAF_CHANGED = "ru.d51x.kaierutils.action.OBD_MAF_CHANGED";
 
-    protected static final String OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ENGINE_FAN_STATE_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_ENGINE_CHANGED";
-
-
-    protected static final String OBD_BROADCAST_ACTION_ECU_CVT_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_CVT_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED = "ru.d51x.kaierutils.action.OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ENGINE_FAN_STATE_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_ENGINE_CHANGED";
 
 
+    public static final String OBD_BROADCAST_ACTION_ECU_CVT_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_CVT_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED = "ru.d51x.kaierutils.action.OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED";
 
 
-    protected static final String OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_COMBINEMETER_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_COMBINEMETER_FUEL_TANK_CHANGED";
-
-    protected static final String OBD_BROADCAST_ACTION_ECU_AWC_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_AWC_CHANGED";
-
-    protected static final String OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_FAN_SPEED_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_FAN_MODE_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_EXT_TEMP_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_AC_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_TEMP_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_BLOW_DIRECTION_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_AC_BLOW_MODE_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_BLOW_MODE_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_DEFOGGER_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_RECIRCULATION_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_AC_STATE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_STATE_CHANGED";
-
-    protected static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_LEFT_INNER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_LEFT_INNER_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_LEFT_OUTER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_LEFT_OUTER_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_RIGHT_INNER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_RIGHT_INNER_CHANGED";
-    protected static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_RIGHT_OUTER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_RIGHT_OUTER_CHANGED";
 
 
-    protected static final int MESSAGE_OBD_CAN_ENGINE = 0x07E00000;
-    protected static final int MESSAGE_OBD_CAN_ENGINE_FAN_STATE = 0x07E00001;
+    public static final String OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_COMBINEMETER_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_COMBINEMETER_FUEL_TANK_CHANGED";
+
+    public static final String OBD_BROADCAST_ACTION_ECU_AWC_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_AWC_CHANGED";
+
+    public static final String OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_FAN_SPEED_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_FAN_MODE_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_EXT_TEMP_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_AC_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_TEMP_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_BLOW_DIRECTION_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_AC_BLOW_MODE_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_BLOW_MODE_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_DEFOGGER_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED = "ru.d51x.kaierutils.action.OBD_AC_RECIRCULATION_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_AC_STATE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_STATE_CHANGED";
+
+    public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_LEFT_INNER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_LEFT_INNER_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_LEFT_OUTER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_LEFT_OUTER_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_RIGHT_INNER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_RIGHT_INNER_CHANGED";
+    public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_RIGHT_OUTER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_RIGHT_OUTER_CHANGED";
+
+
+    public static final int MESSAGE_OBD_CAN_ENGINE = 0x07E00000;
+    public static final int MESSAGE_OBD_CAN_ENGINE_FAN_STATE = 0x07E00001;
 
     public static final int MESSAGE_OBD_CAN_CVT = 0x07E10000;
     public static final int MESSAGE_OBD_CAN_CVT_OIL_DEGR = 0x07E10001;

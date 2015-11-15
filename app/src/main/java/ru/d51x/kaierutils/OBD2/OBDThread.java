@@ -1,8 +1,11 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.OBD2;
 
 import android.util.Log;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import ru.d51x.kaierutils.App;
+
 /**
  * Created by Dmitriy on 18.02.2015.
  */

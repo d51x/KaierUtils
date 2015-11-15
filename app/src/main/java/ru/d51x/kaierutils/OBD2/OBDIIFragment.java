@@ -1,4 +1,4 @@
-package ru.d51x.kaierutils;
+package ru.d51x.kaierutils.OBD2;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -7,6 +7,8 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import ru.d51x.kaierutils.R;
 
 
 public class OBDIIFragment extends Fragment {
