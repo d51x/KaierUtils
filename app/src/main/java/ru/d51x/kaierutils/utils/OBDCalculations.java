@@ -1,4 +1,4 @@
-package ru.d51x.kaierutils.utils;
+package ru.d51x.kaierutils.Utils;
 
 import android.os.Handler;
 import android.os.Message;
