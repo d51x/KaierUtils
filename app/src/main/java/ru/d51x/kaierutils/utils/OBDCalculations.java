@@ -1,15 +1,13 @@
-package ru.d51x.kaierutils.utils;
+package ru.d51x.kaierutils.Utils;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import java.util.ArrayList;
 
 import ru.d51x.kaierutils.App;
-import ru.d51x.kaierutils.CanMmcData;
-import ru.d51x.kaierutils.ClimateData;
-import ru.d51x.kaierutils.OBDII;
+import ru.d51x.kaierutils.Data.CanMmcData;
+import ru.d51x.kaierutils.Data.ClimateData;
 
 /**
  */
@@ -261,6 +259,7 @@ public class OBDCalculations {
             App.obd.canMmcData.can_mmc_fuel_remain = Math.round(( buffer.get(4) - 16) * 0.6f);
         if ( App.obd.canMmcData.can_mmc_fuel_remain != App.obd.canMmcDataPrev.can_mmc_fuel_remain) {
             // send message
+            //
             message.what = msg_id;
             message.arg1 = App.obd.canMmcData.can_mmc_fuel_remain;
             mHandler.sendMessage(message);
