@@ -799,7 +799,7 @@ intent = new Intent();
 	private void show_general_settings() {
 		try {
 			Intent it = new Intent();
-			it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.SettingsActivity");
+			it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.Settings.SettingsActivity");
 			//it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			startActivity(it);
@@ -864,7 +864,7 @@ intent = new Intent();
 
         try {
             Intent it = new Intent();
-            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.OBDIIActivity");
+            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.OBD2.OBDIIActivity");
             //it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(it);
