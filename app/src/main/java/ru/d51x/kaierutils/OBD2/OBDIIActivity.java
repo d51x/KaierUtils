@@ -17,8 +17,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -70,7 +70,10 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TextView tvOBD_MAF;
     private Switch swUseOBD;
     private CheckBox cbCanMMC;
-    private LinearLayout layoutCanMMC;
+
+    private TableRow trMMCHeader;
+    private TableRow trMMCValues;
+
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -79,21 +82,21 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 boolean res = intent.getBooleanExtra("Status", false);
                 tvDeviceStatus.setText(String.format(getString(R.string.odbii_device_status), res ? "Подключен" : "Не подключен"));
             } else if (action.equals(OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED)) {
-                tvOBDEngineRPM.setText(String.format(getString(R.string.text_obd_engine_rpm), intent.getStringExtra("engineRPM")));
+                tvOBDEngineRPM.setText(String.format(getString(R.string.text_obd_engine_rpm_f), intent.getStringExtra("engineRPM")));
             } else if (action.equals(OBDII.OBD_BROADCAST_ACTION_SPEED_CHANGED)) {
-                tvOBDSpeed.setText(String.format(getString(R.string.text_obd_speed), intent.getStringExtra("speed")));
+                tvOBDSpeed.setText(String.format(getString(R.string.text_obd_speed_f), intent.getStringExtra("speed")));
             } else if (action.equals(OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED)) {
-                tvOBD_CoolantTemp.setText(String.format(getString(R.string.text_obd_coolant_temp), intent.getStringExtra("coolantTemp")));
+                tvOBD_CoolantTemp.setText(String.format(getString(R.string.text_obd_coolant_temp_f), intent.getStringExtra("coolantTemp")));
             } else if (action.equals(OBDII.OBD_BROADCAST_ACTION_FUEL_LEVEL_CHANGED)) {
 
             } else if (action.equals(OBDII.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED)) {
-                tvOBD_CMUVoltage.setText(String.format(getString(R.string.text_obd_cmu_voltage), intent.getStringExtra("cmuVoltage")));
+                tvOBD_CMUVoltage.setText(String.format(getString(R.string.text_obd_cmu_voltage_f), intent.getStringExtra("cmuVoltage")));
             } else if (action.equals(OBDII.OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED)) {
 
             } else if (action.equals(OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED)) {
-                tvOBD_MAF.setText(String.format("MAF: %1$s", intent.getStringExtra("sMAF")));
-                tvOBD_FuelConsumption_lph.setText(String.format(getString(R.string.text_obd_fuel_consumption_lph), App.obd.oneTrip.fuel_cons_lph));
-                tvOBD_FuelConsumption_mpg.setText(String.format(getString(R.string.text_obd_fuel_consumption_mpg), App.obd.oneTrip.fuel_cons_lp100km_inst));
+                tvOBD_MAF.setText(String.format(getString(R.string.text_obd_fuel_consumption_maf_f), intent.getStringExtra("sMAF")));
+                tvOBD_FuelConsumption_lph.setText(String.format(getString(R.string.text_obd_fuel_consumption_lph_f), App.obd.oneTrip.fuel_cons_lph));
+                tvOBD_FuelConsumption_mpg.setText(String.format(getString(R.string.text_obd_fuel_consumption_mpg_f), App.obd.oneTrip.fuel_cons_lp100km_inst));
                 tvOBD_FuelConsumption_avg.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg_f), App.obd.oneTrip.fuel_cons_lp100km_avg));
                 tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage_f), App.obd.oneTrip.fuel_usage));
                 tvGPS_Distanse.setText(String.format(getString(R.string.text_obd_distanse_f), App.obd.oneTrip.distance / 1000f));
@@ -209,7 +212,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tv_can_2110_cvt_oil_degr = (TextView) findViewById(R.id.tv_can_2110_cvt_oil_degr);
         tv_can_2103_cvt_temp_count = (TextView) findViewById(R.id.tv_can_2103_cvt_temp_count);
 
-
+        tvOBD_MAF = (TextView) findViewById(R.id.tvOBD_MAF);
 
 
         tvFuelLevel = (TextView) findViewById(R.id.tvFuelLevel);
@@ -223,17 +226,24 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         cbCanMMC.setOnClickListener(this);
         cbCanMMC.setChecked(App.obd.MMC_CAN);
 
-        layoutCanMMC = (LinearLayout) findViewById(R.id.layoutCanMMC);
-        layoutCanMMC.setVisibility(App.obd.MMC_CAN ? View.VISIBLE : View.GONE);
 
-        tvOBDEngineRPM.setText (String.format (getString (R.string.text_obd_engine_rpm), ""));
-        tvOBDSpeed.setText( String.format( getString( R.string.text_obd_speed), ""));
-        tvOBD_CoolantTemp.setText( String.format( getString( R.string.text_obd_coolant_temp), ""));
+        trMMCHeader = (TableRow) findViewById(R.id.trMMCHeader);
+        trMMCHeader.setVisibility(App.obd.MMC_CAN ? View.VISIBLE : View.GONE);
+
+        trMMCValues = (TableRow) findViewById(R.id.trMMCValues);
+        trMMCValues.setVisibility(App.obd.MMC_CAN ? View.VISIBLE : View.GONE);
+
+
+        tvOBDEngineRPM.setText(String.format(getString(R.string.text_obd_engine_rpm_f), "---"));
+        tvOBDSpeed.setText(String.format(getString(R.string.text_obd_speed_f), "---"));
+        tvOBD_CoolantTemp.setText(String.format(getString(R.string.text_obd_coolant_temp_f), "---"));
         tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage_f), 0.0f));
-        tvOBD_CMUVoltage.setText( String.format( getString( R.string.text_obd_cmu_voltage), ""));
+        tvOBD_CMUVoltage.setText(String.format(getString(R.string.text_obd_cmu_voltage_f), "---"));
         tvGPS_Distanse.setText(String.format(getString(R.string.text_obd_distanse_f), 0.0f));
-        tvOBD_FuelConsumption_lph.setText( String.format( getString( R.string.text_obd_fuel_consumption_lph), 0.0f));
-        tvOBD_FuelConsumption_mpg.setText( String.format( getString( R.string.text_obd_fuel_consumption_mpg), 0.0f));
+
+        tvOBD_MAF.setText(String.format(getString(R.string.text_obd_fuel_consumption_maf_f), "0.0"));
+        tvOBD_FuelConsumption_lph.setText(String.format(getString(R.string.text_obd_fuel_consumption_lph_f), 0.0f));
+        tvOBD_FuelConsumption_mpg.setText(String.format(getString(R.string.text_obd_fuel_consumption_mpg_f), 0.0f));
         tvOBD_FuelConsumption_avg.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg_f), 0.0f));
         tvOBD_FuelConsumption_total.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg_f), 0.0f));
         tvOBD_FuelUsageTotal.setText(String.format(getString(R.string.text_obd_fuel_usage_f), 0.0f));
@@ -242,17 +252,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBD_FuelUsageToday.setText(String.format(getString(R.string.text_obd_fuel_usage_f), 0.0f));
         tvGPS_Distanse_Today.setText(String.format(getString(R.string.text_obd_distanse_f), 0.0f));
         tvGPS_Distanse_Total.setText(String.format(getString(R.string.text_obd_distanse_f), 0.0f));
-
-
-
-
-
-
-
-        tvOBD_MAF = (TextView) findViewById(R.id.tvOBD_MAF);
-        tvOBD_MAF.setText("");
-
-
 
 
         tv_can_2110_cvt_oil_degr.setText(String.format( getString( R.string.text_can_2110_cvt_oil_degr), "---"));
@@ -336,7 +335,11 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.cbCanMMC:
                 App.obd.MMC_CAN = cbCanMMC.isChecked();
-                layoutCanMMC.setVisibility( App.obd.MMC_CAN ? View.VISIBLE : View.GONE);
+
+                trMMCHeader.setVisibility(App.obd.MMC_CAN ? View.VISIBLE : View.GONE);
+                trMMCValues.setVisibility(App.obd.MMC_CAN ? View.VISIBLE : View.GONE);
+
+
                 prefs.edit().putBoolean("ODBII_USE_MMC_CAN", App.obd.MMC_CAN).apply();
                 break;
             default:

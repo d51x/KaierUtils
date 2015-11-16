@@ -108,168 +108,177 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:autoText="false"
-                    android:text="Текущие параметры:"
-                    android:textSize="20sp"/>
-
-                <TextView
-                    android:id="@+id/tvOBD_CMUVoltage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|right"
-                    android:gravity="right"
-                    android:text="@string/text_obd_cmu_voltage"
-                    android:textSize="16sp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvOBD_Speed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_weight="0.5"
-                    android:text="@string/text_obd_speed"
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:id="@+id/tvOBDEngineRPM"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:gravity="center|center_vertical|center_horizontal"
-                    android:text="@string/text_obd_engine_rpm"
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:id="@+id/tvOBD_MAF"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:gravity="right"
-                    android:text="MAF"
-                    android:textSize="16sp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvOBD_CoolantTemp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_weight="0.5"
-                    android:text="@string/text_obd_coolant_temp"
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:id="@+id/tvFuelLevel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:gravity="center_vertical|center_horizontal|right"
-                    android:text="@string/text_obd_can_fuel_level"
-                    android:textSize="16sp"/><![CDATA[
-
-                TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/text_obd_can_outside_temp"
-                    android:id="@+id/tvOutsideTemp"
-                    android:layout_weight="0.5"
-                    android:textSize="16sp"
-                    android:gravity="center_vertical|center_horizontal|right"/>
-
-            ]]>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutCanMMC"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_can_2103_cvt_temp_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:text="@string/text_can_2103_cvt_temp_count"
-                    android:textSize="16sp"
-                    />
-
-                <TextView
-                    android:id="@+id/tv_can_2110_cvt_oil_degr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:gravity="right"
-                    android:text="@string/text_can_2110_cvt_oil_degr"
-                    android:textSize="16sp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-
-                <TextView
-                    android:id="@+id/tvOBD_FuelConsumption_mpg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_weight="0.5"
-                    android:text="@string/text_obd_fuel_consumption_mpg"
-                    android:textIsSelectable="false"
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:id="@+id/tvOBD_FuelConsumption_lph"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_weight="0.5"
-                    android:gravity="right"
-                    android:text="@string/text_obd_fuel_consumption_lph"
-                    android:textSize="16sp"/>
-            </LinearLayout>
-
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                >
+                android:layout_marginTop="10dp">
+
+                <TableRow
+                    android:id="@+id/trCommonHeaders"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="Скорость"
+                        android:textSize="18sp"/>
+
+                    <TextView
+                        android:id="@+id/textView19"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:autoText="false"
+                        android:gravity="center"
+                        android:text="Обороты"
+                        android:textSize="18sp"/>
+
+                    <TextView
+                        android:id="@+id/textView20"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:autoText="false"
+                        android:gravity="center"
+                        android:text="Температура ОЖ"
+                        android:textSize="18sp"/>
+
+                    <TextView
+                        android:id="@+id/textView21"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:autoText="false"
+                        android:gravity="center"
+                        android:text="Напряжение"
+                        android:textSize="18sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/trCommonValues"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tvOBD_Speed"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="56"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tvOBDEngineRPM"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="1920"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tvOBD_CoolantTemp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="89"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tvOBD_CMUVoltage"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="14.1"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/trFuelInstantValues"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/textView22"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="Мгновенный расход"
+                        android:textIsSelectable="false"
+                        android:textSize="20sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvOBD_FuelConsumption_lph"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="11.4"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tvOBD_FuelConsumption_mpg"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="15.2"
+                        android:textIsSelectable="false"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tvOBD_MAF"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="22.1"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+                </TableRow>
 
                 <TableRow
                     android:id="@+id/trHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    >
+                    android:layout_marginTop="20dp">
 
                     <TextView
                         android:id="@+id/textView10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|right"/>
+                        android:layout_gravity="center_horizontal|right"
+                        android:textSize="20sp"/>
 
                     <TextView
                         android:id="@+id/textView7"
@@ -278,7 +287,9 @@
                         android:layout_gravity="center"
                         android:layout_weight="0.3"
                         android:autoText="false"
+                        android:gravity="center"
                         android:text="Текущая поездка:"
+                        android:textSize="20sp"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -288,7 +299,9 @@
                         android:layout_gravity="center"
                         android:layout_weight="0.3"
                         android:autoText="false"
+                        android:gravity="center"
                         android:text="За сегодня:"
+                        android:textSize="20sp"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -298,7 +311,9 @@
                         android:layout_gravity="center"
                         android:layout_weight="0.3"
                         android:autoText="false"
+                        android:gravity="center"
                         android:text="За все время:"
+                        android:textSize="20sp"
                         android:textStyle="bold"/>
 
                 </TableRow>
@@ -314,28 +329,37 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|right"
                         android:text="@string/text_obd_distanse"
-                        android:textSize="16sp"/>
+                        android:textSize="18sp"/>
 
                     <TextView
                         android:id="@+id/tvGPS_Distanse"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.3"
                         android:gravity="center"
-                        />
+                        android:text="18.256 км"
+                        android:textSize="20sp"/>
 
                     <TextView
                         android:id="@+id/tvGPS_Distanse_Today"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.3"
                         android:gravity="center"
-                        />
+                        android:text="18.256 км"
+                        android:textSize="20sp"/>
 
                     <TextView
                         android:id="@+id/tvGPS_Distanse_Total"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.3"
                         android:gravity="center"
-                        />
+                        android:text="18.256 км"
+                        android:textSize="20sp"/>
                 </TableRow>
 
                 <TableRow
@@ -350,28 +374,37 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="@string/text_obd_fuel_consumption_avg"
-                        android:textSize="16sp"/>
+                        android:textSize="18sp"/>
 
                     <TextView
                         android:id="@+id/tvOBD_FuelConsumption_avg"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:gravity="center"/>
+                        android:layout_weight="0.3"
+                        android:gravity="center"
+                        android:text="18.256 км"
+                        android:textSize="20sp"/>
 
                     <TextView
                         android:id="@+id/tvOBD_FuelConsumption_today"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:gravity="center"/>
+                        android:layout_weight="0.3"
+                        android:gravity="center"
+                        android:text="18.256 км"
+                        android:textSize="20sp"/>
 
                     <TextView
                         android:id="@+id/tvOBD_FuelConsumption_total"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:gravity="center"/>
+                        android:layout_weight="0.3"
+                        android:gravity="center"
+                        android:text="18.256 км"
+                        android:textSize="20sp"/>
                 </TableRow>
 
                 <TableRow
@@ -383,30 +416,114 @@
                         android:id="@+id/textView18"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|right"
+                        android:layout_gravity="center"
+                        android:gravity="center"
                         android:text="@string/text_obd_fuel_usage"
-                        android:textSize="16sp"/>
+                        android:textSize="18sp"/>
 
                     <TextView
                         android:id="@+id/tvOBD_FuelUsage"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:gravity="center"/>
+                        android:layout_gravity="center"
+                        android:layout_weight="0.3"
+                        android:gravity="center"
+                        android:text="18.256 км"
+                        android:textSize="20sp"/>
 
                     <TextView
                         android:id="@+id/tvOBD_FuelUsageToday"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:gravity="center"/>
+                        android:layout_gravity="center"
+                        android:layout_weight="0.3"
+                        android:gravity="center"
+                        android:text="18.256 км"
+                        android:textSize="20sp"/>
 
                     <TextView
                         android:id="@+id/tvOBD_FuelUsageTotal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:gravity="center"/>
+                        android:layout_gravity="center"
+                        android:layout_weight="0.3"
+                        android:gravity="center"
+                        android:text="18.256 км"
+                        android:textSize="20sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/trMMCHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:id="@+id/textView23"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="CVT Temp"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:id="@+id/textView24"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="Oil Degr"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:id="@+id/textView25"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="Остаток топлива"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/trMMCValues"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_can_2103_cvt_temp_count"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="@string/text_can_2103_cvt_temp_count"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:id="@+id/tv_can_2110_cvt_oil_degr"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="@string/text_can_2110_cvt_oil_degr"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:id="@+id/tvFuelLevel"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:text="@string/text_obd_can_fuel_level"
+                        android:textSize="16sp"/>
+
                 </TableRow>
 
             </TableLayout>

@@ -2,51 +2,51 @@
 <preference-headers
 	xmlns:android="http://schemas.android.com/apk/res/android">
     <header
-        android:fragment="ru.d51x.kaierutils.AboutFragment"
+		android:fragment="ru.d51x.kaierutils.Settings.AboutFragment"
         android:icon="@android:drawable/ic_menu_info_details"
         android:title="@string/header_about_title">
     </header>
 	<header
-		android:fragment="ru.d51x.kaierutils.SettingsGeneralFragment"
+		android:fragment="ru.d51x.kaierutils.Settings.SettingsGeneralFragment"
 		android:icon="@drawable/menu_settings"
 		android:title="@string/header_general_title">
 	</header>
 	<header
-		android:fragment="ru.d51x.kaierutils.SettingsReverseFragment"
+		android:fragment="ru.d51x.kaierutils.Settings.SettingsReverseFragment"
 		android:icon="@drawable/menu_reverse"
 		android:title="@string/header_reverse_title">
 	</header>
 	<header
-		android:fragment="ru.d51x.kaierutils.SettingsSleepWakeUpFragment"
+		android:fragment="ru.d51x.kaierutils.Settings.SettingsSleepWakeUpFragment"
 		android:icon="@drawable/menu_sleep"
 		android:title="@string/header_sleep_wakeup_title">
 	</header>
 	<header
-		android:fragment="ru.d51x.kaierutils.SettingsPowerAmpFragment"
+		android:fragment="ru.d51x.kaierutils.Settings.SettingsPowerAmpFragment"
 		android:icon="@drawable/menu_poweramp"
 		android:title="@string/header_poweramp_title">
 	</header>
 	<header
-		android:fragment="ru.d51x.kaierutils.SettingsRadioFragment"
+		android:fragment="ru.d51x.kaierutils.Settings.SettingsRadioFragment"
 		android:icon="@drawable/menu_radio"
 		android:title="@string/header_radio_title">
 	</header>
 	<!--
 	<header
-		android:fragment="ru.d51x.kaierutils.SettingsDynamicVolumeFragment"
+		android:fragment="ru.d51x.kaierutils.Settings.SettingsDynamicVolumeFragment"
 		android:icon="@android:drawable/ic_menu_info_details"
 		android:title="@string/header_dynamic_volume_title">
 	</header>
 	-->
 
     <header
-        android:fragment="ru.d51x.kaierutils.SettingsOBDFragment"
+		android:fragment="ru.d51x.kaierutils.Settings.SettingsOBDFragment"
         android:icon="@drawable/menu_obd_settings"
         android:title="@string/header_obd_settings_title">
     </header>
 
 	<header
-		android:fragment="ru.d51x.kaierutils.SettingsToastsFragment"
+		android:fragment="ru.d51x.kaierutils.Settings.SettingsToastsFragment"
 		android:icon="@drawable/menu_popup"
 		android:title="@string/header_popup_title">
 	</header>
