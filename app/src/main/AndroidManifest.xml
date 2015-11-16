@@ -50,7 +50,7 @@
         </service>
 
         <receiver
-            android:name=".TWUtilBroadcastReceiver"
+            android:name=".TWUtils.TWUtilBroadcastReceiver"
             android:enabled="true"
             android:exported="false" >
             <intent-filter>
@@ -67,7 +67,7 @@
         </receiver>
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".Settings.SettingsActivity"
             android:label="@string/header_general_title"
             android:launchMode="singleTop">
             <intent-filter>
@@ -78,7 +78,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".OBDIIActivity"
+            android:name=".OBD2.OBDIIActivity"
             android:label="@string/title_activity_obdii"
             android:launchMode="singleTop" >
         </activity>
