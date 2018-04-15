@@ -8,7 +8,8 @@
 	        android:defaultValue="false"
 		/>
 
-		<ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__VOLUME_AT_START_UP__LEVEL"
+		<ru.d51x.kaierutils.Settings.SeekBarPreference
+            android:key="CAR_SETTINGS__VOLUME_AT_START_UP__LEVEL"
                                              android:title="@string/menu_startup_volume_level_title"
                                              android:summary="@string/menu_startup_volume_level_summary"
                                              android:dialogTitle="@string/menu_startup_volume_level_dialog"
@@ -26,7 +27,8 @@
 			android:title="@string/menu_wakeup_volume_change_title"
 			android:defaultValue="false"
 		/>
-		<ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__VOLUME_AT_WAKE_UP__LEVEL"
+		<ru.d51x.kaierutils.Settings.SeekBarPreference
+            android:key="CAR_SETTINGS__VOLUME_AT_WAKE_UP__LEVEL"
 		                                      android:title="@string/menu_wakeup_volume_level_title"
 		                                      android:summary="@string/menu_wakeup_volume_level_summary"
 		                                      android:dialogTitle="@string/menu_wakeup_volume_level_dialog"

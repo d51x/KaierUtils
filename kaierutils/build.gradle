@@ -1,0 +1,60 @@
+apply plugin: 'com.android.application'
+
+android {
+	compileSdkVersion 26
+	defaultConfig {
+		applicationId "ru.d51x.kaierutils"
+		minSdkVersion 16
+		targetSdkVersion 26
+		versionCode 10921
+		versionName '1.9.21'
+		multiDexEnabled true
+	}
+
+	signingConfigs {
+		debug {
+//            storeFile file("debug.keystore")
+		}
+		release {
+			storeFile file('../keystore.jks')
+			storePassword '123456'
+			keyAlias 'key0'
+			keyPassword '123456'
+			v1SigningEnabled true
+			v2SigningEnabled false
+		}
+	}
+
+	buildTypes {
+		debug {
+			versionNameSuffix '-debug'
+			minifyEnabled false
+			debuggable true
+			signingConfig signingConfigs.release
+		}
+		release {
+			minifyEnabled true
+			shrinkResources true
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+			debuggable false
+			jniDebuggable false
+			signingConfig signingConfigs.release
+		}
+	}
+
+	applicationVariants.all { variant ->
+		variant.outputs.all { output ->
+			def file = output.outputFile
+			def fileName = file.name.replace("-debug.apk", "-" + defaultConfig.versionName + "-debug.apk")
+			fileName = fileName.replace("-release.apk", "-" + defaultConfig.versionName + "-release.apk")
+			outputFileName = fileName
+		}
+	}
+}
+
+dependencies {
+	implementation fileTree(dir: 'libs', include: ['*.jar'])
+	//implementation 'com.android.support:appcompat-v7:26.1.0'
+	implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+	compileOnly files('libs/twUtil.jar')
+}

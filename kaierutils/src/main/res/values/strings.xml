@@ -221,4 +221,10 @@
     <string name="cbCanMMC_show_climate_data">Отображать данные климат-контроля</string>
     <string name="cbCanMMC_show_parking_data">Отображать данные с парковочных сенсоров (только задние родные)</string>
     <string name="text_distance_today">Пройдено (км): %1$.3f</string>
+    <string name="km">км</string>
+	<string name="str_dashes">--</string>
+	<string name="_0">0</string>
+	<string name="todo">TODO</string>
+	<string name="_2">2</string>
+	<string name="_10">10</string>
 </resources>

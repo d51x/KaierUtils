@@ -118,8 +118,8 @@ public class GlSets {
     public int cntGpsHangs = 0;
     //public boolean isFirstRunGPS = false;
     public boolean isFirstFixGPS = false;
-    public long locRequestUpdateTime = 0; // msec
-    public int locRequestMinDistance = 0; // meters
+    public long locRequestUpdateTime = 1; //0; // msec
+    public float locRequestMinDistance = 1f; // meters
 
     String BT_deviceAddress = "unknown";
 

@@ -15,7 +15,7 @@
 			android:dependency="CAR_SETTINGS__VOLUME_AT_REVERSE__DO_CHANGE"
 			/>
 
-		<ru.d51x.kaierutils.SeekBarPreference
+		<ru.d51x.kaierutils.Settings.SeekBarPreference
 			android:key="CAR_SETTINGS__VOLUME_AT_REVERSE__FIXED_LEVEL"
 			android:title="@string/menu_reverse_fixed_volume_level_title"
 			android:summary="@string/menu_reverse_fixed_volume_level_summary"
@@ -35,7 +35,7 @@
 			android:dependency="CAR_SETTINGS__VOLUME_AT_REVERSE__DO_CHANGE"
 		/>
 
-		<ru.d51x.kaierutils.SeekBarPreference
+		<ru.d51x.kaierutils.Settings.SeekBarPreference
 			android:key="CAR_SETTINGS__VOLUME_AT_REVERSE__PERCENTAGE_LEVEL"
 			android:title="@string/menu_reverse_percent_volume_level_title"
 			android:summary="@string/menu_reverse_percent_volume_level_summary"

@@ -40,7 +40,8 @@
 						android:summary="@string/menu_general_show_clock_summary"
                         android:defaultValue="false"
         />
-	<ru.d51x.kaierutils.SeekBarPreference android:key="kaierutils_clock_size"
+	<ru.d51x.kaierutils.Settings.SeekBarPreference
+        android:key="kaierutils_clock_size"
 		android:title="@string/menu_general_clock_size_title"
 		android:summary="@string/menu_general_clock_size_summary"
 		android:dialogTitle="@string/menu_general_clock_size_title"

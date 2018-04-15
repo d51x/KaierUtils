@@ -8,162 +8,6 @@
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 tools:context=".SettingsActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout_general_info"
-        android:layout_alignParentLeft="true"
-        >
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/layout_gps_speed">
-
-	        <ImageView
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:id="@+id/ivSpeedChange"
-	            android:paddingLeft="20dp"/>
-	        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:id="@+id/ivSpeed"
-                android:src="@drawable/speedo_1"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/text_gps_speed_value"
-                android:id="@+id/text_gps_speed_value"
-                android:textSize="40sp"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:textStyle="bold"
-                />
-
-	        <TextView
-		        android:layout_width="wrap_content"
-		        android:layout_height="match_parent"
-		        android:text="км/ч"
-		        android:id="@+id/textView2" android:gravity="bottom|center_horizontal"
-		        android:textSize="30sp" android:paddingLeft="4dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/layout_other_speed">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_average_speed"
-                android:id="@+id/tvAverageSpeed"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="30dp"
-                android:textSize="14sp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_max_speed"
-                android:id="@+id/tvMaxSpeed"
-                android:textSize="14sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-android:id="@+id/layout_waypoints"
-android:longClickable="true">
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/ivGPSDistance" android:src="@drawable/route_length"
-                android:layout_marginLeft="26dp"
-                android:padding="6dp"
-                android:layout_gravity="center"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/tvGPSDistance" android:text="@string/text_gps_distance"
-                android:textSize="40sp" android:paddingLeft="10dp"
-                android:gravity="center_vertical"
-                android:longClickable="false"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="км"
-                android:id="@+id/textView3"
-                android:gravity="bottom|center_horizontal"
-                android:textSize="20sp"
-                android:paddingLeft="4dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/layout_tracktime"
-            android:longClickable="true"
-            android:clickable="true">
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/ivTrackTime"
-                android:layout_marginLeft="26dp"
-                android:src="@drawable/track_time_0"
-                android:padding="6dp"
-                android:layout_gravity="center"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="--"
-                android:id="@+id/tvTrackTime"
-                android:layout_above="@+id/layout_test"
-                android:layout_toLeftOf="@+id/layoutCanMMC"
-                android:paddingLeft="10dp"
-                android:textSize="40sp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_gps_track_time_format_min"
-                android:id="@+id/tvTrackTimeHourOrMin"
-                android:gravity="bottom|center_horizontal"
-                android:textSize="20sp"
-                android:paddingLeft="4dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="--"
-                android:id="@+id/tvTrackTime2"
-                android:layout_above="@+id/layout_test"
-                android:layout_toLeftOf="@+id/layoutCanMMC"
-                android:paddingLeft="10dp"
-                android:textSize="40sp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_gps_track_time_format_sec"
-                android:id="@+id/tvTrackTimeMinOrSec"
-                android:gravity="bottom|center_horizontal"
-                android:textSize="20sp"
-                android:paddingLeft="4dp"/>
-        </LinearLayout>
-
-    </LinearLayout>
 
 	<LinearLayout
 		android:orientation="vertical"
@@ -191,7 +35,7 @@ android:longClickable="true">
 	            android:id="@+id/tvCurrentVolum"
 	            android:textSize="40sp"
 	            android:textIsSelectable="false"
-	            android:text="0"
+	            android:text="@string/_0"
 	            android:layout_gravity="center"
 	            android:textStyle="bold"
 	            android:paddingLeft="10dp"/>
@@ -218,7 +62,7 @@ android:longClickable="true">
 				android:layout_height="16dp"
 				android:id="@+id/imageView5" android:src="@drawable/eq_mid"/>
 			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-			          android:textAppearance="?android:attr/textAppearanceSmall" android:text="0"
+			          android:textAppearance="?android:attr/textAppearanceSmall" android:text="@string/_0"
 			          android:id="@+id/tv_eq_mid" android:textSize="10dp"
 			          android:gravity="center_vertical" android:paddingLeft="2dp"
 			          android:paddingRight="6dp" android:layout_gravity="bottom"/>
@@ -257,7 +101,8 @@ android:longClickable="true">
                 android:layout_height="40dp"
                 android:id="@+id/ivOBD_CarBattery"
                 android:src="@drawable/car_battery_bad"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+				android:contentDescription="@string/todo" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -640,132 +485,302 @@ android:longClickable="true">
 
 	</FrameLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:id="@+id/layout_radio_music_info" android:layout_marginTop="80dp"
-        >
+	<LinearLayout
+		android:id="@+id/layout_radio_music_info"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="74dp"
+		android:orientation="vertical">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/layout_radio_info"
-            android:visibility="gone"
-            android:layout_gravity="center_horizontal">
+		<LinearLayout
+			android:id="@+id/layout_radio_info"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:orientation="vertical"
+			android:visibility="gone">
 
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:id="@+id/ivRadioInfo"
-                android:src="@drawable/toast_radio"
-                android:layout_gravity="center_horizontal"/>
+			<ImageView
+				android:id="@+id/ivRadioInfo"
+				android:layout_width="64dp"
+				android:layout_height="64dp"
+				android:layout_gravity="center_horizontal"
+				android:src="@drawable/toast_radio" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/layout_gps_info"
-                android:layout_alignLeft="@+id/linearLayout"
-                android:paddingTop="10dp"
-                android:visibility="visible"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal">
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignLeft="@+id/linearLayout"
+				android:layout_gravity="center_horizontal"
+				android:layout_toLeftOf="@+id/layout_gps_info"
+				android:gravity="center_horizontal"
+				android:orientation="vertical"
+				android:paddingTop="10dp"
+				android:visibility="visible">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Medium Text"
-                    android:id="@+id/tvRadioInfo1"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="32sp"
-                    android:gravity="center_horizontal"/>
+				<TextView
+					android:id="@+id/tvRadioInfo1"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_horizontal"
+					android:gravity="center_horizontal"
+					android:text="Medium Text"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textSize="32sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Medium Text"
-                    android:id="@+id/tvRadioInfo2"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal"/>
-            </LinearLayout>
-        </LinearLayout>
+				<TextView
+					android:id="@+id/tvRadioInfo2"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_horizontal"
+					android:gravity="center_horizontal"
+					android:text="Medium Text"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textColor="@android:color/holo_blue_dark" />
+			</LinearLayout>
+		</LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="480dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/layout_music_info"
-            android:focusableInTouchMode="false"
-            android:layout_gravity="center_horizontal"
-            android:visibility="visible">
+		<LinearLayout
+			android:id="@+id/layout_music_info"
+			android:layout_width="480dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:focusableInTouchMode="false"
+			android:orientation="vertical"
+			android:visibility="visible">
 
-            <ImageView
-                android:layout_width="144dp"
-                android:layout_height="144dp"
-                android:id="@+id/ivAlbumArt"
-                android:src="@drawable/toast_music"
-                android:layout_gravity="center_horizontal"/>
+			<ImageView
+				android:id="@+id/ivAlbumArt"
+				android:layout_width="144dp"
+				android:layout_height="144dp"
+				android:layout_gravity="center_horizontal"
+				android:src="@drawable/toast_music" />
 
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/layout_gps_info"
-                android:layout_alignLeft="@+id/linearLayout"
-                android:paddingTop="10dp"
-                android:visibility="visible"
-                android:layout_gravity="center_horizontal">
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_alignLeft="@+id/linearLayout"
+				android:layout_gravity="center_horizontal"
+				android:layout_toLeftOf="@+id/layout_gps_info"
+				android:orientation="vertical"
+				android:paddingTop="10dp"
+				android:visibility="visible">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Medium Text"
-                    android:id="@+id/tvMusicInfo1"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="26sp"
-                    android:gravity="center"
-                    android:ellipsize="marquee"/>
+				<TextView
+					android:id="@+id/tvMusicInfo1"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_horizontal"
+					android:ellipsize="marquee"
+					android:gravity="center"
+					android:text="Medium Text"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textSize="26sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Medium Text"
-                    android:id="@+id/tvMusicInfo2"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"/>
+				<TextView
+					android:id="@+id/tvMusicInfo2"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_horizontal"
+					android:gravity="center"
+					android:text="Medium Text"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textColor="@android:color/holo_blue_dark" />
 
-            </LinearLayout>
+			</LinearLayout>
 
-        </LinearLayout>
+		</LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/layout_clock">
 
-            <DigitalClock
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/digitalClock"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:textSize="60sp"
-                android:textColor="@android:color/holo_blue_light" />
+	</LinearLayout>
 
-        </LinearLayout>
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/layout_general_info"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true">
 
-    </LinearLayout>
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="fill_parent"
+			android:id="@+id/layout_gps_speed">
+
+			<ImageView
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:id="@+id/ivSpeedChange"
+				android:paddingLeft="20dp"
+				android:contentDescription="@string/todo" />
+			<ImageView
+				android:layout_width="wrap_content"
+				android:layout_height="fill_parent"
+				android:id="@+id/ivSpeed"
+				android:src="@drawable/speedo_1"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:text="@string/text_gps_speed_value"
+				android:id="@+id/text_gps_speed_value"
+				android:textSize="40sp"
+				android:gravity="center_vertical"
+				android:paddingLeft="10dp"
+				android:textStyle="bold"
+				/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:text="км/ч"
+				android:id="@+id/textView2" android:gravity="bottom|center_horizontal"
+				android:textSize="30sp" android:paddingLeft="4dp"/>
+		</LinearLayout>
+
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:id="@+id/layout_other_speed">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/text_average_speed"
+				android:id="@+id/tvAverageSpeed"
+				android:layout_marginLeft="40dp"
+				android:layout_marginRight="30dp"
+				android:textSize="14sp"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/text_max_speed"
+				android:id="@+id/tvMaxSpeed"
+				android:textSize="14sp"/>
+		</LinearLayout>
+
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:id="@+id/layout_waypoints"
+			android:longClickable="true">
+			<ImageView
+				android:layout_width="48dp"
+				android:layout_height="wrap_content"
+				android:id="@+id/ivGPSDistance" android:src="@drawable/route_length"
+				android:layout_marginLeft="26dp"
+				android:padding="6dp"
+				android:layout_gravity="center"/>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:id="@+id/tvGPSDistance" android:text="@string/text_gps_distance"
+				android:textSize="40sp" android:paddingLeft="10dp"
+				android:gravity="center_vertical"
+				android:longClickable="false"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/km"
+				android:id="@+id/textView3"
+				android:gravity="bottom|center_horizontal"
+				android:textSize="20sp"
+				android:paddingLeft="4dp"/>
+		</LinearLayout>
+
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:id="@+id/layout_tracktime"
+			android:longClickable="true"
+			android:clickable="true">
+
+			<ImageView
+				android:layout_width="48dp"
+				android:layout_height="wrap_content"
+				android:id="@+id/ivTrackTime"
+				android:layout_marginLeft="26dp"
+				android:src="@drawable/track_time_0"
+				android:padding="6dp"
+				android:layout_gravity="center"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="--"
+				android:id="@+id/tvTrackTime"
+				android:layout_above="@+id/layout_test"
+				android:layout_toLeftOf="@+id/layoutCanMMC"
+				android:paddingLeft="10dp"
+				android:textSize="40sp"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/text_gps_track_time_format_min"
+				android:id="@+id/tvTrackTimeHourOrMin"
+				android:gravity="bottom|center_horizontal"
+				android:textSize="20sp"
+				android:paddingLeft="4dp"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/str_dashes"
+				android:id="@+id/tvTrackTime2"
+				android:layout_above="@+id/layout_test"
+				android:layout_toLeftOf="@+id/layoutCanMMC"
+				android:paddingLeft="10dp"
+				android:textSize="40sp"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/text_gps_track_time_format_sec"
+				android:id="@+id/tvTrackTimeMinOrSec"
+				android:gravity="bottom|center_horizontal"
+				android:textSize="20sp"
+				android:paddingLeft="4dp"/>
+		</LinearLayout>
+
+	</LinearLayout>
+
+
+	<LinearLayout
+		android:id="@+id/layout_clock"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/layout_radio_music_info"
+		android:layout_centerHorizontal="true"
+		android:addStatesFromChildren="false"
+		android:alwaysDrawnWithCache="false"
+		android:animateLayoutChanges="false"
+		android:animationCache="false"
+		android:baselineAligned="false"
+		android:duplicateParentState="false"
+		android:gravity="center"
+		android:measureWithLargestChild="false"
+		android:orientation="horizontal">
+
+		<DigitalClock
+			android:id="@+id/digitalClock"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_gravity="center"
+			android:textColor="@android:color/holo_blue_light"
+			android:textSize="60sp" />
+
+	</LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
@@ -799,16 +814,19 @@ android:longClickable="true">
                     android:id="@+id/imageView3"
                     android:src="@drawable/satellite"
                     android:baselineAlignBottom="true"
-                    android:layout_marginLeft="-10dp"/>
+                    android:layout_marginLeft="-10dp"
+					android:layout_marginStart="-10dp"
+					android:contentDescription="@string/todo" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="10"
+                    android:text="@string/_10"
                     android:id="@+id/text_satellites_total"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:paddingLeft="10dp"
-                    android:gravity="center_vertical"/>
+                    android:gravity="center_vertical"
+					android:paddingStart="10dp" />
 
                 <ImageView
                     android:layout_width="32dp"
@@ -816,16 +834,19 @@ android:longClickable="true">
                     android:id="@+id/imageView"
                     android:src="@drawable/satellite_good"
                     android:baselineAlignBottom="true"
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginLeft="10dp"
+					android:contentDescription="@string/todo"
+					android:layout_marginStart="10dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="2"
+                    android:text="@string/_2"
                     android:id="@+id/text_satellites_inuse"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:paddingLeft="10dp"
-                    android:gravity="center_vertical"/>
+                    android:gravity="center_vertical"
+					android:paddingStart="10dp" />
 
                 <ImageView
                     android:layout_width="32dp"
@@ -833,16 +854,19 @@ android:longClickable="true">
                     android:id="@+id/imageView4"
                     android:src="@drawable/satellites_inuse"
                     android:baselineAlignBottom="true"
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginLeft="10dp"
+					android:layout_marginStart="10dp"
+					android:contentDescription="@string/todo" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="2"
+                    android:text="@string/_2"
                     android:id="@+id/text_satellites_good"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:paddingLeft="10dp"
-                    android:gravity="center_vertical"/>
+                    android:gravity="center_vertical"
+					android:paddingStart="10dp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

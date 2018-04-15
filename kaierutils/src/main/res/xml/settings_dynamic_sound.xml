@@ -8,7 +8,8 @@
 	        android:defaultValue="false"
 		    android:persistent="true" />
 
-		<ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__FIRST_SPEED"
+		<ru.d51x.kaierutils.Settings.SeekBarPreference
+            android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__FIRST_SPEED"
 		                                                     android:title="@string/dsc_firstspeed_title"
 		                                                     android:summary="@string/dsc_firstspeed_summary"
 		                                                     android:dialogTitle="@string/dsc_firstspeed_dialogtitle"
@@ -20,7 +21,8 @@
 		                                                     android:persistent="true"
 
 			/>
-		<ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__STEP_SPEED"
+		<ru.d51x.kaierutils.Settings.SeekBarPreference
+            android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__STEP_SPEED"
 		                                                     android:title="@string/dsc_stepspeed_title"
 		                                                     android:summary="@string/dsc_stepspeed_summary"
 		                                                     android:dialogTitle="@string/dsc_stepspeed_dialogtitle"
@@ -32,7 +34,8 @@
 		                                                     android:persistent="true"
 
 			/>
-        <ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__STEP_VOLUME"
+        <ru.d51x.kaierutils.Settings.SeekBarPreference
+            android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__STEP_VOLUME"
 		                                                     android:title="@string/dsc_stepvolume_title"
 		                                                     android:summary="@string/dsc_stepvolume_summary"
 		                                                     android:dialogTitle="@string/dsc_stepvolume_dialogtitle"
@@ -44,7 +47,8 @@
 		                                                     android:persistent="true"
 
 			/>
-        <ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__TIME_TO_CHANGE"
+        <ru.d51x.kaierutils.Settings.SeekBarPreference
+            android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__TIME_TO_CHANGE"
 		                                                     android:title="@string/dsc_time_to_change_title"
 		                                                     android:summary="@string/dsc_time_to_change_summary"
 		                                                     android:dialogTitle="@string/dsc_time_to_change_dialogtitle"
@@ -57,7 +61,8 @@
 
 			/>
 
-    <ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DELTA_TO_CHANGE"
+    <ru.d51x.kaierutils.Settings.SeekBarPreference
+        android:key="CAR_SETTINGS__DYNAMIC_SOUND_CONTROL__DELTA_TO_CHANGE"
                                           android:title="@string/dsc_delta_to_change_title"
                                           android:summary="@string/dsc_delta_to_change_summary"
                                           android:dialogTitle="@string/dsc_delta_to_change_dialogtitle"

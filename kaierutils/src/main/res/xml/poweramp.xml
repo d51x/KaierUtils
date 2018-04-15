@@ -41,7 +41,8 @@
 		android:persistent="true"
 		android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE"
 	/>
-	<ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__CONTROL_POWERAMP_WAKEUP_DELAY"
+	<ru.d51x.kaierutils.Settings.SeekBarPreference
+        android:key="CAR_SETTINGS__CONTROL_POWERAMP_WAKEUP_DELAY"
 	                                      android:title="@string/menu_poweramp_wakeup_start_delay_title"
 	                                      android:summary="@string/menu_poweramp_wakeup_start_delay_summary"
 	                                      android:dialogTitle="@string/menu_poweramp_wakeup_start_delay_dialog"
@@ -60,7 +61,8 @@
 		android:dependency="CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE"
 		/>
 
-	<ru.d51x.kaierutils.SeekBarPreference android:key="CAR_SETTINGS__CONTROL_POWERAMP_START_DELAY"
+	<ru.d51x.kaierutils.Settings.SeekBarPreference
+        android:key="CAR_SETTINGS__CONTROL_POWERAMP_START_DELAY"
 	                                      android:title="@string/menu_poweramp_watch_bootup_delay_title"
 	                                      android:summary="@string/menu_poweramp_watch_bootup_delay_summary"
 	                                      android:dialogTitle="@string/menu_poweramp_watch_bootup_delay_dialog"

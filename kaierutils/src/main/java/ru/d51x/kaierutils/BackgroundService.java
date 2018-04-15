@@ -25,7 +25,7 @@ public class BackgroundService extends Service {
 	private int startCount = -1;
 
 	public BackgroundService () {
-		twUtilProcessingThread = null;
+		//twUtilProcessingThread = null;
         powerAmpProcessingThread = null;
         gpsProcessingThread = null;
         obdiiThread = null;

@@ -429,15 +429,20 @@ public class TWUtilEx {
 	public static void initEqData() {
         Log.d ("TWUtilEx", "initEqData ");
 		if ( ! isTWUtilAvailable() ) return;
-		TWUtil mTW = new TWUtil ();
-		if (mTW.open (new short[]{(short) TWUtilConst.TW_CONTEXT_EQ}) == 0) {
-			try {
-				mTW.start ();
-				mTW.write ( TWUtilConst.TW_CONTEXT_EQ, 255);
-				mTW.stop ();
-				mTW.close ();
-			} catch (Exception e) {
+		try {
+			TWUtil mTW = new TWUtil();
+			if (mTW.open(new short[]{(short) TWUtilConst.TW_CONTEXT_EQ}) == 0) {
+				try {
+					mTW.start();
+					mTW.write(TWUtilConst.TW_CONTEXT_EQ, 255);
+					mTW.stop();
+					mTW.close();
+				} catch (Exception e) {
+				}
 			}
+		}
+		finally {
+
 		}
 	}
 
