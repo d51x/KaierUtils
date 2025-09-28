@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Notification;
@@ -59,11 +60,11 @@ import ru.d51x.kaierutils.TWUtils.TWUtilEx;
 public class MainActivity extends Activity implements View.OnClickListener,
 													  OnLongClickListener{
 
-    private static int TEXT_SIZE_BEFORE_DOT = 40;
-    private static int TEXT_SIZE_BEFORE_DOT_2 = 26;
-    private static int TEXT_SIZE_BEFORE_DOT_3 = 2;
-    private static int TEXT_SIZE_BEFORE_DOT_4 = 44;
-    private static int TEXT_SIZE_AFTER_DOT = 16;
+    private static final int TEXT_SIZE_BEFORE_DOT = 40;
+    private static final int TEXT_SIZE_BEFORE_DOT_2 = 26;
+    private static final int TEXT_SIZE_BEFORE_DOT_3 = 2;
+    private static final int TEXT_SIZE_BEFORE_DOT_4 = 44;
+    private static final int TEXT_SIZE_AFTER_DOT = 16;
 
 	private Handler mHandler;
 	private PopupWindow pwindo;
@@ -774,6 +775,7 @@ intent = new Intent();
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
