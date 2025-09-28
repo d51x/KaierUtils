@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/KaierUtils.iml" filepath="$PROJECT_DIR$/KaierUtils.iml" />
-      <module fileurl="file://$PROJECT_DIR$/kaierutils/kaierutils.iml" filepath="$PROJECT_DIR$/kaierutils/kaierutils.iml" />
-    </modules>
-  </component>
-</project>
