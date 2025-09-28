@@ -7,7 +7,7 @@ android {
 		applicationId "ru.d51x.kaierutils"
 		minSdkVersion 16
 		//noinspection ExpiredTargetSdkVersion
-		targetSdkVersion 27
+		targetSdkVersion 30
 		versionCode 11000
 		versionName '1.10.0'
 		multiDexEnabled true
@@ -23,7 +23,7 @@ android {
 			keyAlias 'key0'
 			keyPassword '123456'
 			v1SigningEnabled true
-			v2SigningEnabled false
+			v2SigningEnabled true
 		}
 	}
 
