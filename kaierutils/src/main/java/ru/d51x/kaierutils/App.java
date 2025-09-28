@@ -2,6 +2,7 @@ package ru.d51x.kaierutils;
 
 import android.app.Application;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -40,7 +41,12 @@ public class App extends Application {
 		self = this;
 		GS = new GlSets();
         obd = new OBDII( self );
-		this.startService (new Intent (this, BackgroundService.class));
+		//this.startService (new Intent (this, BackgroundService.class));
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			this.startForegroundService(new Intent(this, BackgroundService.class));
+		} else {
+			this.startService(new Intent(this, BackgroundService.class));
+		}
 		rToast = new RadioToast( self );
 		mToast = new MusicToast( self );
         sensorsToast = new SensorsToast( self );

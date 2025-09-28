@@ -1,13 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdkVersion 26
+	compileSdkVersion 36
+	namespace "ru.d51x.kaierutils"
 	defaultConfig {
 		applicationId "ru.d51x.kaierutils"
 		minSdkVersion 16
+		//noinspection ExpiredTargetSdkVersion
 		targetSdkVersion 26
-		versionCode 10921
-		versionName '1.9.21'
+		versionCode 11000
+		versionName '1.10.0'
 		multiDexEnabled true
 	}
 
@@ -23,6 +25,10 @@ android {
 			v1SigningEnabled true
 			v2SigningEnabled false
 		}
+	}
+
+	buildFeatures {
+		buildConfig = true
 	}
 
 	buildTypes {
