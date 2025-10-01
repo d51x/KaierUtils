@@ -1,14 +1,17 @@
 package ru.d51x.kaierutils.Settings;
 
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -296,8 +299,18 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         final ArrayList<String> devices = new ArrayList<String>();
         final ArrayList<String> devicesName = new ArrayList<String>();
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (ActivityCompat.checkSelfPermission(App.getInstance().getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
-        if (pairedDevices.size() > 0)
+        if (!pairedDevices.isEmpty())
         {
             for (BluetoothDevice device : pairedDevices)
             {
@@ -310,7 +323,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder( context );
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.select_dialog_singlechoice,
-                deviceStrs.toArray(new String[deviceStrs.size()]));
+                deviceStrs.toArray(new String[0]));
 
         alertDialog.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener()
         {
@@ -322,8 +335,8 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
                 App.obd.setDeviceAddress(devices.get(position));
                 App.obd.setDeviceName( devicesName.get(position));
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
-                prefs.edit().putString("ODBII_DEVICE_ADDRESS", App.obd.getDeviceAddress()).commit();
-                prefs.edit().putString("ODBII_DEVICE_NAME", App.obd.getDeviceName()).commit();
+                prefs.edit().putString("ODBII_DEVICE_ADDRESS", App.obd.getDeviceAddress()).apply();
+                prefs.edit().putString("ODBII_DEVICE_NAME", App.obd.getDeviceName()).apply();
             }
         });
 
