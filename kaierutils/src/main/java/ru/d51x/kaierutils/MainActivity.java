@@ -78,10 +78,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private TextView tvGPSSatellitesGoodQACount;
     private TextView tvGPSSatellitesInUse;
 
-    //private TextView tvGPSAccuracy;
-    //private TextView tvGPSAltitude;
-    //private TextView tvGPSLatitude;
-//    private TextView tvGPSLongitude;
     private TextView tvGPSSpeed;
     private TextView tvTrackTime;
     private TextView tvTrackTime2;
@@ -209,10 +205,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvGPSSatellitesTotal = findViewById(R.id.text_satellites_total);
 		tvGPSSatellitesGoodQACount = findViewById(R.id.text_satellites_good);
 		tvGPSSatellitesInUse = findViewById(R.id.text_satellites_inuse);
-		//tvGPSAccuracy = (TextView) findViewById(R.id.text_gps_accuracy);
-		//tvGPSAltitude = (TextView) findViewById(R.id.text_gps_altitude);
-		//tvGPSLatitude = (TextView) findViewById(R.id.text_gps_latitude);
-		//tvGPSLongitude = (TextView) findViewById(R.id.text_gps_longitude);
 		tvGPSSpeed = findViewById(R.id.text_gps_speed_value);
 
 		// track distance
@@ -274,10 +266,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         tvMusicInfo1.setMarqueeRepeatLimit(-1);
         tvMusicInfo1.setHorizontallyScrolling(true);
         tvMusicInfo1.setSelected(true);
-//        tvMusicInfo2.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-//        tvMusicInfo2.setMarqueeRepeatLimit(-1);
-//        tvMusicInfo2.setHorizontallyScrolling(true);
-//        tvMusicInfo2.setSelected(true);
 
         ivAlbumArt = findViewById(R.id.ivAlbumArt);
 
@@ -365,10 +353,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvGPSSatellitesTotal.setText( "--");
 		tvGPSSatellitesInUse.setText( "--");
 		tvGPSSatellitesGoodQACount.setText( "--" );
-		//tvGPSAccuracy.setText( "---" );
-		//tvGPSAltitude.setText( "---" );
-		//tvGPSLatitude.setText( "--.-----" );
-		//tvGPSLongitude.setText( "--.-----" );
 		tvGPSSpeed.setText( "---" );
 
 		//track distance
@@ -618,29 +602,10 @@ intent = new Intent();
                     setVolumeIcon(ivVolumeLevel, vol);
                     break;
                 case TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH:
-                    //tvReverseCount.setText( String.format(getString(R.string.text_reverse_count),
-                    //                                      App.GS.ReverseActivityCount) );
                     break;
                 case TWUtilConst.TW_BROADCAST_ACTION_SLEEP:
-//                tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count),
-//                        App.GS.SleepModeCount) );
-
-                    //if ( App.GS.lastSleep == 0)
-                    //{
-                    //tvSleepModeLastTime.setVisibility( View.INVISIBLE );
-                    //}
-                    //else
-                    //{
-                    //Date date = new Date( App.GS.lastSleep );
-                    // SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
-                    // tvSleepModeLastTime.setText( String.format("%s", ft.format(date)) );
-                    // tvSleepModeLastTime.setVisibility( View.VISIBLE );
-                    //}
                     break;
                 case TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP:
-                    // tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count),
-                    //         App.GS.SleepModeCount) );
-
                     break;
                 case TWUtilConst.TW_BROADCAST_ACTION_EQ_CHANGED:
                     App.GS.eqData = intent.getByteArrayExtra("EQ");
