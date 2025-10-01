@@ -462,13 +462,6 @@
 			android:orientation="horizontal">
 
 			<ImageView
-				android:id="@+id/ivSpeedChange"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"
-				android:contentDescription="@string/todo"
-				android:paddingLeft="20dp" />
-
-			<ImageView
 				android:id="@+id/ivSpeed"
 				android:layout_width="wrap_content"
 				android:layout_height="fill_parent"

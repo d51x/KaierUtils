@@ -87,14 +87,6 @@ public class BackgroundService extends Service {
 			startForeground( NOTIFICATION_SERVICE_ID, notification);
 		}
 
-
-
-        //if ( App.GS.interactWithPowerAmp &&
-        //        App.GS.needWatchBootUpPowerAmp ) {
-            //Radio.checkRadioActivityStarted(false);
-            //if ( App.GS.isRadioActivityRunning ) TWUtilEx.setAudioFocus( 3 );
-        //}
-
 		if ((flags & START_FLAG_RETRY) == 0) {
 			// TODO Если это повторный запуск, выполнить какие-то действия.
 			Log.d ("BackgroundService", "Second attempt or more...");

@@ -13,7 +13,6 @@ import ru.d51x.kaierutils.TWUtils.TWUtilEx;
 public class GlSets {
 
     public static final String GPS_BROADCAST_ACTION_LOCATION_CHANGED = "ru.d51x.kaierutils.action.LOCATION_CHANGED";
-    public static final String GPS_BROADCAST_ACTION_SPEED_CHANGED = "ru.d51x.kaierutils.action.SPEED_CHANGED";
     public static final String GPS_BROADCAST_ACTION_FIRST_FIX = "ru.d51x.kaierutils.action.GPS_EVENT_FIRST_FIX";
     public static final String GPS_BROADCAST_ACTION_SATELLITE_STATUS = "ru.d51x.kaierutils.action.GPS_EVENT_SATELLITE_STATUS";
     public static final String GPS_BROADCAST_ACTION_AGPS_RESET = "ru.d51x.kaierutils.action.GPS_EVENT_AGPS_RESET";
@@ -34,9 +33,6 @@ public class GlSets {
 	public boolean isNeedSoundDecreaseAtWakeUp;
 	public int VolumeLevelAtWakeUp;
 
-	//public boolean isDebug = false;
-	public boolean isRadioActivityRunning = false;
-
     public boolean isNotificationIconShow;
     public boolean isAutoStart;
     public boolean isHideHeader;
@@ -47,8 +43,7 @@ public class GlSets {
 	public boolean isShowClock;
     public int clock_show_mode = 0;
 	public int ClockSize;
-    public boolean isVolumeShowOnNotificationIcon;
-	public boolean isColorSpeed = false;
+    public boolean isColorSpeed = false;
 
 
 	public boolean isNeedSoundDecreaseAtReverse;
@@ -99,8 +94,6 @@ public class GlSets {
 
 
     public int gpsSpeed = 0;
-    public int gpsPrevSpeed = 0;
-    public int gpsSpeedGrow = 0;
     public int gpsMaxSpeed = 0;
     public long gpsPrevTimeAtWay = 0;
     public long gpsTimeAtWay = 0;
@@ -110,7 +103,6 @@ public class GlSets {
     public long gpsPrevTimeForAverageSpeed = 0;
     public long gpsFirstTimeAtWay = 0;
     public int gpsAverageSpeed = 0;
-    public int gpsAverageSpeedWithoutStops = 0;
     public int gpsTimeAtWay_Type = 0;   // 0 - не учитывать простои, 1 - учитывать простои
 	public float totalDistance = 0;
 	public float totalDistanceForAverageSpeed = 0;
@@ -291,38 +283,5 @@ public class GlSets {
 
         }
     }
-
-
-
-//	public int getBrightnessLevel () {
-//		return Brightness;
-//	}
-
-//	public boolean setBrightnessLevel (int level, boolean change) {
-//		if ( !change ) {
-//			Brightness = level;
-//			return true;
-//		}
-//
-//		if ( TWUtilEx.setBrightnessLevel (level)) {
-//			Brightness = level;
-//			return true;
-//		} else { return false;}
-//	}
-
-//	public int getBrightnessMode() {
-//		return BrightnessMode;
-//	}
-
-//	public boolean setBrightnessMode(int mode, boolean change) {
-//		if ( !change ) {
-//			BrightnessMode = mode;
-//			return true;
-//		}
-//		if ( TWUtilEx.setBrightnessMode ( mode ) ) {
-//			BrightnessMode = mode;
-//			return true;
-//		} else { return false; }
-//	}
 
 }

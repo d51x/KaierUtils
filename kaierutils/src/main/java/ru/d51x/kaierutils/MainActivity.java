@@ -15,7 +15,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.SpannableString;
@@ -35,7 +34,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -45,6 +43,7 @@ import com.maxmpz.poweramp.player.PowerampAPI;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import ru.d51x.kaierutils.Data.CanMmcData;
@@ -65,12 +64,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private static final int TEXT_SIZE_AFTER_DOT = 16;
 
     private static final int REQUEST_CODE_DRAW_OVERLAY_PERMISSION = 5;
-	private Handler mHandler;
-	private PopupWindow pwindo;
     private TextView tvCurrentVolume;
-    private LinearLayout layout_gps_speed;
-    private LinearLayout layout_waypoints;
-    private LinearLayout layout_tracktime;
     private LinearLayout layout_gps_info;
 
     private int modeFuelTank = 0;
@@ -79,7 +73,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private int modeFuelConsump = 0;
 
 	private TextView tvGPSDistance;
-	private ImageView ivGPSDistance;
     private ImageView ivTrackTime;
     private TextView tvGPSSatellitesTotal;
     private TextView tvGPSSatellitesGoodQACount;
@@ -109,11 +102,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	private TextView tv_eq_mid;
 	private TextView tv_eq_tre;
 
-    private Button btnAGPSReset;
-
     private ImageView ivVolumeLevel;
     private ImageView ivSpeed;
-    private ImageView ivSpeedChange;
 
     private TextView tvRadioInfo1;
     private TextView tvRadioInfo2;
@@ -160,16 +150,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private TextView tv_air_cond_temp;
 
-	private Button btnTest2, btnTest1;
-	private SharedPreferences prefs;
-
     private RelativeLayout layout_MMC_climate;
-    private LinearLayout layout_ac_indicators;
-    private LinearLayout layout_ac_blow_direction;
-
-    private ImageView ivBtnRadio;
-    private ImageView ivBtnMusic;
-    private ImageButton ibFloatingPanel;
 
     private FloatingWindow floatingWindow;
 
@@ -183,8 +164,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView (R.layout.main_activity);
 		Log.d ("MainActivity", "onCreate");
-		prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance ());
-		startService(new Intent(this, BackgroundService.class));
+
+        startService(new Intent(this, BackgroundService.class));
 		TWUtilEx.initEqData();
 		initComponents();
 		setInitData();
@@ -197,11 +178,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvCurrentVolume = findViewById(R.id.tvCurrentVolum);
 
 		// color speed
-		layout_gps_speed = findViewById(R.id.layout_gps_speed);
+        LinearLayout layout_gps_speed = findViewById(R.id.layout_gps_speed);
 		layout_gps_speed.setOnClickListener(this);
 
 		// track time
-		layout_tracktime = findViewById(R.id.layout_tracktime);
+        LinearLayout layout_tracktime = findViewById(R.id.layout_tracktime);
 		layout_tracktime.setOnLongClickListener(this);
 		layout_tracktime.setOnClickListener(this);
 
@@ -225,9 +206,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_gps_info = findViewById(R.id.layout_gps_info);
 
 		// gps info
-		tvGPSSatellitesTotal = (TextView) findViewById(R.id.text_satellites_total);
-		tvGPSSatellitesGoodQACount = (TextView) findViewById(R.id.text_satellites_good);
-		tvGPSSatellitesInUse = (TextView) findViewById(R.id.text_satellites_inuse);
+		tvGPSSatellitesTotal = findViewById(R.id.text_satellites_total);
+		tvGPSSatellitesGoodQACount = findViewById(R.id.text_satellites_good);
+		tvGPSSatellitesInUse = findViewById(R.id.text_satellites_inuse);
 		//tvGPSAccuracy = (TextView) findViewById(R.id.text_gps_accuracy);
 		//tvGPSAltitude = (TextView) findViewById(R.id.text_gps_altitude);
 		//tvGPSLatitude = (TextView) findViewById(R.id.text_gps_latitude);
@@ -240,7 +221,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvTrackTimeMinOrSec = findViewById(R.id.tvTrackTimeMinOrSec);
 		tvTrackTimeHourOrMin = findViewById(R.id.tvTrackTimeHourOrMin);
 		tvGPSDistance = findViewById(R.id.tvGPSDistance);
-		layout_waypoints = findViewById(R.id.layout_waypoints);
+        LinearLayout layout_waypoints = findViewById(R.id.layout_waypoints);
 		layout_waypoints.setOnLongClickListener(this);
 		ivTrackTime = findViewById(R.id.ivTrackTime);
 		tvAverageSpeed = findViewById(R.id.tvAverageSpeed);
@@ -248,8 +229,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 		ivVolumeLevel = findViewById(R.id.ivVolumeLevel);
 		ivSpeed = findViewById(R.id.ivSpeed);
-		ivSpeedChange = findViewById(R.id.ivSpeedChange);
-		ivSpeedChange.setVisibility(View.INVISIBLE);
 
         ivOBD2Status = findViewById(R.id.ivOBD2Status);
         ivOBD2Status.setOnClickListener(this);
@@ -281,10 +260,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
         tvOBD_FuelConsump2.setText("--");
         tvOBD_FuelConsump2.setVisibility(View.GONE);
 
-		btnTest2 = findViewById (R.id.btnTest2);
+        Button btnTest2 = findViewById(R.id.btnTest2);
 		btnTest2.setOnClickListener(this);
 
-		btnTest1 = findViewById (R.id.btnTest1);
+        Button btnTest1 = findViewById(R.id.btnTest1);
 		btnTest1.setOnClickListener(this);
 
         tvRadioInfo1 = findViewById(R.id.tvRadioInfo1);
@@ -352,15 +331,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
         layout_MMC_climate = findViewById(R.id.layout_MMC_climate);
-        layout_ac_indicators = findViewById(R.id.layout_ac_indicators);
-        layout_ac_blow_direction = findViewById(R.id.layout_ac_blow_direction);
 
-        ivBtnRadio = findViewById(R.id.ivBtnRadio);
+        ImageView ivBtnRadio = findViewById(R.id.ivBtnRadio);
         ivBtnRadio.setOnClickListener (this);
-        ivBtnMusic = findViewById(R.id.ivBtnMusic);
+        ImageView ivBtnMusic = findViewById(R.id.ivBtnMusic);
         ivBtnMusic.setOnClickListener (this);
 
-        ibFloatingPanel = findViewById(R.id.ibFloatingPanel);
+        ImageButton ibFloatingPanel = findViewById(R.id.ibFloatingPanel);
         ibFloatingPanel.setOnClickListener (this);
         layout_battery.setOnClickListener (this);
 	}
@@ -628,7 +605,7 @@ intent = new Intent();
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
-		@SuppressLint("SetTextI18n")
+		@SuppressLint({"SetTextI18n", "StringFormatMatches"})
         @Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
@@ -689,12 +666,7 @@ intent = new Intent();
                 case GlSets.GPS_BROADCAST_ACTION_AGPS_RESET:
                     App.GS.cntGpsHangs++;
                     break;
-                case GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED: {
-                    int speed = intent.getIntExtra("Speed", 0);
-                    int grow = intent.getIntExtra("SpeedGrow", 0);
-                    processDynamicVoume(speed, grow);
-                    break;
-                }
+
                 case GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED: {
                     //double latitude = intent.getDoubleExtra("Latitude", 0);
                 /*
@@ -729,12 +701,9 @@ intent = new Intent();
                     tvGPSSpeed.setText(speed > 0 ? String.format(getString(R.string.text_gps_speed_value), speed) : "---");
                     color_speed(tvGPSSpeed, speed);
 
-                    tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), Integer.toString(App.GS.gpsAverageSpeed)));
-                    tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), Integer.toString(App.GS.gpsMaxSpeed)));
+                    tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.GS.gpsAverageSpeed));
+                    tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.GS.gpsMaxSpeed));
 
-                    if (!App.GS.dsc_isAvailable) {
-                        ivSpeedChange.setVisibility(View.INVISIBLE);
-                    }
                     float dist = App.GS.totalDistance / 1000;
 
                     tvGPSDistance.setText(dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-");
@@ -754,7 +723,6 @@ intent = new Intent();
                     tvRadioInfo2.setText(freq + " MHz");
                     break;
                 case TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED:
-                    int af_id = intent.getIntExtra("audio_focus_id", -1);
                     // update screen
                     updateAudioModeInfo(App.GS.curAudioFocusID);
 
@@ -763,7 +731,7 @@ intent = new Intent();
                     if (App.GS.interactWithPowerAmp && App.GS.isShowMusicInfo && App.GS.isPowerAmpPlaying) {
                         //String TrackTitle = intent.getStringExtra("TrackTitle");
                         //String AlbumArtist = intent.getStringExtra ("AlbumArtist");
-                        Bitmap AlbumArt = (Bitmap) intent.getParcelableExtra("AlbumArt");
+                        Bitmap AlbumArt = intent.getParcelableExtra("AlbumArt");
                         //tvMusicInfo1.setText( TrackTitle );
                         tvMusicInfo1.setText(App.GS.PowerAmp_TrackTitle);
                         //tvMusicInfo2.setText( AlbumArtist );
@@ -880,6 +848,7 @@ intent = new Intent();
 			it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			startActivity(it);
 		} catch (Exception e) {
+            Log.e("Main", Objects.requireNonNull(e.getMessage()));
 		}
 
 
@@ -896,44 +865,6 @@ intent = new Intent();
             iv.setImageResource(R.drawable.volume_high);
         }
 
-    }
-
-    private void  processDynamicVoume(int speed, int grow) {
-        if ( !App.GS.dsc_isAvailable) return;
-        int  t = Math.abs(speed - App.GS.dsc_FirstSpeed) / App.GS.dsc_StepSpeed;
-        switch ( grow ){
-            case -1:
-                ivSpeedChange.setImageResource(R.drawable.speed_down);
-                ivSpeedChange.setVisibility(View.VISIBLE);
-
-
-                //if ( Math.abs( speed - (App.GS.dsc_FirstSpeed + t*App.GS.dsc_StepSpeed) ) > App.GS.dsc_DeltaToChange  ) {
-                    //ivSpeedChange2.setImageResource(R.drawable.speed_down_2);
-                    //ivSpeedChange2.setVisibility(View.VISIBLE);
-                //} else {
-
-                //}
-                break;
-            case 1:
-                ivSpeedChange.setImageResource(R.drawable.speed_up);
-                ivSpeedChange.setVisibility(View.VISIBLE);
-
-                //if ( Math.abs( speed - (App.GS.dsc_FirstSpeed + t*App.GS.dsc_StepSpeed) ) > App.GS.dsc_DeltaToChange  ) {
-                    //ivSpeedChange2.setImageResource(R.drawable.speed_up_2);
-                    //ivSpeedChange2.setVisibility(View.VISIBLE);
-                //} else {
-
-                //}
-
-
-                break;
-            default:
-                ivSpeedChange.setVisibility(View.INVISIBLE);
-                //ivSpeedChange2.setVisibility(View.INVISIBLE);
-
-                break;
-        }
-        App.GS.gpsPrevSpeed = speed;
     }
 
     private void show_obdii_activity(Context context) {
@@ -1011,7 +942,7 @@ intent = new Intent();
 
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS));
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED));
-		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED));
+
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_FIRST_FIX));
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET));
 		registerReceiver(receiver, new IntentFilter(GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED));

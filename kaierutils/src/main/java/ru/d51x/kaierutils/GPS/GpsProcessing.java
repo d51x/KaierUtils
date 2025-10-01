@@ -269,31 +269,6 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
         context.sendBroadcast(intent);
 
-
-
-
-
-            if (App.GS.dsc_isAvailable) {
-                int t = Math.abs(Speed - App.GS.dsc_FirstSpeed) / App.GS.dsc_StepSpeed;
-                App.GS.gpsSpeed = Speed;
-
-                if (App.GS.gpsPrevSpeed > Speed) {
-                    App.GS.gpsSpeedGrow = -1;  // скорость уменьшилась
-                } else if (App.GS.gpsPrevSpeed < Speed) {
-                    App.GS.gpsSpeedGrow = 1;   // скорость увеличилась
-                } else {
-                    App.GS.gpsSpeedGrow = 0;
-                }
-
-
-                Intent intent2 = new Intent();
-                intent2.setAction(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED);
-                intent2.putExtra("Speed", Speed);
-                intent2.putExtra("SpeedGrow", App.GS.gpsSpeedGrow);
-                context.sendBroadcast(intent2);
-            }
-
-
 	    prevLocation = location;
         if ( App.obd.isConnected && App.obd.obdData.speed > 0 ) prevFuelLocation = location;
     }
