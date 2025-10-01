@@ -1,7 +1,10 @@
 package ru.d51x.kaierutils;
 
 import android.app.Application;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 import android.view.WindowManager;
@@ -25,6 +28,8 @@ public class App extends Application {
 	public static SensorsToast sensorsToast;
 	public static Toast gToast;
 
+	private final static int REQUEST_ENABLE_BT = 1;
+
 	private WindowManager.LayoutParams mWindowManagerLayoutParams = new WindowManager.LayoutParams();
 	public WindowManager.LayoutParams getWindowManagerLayoutParams() {
 		return mWindowManagerLayoutParams;
@@ -40,6 +45,23 @@ public class App extends Application {
 		Log.d ("App", "onCreate");
 		self = this;
 		GS = new GlSets();
+
+		boolean bluetoothAvailable = getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
+		//boolean bluetoothLEAvailable = getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                BluetoothManager bluetoothManager = getSystemService(BluetoothManager.class);
+				BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
+				if (bluetoothAdapter == null) {
+					// Device doesn't support Bluetooth
+				}
+				if (!bluetoothAdapter.isEnabled()) {
+					Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+					//startActivityForResult(MainActivity, enableBtIntent, REQUEST_ENABLE_BT);
+				}
+            }
+        }
+
         obd = new OBDII( self );
 		//this.startService (new Intent (this, BackgroundService.class));
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

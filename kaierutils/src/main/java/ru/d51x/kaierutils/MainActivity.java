@@ -1,5 +1,7 @@
 package ru.d51x.kaierutils;
 
+import static android.widget.Toast.LENGTH_LONG;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -11,9 +13,13 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -21,9 +27,13 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.DigitalClock;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -66,6 +76,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private static final int TEXT_SIZE_BEFORE_DOT_4 = 44;
     private static final int TEXT_SIZE_AFTER_DOT = 16;
 
+    private static final int REQUEST_CODE_DRAW_OVERLAY_PERMISSION = 5;
 	private Handler mHandler;
 	private PopupWindow pwindo;
     private TextView tvCurrentVolume;
@@ -170,7 +181,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private ImageView ivBtnRadio;
     private ImageView ivBtnMusic;
+    private ImageButton ibFloatingPanel;
 
+    private FloatingWindow floatingWindow;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -188,6 +201,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		initComponents();
 		setInitData();
 		registerReceivers(receiver);
+
+        floatingWindow = new FloatingWindow(getApplicationContext());
 	}
 
 	public void initComponents() {
@@ -357,9 +372,28 @@ public class MainActivity extends Activity implements View.OnClickListener,
         ivBtnMusic = (ImageView) findViewById(R.id.ivBtnMusic);
         ivBtnMusic.setOnClickListener (this);
 
+        ibFloatingPanel = (ImageButton) findViewById(R.id.ibFloatingPanel);
+        ibFloatingPanel.setOnClickListener (this);
+        layout_battery.setOnClickListener (this);
 	}
 
-	public void setInitData() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CODE_DRAW_OVERLAY_PERMISSION:
+                if (Settings.canDrawOverlays(getApplicationContext())) {
+                    floatingWindow.show();
+                } else {
+                    Log.e("Main", "Permission is not granted!");
+                    Toast.makeText(getApplicationContext(), "Permission is not granted!", LENGTH_LONG);
+                }
+                break;
+            default: break;
+        }
+    }
+
+    public void setInitData() {
 
 
 		// gps info
@@ -499,6 +533,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
     // анализируем, какая кнопка была нажата. Всего один метод для всех кнопок
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v){
 
@@ -576,13 +611,33 @@ intent = new Intent();
                 startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
                         PowerampAPI.Commands.TOGGLE_PLAY_PAUSE));
                 break;
+            case R.id.ibFloatingPanel:
+            case R.id.layout_battery:
+                showFloatingPanel();
             default:
                 break;
         }
     }
 
 
-	private BroadcastReceiver receiver = new BroadcastReceiver() {
+    private void showFloatingPanel() {
+        if (Settings.canDrawOverlays(getApplicationContext())) {
+            floatingWindow.show();
+        } else {
+            startManageDrawOverlaysPermission();
+        }
+
+    }
+
+    private void startManageDrawOverlaysPermission() {
+        Intent intent = new Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:${applicationContext.packageName}")
+        );
+        startActivityForResult(intent, REQUEST_CODE_DRAW_OVERLAY_PERMISSION);
+    }
+
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();

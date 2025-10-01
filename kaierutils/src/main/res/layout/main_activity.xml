@@ -1,487 +1,337 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                tools:context=".SettingsActivity">
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="horizontal"
+	android:paddingLeft="@dimen/activity_horizontal_margin"
+	android:paddingTop="@dimen/activity_vertical_margin"
+	android:paddingRight="@dimen/activity_horizontal_margin"
+	android:paddingBottom="@dimen/activity_vertical_margin"
+	tools:context=".SettingsActivity">
 
 
 	<LinearLayout
-		android:orientation="vertical"
+		android:id="@+id/linearLayout"
 		android:layout_width="160dp"
 		android:layout_height="wrap_content"
-		android:layout_alignParentTop="true" android:layout_centerHorizontal="true"
-		android:id="@+id/linearLayout">
-		<LinearLayout
-	        android:orientation="horizontal"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:id="@+id/layout_volume_level"
-			>
+		android:layout_alignParentTop="true"
+		android:layout_centerHorizontal="true"
+		android:orientation="vertical">
 
-	        <ImageView
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:id="@+id/ivVolumeLevel"
-	            android:src="@drawable/volume_mute"
-	            android:layout_marginLeft="26dp"/>
-
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:id="@+id/tvCurrentVolum"
-	            android:textSize="40sp"
-	            android:textIsSelectable="false"
-	            android:text="@string/_0"
-	            android:layout_gravity="center"
-	            android:textStyle="bold"
-	            android:paddingLeft="10dp"/>
-	    </LinearLayout>
 		<LinearLayout
-			android:orientation="horizontal"
+			android:id="@+id/layout_volume_level"
 			android:layout_width="wrap_content"
-			android:layout_height="match_parent" android:layout_gravity="center_horizontal"
-			android:id="@+id/layout_eq_data">
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+
 			<ImageView
+				android:id="@+id/ivVolumeLevel"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:layout_marginLeft="26dp"
+				android:src="@drawable/volume_mute" />
+
+			<TextView
+				android:id="@+id/tvCurrentVolum"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:layout_gravity="center"
+				android:paddingLeft="10dp"
+				android:text="@string/_0"
+				android:textIsSelectable="false"
+				android:textSize="40sp"
+				android:textStyle="bold" />
+		</LinearLayout>
+
+		<LinearLayout
+			android:id="@+id/layout_eq_data"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_gravity="center_horizontal"
+			android:orientation="horizontal">
+
+			<ImageView
+				android:id="@+id/imageView2"
 				android:layout_width="16dp"
 				android:layout_height="16dp"
-				android:id="@+id/imageView2" android:src="@drawable/eq_bass"/>
+				android:src="@drawable/eq_bass" />
+
 			<TextView
+				android:id="@+id/tv_eq_bass"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:layout_gravity="bottom"
+				android:gravity="center_vertical"
+				android:paddingLeft="2dp"
+				android:paddingRight="6dp"
 				android:text="0"
-				android:id="@+id/tv_eq_bass" android:textSize="10dp"
-				android:gravity="center_vertical" android:paddingLeft="2dp"
-				android:paddingRight="6dp" android:layout_gravity="bottom"/>
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:textSize="10dp" />
+
 			<ImageView
+				android:id="@+id/imageView5"
 				android:layout_width="16dp"
 				android:layout_height="16dp"
-				android:id="@+id/imageView5" android:src="@drawable/eq_mid"/>
-			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-			          android:textAppearance="?android:attr/textAppearanceSmall" android:text="@string/_0"
-			          android:id="@+id/tv_eq_mid" android:textSize="10dp"
-			          android:gravity="center_vertical" android:paddingLeft="2dp"
-			          android:paddingRight="6dp" android:layout_gravity="bottom"/>
-			<ImageView android:layout_width="16dp" android:layout_height="16dp"
-			           android:id="@+id/imageView6" android:src="@drawable/eq_tre"/>
-			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-			          android:textAppearance="?android:attr/textAppearanceSmall" android:text="0"
-			          android:id="@+id/tv_eq_tre" android:textSize="10dp"
-			          android:gravity="center_vertical" android:paddingLeft="2dp"
-			          android:paddingRight="6dp" android:layout_gravity="bottom"/>
+				android:src="@drawable/eq_mid" />
+
+			<TextView
+				android:id="@+id/tv_eq_mid"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="bottom"
+				android:gravity="center_vertical"
+				android:paddingLeft="2dp"
+				android:paddingRight="6dp"
+				android:text="@string/_0"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:textSize="10dp" />
+
+			<ImageView
+				android:id="@+id/imageView6"
+				android:layout_width="16dp"
+				android:layout_height="16dp"
+				android:src="@drawable/eq_tre" />
+
+			<TextView
+				android:id="@+id/tv_eq_tre"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="bottom"
+				android:gravity="center_vertical"
+				android:paddingLeft="2dp"
+				android:paddingRight="6dp"
+				android:text="0"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:textSize="10dp" />
 		</LinearLayout>
 	</LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/layoutCanMMC"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="false"
-        android:baselineAligned="false"
-        android:layout_centerInParent="true"
-        android:gravity="center_vertical">
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:baselineAligned="false"
-            android:id="@+id/layout_battery">
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:id="@+id/ivOBD_CarBattery"
-                android:src="@drawable/car_battery_bad"
-                android:layout_gravity="center_vertical"
-				android:contentDescription="@string/todo" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="12,5"
-                android:id="@+id/tvOBD_CarBattery"
-                android:textSize="32sp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="4dp"
-                android:gravity="center_vertical"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:baselineAligned="false"
-            android:id="@+id/layout_temp_data">
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:id="@+id/ivOBD_CoolantTemp"
-                android:src="@drawable/coolant_temp_min"
-                android:layout_gravity="center_vertical"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/ivOBD_CoolantTempFan"
-                android:layout_marginLeft="-40dp"
-                android:src="@drawable/engine_fan_yellow"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:visibility="invisible"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="90"
-                android:id="@+id/tvOBD_CoolantTemp"
-                android:textSize="32sp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="-4dp"
-                android:gravity="center_vertical"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:baselineAligned="false"
-            android:id="@+id/layout_cvt_data">
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/ivOBD_CVT_Data"
-                android:src="@drawable/cvt_temp_min"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="10dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="90"
-                android:id="@+id/tvOBD_CVT_Data"
-                android:textSize="32sp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="-4dp"
-                android:gravity="center_vertical"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:id="@+id/layout_fuel_data"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:baselineAligned="false">
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:id="@+id/ivOBD_FuelTank"
-                android:src="@drawable/fuel_tank_min"
-                android:layout_gravity="center_vertical"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="60"
-                android:id="@+id/tvOBD_FuelTank"
-                android:layout_marginLeft="4dp"
-                android:textSize="40sp"
-                android:layout_gravity="center_vertical"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="л"
-                android:id="@+id/tvOBD_FuelTank_desc"
-                android:gravity="bottom"
-                android:layout_gravity="center_vertical"
-                android:textSize="22sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:id="@+id/layout_fuel_consump"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:baselineAligned="false">
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:id="@+id/ivOBD_FuelConsump"
-                android:src="@drawable/fuel_consump_min"
-                android:layout_gravity="center_vertical"/>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="9.7"
-                    android:id="@+id/tvOBD_FuelConsump"
-                    android:layout_marginLeft="4dp"
-                    android:textSize="40sp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="9.7"
-                    android:id="@+id/tvOBD_FuelConsump2"
-                    android:layout_marginLeft="4dp"
-                    android:textSize="22sp"
-                    android:gravity="bottom"
-                    android:layout_gravity="bottom"
-                    android:visibility="gone"/>
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="    л/\n100км"
-                android:id="@+id/tvOBD_FuelConsump_desc"
-                android:gravity="bottom"
-                android:layout_gravity="center_vertical"
-                android:textSize="16sp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:layout_gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/ivOBD2Status"
-                android:src="@drawable/obd_disconnected"
-                android:clickable="true"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="0dp"
-        android:id="@+id/layout_MMC_climate"
-        android:visibility="visible"
-        android:layout_alignTop="@+id/layout_general_info"
-        >
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true">
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="24dp"
-                android:id="@+id/layout_ac_indicators"
-                >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="16dp"
-                    android:id="@+id/iv_air_defogger"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/air_rear"
-                    android:layout_weight="0.3"
-                    android:visibility="visible"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="16dp"
-                    android:id="@+id/iv_air_recirculation"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/air_inner_loop"
-                    android:visibility="visible"
-                    android:layout_weight="0.3"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="16dp"
-                    android:id="@+id/iv_air_ac_state"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/air_cond__state_off"
-                    android:layout_weight="0.4"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusableInTouchMode="false"
-                android:id="@+id/layout_ac_blow_direction"
-                android:layout_marginTop="10dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_bg_seat"
-                    android:src="@drawable/air_wind_seat_my"
-                    android:adjustViewBounds="false"
-                    android:baselineAlignBottom="false"
-                    android:layout_gravity="right"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_air_direction"
-                    android:layout_gravity="center_horizontal|right"
-                    android:src="@drawable/air_wind_seat_my_to_beetwen_window_and_feet_and_window"
-                    android:layout_marginTop="-89dp"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_ac_blow_auto"
-                    android:src="@drawable/ac_mode_auto"
-                    android:layout_marginTop="-84dp"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="96dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:id="@+id/layout_fan_speed"
-                android:gravity="center_horizontal|bottom"
-                android:orientation="vertical"
-                android:layout_gravity="right">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_air_fan_speed"
-                    android:src="@drawable/air_wind_seat_my_fan_8"
-                    />
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_ac_fan_mode"
-                    android:src="@drawable/ac_mode_auto"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="-36dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/layout_ac_temp"
-                android:gravity="right"
-                android:layout_gravity="right">
-
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:id="@+id/iv_air_temp"
-                    android:src="@drawable/ac_temp_green"
-                    android:adjustViewBounds="false"
-                    android:layout_gravity="right"
-                    android:baselineAlignBottom="false"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="--.-"
-                    android:id="@+id/tv_air_cond_temp"
-                    android:textSize="42sp"
-                    android:textStyle="bold"
-                    android:layout_gravity="right"
-                    android:gravity="center_vertical|right"/>
-            </LinearLayout>
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <FrameLayout
-		android:layout_width="wrap_content"
+	<LinearLayout
+		android:id="@+id/layoutCanMMC"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:id="@+id/layout_test"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="false"
-        android:layout_marginBottom="60dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignWithParentIfMissing="false"
-        android:layout_marginLeft="-20dp">
+		android:layout_alignParentRight="false"
+		android:layout_alignParentBottom="true"
+		android:layout_centerInParent="true"
+		android:baselineAligned="false"
+		android:gravity="center_vertical"
+		android:orientation="horizontal">
+
+		<include
+			layout="@layout/floating_panel"
+			android:layout_weight="1" />
+
 		<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:visibility="visible"
-            android:id="@+id/layout_buttons">
-			<Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-			        android:text="Radio" android:id="@+id/btnTest1"
-			        android:layout_gravity="right|center_vertical"
-                    android:visibility="gone"/>
-			<Button
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:gravity="right"
+			android:orientation="horizontal">
+
+			<ImageView
+				android:id="@+id/ivOBD2Status"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:clickable="true"
+				android:paddingLeft="10dp"
+				android:paddingTop="4dp"
+				android:paddingRight="10dp"
+				android:paddingBottom="4dp"
+				android:src="@drawable/obd_disconnected" />
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<RelativeLayout
+		android:id="@+id/layout_MMC_climate"
+		android:layout_width="250dp"
+		android:layout_height="wrap_content"
+		android:layout_alignTop="@+id/layout_general_info"
+		android:layout_alignParentRight="true"
+		android:layout_marginTop="0dp"
+		android:visibility="visible">
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:orientation="vertical">
+
+			<LinearLayout
+				android:id="@+id/layout_ac_indicators"
+				android:layout_width="fill_parent"
+				android:layout_height="24dp"
+				android:orientation="horizontal">
+
+				<ImageView
+					android:id="@+id/iv_air_defogger"
+					android:layout_width="wrap_content"
+					android:layout_height="16dp"
+					android:layout_gravity="center_horizontal"
+					android:layout_weight="0.3"
+					android:src="@drawable/air_rear"
+					android:visibility="visible" />
+
+				<ImageView
+					android:id="@+id/iv_air_recirculation"
+					android:layout_width="wrap_content"
+					android:layout_height="16dp"
+					android:layout_gravity="center_horizontal"
+					android:layout_weight="0.3"
+					android:src="@drawable/air_inner_loop"
+					android:visibility="visible" />
+
+				<ImageView
+					android:id="@+id/iv_air_ac_state"
+					android:layout_width="wrap_content"
+					android:layout_height="16dp"
+					android:layout_gravity="center_horizontal"
+					android:layout_weight="0.4"
+					android:src="@drawable/air_cond__state_off" />
+
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/layout_ac_blow_direction"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="10dp"
+				android:focusableInTouchMode="false"
+				android:orientation="vertical">
+
+				<ImageView
+					android:id="@+id/iv_bg_seat"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="right"
+					android:adjustViewBounds="false"
+					android:baselineAlignBottom="false"
+					android:src="@drawable/air_wind_seat_my" />
+
+				<ImageView
+					android:id="@+id/iv_air_direction"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_horizontal|right"
+					android:layout_marginTop="-89dp"
+					android:src="@drawable/air_wind_seat_my_to_beetwen_window_and_feet_and_window" />
+
+				<ImageView
+					android:id="@+id/iv_ac_blow_auto"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="right"
+					android:layout_marginTop="-84dp"
+					android:layout_marginRight="96dp"
+					android:src="@drawable/ac_mode_auto" />
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/layout_fan_speed"
+				android:layout_width="wrap_content"
+				android:layout_height="40dp"
+				android:layout_gravity="right"
+				android:gravity="center_horizontal|bottom"
+				android:orientation="vertical">
+
+				<ImageView
+					android:id="@+id/iv_air_fan_speed"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:src="@drawable/air_wind_seat_my_fan_8" />
+
+				<ImageView
+					android:id="@+id/iv_ac_fan_mode"
+					android:layout_width="40dp"
+					android:layout_height="wrap_content"
+					android:layout_gravity="right"
+					android:layout_marginTop="-36dp"
+					android:src="@drawable/ac_mode_auto" />
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/layout_ac_temp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="right"
+				android:gravity="right"
+				android:orientation="horizontal">
+
+				<ImageView
+					android:id="@+id/iv_air_temp"
+					android:layout_width="50dp"
+					android:layout_height="50dp"
+					android:layout_gravity="right"
+					android:adjustViewBounds="false"
+					android:baselineAlignBottom="false"
+					android:src="@drawable/ac_temp_green" />
+
+				<TextView
+					android:id="@+id/tv_air_cond_temp"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:layout_gravity="right"
+					android:gravity="center_vertical|right"
+					android:text="--.-"
+					android:textAppearance="?android:attr/textAppearanceLarge"
+					android:textSize="42sp"
+					android:textStyle="bold" />
+			</LinearLayout>
+		</LinearLayout>
+
+	</RelativeLayout>
+
+	<FrameLayout
+		android:id="@+id/layout_test"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignWithParentIfMissing="false"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentRight="false"
+		android:layout_alignParentBottom="true"
+		android:layout_marginLeft="-20dp"
+		android:layout_marginBottom="60dp"
+		android:visibility="visible">
+
+		<LinearLayout
+			android:id="@+id/layout_buttons"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:visibility="visible">
+
+			<Button
+				android:id="@+id/btnTest1"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="right|center_vertical"
+				android:text="Radio"
+				android:visibility="gone" />
+
+			<Button
+				android:id="@+id/btnTest2"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="right"
 				android:text="Music"
-				android:id="@+id/btnTest2" android:layout_gravity="right"
-                android:visibility="gone"/>
+				android:visibility="gone" />
 
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="48dp"
-                android:id="@+id/ivBtnRadio"
-                android:src="@drawable/toast_radio"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp" />
+			<ImageView
+				android:id="@+id/ivBtnRadio"
+				android:layout_width="80dp"
+				android:layout_height="48dp"
+				android:layout_gravity="center"
+				android:layout_marginLeft="10dp"
+				android:src="@drawable/toast_radio" />
 
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="48dp"
-                android:id="@+id/ivBtnMusic"
-                android:src="@drawable/toast_music"
-                android:layout_gravity="center" />
+			<ImageView
+				android:id="@+id/ivBtnMusic"
+				android:layout_width="80dp"
+				android:layout_height="48dp"
+				android:layout_gravity="center"
+				android:src="@drawable/toast_music" />
 
-        </LinearLayout>
+		</LinearLayout>
 
 	</FrameLayout>
 
@@ -598,159 +448,166 @@
 	</LinearLayout>
 
 	<LinearLayout
-		android:orientation="vertical"
+		android:id="@+id/layout_general_info"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:id="@+id/layout_general_info"
+		android:layout_alignParentStart="true"
 		android:layout_alignParentLeft="true"
-		android:layout_alignParentStart="true">
+		android:orientation="vertical">
 
 		<LinearLayout
-			android:orientation="horizontal"
+			android:id="@+id/layout_gps_speed"
 			android:layout_width="match_parent"
 			android:layout_height="fill_parent"
-			android:id="@+id/layout_gps_speed">
+			android:orientation="horizontal">
 
 			<ImageView
+				android:id="@+id/ivSpeedChange"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
-				android:id="@+id/ivSpeedChange"
-				android:paddingLeft="20dp"
-				android:contentDescription="@string/todo" />
+				android:contentDescription="@string/todo"
+				android:paddingLeft="20dp" />
+
 			<ImageView
+				android:id="@+id/ivSpeed"
 				android:layout_width="wrap_content"
 				android:layout_height="fill_parent"
-				android:id="@+id/ivSpeed"
-				android:src="@drawable/speedo_1"/>
+				android:src="@drawable/speedo_1" />
 
 			<TextView
+				android:id="@+id/text_gps_speed_value"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
-				android:textAppearance="?android:attr/textAppearanceLarge"
-				android:text="@string/text_gps_speed_value"
-				android:id="@+id/text_gps_speed_value"
-				android:textSize="40sp"
 				android:gravity="center_vertical"
 				android:paddingLeft="10dp"
-				android:textStyle="bold"
-				/>
+				android:text="@string/text_gps_speed_value"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+				android:textSize="40sp"
+				android:textStyle="bold" />
 
 			<TextView
+				android:id="@+id/textView2"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
+				android:gravity="bottom|center_horizontal"
+				android:paddingLeft="4dp"
 				android:text="км/ч"
-				android:id="@+id/textView2" android:gravity="bottom|center_horizontal"
-				android:textSize="30sp" android:paddingLeft="4dp"/>
+				android:textSize="30sp" />
 		</LinearLayout>
 
 		<LinearLayout
-			android:orientation="horizontal"
+			android:id="@+id/layout_other_speed"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
-			android:id="@+id/layout_other_speed">
+			android:orientation="horizontal">
 
 			<TextView
+				android:id="@+id/tvAverageSpeed"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/text_average_speed"
-				android:id="@+id/tvAverageSpeed"
 				android:layout_marginLeft="40dp"
 				android:layout_marginRight="30dp"
-				android:textSize="14sp"/>
+				android:text="@string/text_average_speed"
+				android:textSize="14sp" />
 
 			<TextView
+				android:id="@+id/tvMaxSpeed"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/text_max_speed"
-				android:id="@+id/tvMaxSpeed"
-				android:textSize="14sp"/>
+				android:textSize="14sp" />
 		</LinearLayout>
 
 		<LinearLayout
-			android:orientation="horizontal"
+			android:id="@+id/layout_waypoints"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:id="@+id/layout_waypoints"
-			android:longClickable="true">
+			android:longClickable="true"
+			android:orientation="horizontal">
+
 			<ImageView
+				android:id="@+id/ivGPSDistance"
 				android:layout_width="48dp"
 				android:layout_height="wrap_content"
-				android:id="@+id/ivGPSDistance" android:src="@drawable/route_length"
+				android:layout_gravity="center"
 				android:layout_marginLeft="26dp"
 				android:padding="6dp"
-				android:layout_gravity="center"/>
+				android:src="@drawable/route_length" />
+
 			<TextView
+				android:id="@+id/tvGPSDistance"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
-				android:id="@+id/tvGPSDistance" android:text="@string/text_gps_distance"
-				android:textSize="40sp" android:paddingLeft="10dp"
 				android:gravity="center_vertical"
-				android:longClickable="false"/>
+				android:longClickable="false"
+				android:paddingLeft="10dp"
+				android:text="@string/text_gps_distance"
+				android:textSize="40sp" />
 
 			<TextView
+				android:id="@+id/textView3"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/km"
-				android:id="@+id/textView3"
 				android:gravity="bottom|center_horizontal"
-				android:textSize="20sp"
-				android:paddingLeft="4dp"/>
+				android:paddingLeft="4dp"
+				android:text="@string/km"
+				android:textSize="20sp" />
 		</LinearLayout>
 
 		<LinearLayout
-			android:orientation="horizontal"
+			android:id="@+id/layout_tracktime"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:id="@+id/layout_tracktime"
+			android:clickable="true"
 			android:longClickable="true"
-			android:clickable="true">
+			android:orientation="horizontal">
 
 			<ImageView
+				android:id="@+id/ivTrackTime"
 				android:layout_width="48dp"
 				android:layout_height="wrap_content"
-				android:id="@+id/ivTrackTime"
+				android:layout_gravity="center"
 				android:layout_marginLeft="26dp"
-				android:src="@drawable/track_time_0"
 				android:padding="6dp"
-				android:layout_gravity="center"/>
+				android:src="@drawable/track_time_0" />
 
 			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="--"
 				android:id="@+id/tvTrackTime"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
 				android:layout_above="@+id/layout_test"
 				android:layout_toLeftOf="@+id/layoutCanMMC"
 				android:paddingLeft="10dp"
-				android:textSize="40sp"/>
+				android:text="--"
+				android:textSize="40sp" />
 
 			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/text_gps_track_time_format_min"
 				android:id="@+id/tvTrackTimeHourOrMin"
-				android:gravity="bottom|center_horizontal"
-				android:textSize="20sp"
-				android:paddingLeft="4dp"/>
-
-			<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/str_dashes"
+				android:gravity="bottom|center_horizontal"
+				android:paddingLeft="4dp"
+				android:text="@string/text_gps_track_time_format_min"
+				android:textSize="20sp" />
+
+			<TextView
 				android:id="@+id/tvTrackTime2"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
 				android:layout_above="@+id/layout_test"
 				android:layout_toLeftOf="@+id/layoutCanMMC"
 				android:paddingLeft="10dp"
-				android:textSize="40sp"/>
+				android:text="@string/str_dashes"
+				android:textSize="40sp" />
 
 			<TextView
+				android:id="@+id/tvTrackTimeMinOrSec"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/text_gps_track_time_format_sec"
-				android:id="@+id/tvTrackTimeMinOrSec"
 				android:gravity="bottom|center_horizontal"
-				android:textSize="20sp"
-				android:paddingLeft="4dp"/>
+				android:paddingLeft="4dp"
+				android:text="@string/text_gps_track_time_format_sec"
+				android:textSize="20sp" />
 		</LinearLayout>
 
 	</LinearLayout>
@@ -782,93 +639,93 @@
 
 	</LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout_gps_info"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="-40dp"
-        android:layout_alignTop="@+id/layoutCanMMC"
-        android:layout_alignLeft="@+id/layoutCanMMC"
-        android:gravity="right">
+	<LinearLayout
+		android:id="@+id/layout_gps_info"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignLeft="@+id/layoutCanMMC"
+		android:layout_alignTop="@+id/layoutCanMMC"
+		android:layout_alignParentRight="true"
+		android:layout_marginTop="-40dp"
+		android:gravity="right"
+		android:orientation="vertical">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:id="@+id/layout_satellites"
-            android:layout_marginTop="-10dp">
+		<LinearLayout
+			android:id="@+id/layout_satellites"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="-10dp"
+			android:orientation="horizontal"
+			android:paddingBottom="5dp">
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:layout_gravity="left">
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="left"
+				android:gravity="left"
+				android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="match_parent"
-                    android:id="@+id/imageView3"
-                    android:src="@drawable/satellite"
-                    android:baselineAlignBottom="true"
-                    android:layout_marginLeft="-10dp"
+				<ImageView
+					android:id="@+id/imageView3"
+					android:layout_width="32dp"
+					android:layout_height="match_parent"
 					android:layout_marginStart="-10dp"
-					android:contentDescription="@string/todo" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/_10"
-                    android:id="@+id/text_satellites_total"
-                    android:textSize="20sp"
-                    android:paddingLeft="10dp"
-                    android:gravity="center_vertical"
-					android:paddingStart="10dp" />
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="match_parent"
-                    android:id="@+id/imageView"
-                    android:src="@drawable/satellite_good"
-                    android:baselineAlignBottom="true"
-                    android:layout_marginLeft="10dp"
+					android:layout_marginLeft="-10dp"
+					android:baselineAlignBottom="true"
 					android:contentDescription="@string/todo"
-					android:layout_marginStart="10dp" />
+					android:src="@drawable/satellite" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/_2"
-                    android:id="@+id/text_satellites_inuse"
-                    android:textSize="20sp"
-                    android:paddingLeft="10dp"
-                    android:gravity="center_vertical"
-					android:paddingStart="10dp" />
+				<TextView
+					android:id="@+id/text_satellites_total"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:gravity="center_vertical"
+					android:paddingStart="10dp"
+					android:paddingLeft="10dp"
+					android:text="@string/_10"
+					android:textSize="20sp" />
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="match_parent"
-                    android:id="@+id/imageView4"
-                    android:src="@drawable/satellites_inuse"
-                    android:baselineAlignBottom="true"
-                    android:layout_marginLeft="10dp"
+				<ImageView
+					android:id="@+id/imageView"
+					android:layout_width="32dp"
+					android:layout_height="match_parent"
 					android:layout_marginStart="10dp"
-					android:contentDescription="@string/todo" />
+					android:layout_marginLeft="10dp"
+					android:baselineAlignBottom="true"
+					android:contentDescription="@string/todo"
+					android:src="@drawable/satellite_good" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/_2"
-                    android:id="@+id/text_satellites_good"
-                    android:textSize="20sp"
-                    android:paddingLeft="10dp"
-                    android:gravity="center_vertical"
-					android:paddingStart="10dp" />
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
+				<TextView
+					android:id="@+id/text_satellites_inuse"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:gravity="center_vertical"
+					android:paddingStart="10dp"
+					android:paddingLeft="10dp"
+					android:text="@string/_2"
+					android:textSize="20sp" />
+
+				<ImageView
+					android:id="@+id/imageView4"
+					android:layout_width="32dp"
+					android:layout_height="match_parent"
+					android:layout_marginStart="10dp"
+					android:layout_marginLeft="10dp"
+					android:baselineAlignBottom="true"
+					android:contentDescription="@string/todo"
+					android:src="@drawable/satellites_inuse" />
+
+				<TextView
+					android:id="@+id/text_satellites_good"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:gravity="center_vertical"
+					android:paddingStart="10dp"
+					android:paddingLeft="10dp"
+					android:text="@string/_2"
+					android:textSize="20sp" />
+			</LinearLayout>
+		</LinearLayout>
+	</LinearLayout>
 
 </RelativeLayout>
