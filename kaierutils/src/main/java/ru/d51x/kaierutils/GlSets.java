@@ -38,7 +38,6 @@ public class GlSets {
     public boolean isHideHeader;
 	public boolean isShowStatistics;
 	public boolean isShowGPSSAtellities;
-	public boolean isShowEQData;
 	public boolean isShowButtons;
 	public boolean isShowClock;
     public int clock_show_mode = 0;
@@ -51,8 +50,6 @@ public class GlSets {
 	public boolean isPercentVolumeAtReverse;
 	public int FixedVolumeLevelAtReverse;
 	public int PercentVolumeLevelAtReverse;
-
-	public byte[] eqData;
 
     public int ReverseActivityCount;
     public int SleepModeCount;
@@ -188,7 +185,6 @@ public class GlSets {
 			isColorSpeed = prefs.getBoolean ("kaierutils_show_color_speed", false);
             isShowGPSSAtellities = prefs.getBoolean ("kaierutils_show_gps_satellities", false);
 			isShowStatistics = prefs.getBoolean ("kaierutils_show_statistics", true);
-			isShowEQData = prefs.getBoolean ("kaierutils_show_eq", false);
 			isShowButtons = prefs.getBoolean ("kaierutils_show_buttons", false);
             isShowClock = prefs.getBoolean ("kaierutils_show_clock", false);
             ClockSize = prefs.getInt("kaierutils_clock_size", 60);

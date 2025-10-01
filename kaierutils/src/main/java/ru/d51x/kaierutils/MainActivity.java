@@ -88,15 +88,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private TextView tvMaxSpeed;
 
 
-	private LinearLayout layout_eq_data;
 	private LinearLayout layout_radio_music_info;
 	private LinearLayout layout_clock;
 	private LinearLayout layout_buttons;
 
     private DigitalClock digitalClock;
-	private TextView tv_eq_bass;
-	private TextView tv_eq_mid;
-	private TextView tv_eq_tre;
 
     private ImageView ivVolumeLevel;
     private ImageView ivSpeed;
@@ -162,7 +158,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		Log.d ("MainActivity", "onCreate");
 
         startService(new Intent(this, BackgroundService.class));
-		TWUtilEx.initEqData();
 		initComponents();
 		setInitData();
 		registerReceivers(receiver);
@@ -194,11 +189,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         digitalClock.setTextSize( App.GS.ClockSize );
 
         layout_buttons = findViewById (R.id.layout_buttons);
-        layout_eq_data = findViewById (R.id.layout_eq_data);
-		tv_eq_bass = findViewById (R.id.tv_eq_bass);
-		tv_eq_mid = findViewById (R.id.tv_eq_mid);
-		tv_eq_tre = findViewById (R.id.tv_eq_tre);
-
         layout_gps_info = findViewById(R.id.layout_gps_info);
 
 		// gps info
@@ -364,7 +354,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvMaxSpeed.setText( String.format(getString(R.string.text_max_speed), "---"));
 		tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), "---"));
 
-		setEQData(App.GS.eqData);
         tvRadioInfo1.setText("");
         tvRadioInfo2.setText("");
         tvMusicInfo1.setText("");
@@ -407,12 +396,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 		tvCurrentVolume.setText(Integer.toString(App.GS.getVolumeLevel()));
 		layout_buttons.setVisibility(App.GS.isShowButtons ? View.VISIBLE : View.INVISIBLE);
-		layout_eq_data.setVisibility(App.GS.isShowEQData ? View.VISIBLE : View.INVISIBLE);
-
-
 
         show_hide_clock();
-
 
         setVolumeIcon(ivVolumeLevel, App.GS.getVolumeLevel());
         TWUtilEx.requestAudioFocusState();
@@ -546,16 +531,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 TWUtilEx.requestRadioInfo();
 
                 startActivity( getPackageManager().getLaunchIntentForPackage(Radio.PACKAGE_NAME) );
-                //startActivity(new Intent(Radio.PACKAGE_NAME + ".RadioActivity"));
-/*
-
-или так
-
-intent = new Intent();
-                    intent.setClassName("com.tw.eq", "com.tw.eq.EQActivity");
-                    intent.setFlags(268435456);
-                    startActivity(intent);
- */
                 break;
             case R.id.ivBtnMusic:
                 TWUtilEx.setAudioFocus(3);
@@ -606,10 +581,6 @@ intent = new Intent();
                 case TWUtilConst.TW_BROADCAST_ACTION_SLEEP:
                     break;
                 case TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP:
-                    break;
-                case TWUtilConst.TW_BROADCAST_ACTION_EQ_CHANGED:
-                    App.GS.eqData = intent.getByteArrayExtra("EQ");
-                    setEQData(App.GS.eqData);
                     break;
                 case GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS:
                     int cntSats = intent.getIntExtra("SatellitesTotal", 0);
@@ -901,7 +872,6 @@ intent = new Intent();
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH));
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP));
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED));
-		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_EQ_CHANGED));
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED));
 
 
@@ -944,23 +914,6 @@ intent = new Intent();
 		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED));
 
 		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED));
-	}
-
-
-
-
-	@SuppressLint("SetTextI18n")
-    public void setEQData(byte[] bArr) {
-	//bass bArr[1], mid  bArr[2], tree bArr[3], loud bArr[5]
-	            /*
-					0	1	2	3	4	5	6	7	8	9	10	11	12	13	14
-					-7	-6	-5	-4	-3	-2	-1	0	1	2	3	4	5	6	7
-	             */
-		if ( bArr != null ) {
-			tv_eq_bass.setText( Integer.toString ( bArr[1] - 7 ));
-			tv_eq_mid.setText( Integer.toString (bArr[2] - 7));
-			tv_eq_tre.setText( Integer.toString (bArr[3] - 7));
-		}
 	}
 
     public void updateAudioModeInfo(int id) {

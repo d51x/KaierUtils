@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils.TWUtils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,15 +36,9 @@ public class TWUtilEx {
 		}
 	}
 
-	private boolean isGetRadioProgram = false;
-	private boolean isGetRadioFreq = false;
-	private boolean isGetRadioTitle = false;
-
 	private TWUtil mTWUtil;
 	private TWUtil mTWUtilRadio;
 	private static int curVolume;
-	//private static int curBrightness;
-	//private static int curBrightnessMode;
 	protected static final String TWUTIL_HANDLER = "TWUtilHandler";
 
 
@@ -56,7 +51,6 @@ public class TWUtilEx {
             TWUtilConst.TW_COMMAND_KEY_PRESS,                // 513
 			//TWUtilConst.TW_CONTEXT_BRIGHTNESS              // 258
 			(short) TWUtilConst.TW_CONTEXT_PRESS_BUTTON_3,                       // 33281 - запуск стандартных приложений
-			TWUtilConst.TW_CONTEXT_EQ,
             TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG                      // 769 - audio focus
 	};
 
@@ -64,7 +58,8 @@ public class TWUtilEx {
 	private Handler mTWUtilHandler;
 
 
-	public TWUtilEx(Context context) {
+	@SuppressLint("HandlerLeak")
+    public TWUtilEx(Context context) {
 
 		this.context = context;
 		mHandler = new Handler();
@@ -75,7 +70,8 @@ public class TWUtilEx {
 		isTWUtilOpened = false;
 		curVolume = -1;
 		mTWUtilHandler = new Handler(){
-			@Override
+			@SuppressLint({"HandlerLeak", "DefaultLocale"})
+            @Override
 			public void handleMessage(Message message) {
 				switch (message.what) {
 					case TWUtilConst.TW_COMMAND_SLEEP:
@@ -94,9 +90,6 @@ public class TWUtilEx {
 							SendBroadcastAction( TWUtilConst.TW_BROADCAST_ACTION_SHUTDOWN);
 						}
 						break;
-					//case TWUtilConst.TWUTIL_COMMAND_REQUEST_SHUTDOWN:
-					//	SendBroadcastAction( TWUtilConst.TW_BROADCAST_ACTION_SHUTDOWN );
-					//	break;
 					case TWUtilConst.TW_COMMAND_REVERSE_ACTIVITY:
 						if ( message.arg1 == 0 ) {
 							SendBroadcastAction( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH);
@@ -116,14 +109,8 @@ public class TWUtilEx {
 						SendBroadcastAction( TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED,
 								             TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED, curVolume);
 						break;
-//					case TWUtilConst.TW_CONTEXT_BRIGHTNESS:
-//						curBrightness = message.arg1;
-//						curBrightnessMode = message.arg2;
-//						App.GS.setBrightnessLevel (curBrightness, false);
-//						App.GS.setBrightnessMode (curBrightnessMode, false);
-//						break;
-                    case TWUtilConst.TW_COMMAND_KEY_PRESS:
 
+                    case TWUtilConst.TW_COMMAND_KEY_PRESS:
                         if ( message.arg2 == App.GS.codeNextFolder ) {
                             //case TWUtilConst.TW_SVC_BUTTON_NEXT:
                                 if ( message.arg1 == 2) {  // долгое нажатие
@@ -202,16 +189,6 @@ public class TWUtilEx {
 		                    ri.setAction(TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED);
 		                    App.getInstance ().sendBroadcast(ri);
 	                    }
-                        break;
-					case TWUtilConst.TW_CONTEXT_EQ:    // 257 - EQ
-                        byte[] bArr = (byte[]) message.obj;
-                        String sbytes = "";
-                        for(int i = 0; i < bArr.length; i++)
-                        {
-                            sbytes += String.valueOf( bArr[i] ) + " ";
-                        }
-                        Log.d("TWUtil.handleMessage:", "received message 257 (eq) obj = " + sbytes);
-                        SendBroadcastAction( TWUtilConst.TW_BROADCAST_ACTION_EQ_CHANGED, "EQ", bArr);
                         break;
                     case TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG:    // 769 - audio focus
                         App.GS.curAudioFocusID = message.arg1;
