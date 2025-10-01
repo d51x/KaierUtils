@@ -14,7 +14,6 @@ public class GlSets {
 
     public static final String GPS_BROADCAST_ACTION_LOCATION_CHANGED = "ru.d51x.kaierutils.action.LOCATION_CHANGED";
     public static final String GPS_BROADCAST_ACTION_FIRST_FIX = "ru.d51x.kaierutils.action.GPS_EVENT_FIRST_FIX";
-    public static final String GPS_BROADCAST_ACTION_SATELLITE_STATUS = "ru.d51x.kaierutils.action.GPS_EVENT_SATELLITE_STATUS";
     public static final String GPS_BROADCAST_ACTION_AGPS_RESET = "ru.d51x.kaierutils.action.GPS_EVENT_AGPS_RESET";
     public static final String PWRAMP_BROADCAST_ACTION_TRACK_CHANGED = "ru.d51x.kaierutils.action.TRACK_CHANGED";
 
@@ -37,8 +36,6 @@ public class GlSets {
     public boolean isAutoStart;
     public boolean isHideHeader;
 	public boolean isShowStatistics;
-	public boolean isShowGPSSAtellities;
-	public boolean isShowButtons;
 
     public boolean isColorSpeed = false;
 
@@ -180,9 +177,7 @@ public class GlSets {
 			isAutoStart = prefs.getBoolean ("kaierutils_auto_start", false);
 			isHideHeader = prefs.getBoolean ("kaierutils_hide_header", false);
 			isColorSpeed = prefs.getBoolean ("kaierutils_show_color_speed", false);
-            isShowGPSSAtellities = prefs.getBoolean ("kaierutils_show_gps_satellities", false);
 			isShowStatistics = prefs.getBoolean ("kaierutils_show_statistics", true);
-			isShowButtons = prefs.getBoolean ("kaierutils_show_buttons", false);
 
 			// load reverse settings
 			isNeedSoundDecreaseAtStartUp = prefs.getBoolean ("CAR_SETTINGS__VOLUME_AT_START_UP__DO_CHANGE", false);

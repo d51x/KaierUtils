@@ -123,12 +123,6 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
                     }
                 }
 
-                intent.setAction( GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS );
-                intent.putExtra("SatellitesTotal", cntSats);
-                intent.putExtra("SatellitesInUse", cntInUse);
-                intent.putExtra("SatellitesGoodQATotal", goodSatellitesCount);
-                context.sendBroadcast(intent);
-
                 if ( (cntSats > 0) && (goodSatellitesCount >= min_good_sats) &&
                         /*App.GS.isFirstRunGPS &&*/ App.GS.isFirstFixGPS &&
                         !App.GS.isGpsHangs)

@@ -28,19 +28,21 @@
 				android:id="@+id/ivVolumeLevel"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
-				android:layout_marginLeft="26dp"
-				android:src="@drawable/volume_mute" />
+				android:layout_marginStart="26dp"
+                android:contentDescription="@string/vol_mute"
+                android:src="@drawable/volume_mute" />
 
 			<TextView
-				android:id="@+id/tvCurrentVolum"
+				android:id="@+id/tvCurrentVolume"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:layout_gravity="center"
-				android:paddingLeft="10dp"
+				android:paddingStart="10dp"
 				android:text="@string/_0"
 				android:textIsSelectable="false"
 				android:textSize="40sp"
-				android:textStyle="bold" />
+				android:textStyle="bold"
+                tools:ignore="RtlSymmetry" />
 		</LinearLayout>
 
 	</LinearLayout>
@@ -49,7 +51,7 @@
 		android:id="@+id/layoutCanMMC"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_alignParentRight="false"
+		android:layout_alignParentEnd="false"
 		android:layout_alignParentBottom="true"
 		android:layout_centerInParent="true"
 		android:baselineAligned="false"
@@ -58,21 +60,24 @@
 
 		<include
 			layout="@layout/floating_panel"
-			android:layout_weight="1" />
+
+			/>
 
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:gravity="right"
-			android:orientation="horizontal">
+			android:orientation="horizontal"
+            tools:ignore="RtlHardcoded">
 
 			<ImageView
 				android:id="@+id/ivOBD2Status"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:clickable="true"
-				android:paddingLeft="10dp"
+                android:contentDescription="@string/obd2_status"
+                android:paddingLeft="10dp"
 				android:paddingTop="4dp"
 				android:paddingRight="10dp"
 				android:paddingBottom="4dp"
@@ -86,14 +91,14 @@
 		android:layout_width="250dp"
 		android:layout_height="wrap_content"
 		android:layout_alignTop="@+id/layout_general_info"
-		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
 		android:layout_marginTop="0dp"
 		android:visibility="visible">
 
 		<LinearLayout
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
 			android:orientation="vertical">
 
 			<LinearLayout
@@ -108,7 +113,8 @@
 					android:layout_height="16dp"
 					android:layout_gravity="center_horizontal"
 					android:layout_weight="0.3"
-					android:src="@drawable/air_rear"
+                    android:contentDescription="@string/air_defogger"
+                    android:src="@drawable/air_rear"
 					android:visibility="visible" />
 
 				<ImageView
@@ -117,7 +123,8 @@
 					android:layout_height="16dp"
 					android:layout_gravity="center_horizontal"
 					android:layout_weight="0.3"
-					android:src="@drawable/air_inner_loop"
+                    android:contentDescription="@string/air_recirculation"
+                    android:src="@drawable/air_inner_loop"
 					android:visibility="visible" />
 
 				<ImageView
@@ -126,7 +133,8 @@
 					android:layout_height="16dp"
 					android:layout_gravity="center_horizontal"
 					android:layout_weight="0.4"
-					android:src="@drawable/air_cond__state_off" />
+                    android:contentDescription="@string/air_ac_state"
+                    android:src="@drawable/air_cond__state_off" />
 
 			</LinearLayout>
 
@@ -145,31 +153,35 @@
 					android:layout_gravity="right"
 					android:adjustViewBounds="false"
 					android:baselineAlignBottom="false"
-					android:src="@drawable/air_wind_seat_my" />
+                    android:contentDescription="@string/bg_seat"
+                    android:src="@drawable/air_wind_seat_my"
+                    tools:ignore="RtlHardcoded" />
 
 				<ImageView
 					android:id="@+id/iv_air_direction"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_gravity="center_horizontal|right"
+					android:layout_gravity="center_horizontal|end"
 					android:layout_marginTop="-89dp"
-					android:src="@drawable/air_wind_seat_my_to_beetwen_window_and_feet_and_window" />
+                    android:contentDescription="@string/air_direction"
+                    android:src="@drawable/air_wind_seat_my_to_between_window_and_feet_and_window" />
 
 				<ImageView
 					android:id="@+id/iv_ac_blow_auto"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_gravity="right"
+					android:layout_gravity="end"
 					android:layout_marginTop="-84dp"
-					android:layout_marginRight="96dp"
-					android:src="@drawable/ac_mode_auto" />
+					android:layout_marginEnd="96dp"
+                    android:contentDescription="@string/ac_blow_auto"
+                    android:src="@drawable/ac_mode_auto" />
 			</LinearLayout>
 
 			<LinearLayout
 				android:id="@+id/layout_fan_speed"
 				android:layout_width="wrap_content"
 				android:layout_height="40dp"
-				android:layout_gravity="right"
+				android:layout_gravity="end"
 				android:gravity="center_horizontal|bottom"
 				android:orientation="vertical">
 
@@ -177,41 +189,44 @@
 					android:id="@+id/iv_air_fan_speed"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:src="@drawable/air_wind_seat_my_fan_8" />
+                    android:contentDescription="@string/air_fan_speed"
+                    android:src="@drawable/air_wind_seat_my_fan_8" />
 
 				<ImageView
 					android:id="@+id/iv_ac_fan_mode"
 					android:layout_width="40dp"
 					android:layout_height="wrap_content"
-					android:layout_gravity="right"
+					android:layout_gravity="end"
 					android:layout_marginTop="-36dp"
-					android:src="@drawable/ac_mode_auto" />
+                    android:contentDescription="@string/ac_fan_mode"
+                    android:src="@drawable/ac_mode_auto" />
 			</LinearLayout>
 
 			<LinearLayout
 				android:id="@+id/layout_ac_temp"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_gravity="right"
-				android:gravity="right"
+				android:layout_gravity="end"
+				android:gravity="end"
 				android:orientation="horizontal">
 
 				<ImageView
 					android:id="@+id/iv_air_temp"
 					android:layout_width="50dp"
 					android:layout_height="50dp"
-					android:layout_gravity="right"
+					android:layout_gravity="end"
 					android:adjustViewBounds="false"
 					android:baselineAlignBottom="false"
-					android:src="@drawable/ac_temp_green" />
+                    android:contentDescription="@string/air_temp"
+                    android:src="@drawable/ac_temp_green" />
 
 				<TextView
 					android:id="@+id/tv_air_cond_temp"
 					android:layout_width="wrap_content"
 					android:layout_height="match_parent"
-					android:layout_gravity="right"
-					android:gravity="center_vertical|right"
-					android:text="--.-"
+					android:layout_gravity="end"
+					android:gravity="center_vertical|end"
+					android:text="@string/empty_temp"
 					android:textAppearance="?android:attr/textAppearanceLarge"
 					android:textSize="42sp"
 					android:textStyle="bold" />
@@ -219,60 +234,6 @@
 		</LinearLayout>
 
 	</RelativeLayout>
-
-	<FrameLayout
-		android:id="@+id/layout_test"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignWithParentIfMissing="false"
-		android:layout_alignParentLeft="true"
-		android:layout_alignParentRight="false"
-		android:layout_alignParentBottom="true"
-		android:layout_marginLeft="-20dp"
-		android:layout_marginBottom="60dp"
-		android:visibility="visible">
-
-		<LinearLayout
-			android:id="@+id/layout_buttons"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal"
-			android:visibility="visible">
-
-			<Button
-				android:id="@+id/btnTest1"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="right|center_vertical"
-				android:text="Radio"
-				android:visibility="gone" />
-
-			<Button
-				android:id="@+id/btnTest2"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="right"
-				android:text="Music"
-				android:visibility="gone" />
-
-			<ImageView
-				android:id="@+id/ivBtnRadio"
-				android:layout_width="80dp"
-				android:layout_height="48dp"
-				android:layout_gravity="center"
-				android:layout_marginLeft="10dp"
-				android:src="@drawable/toast_radio" />
-
-			<ImageView
-				android:id="@+id/ivBtnMusic"
-				android:layout_width="80dp"
-				android:layout_height="48dp"
-				android:layout_gravity="center"
-				android:src="@drawable/toast_music" />
-
-		</LinearLayout>
-
-	</FrameLayout>
 
 	<LinearLayout
 		android:id="@+id/layout_radio_music_info"
@@ -296,15 +257,14 @@
 				android:layout_width="64dp"
 				android:layout_height="64dp"
 				android:layout_gravity="center_horizontal"
-				android:src="@drawable/toast_radio" />
+                android:contentDescription="@string/radio_info"
+                android:src="@drawable/toast_radio" />
 
 			<LinearLayout
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_alignLeft="@+id/linearLayout"
-				android:layout_gravity="center_horizontal"
-				android:layout_toLeftOf="@+id/layout_gps_info"
-				android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
 				android:orientation="vertical"
 				android:paddingTop="10dp"
 				android:visibility="visible">
@@ -345,16 +305,15 @@
 				android:layout_width="144dp"
 				android:layout_height="144dp"
 				android:layout_gravity="center_horizontal"
-				android:src="@drawable/toast_music" />
+                android:contentDescription="@string/album_art"
+                android:src="@drawable/toast_music" />
 
 
 			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_alignLeft="@+id/linearLayout"
-				android:layout_gravity="center_horizontal"
-				android:layout_toLeftOf="@+id/layout_gps_info"
-				android:orientation="vertical"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
 				android:paddingTop="10dp"
 				android:visibility="visible">
 
@@ -391,7 +350,6 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignParentStart="true"
-		android:layout_alignParentLeft="true"
 		android:orientation="vertical">
 
 		<LinearLayout
@@ -404,27 +362,30 @@
 				android:id="@+id/ivSpeed"
 				android:layout_width="wrap_content"
 				android:layout_height="fill_parent"
-				android:src="@drawable/speedo_1" />
+                android:contentDescription="@string/speed"
+                android:src="@drawable/speedo_1" />
 
 			<TextView
 				android:id="@+id/text_gps_speed_value"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:gravity="center_vertical"
-				android:paddingLeft="10dp"
+				android:paddingStart="10dp"
 				android:text="@string/text_gps_speed_value"
 				android:textAppearance="?android:attr/textAppearanceLarge"
 				android:textSize="40sp"
-				android:textStyle="bold" />
+				android:textStyle="bold"
+                tools:ignore="RtlSymmetry" />
 
 			<TextView
 				android:id="@+id/textView2"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:gravity="bottom|center_horizontal"
-				android:paddingLeft="4dp"
-				android:text="км/ч"
-				android:textSize="30sp" />
+				android:paddingStart="4dp"
+				android:text="@string/unit_km_h"
+				android:textSize="30sp"
+                tools:ignore="RtlSymmetry" />
 		</LinearLayout>
 
 		<LinearLayout
@@ -437,8 +398,8 @@
 				android:id="@+id/tvAverageSpeed"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginLeft="40dp"
-				android:layout_marginRight="30dp"
+				android:layout_marginStart="40dp"
+				android:layout_marginEnd="30dp"
 				android:text="@string/text_average_speed"
 				android:textSize="14sp" />
 
@@ -462,8 +423,9 @@
 				android:layout_width="48dp"
 				android:layout_height="wrap_content"
 				android:layout_gravity="center"
-				android:layout_marginLeft="26dp"
-				android:padding="6dp"
+				android:layout_marginStart="26dp"
+                android:contentDescription="@string/gps_distance"
+                android:padding="6dp"
 				android:src="@drawable/route_length" />
 
 			<TextView
@@ -472,18 +434,20 @@
 				android:layout_height="match_parent"
 				android:gravity="center_vertical"
 				android:longClickable="false"
-				android:paddingLeft="10dp"
+				android:paddingStart="10dp"
 				android:text="@string/text_gps_distance"
-				android:textSize="40sp" />
+				android:textSize="40sp"
+                tools:ignore="RtlSymmetry" />
 
 			<TextView
 				android:id="@+id/textView3"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:gravity="bottom|center_horizontal"
-				android:paddingLeft="4dp"
+				android:paddingStart="4dp"
 				android:text="@string/km"
-				android:textSize="20sp" />
+				android:textSize="20sp"
+                tools:ignore="RtlSymmetry" />
 		</LinearLayout>
 
 		<LinearLayout
@@ -499,139 +463,51 @@
 				android:layout_width="48dp"
 				android:layout_height="wrap_content"
 				android:layout_gravity="center"
-				android:layout_marginLeft="26dp"
-				android:padding="6dp"
-				android:src="@drawable/track_time_0" />
+				android:layout_marginStart="26dp"
+                android:contentDescription="@string/track_time"
+                android:padding="6dp"
+				android:src="@drawable/track_time_0"
+                tools:ignore="ContentDescription" />
 
 			<TextView
 				android:id="@+id/tvTrackTime"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_above="@+id/layout_test"
-				android:layout_toLeftOf="@+id/layoutCanMMC"
-				android:paddingLeft="10dp"
-				android:text="--"
-				android:textSize="40sp" />
+                android:paddingStart="10dp"
+				android:text="@string/empty_str_2_dashes"
+				android:textSize="40sp"
+                tools:ignore="RtlSymmetry" />
 
 			<TextView
 				android:id="@+id/tvTrackTimeHourOrMin"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:gravity="bottom|center_horizontal"
-				android:paddingLeft="4dp"
+				android:paddingStart="4dp"
 				android:text="@string/text_gps_track_time_format_min"
-				android:textSize="20sp" />
+				android:textSize="20sp"
+                tools:ignore="RtlSymmetry" />
 
 			<TextView
 				android:id="@+id/tvTrackTime2"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_above="@+id/layout_test"
-				android:layout_toLeftOf="@+id/layoutCanMMC"
-				android:paddingLeft="10dp"
+                android:paddingStart="10dp"
 				android:text="@string/str_dashes"
-				android:textSize="40sp" />
+				android:textSize="40sp"
+                tools:ignore="RtlSymmetry" />
 
 			<TextView
 				android:id="@+id/tvTrackTimeMinOrSec"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:gravity="bottom|center_horizontal"
-				android:paddingLeft="4dp"
+				android:paddingStart="4dp"
 				android:text="@string/text_gps_track_time_format_sec"
-				android:textSize="20sp" />
+				android:textSize="20sp"
+                tools:ignore="RtlSymmetry" />
 		</LinearLayout>
 
-	</LinearLayout>
-
-
-	<LinearLayout
-		android:id="@+id/layout_gps_info"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignLeft="@+id/layoutCanMMC"
-		android:layout_alignTop="@+id/layoutCanMMC"
-		android:layout_alignParentRight="true"
-		android:layout_marginTop="-40dp"
-		android:gravity="right"
-		android:orientation="vertical">
-
-		<LinearLayout
-			android:id="@+id/layout_satellites"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="-10dp"
-			android:orientation="horizontal"
-			android:paddingBottom="5dp">
-
-			<LinearLayout
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="left"
-				android:gravity="left"
-				android:orientation="horizontal">
-
-				<ImageView
-					android:id="@+id/imageView3"
-					android:layout_width="32dp"
-					android:layout_height="match_parent"
-					android:layout_marginStart="-10dp"
-					android:layout_marginLeft="-10dp"
-					android:baselineAlignBottom="true"
-					android:contentDescription="@string/todo"
-					android:src="@drawable/satellite" />
-
-				<TextView
-					android:id="@+id/text_satellites_total"
-					android:layout_width="wrap_content"
-					android:layout_height="match_parent"
-					android:gravity="center_vertical"
-					android:paddingStart="10dp"
-					android:paddingLeft="10dp"
-					android:text="@string/_10"
-					android:textSize="20sp" />
-
-				<ImageView
-					android:id="@+id/imageView"
-					android:layout_width="32dp"
-					android:layout_height="match_parent"
-					android:layout_marginStart="10dp"
-					android:layout_marginLeft="10dp"
-					android:baselineAlignBottom="true"
-					android:contentDescription="@string/todo"
-					android:src="@drawable/satellite_good" />
-
-				<TextView
-					android:id="@+id/text_satellites_inuse"
-					android:layout_width="wrap_content"
-					android:layout_height="match_parent"
-					android:gravity="center_vertical"
-					android:paddingStart="10dp"
-					android:paddingLeft="10dp"
-					android:text="@string/_2"
-					android:textSize="20sp" />
-
-				<ImageView
-					android:id="@+id/imageView4"
-					android:layout_width="32dp"
-					android:layout_height="match_parent"
-					android:layout_marginStart="10dp"
-					android:layout_marginLeft="10dp"
-					android:baselineAlignBottom="true"
-					android:contentDescription="@string/todo"
-					android:src="@drawable/satellites_inuse" />
-
-				<TextView
-					android:id="@+id/text_satellites_good"
-					android:layout_width="wrap_content"
-					android:layout_height="match_parent"
-					android:gravity="center_vertical"
-					android:paddingStart="10dp"
-					android:paddingLeft="10dp"
-					android:text="@string/_2"
-					android:textSize="20sp" />
-			</LinearLayout>
-		</LinearLayout>
 	</LinearLayout>
 
 </RelativeLayout>

@@ -28,7 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -38,8 +37,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.maxmpz.poweramp.player.PowerampAPI;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
@@ -47,7 +44,6 @@ import java.util.TimeZone;
 
 import ru.d51x.kaierutils.Data.CanMmcData;
 import ru.d51x.kaierutils.Data.ClimateData;
-import ru.d51x.kaierutils.GPS.GpsProcessing;
 import ru.d51x.kaierutils.OBD2.OBDII;
 import ru.d51x.kaierutils.Radio.Radio;
 import ru.d51x.kaierutils.TWUtils.TWUtilConst;
@@ -64,7 +60,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private static final int REQUEST_CODE_DRAW_OVERLAY_PERMISSION = 5;
     private TextView tvCurrentVolume;
-    private LinearLayout layout_gps_info;
 
     private int modeFuelTank = 0;
     private int modeEngineTemp = 0;
@@ -73,9 +68,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 	private TextView tvGPSDistance;
     private ImageView ivTrackTime;
-    private TextView tvGPSSatellitesTotal;
-    private TextView tvGPSSatellitesGoodQACount;
-    private TextView tvGPSSatellitesInUse;
 
     private TextView tvGPSSpeed;
     private TextView tvTrackTime;
@@ -88,7 +80,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
 	private LinearLayout layout_radio_music_info;
-	private LinearLayout layout_buttons;
 
     private ImageView ivVolumeLevel;
     private ImageView ivSpeed;
@@ -162,7 +153,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	}
 
 	public void initComponents() {
-		tvCurrentVolume = findViewById(R.id.tvCurrentVolum);
+		tvCurrentVolume = findViewById(R.id.tvCurrentVolume);
 
 		// color speed
         LinearLayout layout_gps_speed = findViewById(R.id.layout_gps_speed);
@@ -178,13 +169,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_radio_music_info = findViewById (R.id.layout_radio_music_info);
         layout_radio_music_info.setOnLongClickListener(this);
 
-        layout_buttons = findViewById (R.id.layout_buttons);
-        layout_gps_info = findViewById(R.id.layout_gps_info);
-
 		// gps info
-		tvGPSSatellitesTotal = findViewById(R.id.text_satellites_total);
-		tvGPSSatellitesGoodQACount = findViewById(R.id.text_satellites_good);
-		tvGPSSatellitesInUse = findViewById(R.id.text_satellites_inuse);
 		tvGPSSpeed = findViewById(R.id.text_gps_speed_value);
 
 		// track distance
@@ -231,12 +216,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         tvOBD_FuelConsump2 = findViewById(R.id.tvOBD_FuelConsump2);
         tvOBD_FuelConsump2.setText("--");
         tvOBD_FuelConsump2.setVisibility(View.GONE);
-
-        Button btnTest2 = findViewById(R.id.btnTest2);
-		btnTest2.setOnClickListener(this);
-
-        Button btnTest1 = findViewById(R.id.btnTest1);
-		btnTest1.setOnClickListener(this);
 
         tvRadioInfo1 = findViewById(R.id.tvRadioInfo1);
         tvRadioInfo2 = findViewById(R.id.tvRadioInfo2);
@@ -300,11 +279,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         layout_MMC_climate = findViewById(R.id.layout_MMC_climate);
 
-        ImageView ivBtnRadio = findViewById(R.id.ivBtnRadio);
-        ivBtnRadio.setOnClickListener (this);
-        ImageView ivBtnMusic = findViewById(R.id.ivBtnMusic);
-        ivBtnMusic.setOnClickListener (this);
-
         ImageButton ibFloatingPanel = findViewById(R.id.ibFloatingPanel);
         ibFloatingPanel.setOnClickListener (this);
         layout_battery.setOnClickListener (this);
@@ -330,9 +304,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
 		// gps info
-		tvGPSSatellitesTotal.setText( "--");
-		tvGPSSatellitesInUse.setText( "--");
-		tvGPSSatellitesGoodQACount.setText( "--" );
 		tvGPSSpeed.setText( "---" );
 
 		//track distance
@@ -385,7 +356,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		super.onResume();
 
 		tvCurrentVolume.setText(Integer.toString(App.GS.getVolumeLevel()));
-		layout_buttons.setVisibility(App.GS.isShowButtons ? View.VISIBLE : View.INVISIBLE);
 
         setVolumeIcon(ivVolumeLevel, App.GS.getVolumeLevel());
         TWUtilEx.requestAudioFocusState();
@@ -401,7 +371,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_cvt_data.setVisibility( (App.obd.MMC_CAN && (App.obd.canMmcData.can_mmc_cvt_degr_show || App.obd.canMmcData.can_mmc_cvt_temp_show)) ? View.VISIBLE : View.GONE);
         layout_MMC_climate.setVisibility( (App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_ac_data_show) ? View.VISIBLE : View.GONE);
         layout_temp_data.setVisibility( App.obd.engine_temp_show ? View.VISIBLE : View.GONE);
-        layout_gps_info.setVisibility( App.GS.isShowGPSSAtellities ? View.VISIBLE : View.INVISIBLE);
+
         // обновить данные OBD
         updateOBD_climate_data(App.obd.climateData);
 	}
@@ -459,18 +429,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
     public void onClick(View v){
 
         switch (v.getId()) {
-	        case R.id.btnTest1:
-                // radio audio focus
-                //if (App.GS.curAudioFocusID > 0) TWUtilEx.setAudioFocus(128 & App.GS.curAudioFocusID);
-
-
-		        break;
-            case R.id.btnTest2:
-                // music audio focus
-                //if (App.GS.curAudioFocusID > 0) TWUtilEx.setAudioFocus(128 & App.GS.curAudioFocusID);
-
-
-	            break;
             case R.id.layout_gps_speed:
                 color_speed(tvGPSSpeed, App.GS.gpsSpeed);
                 App.GS.isColorSpeed = ! App.GS.isColorSpeed;
@@ -508,19 +466,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 break;
             case R.id.layout_cvt_data:
                 switch_cvt_mode();
-                break;
-            case R.id.ivBtnRadio:
-                TWUtilEx.setAudioFocus(1);
-
-                startService(new Intent("com.tw.radio:RadioService"));
-                TWUtilEx.requestRadioInfo();
-
-                startActivity( getPackageManager().getLaunchIntentForPackage(Radio.PACKAGE_NAME) );
-                break;
-            case R.id.ivBtnMusic:
-                TWUtilEx.setAudioFocus(3);
-                startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
-                        PowerampAPI.Commands.TOGGLE_PLAY_PAUSE));
                 break;
             case R.id.ibFloatingPanel:
             case R.id.layout_battery:
@@ -566,23 +511,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 case TWUtilConst.TW_BROADCAST_ACTION_SLEEP:
                     break;
                 case TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP:
-                    break;
-                case GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS:
-                    int cntSats = intent.getIntExtra("SatellitesTotal", 0);
-                    int goodSatellitesCount = intent.getIntExtra("SatellitesGoodQATotal", 0);
-                    int satellitesInUse = intent.getIntExtra("SatellitesInUse", 0);
-                    tvGPSSatellitesTotal.setText(Integer.toString(cntSats));
-                    tvGPSSatellitesGoodQACount.setText(Integer.toString(goodSatellitesCount));
-                    tvGPSSatellitesInUse.setText(Integer.toString(satellitesInUse));
-
-                    if (goodSatellitesCount < 2) {
-                        tvGPSSatellitesGoodQACount.setTextColor(Color.RED);
-                    } else if (goodSatellitesCount < GpsProcessing.signal_quality) {
-                        tvGPSSatellitesGoodQACount.setTextColor(Color.YELLOW);
-                    } else {
-                        tvGPSSatellitesGoodQACount.setTextColor(Color.GREEN);
-                    }
-
                     break;
                 case GlSets.GPS_BROADCAST_ACTION_AGPS_RESET:
                     App.GS.cntGpsHangs++;
@@ -859,8 +787,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED));
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED));
 
-
-		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS));
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED));
 
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_FIRST_FIX));
@@ -1415,7 +1341,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
             case feet: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_feet); break;
             case from_feet_to_feet_and_window: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_window); break;
             case feet_and_window: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_feet_and_window); break;
-            case from_feet_and_window_to_window: iv_air_direction.setImageResource(R.drawable.air_wind_seat_my_to_beetwen_window_and_feet_and_window); break;
+            case from_feet_and_window_to_window: iv_air_direction.setImageResource(R.drawable.air_wind_seat_my_to_between_window_and_feet_and_window); break;
             case window: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_window); break;
             default:  break;
         }
