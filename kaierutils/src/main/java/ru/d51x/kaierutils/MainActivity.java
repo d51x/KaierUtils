@@ -206,35 +206,35 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	}
 
 	public void initComponents() {
-		tvCurrentVolume = (TextView) findViewById(R.id.tvCurrentVolum);
+		tvCurrentVolume = findViewById(R.id.tvCurrentVolum);
 
 		// color speed
-		layout_gps_speed = (LinearLayout) findViewById(R.id.layout_gps_speed);
+		layout_gps_speed = findViewById(R.id.layout_gps_speed);
 		layout_gps_speed.setOnClickListener(this);
 
 		// track time
-		layout_tracktime = (LinearLayout) findViewById(R.id.layout_tracktime);
+		layout_tracktime = findViewById(R.id.layout_tracktime);
 		layout_tracktime.setOnLongClickListener(this);
 		layout_tracktime.setOnClickListener(this);
 
 
 
-        layout_radio_music_info = (LinearLayout) findViewById (R.id.layout_radio_music_info);
-        layout_clock = (LinearLayout) findViewById (R.id.layout_clock);
+        layout_radio_music_info = findViewById (R.id.layout_radio_music_info);
+        layout_clock = findViewById (R.id.layout_clock);
 
         //layout_radio_music_info.setOnTouchListener(this);
         layout_radio_music_info.setOnLongClickListener(this);
 
-        digitalClock = (DigitalClock) findViewById(R.id.digitalClock);
+        digitalClock = findViewById(R.id.digitalClock);
         digitalClock.setTextSize( App.GS.ClockSize );
 
-        layout_buttons = (LinearLayout) findViewById (R.id.layout_buttons);
-        layout_eq_data = (LinearLayout) findViewById (R.id.layout_eq_data);
-		tv_eq_bass = (TextView) findViewById (R.id.tv_eq_bass);
-		tv_eq_mid = (TextView) findViewById (R.id.tv_eq_mid);
-		tv_eq_tre = (TextView) findViewById (R.id.tv_eq_tre);
+        layout_buttons = findViewById (R.id.layout_buttons);
+        layout_eq_data = findViewById (R.id.layout_eq_data);
+		tv_eq_bass = findViewById (R.id.tv_eq_bass);
+		tv_eq_mid = findViewById (R.id.tv_eq_mid);
+		tv_eq_tre = findViewById (R.id.tv_eq_tre);
 
-        layout_gps_info = (LinearLayout) findViewById(R.id.layout_gps_info);
+        layout_gps_info = findViewById(R.id.layout_gps_info);
 
 		// gps info
 		tvGPSSatellitesTotal = (TextView) findViewById(R.id.text_satellites_total);
@@ -244,65 +244,65 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		//tvGPSAltitude = (TextView) findViewById(R.id.text_gps_altitude);
 		//tvGPSLatitude = (TextView) findViewById(R.id.text_gps_latitude);
 		//tvGPSLongitude = (TextView) findViewById(R.id.text_gps_longitude);
-		tvGPSSpeed = (TextView) findViewById(R.id.text_gps_speed_value);
+		tvGPSSpeed = findViewById(R.id.text_gps_speed_value);
 
 		// track distance
-		tvTrackTime = (TextView) findViewById(R.id.tvTrackTime);
-		tvTrackTime2 = (TextView) findViewById(R.id.tvTrackTime2);
-		tvTrackTimeMinOrSec = (TextView) findViewById(R.id.tvTrackTimeMinOrSec);
-		tvTrackTimeHourOrMin = (TextView) findViewById(R.id.tvTrackTimeHourOrMin);
-		tvGPSDistance = (TextView) findViewById(R.id.tvGPSDistance);
-		layout_waypoints = (LinearLayout) findViewById(R.id.layout_waypoints);
+		tvTrackTime = findViewById(R.id.tvTrackTime);
+		tvTrackTime2 = findViewById(R.id.tvTrackTime2);
+		tvTrackTimeMinOrSec = findViewById(R.id.tvTrackTimeMinOrSec);
+		tvTrackTimeHourOrMin = findViewById(R.id.tvTrackTimeHourOrMin);
+		tvGPSDistance = findViewById(R.id.tvGPSDistance);
+		layout_waypoints = findViewById(R.id.layout_waypoints);
 		layout_waypoints.setOnLongClickListener(this);
-		ivTrackTime = (ImageView) findViewById(R.id.ivTrackTime);
-		tvAverageSpeed = (TextView) findViewById(R.id.tvAverageSpeed);
-		tvMaxSpeed = (TextView) findViewById(R.id.tvMaxSpeed);
+		ivTrackTime = findViewById(R.id.ivTrackTime);
+		tvAverageSpeed = findViewById(R.id.tvAverageSpeed);
+		tvMaxSpeed = findViewById(R.id.tvMaxSpeed);
 
-		ivVolumeLevel = (ImageView) findViewById(R.id.ivVolumeLevel);
-		ivSpeed = (ImageView) findViewById(R.id.ivSpeed);
-		ivSpeedChange = (ImageView) findViewById(R.id.ivSpeedChange);
+		ivVolumeLevel = findViewById(R.id.ivVolumeLevel);
+		ivSpeed = findViewById(R.id.ivSpeed);
+		ivSpeedChange = findViewById(R.id.ivSpeedChange);
 		ivSpeedChange.setVisibility(View.INVISIBLE);
 
-        ivOBD2Status = (ImageView) findViewById(R.id.ivOBD2Status);
+        ivOBD2Status = findViewById(R.id.ivOBD2Status);
         ivOBD2Status.setOnClickListener(this);
         ivOBD2Status.setOnLongClickListener(this);
 
-        ivOBD_CarBattery = (ImageView) findViewById(R.id.ivOBD_CarBattery);
-        tvOBD_CarBattery = (TextView) findViewById(R.id.tvOBD_CarBattery);
+        ivOBD_CarBattery = findViewById(R.id.ivOBD_CarBattery);
+        tvOBD_CarBattery = findViewById(R.id.tvOBD_CarBattery);
         tvOBD_CarBattery.setText("--");
 
-        ivOBD_CoolantTemp = (ImageView) findViewById(R.id.ivOBD_CoolantTemp);
-        ivOBD_CoolantTempFan = (ImageView) findViewById(R.id.ivOBD_CoolantTempFan);
-        tvOBD_CoolantTemp = (TextView) findViewById(R.id.tvOBD_CoolantTemp);
+        ivOBD_CoolantTemp = findViewById(R.id.ivOBD_CoolantTemp);
+        ivOBD_CoolantTempFan = findViewById(R.id.ivOBD_CoolantTempFan);
+        tvOBD_CoolantTemp = findViewById(R.id.tvOBD_CoolantTemp);
         tvOBD_CoolantTemp.setText("--");
 
-        ivOBD_CVT_Data = (ImageView) findViewById(R.id.ivOBD_CVT_Data);
-        tvOBD_CVT_Data = (TextView) findViewById(R.id.tvOBD_CVT_Data);
+        ivOBD_CVT_Data = findViewById(R.id.ivOBD_CVT_Data);
+        tvOBD_CVT_Data = findViewById(R.id.tvOBD_CVT_Data);
         tvOBD_CVT_Data.setText("--");
 
 
-        ivOBD_FuelTank = (ImageView) findViewById(R.id.ivOBD_FuelTank);
-        tvOBD_FuelTank = (TextView) findViewById(R.id.tvOBD_FuelTank);
+        ivOBD_FuelTank = findViewById(R.id.ivOBD_FuelTank);
+        tvOBD_FuelTank = findViewById(R.id.tvOBD_FuelTank);
         tvOBD_FuelTank.setText("--");
-        tvOBD_FuelTank_desc = (TextView) findViewById(R.id.tvOBD_FuelTank_desc);
+        tvOBD_FuelTank_desc = findViewById(R.id.tvOBD_FuelTank_desc);
 
-        ivOBD_FuelConsump = (ImageView) findViewById(R.id.ivOBD_FuelConsump);
-        tvOBD_FuelConsump = (TextView) findViewById(R.id.tvOBD_FuelConsump);
+        ivOBD_FuelConsump = findViewById(R.id.ivOBD_FuelConsump);
+        tvOBD_FuelConsump = findViewById(R.id.tvOBD_FuelConsump);
         tvOBD_FuelConsump.setText("--");
-        tvOBD_FuelConsump2 = (TextView) findViewById(R.id.tvOBD_FuelConsump2);
+        tvOBD_FuelConsump2 = findViewById(R.id.tvOBD_FuelConsump2);
         tvOBD_FuelConsump2.setText("--");
         tvOBD_FuelConsump2.setVisibility(View.GONE);
 
-		btnTest2 = (Button) findViewById (R.id.btnTest2);
+		btnTest2 = findViewById (R.id.btnTest2);
 		btnTest2.setOnClickListener(this);
 
-		btnTest1 = (Button) findViewById (R.id.btnTest1);
+		btnTest1 = findViewById (R.id.btnTest1);
 		btnTest1.setOnClickListener(this);
 
-        tvRadioInfo1 = (TextView) findViewById(R.id.tvRadioInfo1);
-        tvRadioInfo2 = (TextView) findViewById(R.id.tvRadioInfo2);
-        tvMusicInfo1 = (TextView) findViewById(R.id.tvMusicInfo1);
-        tvMusicInfo2 = (TextView) findViewById(R.id.tvMusicInfo2);
+        tvRadioInfo1 = findViewById(R.id.tvRadioInfo1);
+        tvRadioInfo2 = findViewById(R.id.tvRadioInfo2);
+        tvMusicInfo1 = findViewById(R.id.tvMusicInfo1);
+        tvMusicInfo2 = findViewById(R.id.tvMusicInfo2);
         tvMusicInfo1.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         tvMusicInfo1.setMarqueeRepeatLimit(-1);
         tvMusicInfo1.setHorizontallyScrolling(true);
@@ -312,67 +312,67 @@ public class MainActivity extends Activity implements View.OnClickListener,
 //        tvMusicInfo2.setHorizontallyScrolling(true);
 //        tvMusicInfo2.setSelected(true);
 
-        ivAlbumArt = (ImageView) findViewById(R.id.ivAlbumArt);
+        ivAlbumArt = findViewById(R.id.ivAlbumArt);
 
 
 
-        layout_radio_info = (LinearLayout) findViewById(R.id.layout_radio_info);
-        layout_music_info = (LinearLayout) findViewById(R.id.layout_music_info);
+        layout_radio_info = findViewById(R.id.layout_radio_info);
+        layout_music_info = findViewById(R.id.layout_music_info);
         layout_radio_info.setVisibility( View.GONE );
         layout_music_info.setVisibility( View.GONE );
 
-        layout_obd_fuel = (LinearLayout) findViewById(R.id.layout_fuel_data);
-        layout_obd2 = (LinearLayout) findViewById(R.id.layoutCanMMC);
+        layout_obd_fuel = findViewById(R.id.layout_fuel_data);
+        layout_obd2 = findViewById(R.id.layoutCanMMC);
         layout_obd_fuel.setOnLongClickListener (this);
         layout_obd_fuel.setOnClickListener (this);
 
-        iv_air_fan_speed = (ImageView) findViewById(R.id.iv_air_fan_speed);
+        iv_air_fan_speed = findViewById(R.id.iv_air_fan_speed);
         iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0);
 
-        iv_air_direction = (ImageView) findViewById(R.id.iv_air_direction);
+        iv_air_direction = findViewById(R.id.iv_air_direction);
         iv_air_direction.setImageResource(R.drawable.air_wind_seat_my_to_face);
 
-        iv_air_ac_state = (ImageView) findViewById(R.id.iv_air_ac_state);
+        iv_air_ac_state = findViewById(R.id.iv_air_ac_state);
         //iv_air_ac_state.setVisibility( View.INVISIBLE );
 
-        iv_air_recirculation = (ImageView) findViewById(R.id.iv_air_recirculation);
+        iv_air_recirculation = findViewById(R.id.iv_air_recirculation);
         iv_air_recirculation.setVisibility( View.INVISIBLE );
 
-        iv_air_defogger = (ImageView) findViewById(R.id.iv_air_defogger);
+        iv_air_defogger = findViewById(R.id.iv_air_defogger);
         iv_air_defogger.setVisibility( View.INVISIBLE );
 
-        iv_ac_blow_auto = (ImageView) findViewById(R.id.iv_ac_blow_auto);
+        iv_ac_blow_auto = findViewById(R.id.iv_ac_blow_auto);
         iv_ac_blow_auto.setVisibility( View.INVISIBLE );
 
-        iv_ac_fan_mode = (ImageView) findViewById(R.id.iv_ac_fan_mode);
+        iv_ac_fan_mode = findViewById(R.id.iv_ac_fan_mode);
         iv_ac_fan_mode.setVisibility( View.INVISIBLE );
 
-        iv_air_temp = (ImageView) findViewById(R.id.iv_air_temp);
+        iv_air_temp = findViewById(R.id.iv_air_temp);
 
-        tv_air_cond_temp = (TextView) findViewById(R.id.tv_air_cond_temp);
+        tv_air_cond_temp = findViewById(R.id.tv_air_cond_temp);
 
-        layout_fuel_consump = (LinearLayout) findViewById(R.id.layout_fuel_consump);
+        layout_fuel_consump = findViewById(R.id.layout_fuel_consump);
         layout_fuel_consump.setOnClickListener (this);
 
-        layout_temp_data = (LinearLayout) findViewById(R.id.layout_temp_data);
+        layout_temp_data = findViewById(R.id.layout_temp_data);
         layout_temp_data.setOnClickListener (this);
 
-        layout_battery = (LinearLayout) findViewById(R.id.layout_battery);
+        layout_battery = findViewById(R.id.layout_battery);
 
-        layout_cvt_data = (LinearLayout) findViewById(R.id.layout_cvt_data);
+        layout_cvt_data = findViewById(R.id.layout_cvt_data);
         layout_cvt_data.setOnClickListener (this);
 
 
-        layout_MMC_climate = (RelativeLayout) findViewById(R.id.layout_MMC_climate);
-        layout_ac_indicators = (LinearLayout) findViewById(R.id.layout_ac_indicators);
-        layout_ac_blow_direction = (LinearLayout) findViewById(R.id.layout_ac_blow_direction);
+        layout_MMC_climate = findViewById(R.id.layout_MMC_climate);
+        layout_ac_indicators = findViewById(R.id.layout_ac_indicators);
+        layout_ac_blow_direction = findViewById(R.id.layout_ac_blow_direction);
 
-        ivBtnRadio = (ImageView) findViewById(R.id.ivBtnRadio);
+        ivBtnRadio = findViewById(R.id.ivBtnRadio);
         ivBtnRadio.setOnClickListener (this);
-        ivBtnMusic = (ImageView) findViewById(R.id.ivBtnMusic);
+        ivBtnMusic = findViewById(R.id.ivBtnMusic);
         ivBtnMusic.setOnClickListener (this);
 
-        ibFloatingPanel = (ImageButton) findViewById(R.id.ibFloatingPanel);
+        ibFloatingPanel = findViewById(R.id.ibFloatingPanel);
         ibFloatingPanel.setOnClickListener (this);
         layout_battery.setOnClickListener (this);
 	}
@@ -386,7 +386,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     floatingWindow.show();
                 } else {
                     Log.e("Main", "Permission is not granted!");
-                    Toast.makeText(getApplicationContext(), "Permission is not granted!", LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(), "Permission is not granted!", LENGTH_LONG).show();
                 }
                 break;
             default: break;
@@ -452,7 +452,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		super.onPause();
 	}
 
-	public void onResume() {
+	@SuppressLint("SetTextI18n")
+    public void onResume() {
 		super.onResume();
 
 		tvCurrentVolume.setText(Integer.toString(App.GS.getVolumeLevel()));
@@ -485,6 +486,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         digitalClock.setTextSize(App.GS.ClockSize);
 	}
 
+    @SuppressLint("NonConstantResourceId")
     @Override
         public boolean onLongClick(View v) {
             switch (v.getId()) {
@@ -533,7 +535,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
     // анализируем, какая кнопка была нажата. Всего один метод для всех кнопок
-    @SuppressLint("NonConstantResourceId")
+    @SuppressLint({"NonConstantResourceId", "CommitPrefEdits"})
     @Override
     public void onClick(View v){
 
@@ -553,7 +555,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
             case R.id.layout_gps_speed:
                 color_speed(tvGPSSpeed, App.GS.gpsSpeed);
                 App.GS.isColorSpeed = ! App.GS.isColorSpeed;
-	            PreferenceManager.getDefaultSharedPreferences (App.getInstance ()).edit().putBoolean ("kaierutils_show_color_speed", App.GS.isColorSpeed).commit ();
+	            PreferenceManager.getDefaultSharedPreferences (App.getInstance ()).edit().putBoolean ("kaierutils_show_color_speed", App.GS.isColorSpeed).apply();
                 break;
             case R.id.layout_tracktime:
                 App.GS.gpsTimeAtWay_Type++;
@@ -565,7 +567,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 }
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
                 prefs.edit().putInt("CAR_SETTINGS__GPS_TIME_AT_WAY_TYPE", App.GS.gpsTimeAtWay_Type);
-                prefs.edit().commit();
+                prefs.edit().apply();
                 // сменить иконку, сменить текст
                 showFormatedTrackTime( App.GS.gpsTimeAtWay_Type );
                 break;
@@ -638,76 +640,75 @@ intent = new Intent();
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
-		@Override
+		@SuppressLint("SetTextI18n")
+        @Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED))
-			{
-				int vol = intent.getIntExtra(TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED, 0);
-				tvCurrentVolume.setText (String.format( Integer.toString(vol)));
-                setVolumeIcon(ivVolumeLevel, vol);
-			}
-            else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH) )
-            {
-                //tvReverseCount.setText( String.format(getString(R.string.text_reverse_count),
-                //                                      App.GS.ReverseActivityCount) );
-            }
-            else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_SLEEP) )
-            {
+            if (action == null) return;
+
+            switch (action) {
+                case TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED:
+                    int vol = intent.getIntExtra(TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED, 0);
+                    tvCurrentVolume.setText(String.format(Integer.toString(vol)));
+                    setVolumeIcon(ivVolumeLevel, vol);
+                    break;
+                case TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH:
+                    //tvReverseCount.setText( String.format(getString(R.string.text_reverse_count),
+                    //                                      App.GS.ReverseActivityCount) );
+                    break;
+                case TWUtilConst.TW_BROADCAST_ACTION_SLEEP:
 //                tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count),
 //                        App.GS.SleepModeCount) );
 
-                //if ( App.GS.lastSleep == 0)
-                //{
+                    //if ( App.GS.lastSleep == 0)
+                    //{
                     //tvSleepModeLastTime.setVisibility( View.INVISIBLE );
-                //}
-                //else
-                //{
+                    //}
+                    //else
+                    //{
                     //Date date = new Date( App.GS.lastSleep );
-                   // SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
-                   // tvSleepModeLastTime.setText( String.format("%s", ft.format(date)) );
-                   // tvSleepModeLastTime.setVisibility( View.VISIBLE );
-                //}
-            }
-            else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP) )
-            {
-	           // tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count),
-			   //         App.GS.SleepModeCount) );
+                    // SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
+                    // tvSleepModeLastTime.setText( String.format("%s", ft.format(date)) );
+                    // tvSleepModeLastTime.setVisibility( View.VISIBLE );
+                    //}
+                    break;
+                case TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP:
+                    // tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count),
+                    //         App.GS.SleepModeCount) );
 
-            }
-			else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_EQ_CHANGED) )
-            {
-	            App.GS.eqData = intent.getByteArrayExtra ("EQ");
-	            setEQData(App.GS.eqData);
-            }
-            else if (action.equals(GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS))
-            {
-                int cntSats = intent.getIntExtra ("SatellitesTotal", 0);
-                int goodSatellitesCount = intent.getIntExtra( "SatellitesGoodQATotal", 0 );
-                int satellitesInUse = intent.getIntExtra( "SatellitesInUse", 0 );
-                tvGPSSatellitesTotal.setText( Integer.toString(cntSats) );
-                tvGPSSatellitesGoodQACount.setText( Integer.toString(goodSatellitesCount) );
-                tvGPSSatellitesInUse.setText( Integer.toString(satellitesInUse) );
+                    break;
+                case TWUtilConst.TW_BROADCAST_ACTION_EQ_CHANGED:
+                    App.GS.eqData = intent.getByteArrayExtra("EQ");
+                    setEQData(App.GS.eqData);
+                    break;
+                case GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS:
+                    int cntSats = intent.getIntExtra("SatellitesTotal", 0);
+                    int goodSatellitesCount = intent.getIntExtra("SatellitesGoodQATotal", 0);
+                    int satellitesInUse = intent.getIntExtra("SatellitesInUse", 0);
+                    tvGPSSatellitesTotal.setText(Integer.toString(cntSats));
+                    tvGPSSatellitesGoodQACount.setText(Integer.toString(goodSatellitesCount));
+                    tvGPSSatellitesInUse.setText(Integer.toString(satellitesInUse));
 
-                if ( goodSatellitesCount  <  2 ) {
-                    tvGPSSatellitesGoodQACount.setTextColor(Color.RED);
-                } else if ( goodSatellitesCount < GpsProcessing.signal_quality ) {
-                    tvGPSSatellitesGoodQACount.setTextColor(Color.YELLOW);
-                } else {
-                    tvGPSSatellitesGoodQACount.setTextColor(Color.GREEN);
+                    if (goodSatellitesCount < 2) {
+                        tvGPSSatellitesGoodQACount.setTextColor(Color.RED);
+                    } else if (goodSatellitesCount < GpsProcessing.signal_quality) {
+                        tvGPSSatellitesGoodQACount.setTextColor(Color.YELLOW);
+                    } else {
+                        tvGPSSatellitesGoodQACount.setTextColor(Color.GREEN);
+                    }
+
+                    break;
+                case GlSets.GPS_BROADCAST_ACTION_AGPS_RESET:
+                    App.GS.cntGpsHangs++;
+                    break;
+                case GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED: {
+                    int speed = intent.getIntExtra("Speed", 0);
+                    int grow = intent.getIntExtra("SpeedGrow", 0);
+                    processDynamicVoume(speed, grow);
+                    break;
                 }
-
-            }
-            else if (action.equals(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET)) {
-				App.GS.cntGpsHangs++;
-            }
-            else if (action.equals(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED)) {
-                int speed = intent.getIntExtra("Speed", 0);
-                int grow = intent.getIntExtra("SpeedGrow", 0);
-                processDynamicVoume (speed, grow);
-            }
-            else if (action.equals(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED)) {
-                //double latitude = intent.getDoubleExtra("Latitude", 0);
+                case GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED: {
+                    //double latitude = intent.getDoubleExtra("Latitude", 0);
                 /*
                 if ( latitude < 0 ) {
                     //S - south latitude
@@ -718,7 +719,7 @@ intent = new Intent();
                 }
                 */
 
-                //double longitude = intent.getDoubleExtra("Longitude", 0);
+                    //double longitude = intent.getDoubleExtra("Longitude", 0);
                 /*
                 if ( longitude < 0 ) {
                     //W - west longitude
@@ -728,89 +729,119 @@ intent = new Intent();
                     tvGPSLongitude.setText( String.format("E %1$.5f", longitude).replace(",", ".") );
                 }
                 */
-                //tvGPSAccuracy.setText( String.format(getString(R.string.text_gps_accuracy), intent.getStringExtra("Accuracy")) );
-                //tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), intent.getStringExtra("Altitude")).replace(",", ".") );
+                    //tvGPSAccuracy.setText( String.format(getString(R.string.text_gps_accuracy), intent.getStringExtra("Accuracy")) );
+                    //tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), intent.getStringExtra("Altitude")).replace(",", ".") );
 
-				int speed = intent.getIntExtra("Speed", 0);
-                if ( speed > 80) {
-                    ivSpeed.setImageResource(R.drawable.speedo_2);
-                } else {
-                    ivSpeed.setImageResource(R.drawable.speedo_1);
-                }
-				tvGPSSpeed.setText( speed > 0 ? String.format(getString(R.string.text_gps_speed_value), speed) : "---" );
-				color_speed(tvGPSSpeed, speed);
+                    int speed = intent.getIntExtra("Speed", 0);
+                    if (speed > 80) {
+                        ivSpeed.setImageResource(R.drawable.speedo_2);
+                    } else {
+                        ivSpeed.setImageResource(R.drawable.speedo_1);
+                    }
+                    tvGPSSpeed.setText(speed > 0 ? String.format(getString(R.string.text_gps_speed_value), speed) : "---");
+                    color_speed(tvGPSSpeed, speed);
 
-                tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), Integer.toString( App.GS.gpsAverageSpeed)));
-                tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), Integer.toString(App.GS.gpsMaxSpeed)));
+                    tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), Integer.toString(App.GS.gpsAverageSpeed)));
+                    tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), Integer.toString(App.GS.gpsMaxSpeed)));
 
-                if ( !App.GS.dsc_isAvailable ) {
-                    ivSpeedChange.setVisibility(View.INVISIBLE);
-                }
-                float dist = App.GS.totalDistance / 1000;
+                    if (!App.GS.dsc_isAvailable) {
+                        ivSpeedChange.setVisibility(View.INVISIBLE);
+                    }
+                    float dist = App.GS.totalDistance / 1000;
 
-                tvGPSDistance.setText(dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-");
-                showFormatedTrackTime(App.GS.gpsTimeAtWay_Type);
+                    tvGPSDistance.setText(dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-");
+                    showFormatedTrackTime(App.GS.gpsTimeAtWay_Type);
 
 //                NotifyData notifyData = new NotifyData( App.getInstance () );
 //                notifyData.line_inway_distance = dist > 0 ? "Пройдено: " + String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-";
 //                notifyData.show();
-            }
-			else if ( action.equals( TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED)) {
-				String title = intent.getStringExtra("Title");
-				String freq = intent.getStringExtra ("Frequency");
-                tvRadioInfo1.setText( title );
-                tvRadioInfo1.setVisibility( title.contentEquals( Radio.BLANK_STATION_NAME) ? View.GONE : View.VISIBLE);
-                tvRadioInfo2.setText( freq + " MHz");
-            }
-            else if ( action.equals( TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED)) {
-				int af_id = intent.getIntExtra("audio_focus_id", -1);
-                // update screen
-                updateAudioModeInfo(App.GS.curAudioFocusID);
-
-            }
-            else if ( action.equals( GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED)) {
-                if ( App.GS.interactWithPowerAmp && App.GS.isShowMusicInfo && App.GS.isPowerAmpPlaying )
-                {
-                    //String TrackTitle = intent.getStringExtra("TrackTitle");
-                    //String AlbumArtist = intent.getStringExtra ("AlbumArtist");
-                    Bitmap AlbumArt = (Bitmap) intent.getParcelableExtra("AlbumArt");
-                    //tvMusicInfo1.setText( TrackTitle );
-                    tvMusicInfo1.setText(App.GS.PowerAmp_TrackTitle);
-                    //tvMusicInfo2.setText( AlbumArtist );
-                    tvMusicInfo2.setText(App.GS.PowerAmp_AlbumArtist);
-                    //if (!AlbumArt.equals(App.GS.PowerAmp_AlbumArt))
-                    //if ( AlbumArt != null ) {
-                        ivAlbumArt.setImageBitmap(AlbumArt);
-                    //} else {
-                      //  ivAlbumArt.setImageResource( R.drawable.toast_music);
-                    //}
+                    break;
                 }
-            } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_STATUS_CHANGED )) {
-                boolean obd_status = intent.getBooleanExtra("Status", false);
-                updateOBDStatus(obd_status);
-            } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED )) {
-                updateOBD_CarBattery(App.obd.obdData.voltage);
-            } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED )) {
-                updateOBD_CoolantTemp(modeEngineTemp, App.obd.canMmcData.fan_state);
-            } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED )) {
-                updateOBD_FuelConsump( App.obd.oneTrip.fuel_cons_lph );
-                updateOBD_FuelTank( App.obd.totalTrip.fuel_remains );
-            } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED )) {
+                case TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED:
+                    String title = intent.getStringExtra("Title");
+                    if (title == null) break;
+                    String freq = intent.getStringExtra("Frequency");
+                    tvRadioInfo1.setText(title);
+                    tvRadioInfo1.setVisibility(title.contentEquals(Radio.BLANK_STATION_NAME) ? View.GONE : View.VISIBLE);
+                    tvRadioInfo2.setText(freq + " MHz");
+                    break;
+                case TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED:
+                    int af_id = intent.getIntExtra("audio_focus_id", -1);
+                    // update screen
+                    updateAudioModeInfo(App.GS.curAudioFocusID);
 
+                    break;
+                case GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED:
+                    if (App.GS.interactWithPowerAmp && App.GS.isShowMusicInfo && App.GS.isPowerAmpPlaying) {
+                        //String TrackTitle = intent.getStringExtra("TrackTitle");
+                        //String AlbumArtist = intent.getStringExtra ("AlbumArtist");
+                        Bitmap AlbumArt = (Bitmap) intent.getParcelableExtra("AlbumArt");
+                        //tvMusicInfo1.setText( TrackTitle );
+                        tvMusicInfo1.setText(App.GS.PowerAmp_TrackTitle);
+                        //tvMusicInfo2.setText( AlbumArtist );
+                        tvMusicInfo2.setText(App.GS.PowerAmp_AlbumArtist);
+                        //if (!AlbumArt.equals(App.GS.PowerAmp_AlbumArt))
+                        //if ( AlbumArt != null ) {
+                        ivAlbumArt.setImageBitmap(AlbumArt);
+                        //} else {
+                        //  ivAlbumArt.setImageResource( R.drawable.toast_music);
+                        //}
+                    }
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_STATUS_CHANGED:
+                    boolean obd_status = intent.getBooleanExtra("Status", false);
+                    updateOBDStatus(obd_status);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED:
+                    updateOBD_CarBattery(App.obd.obdData.voltage);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED:
+                    updateOBD_CoolantTemp(modeEngineTemp, App.obd.canMmcData.fan_state);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED:
+                    updateOBD_FuelConsump(App.obd.oneTrip.fuel_cons_lph);
+                    updateOBD_FuelTank(App.obd.totalTrip.fuel_remains);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED:
+
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED:
+                    updateOBD_CoolantTemp(modeEngineTemp, App.obd.canMmcData.fan_state);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED:
+                    updateOBD_CVT_data(modeCVT);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED:
+                    updateOBD_CVT_data(modeCVT);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED:
+                    updateOBD_air_cond_fan_speed(ClimateData.FanSpeed.values()[intent.getIntExtra("air_cond_fan_speed_position", -1)]);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED:
+                    updateOBD_air_cond_fan_mode(ClimateData.FanMode.values()[intent.getIntExtra("air_cond_fan_mode", -1)]);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED:
+                    updateOBD_air_cond_temperature(intent.getStringExtra("air_cond_set_temperature"));
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED:
+                    updateOBD_air_cond_ext_temperature(intent.getIntExtra("air_cond_external_temp", -255));
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED:
+                    updateOBD_air_cond_blow_direction(ClimateData.BlowDirection.values()[intent.getIntExtra("air_cond_blow_direction_position", -1)]);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_BLOW_MODE_CHANGED:
+                    updateOBD_air_cond_blow_mode(ClimateData.BlowMode.values()[intent.getIntExtra("air_cond_blow_mode", -1)]);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED:
+                    updateOBD_air_cond_defogger(ClimateData.State.values()[intent.getIntExtra("air_cond_defogger_state", -1)]);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED:
+                    updateOBD_air_cond_recirculation(ClimateData.State.values()[intent.getIntExtra("air_cond_recirculation_state", -1)]);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED:
+                    updateOBD_air_cond_state(ClimateData.State.values()[intent.getIntExtra("air_cond_state", -1)]);
+                    break;
             }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED )) { updateOBD_CoolantTemp(modeEngineTemp, App.obd.canMmcData.fan_state); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED )) { updateOBD_CVT_data(modeCVT); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED )) { updateOBD_CVT_data(modeCVT); }
-
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED )) { updateOBD_air_cond_fan_speed(ClimateData.FanSpeed.values()[intent.getIntExtra("air_cond_fan_speed_position", -1)]); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED )) { updateOBD_air_cond_fan_mode(ClimateData.FanMode.values()[intent.getIntExtra("air_cond_fan_mode", -1)]);}
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED )) { updateOBD_air_cond_temperature(intent.getStringExtra("air_cond_set_temperature"));  }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED )) { updateOBD_air_cond_ext_temperature(intent.getIntExtra("air_cond_external_temp", -255)); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED )) { updateOBD_air_cond_blow_direction(ClimateData.BlowDirection.values()[intent.getIntExtra("air_cond_blow_direction_position", -1)]); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_BLOW_MODE_CHANGED )) { updateOBD_air_cond_blow_mode(ClimateData.BlowMode.values()[intent.getIntExtra("air_cond_blow_mode", -1)]); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED )) { updateOBD_air_cond_defogger(ClimateData.State.values()[intent.getIntExtra("air_cond_defogger_state", -1)]); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED )) { updateOBD_air_cond_recirculation(ClimateData.State.values()[intent.getIntExtra("air_cond_recirculation_state", -1)]); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED )) { updateOBD_air_cond_state( ClimateData.State.values()[ intent.getIntExtra("air_cond_state", -1) ] ); }
 
 		}
 	};
@@ -946,6 +977,7 @@ intent = new Intent();
         }
 	}
 
+    @SuppressLint("DefaultLocale")
     private void showFormatedTrackTime(int wayType) {
         long tm = 0;
         if ( wayType == 0)
@@ -979,7 +1011,8 @@ intent = new Intent();
         }
     }
 
-	private void registerReceivers(BroadcastReceiver receiver) {
+	@SuppressLint("UnspecifiedRegisterReceiverFlag")
+    private void registerReceivers(BroadcastReceiver receiver) {
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED));
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH));
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP));
@@ -1032,7 +1065,8 @@ intent = new Intent();
 
 
 
-	public void setEQData(byte[] bArr) {
+	@SuppressLint("SetTextI18n")
+    public void setEQData(byte[] bArr) {
 	//bass bArr[1], mid  bArr[2], tree bArr[3], loud bArr[5]
 	            /*
 					0	1	2	3	4	5	6	7	8	9	10	11	12	13	14
@@ -1075,6 +1109,7 @@ intent = new Intent();
         }
     }
 
+    @SuppressLint("DefaultLocale")
     public void updateOBD_CarBattery(double voltage) {
         if (App.obd.battery_show) {
             layout_battery.setVisibility(View.VISIBLE);
@@ -1089,6 +1124,7 @@ intent = new Intent();
         }
     }
 
+    @SuppressLint("DefaultLocale")
     public void updateOBD_CoolantTemp(int mode, CanMmcData.State state){
         if ( App.obd.engine_temp_show ) {
             layout_temp_data.setVisibility( View.VISIBLE );
@@ -1117,6 +1153,7 @@ intent = new Intent();
         }
     }
 
+    @SuppressLint("SetTextI18n")
     public void updateOBD_CVT_data(int mode) {
         if ( App.obd.MMC_CAN && (App.obd.canMmcData.can_mmc_cvt_degr_show || App.obd.canMmcData.can_mmc_cvt_temp_show)) {
             layout_cvt_data.setVisibility( View.VISIBLE);
@@ -1218,6 +1255,7 @@ intent = new Intent();
     }
 
     // диалог редактирования остатка кол-ва топлива в баке и  объема бака
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     public void show_obd_fuel_detail(){
         AlertDialog.Builder fuelDialog = new AlertDialog.Builder(MainActivity.this);
         fuelDialog.setTitle(getString(R.string.text_fuel_tank_detail));
@@ -1244,6 +1282,7 @@ intent = new Intent();
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float fltank = Float.parseFloat(etFuelTankCapacity.getText().toString());
@@ -1373,6 +1412,7 @@ intent = new Intent();
     }
 
     // отобразить данные о текущем расходе топлива
+    @SuppressLint("DefaultLocale")
     private void show_fuel_consumption(int mode) {
         switch (mode) {
             case 0:
@@ -1400,6 +1440,7 @@ intent = new Intent();
     }
 
     // TODO: отобразить данные  о количестве топлива в баке (учесть показания с приборки)
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     private void show_fuel_tank_data(int mode) {
         if ( ! App.obd.fuel_data_show ) {
             layout_obd_fuel.setVisibility( View.GONE );
@@ -1584,6 +1625,7 @@ intent = new Intent();
         iv_ac_blow_auto.setVisibility((blowMode == ClimateData.BlowMode.auto) ? View.VISIBLE : View.INVISIBLE);
     }
 
+    @SuppressLint("DefaultLocale")
     private void updateOBD_climate_data(ClimateData climateData) {
         updateOBD_air_cond_state(climateData.ac_state);
         updateOBD_air_cond_blow_mode(climateData.blow_mode);

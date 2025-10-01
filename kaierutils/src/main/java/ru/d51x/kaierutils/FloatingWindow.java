@@ -5,7 +5,6 @@ import static java.lang.Math.abs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.os.Build;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,16 +12,13 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 
-import java.util.Objects;
-
 public class FloatingWindow implements View.OnClickListener, View.OnTouchListener {
 
     private WindowManager windowManager;
-    private Context context;
-    private View floatingView;
-    private WindowManager.LayoutParams layoutParams;
+    private final Context context;
+    private final View floatingView;
+    private final WindowManager.LayoutParams layoutParams;
 
-    private ImageButton ibFloatingPanel;
     private boolean isShowing = false;
     private boolean touchConsumedByMove = false;
     private int lastX = 0;
@@ -36,7 +32,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel, null);
         floatingView.setOnTouchListener(this);
 
-        ibFloatingPanel = (ImageButton) floatingView.findViewById(R.id.ibFloatingPanel);
+        ImageButton ibFloatingPanel = floatingView.findViewById(R.id.ibFloatingPanel);
         ibFloatingPanel.setOnClickListener (this);
 
         layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
