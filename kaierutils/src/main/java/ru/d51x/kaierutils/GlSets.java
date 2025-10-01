@@ -39,9 +39,7 @@ public class GlSets {
 	public boolean isShowStatistics;
 	public boolean isShowGPSSAtellities;
 	public boolean isShowButtons;
-	public boolean isShowClock;
-    public int clock_show_mode = 0;
-	public int ClockSize;
+
     public boolean isColorSpeed = false;
 
 
@@ -143,8 +141,7 @@ public class GlSets {
 		VolumeLevelAtStartUp = 3;
 		VolumeLevelAtWakeUp = 3;
 
-        ClockSize = 60;
-		isNeedSoundDecreaseAtReverse = false;
+        isNeedSoundDecreaseAtReverse = false;
 		isFixedVolumeAtReverse = false;
 		isPercentVolumeAtReverse = false;
 		FixedVolumeLevelAtReverse = 3;
@@ -186,9 +183,6 @@ public class GlSets {
             isShowGPSSAtellities = prefs.getBoolean ("kaierutils_show_gps_satellities", false);
 			isShowStatistics = prefs.getBoolean ("kaierutils_show_statistics", true);
 			isShowButtons = prefs.getBoolean ("kaierutils_show_buttons", false);
-            isShowClock = prefs.getBoolean ("kaierutils_show_clock", false);
-            ClockSize = prefs.getInt("kaierutils_clock_size", 60);
-            clock_show_mode = prefs.getInt("kaierutils_clock_show_mode", 0);
 
 			// load reverse settings
 			isNeedSoundDecreaseAtStartUp = prefs.getBoolean ("CAR_SETTINGS__VOLUME_AT_START_UP__DO_CHANGE", false);

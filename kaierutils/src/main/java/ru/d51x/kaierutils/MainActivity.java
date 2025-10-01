@@ -29,7 +29,6 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.DigitalClock;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -89,10 +88,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
 	private LinearLayout layout_radio_music_info;
-	private LinearLayout layout_clock;
 	private LinearLayout layout_buttons;
-
-    private DigitalClock digitalClock;
 
     private ImageView ivVolumeLevel;
     private ImageView ivSpeed;
@@ -180,13 +176,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
         layout_radio_music_info = findViewById (R.id.layout_radio_music_info);
-        layout_clock = findViewById (R.id.layout_clock);
-
-        //layout_radio_music_info.setOnTouchListener(this);
         layout_radio_music_info.setOnLongClickListener(this);
-
-        digitalClock = findViewById(R.id.digitalClock);
-        digitalClock.setTextSize( App.GS.ClockSize );
 
         layout_buttons = findViewById (R.id.layout_buttons);
         layout_gps_info = findViewById(R.id.layout_gps_info);
@@ -397,8 +387,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvCurrentVolume.setText(Integer.toString(App.GS.getVolumeLevel()));
 		layout_buttons.setVisibility(App.GS.isShowButtons ? View.VISIBLE : View.INVISIBLE);
 
-        show_hide_clock();
-
         setVolumeIcon(ivVolumeLevel, App.GS.getVolumeLevel());
         TWUtilEx.requestAudioFocusState();
         // определим, запущено ли радио
@@ -416,8 +404,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_gps_info.setVisibility( App.GS.isShowGPSSAtellities ? View.VISIBLE : View.INVISIBLE);
         // обновить данные OBD
         updateOBD_climate_data(App.obd.climateData);
-
-        digitalClock.setTextSize(App.GS.ClockSize);
 	}
 
     @SuppressLint("NonConstantResourceId")
@@ -458,7 +444,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     show_obdii_activity(MainActivity.this);
                     return true;
                 case R.id.layout_radio_music_info:
-                    show_hide_clock();
                     return true;
                 default:
                     return false;
@@ -1488,43 +1473,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         tv.setText(ss);
     }
 
-
-    private void show_hide_clock()
-    {
-        if ( App.GS.isShowClock )
-        {
-            if (App.GS.radio.showInfo || (App.GS.interactWithPowerAmp && App.GS.isShowMusicInfo))
-            {
-                App.GS.clock_show_mode++;
-                if (App.GS.clock_show_mode > 1) App.GS.clock_show_mode = 0;
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
-                prefs.edit().putInt("kaierutils_clock_show_mode", App.GS.clock_show_mode).apply();
-
-
-                if ( App.GS.clock_show_mode == 1 ) {
-                    layout_music_info.setVisibility(View.INVISIBLE);
-                    layout_radio_info.setVisibility(View.INVISIBLE);
-                    layout_clock.setVisibility(View.VISIBLE);
-                } else {
-                    layout_clock.setVisibility(View.INVISIBLE);
-                    switch ( App.GS.curAudioFocusID ) {
-                        case TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID:
-                                layout_radio_info.setVisibility(View.VISIBLE);
-                                break;
-                        case TWUtilConst.TW_AUDIO_FOCUS_MUSIC_ID:
-                        case 0:
-                                layout_radio_music_info.setVisibility(View.VISIBLE);
-                                break;
-                        default:
-                                break;
-                    }
-                }
-            } else {
-                layout_clock.setVisibility(View.VISIBLE);
-            }
-        } else
-            layout_clock.setVisibility(View.INVISIBLE);
-    }
 }
 
 

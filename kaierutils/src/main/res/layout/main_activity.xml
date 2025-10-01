@@ -546,32 +546,6 @@
 
 
 	<LinearLayout
-		android:id="@+id/layout_clock"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@+id/layout_radio_music_info"
-		android:layout_centerHorizontal="true"
-		android:addStatesFromChildren="false"
-		android:alwaysDrawnWithCache="false"
-		android:animateLayoutChanges="false"
-		android:animationCache="false"
-		android:baselineAligned="false"
-		android:duplicateParentState="false"
-		android:gravity="center"
-		android:measureWithLargestChild="false"
-		android:orientation="horizontal">
-
-		<DigitalClock
-			android:id="@+id/digitalClock"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_gravity="center"
-			android:textColor="@android:color/holo_blue_light"
-			android:textSize="60sp" />
-
-	</LinearLayout>
-
-	<LinearLayout
 		android:id="@+id/layout_gps_info"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
