@@ -5,9 +5,9 @@ android {
 	namespace "ru.d51x.kaierutils"
 	defaultConfig {
 		applicationId "ru.d51x.kaierutils"
-		minSdkVersion 16
+		minSdkVersion 29
 		//noinspection ExpiredTargetSdkVersion
-		targetSdkVersion 30
+		targetSdkVersion 31
 		versionCode 11000
 		versionName '1.10.0'
 		multiDexEnabled true
