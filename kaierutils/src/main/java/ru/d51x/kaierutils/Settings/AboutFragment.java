@@ -1,8 +1,8 @@
 package ru.d51x.kaierutils.Settings;
 
 import android.annotation.SuppressLint;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +25,7 @@ public class AboutFragment extends Fragment {
     private TextView tvWorkingStart;
     private TextView tvDeviceName;
     private TextView tvProgramVersion;
+    private TextView tvFlavor;
 
     public AboutFragment() {
         // Required empty public constructor
@@ -43,6 +44,7 @@ public class AboutFragment extends Fragment {
         tvWorkingStart = mV.findViewById(R.id.tv_working_start);
         tvDeviceName = mV.findViewById(R.id.txtDeviceName);
         tvProgramVersion = mV.findViewById(R.id.tvProgramVersion);
+        tvFlavor = mV.findViewById(R.id.tv_flavour);
 
         showStatistics();
 
@@ -50,7 +52,7 @@ public class AboutFragment extends Fragment {
         return mV;
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "StringFormatMatches"})
     private void showStatistics() {
 
         String string_device_name = String.format(getResources().getString(R.string.text_device_name), TWUtilEx.GetDeviceID());
@@ -72,5 +74,7 @@ public class AboutFragment extends Fragment {
             tvWorkingStart.setText( String.format(getResources().getString(R.string.text_working_start), ft.format(date)) );
 
             tvProgramVersion.setText( "KaierUtils ver. " +  BuildConfig.VERSION_NAME);
+            tvFlavor.setText(String.format(getResources().getString(R.string.text_flavour),
+                    BuildConfig.USE_TWUTIL, BuildConfig.SIMULATE_OBD));
     }
 }

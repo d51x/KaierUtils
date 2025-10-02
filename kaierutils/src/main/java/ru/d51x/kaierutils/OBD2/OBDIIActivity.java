@@ -206,31 +206,31 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBD_FuelConsumption_today = (TextView) findViewById(R.id.tvOBD_FuelConsumption_today);
         tvOBD_FuelUsageToday = (TextView) findViewById(R.id.tvOBD_FuelUsageToday);
         tvGPS_Distanse_Today = (TextView) findViewById(R.id.tvGPS_Distanse_Today);
-        tvGPS_Distanse_Total = (TextView) findViewById(R.id.tvGPS_Distanse_Total);
+        tvGPS_Distanse_Total = findViewById(R.id.tvGPS_Distanse_Total);
 
 
-        tv_can_2110_cvt_oil_degr = (TextView) findViewById(R.id.tv_can_2110_cvt_oil_degr);
-        tv_can_2103_cvt_temp_count = (TextView) findViewById(R.id.tv_can_2103_cvt_temp_count);
+        tv_can_2110_cvt_oil_degr = findViewById(R.id.tv_can_2110_cvt_oil_degr);
+        tv_can_2103_cvt_temp_count = findViewById(R.id.tv_can_2103_cvt_temp_count);
 
-        tvOBD_MAF = (TextView) findViewById(R.id.tvOBD_MAF);
-
-
-        tvFuelLevel = (TextView) findViewById(R.id.tvFuelLevel);
+        tvOBD_MAF = findViewById(R.id.tvOBD_MAF);
 
 
-        swUseOBD = (Switch) findViewById(R.id.swUseOBD);
+        tvFuelLevel = findViewById(R.id.tvFuelLevel);
+
+
+        swUseOBD = findViewById(R.id.swUseOBD);
 	    swUseOBD.setOnClickListener(this);
 	    swUseOBD.setChecked(App.obd.useOBD);
 
-        cbCanMMC = (CheckBox) findViewById(R.id.cbCanMMC);
+        cbCanMMC = findViewById(R.id.cbCanMMC);
         cbCanMMC.setOnClickListener(this);
         cbCanMMC.setChecked(App.obd.MMC_CAN);
 
 
-        trMMCHeader = (TableRow) findViewById(R.id.trMMCHeader);
+        trMMCHeader = findViewById(R.id.trMMCHeader);
         trMMCHeader.setVisibility(App.obd.MMC_CAN ? View.VISIBLE : View.GONE);
 
-        trMMCValues = (TableRow) findViewById(R.id.trMMCValues);
+        trMMCValues = findViewById(R.id.trMMCValues);
         trMMCValues.setVisibility(App.obd.MMC_CAN ? View.VISIBLE : View.GONE);
 
 
@@ -255,7 +255,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
 
         tv_can_2110_cvt_oil_degr.setText(String.format( getString( R.string.text_can_2110_cvt_oil_degr), "---"));
-        tv_can_2103_cvt_temp_count.setText(String.format( getString( R.string.text_can_2103_cvt_temp_count), "---", "---"));
+        tv_can_2103_cvt_temp_count.setText(String.format( getString( R.string.text_can_2103_cvt_temp_count), "---"));
 
 
 

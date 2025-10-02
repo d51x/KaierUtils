@@ -1,13 +1,13 @@
 package ru.d51x.kaierutils.TWUtils;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningTaskInfo;
 
 import java.util.ArrayList;
 import java.util.List;

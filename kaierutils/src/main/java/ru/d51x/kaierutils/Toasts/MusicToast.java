@@ -1,13 +1,13 @@
 package ru.d51x.kaierutils.Toasts;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.graphics.Bitmap;
 
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.R;

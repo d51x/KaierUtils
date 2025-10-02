@@ -3,6 +3,7 @@ package ru.d51x.kaierutils.Settings;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -21,7 +22,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.Set;

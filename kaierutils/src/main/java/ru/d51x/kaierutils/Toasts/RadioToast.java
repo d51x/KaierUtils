@@ -1,11 +1,11 @@
 package ru.d51x.kaierutils.Toasts;
 
-import android.view.View;
-import android.widget.Toast;
 import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.view.LayoutInflater;
+import android.widget.Toast;
 
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.R;

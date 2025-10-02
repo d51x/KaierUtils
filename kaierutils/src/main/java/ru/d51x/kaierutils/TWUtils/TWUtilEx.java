@@ -15,15 +15,19 @@ import com.maxmpz.poweramp.player.PowerampAPI;
 import java.lang.reflect.Type;
 
 import ru.d51x.kaierutils.App;
+import ru.d51x.kaierutils.BuildConfig;
+
 
 /**
  * Created by Dmitriy on 18.02.2015.
  */
 public class TWUtilEx {
+	private final static boolean useTW = BuildConfig.USE_TWUTIL;
 	private Context context;
 	private Handler mHandler;
 
 	public static boolean isTWUtilAvailable() {
+		if (!useTW) return false;
 		try {
 			Type type = TWUtil.class;
 			String name = type.getClass().getName();

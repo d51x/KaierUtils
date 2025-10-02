@@ -1,15 +1,15 @@
 package ru.d51x.kaierutils.Settings;
 
-		import android.content.Context;
-		import android.util.AttributeSet;
-		import android.view.LayoutInflater;
-		import android.view.View;
-		import android.preference.DialogPreference;
-		import android.widget.SeekBar;
-		import android.widget.TextView;
-		import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.content.Context;
+import android.preference.DialogPreference;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 
-        import ru.d51x.kaierutils.R;
+import ru.d51x.kaierutils.R;
 
 public final class SeekBarPreference extends DialogPreference implements OnSeekBarChangeListener {
 

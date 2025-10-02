@@ -4,15 +4,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Handler;
-import android.util.Log;
+import android.location.GpsSatellite;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.location.GpsStatus;
-import android.location.GpsSatellite;
+import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
+
 import java.util.Timer;
 import java.util.TimerTask;
 

@@ -1,7 +1,8 @@
 package ru.d51x.kaierutils.Settings;
 
-import java.util.List;
 import android.preference.PreferenceActivity;
+
+import java.util.List;
 
 import ru.d51x.kaierutils.R;
 

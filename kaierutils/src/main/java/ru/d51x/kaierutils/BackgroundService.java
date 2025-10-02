@@ -1,20 +1,17 @@
 package ru.d51x.kaierutils;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
-import android.app.Notification;
 
-import ru.d51x.kaierutils.Data.NotifyData;
 import ru.d51x.kaierutils.GPS.GpsProcessingThread;
 import ru.d51x.kaierutils.OBD2.OBDThread;
 import ru.d51x.kaierutils.PowerAmp.PowerAmpProcessingThread;

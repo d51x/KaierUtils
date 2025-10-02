@@ -1,6 +1,5 @@
 package ru.d51x.kaierutils.OBD2;
 
-import static android.support.v4.content.ContextCompat.getSystemService;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
@@ -11,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -41,6 +39,7 @@ import pt.lighthouselabs.obd.exceptions.NonNumericResponseException;
 import pt.lighthouselabs.obd.exceptions.StoppedException;
 import pt.lighthouselabs.obd.exceptions.UnableToConnectException;
 import ru.d51x.kaierutils.App;
+import ru.d51x.kaierutils.BuildConfig;
 import ru.d51x.kaierutils.Data.CanMmcData;
 import ru.d51x.kaierutils.Data.ClimateData;
 import ru.d51x.kaierutils.Data.TripData;
@@ -49,7 +48,7 @@ import ru.d51x.kaierutils.utils.OBDCalculations;
 /**
  */
 public class OBDII  {
-    public static final boolean localDebug = false;
+    public static final boolean localDebug = BuildConfig.SIMULATE_OBD;
 
     public static final String TAG = "OBD2";
     public static final String OBD_BROADCAST_ACTION_STATUS_CHANGED = "ru.d51x.kaierutils.action.OBD_STATUS_CHANGED";

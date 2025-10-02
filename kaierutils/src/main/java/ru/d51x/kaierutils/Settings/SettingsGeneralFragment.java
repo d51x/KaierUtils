@@ -2,11 +2,11 @@ package ru.d51x.kaierutils.Settings;
 
 
 import android.app.Notification;
-import android.os.Bundle;
-import android.content.SharedPreferences;
 import android.content.Context;
-import android.preference.PreferenceManager;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.Data.NotifyData;

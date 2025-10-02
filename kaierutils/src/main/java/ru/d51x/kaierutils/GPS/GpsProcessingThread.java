@@ -5,7 +5,6 @@ import android.os.Looper;
 import android.util.Log;
 
 import ru.d51x.kaierutils.App;
-import ru.d51x.kaierutils.GPS.GpsProcessing;
 
 public class GpsProcessingThread extends Thread {
 

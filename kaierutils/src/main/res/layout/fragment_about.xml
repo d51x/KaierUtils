@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout2"
-        android:layout_gravity="left|top"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="0dp"
+        android:layout_gravity="start|top"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp">
 
@@ -25,8 +25,8 @@
             android:textColor="@android:color/holo_blue_light"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:gravity="right"
-            android:layout_gravity="right"/>
+            android:gravity="end"
+            android:layout_gravity="end"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,7 +35,7 @@
             android:id="@+id/txtDeviceName"
             android:textSize="20sp"
             android:textIsSelectable="false"
-            android:layout_gravity="right"/>
+            android:layout_gravity="end"/>
 
     </LinearLayout>
 
@@ -44,40 +44,32 @@
         android:layout_height="wrap_content"
         android:id="@+id/scrollView"
         android:layout_below="@+id/linearLayout2"
-        android:layout_alignParentLeft="true">
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="left|center_vertical"
-            android:layout_below="@+id/linearLayout2"
-            android:layout_alignParentLeft="true">
+            android:layout_gravity="start|center_vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/text_statistic_title"
-                android:id="@+id/textView"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"/>
+                android:id="@+id/textView" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_working_start"
-                android:id="@+id/tv_working_start"
-                android:layout_below="@+id/textView"
-                android:layout_alignParentLeft="true"/>
+                android:id="@+id/tv_working_start" />
 
             <TextView
                 android:layout_width="643dp"
                 android:layout_height="wrap_content"
                 android:text="@string/text_reverse_count"
-                android:id="@+id/tv_reverse_count"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"/>
+                android:id="@+id/tv_reverse_count" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -89,20 +81,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/text_sleep_mode_count"
-                    android:id="@+id/tv_sleep_mode_count"
-                    android:layout_above="@+id/tv_reverse_count"
-                    android:layout_alignParentLeft="true"/>
+                    android:id="@+id/tv_sleep_mode_count" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/text_sleep_mode_last_time"
                     android:id="@+id/tv_sleep_mode_last_time"
                     android:layout_gravity="center_horizontal"
-                    android:layout_above="@+id/tv_reverse_count"
-                    android:layout_alignRight="@+id/textView"
                     android:layout_weight="0.13"/>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_flavour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_flavour" />
         </LinearLayout>
     </ScrollView>
 

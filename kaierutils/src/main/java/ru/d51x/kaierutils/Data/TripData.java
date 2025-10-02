@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import ru.d51x.kaierutils.App;
 

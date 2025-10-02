@@ -36,7 +36,9 @@ android {
 			versionNameSuffix '-debug'
 			minifyEnabled false
 			debuggable true
-			signingConfig signingConfigs.release
+			signingConfig signingConfigs.debug
+			buildConfigField "Boolean", "USE_TWUTIL", "false"
+			buildConfigField "Boolean", "SIMULATE_OBD", "true"
 		}
 		release {
 			minifyEnabled true
@@ -45,6 +47,9 @@ android {
 			debuggable false
 			jniDebuggable false
 			signingConfig signingConfigs.release
+			versionNameSuffix '-release'
+			buildConfigField "Boolean", "USE_TWUTIL", "true"
+			buildConfigField "Boolean", "SIMULATE_OBD", "false"
 		}
 	}
 

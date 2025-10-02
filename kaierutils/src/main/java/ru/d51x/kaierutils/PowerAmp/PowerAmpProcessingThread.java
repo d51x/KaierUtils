@@ -5,7 +5,6 @@ import android.os.Looper;
 import android.util.Log;
 
 import ru.d51x.kaierutils.App;
-import ru.d51x.kaierutils.PowerAmp.PowerAmpProcessing;
 
 /**
  * Created by Dmitriy on 18.02.2015.

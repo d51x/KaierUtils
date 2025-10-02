@@ -1,8 +1,8 @@
 package ru.d51x.kaierutils;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.graphics.Bitmap;
+import android.preference.PreferenceManager;
 
 import ru.d51x.kaierutils.Radio.Radio;
 import ru.d51x.kaierutils.TWUtils.TWUtilEx;

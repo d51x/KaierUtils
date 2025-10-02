@@ -125,6 +125,7 @@
     <string name="text_sleep_mode_last_time">последний раз в %1$s</string>
     <string name="text_statistic_title">Статистика с момента включения:</string>
     <string name="text_working_start">Работает с %1$s</string>
+    <string name="text_flavour">TWUtil %1$s, SimOBD %2$s</string>
 
     <!-- <string name="text_gps_altitude">Высота: %1$s м</string> -->
     <!-- <string name="text_gps_accuracy">Точность: %1$s м</string> -->
