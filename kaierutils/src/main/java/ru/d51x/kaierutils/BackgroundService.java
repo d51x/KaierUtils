@@ -60,32 +60,23 @@ public class BackgroundService extends Service {
 
 
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "KaierUtils", NotificationManager.IMPORTANCE_HIGH);
-			channel.setDescription("KaierUtils background service");
-			NotificationManager manager = getSystemService(NotificationManager.class);
-			manager.createNotificationChannel(channel);
+		NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "KaierUtils", NotificationManager.IMPORTANCE_HIGH);
+		channel.setDescription("KaierUtils background service");
+		NotificationManager manager = getSystemService(NotificationManager.class);
+		manager.createNotificationChannel(channel);
 
-			NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
-			Notification notification = notificationBuilder.setOngoing(true)
-					.setContentTitle("KaierUtils")
-					.setContentText("KaierUtils")
-					.setAutoCancel(false)
-					.setPriority(NotificationManager.IMPORTANCE_HIGH)
-					.setCategory(Notification.CATEGORY_SERVICE)
-					.setSmallIcon(App.GS.isNotificationIconShow ? R.drawable.notify_auto : 0)
-					.setWhen(System.currentTimeMillis())
-					.build();
-			startForeground( NOTIFICATION_SERVICE_ID, notification);
-		} else {
-			NotifyData notifyData = new  NotifyData( getApplicationContext() );
-			notifyData.NotifyID = NOTIFICATION_SERVICE_ID;
-			notifyData.Title = NotifyData.NOTIFICATION_TITLE;
-			notifyData.smallIcon = App.GS.isNotificationIconShow ? R.drawable.notify_auto : 0;
-			notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-			Notification notification = notifyData.show();
-			startForeground( NOTIFICATION_SERVICE_ID, notification);
-		}
+		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+		Notification notification = notificationBuilder.setOngoing(true)
+				.setContentTitle("KaierUtils")
+				.setContentText("KaierUtils")
+				.setAutoCancel(false)
+				.setPriority(NotificationManager.IMPORTANCE_HIGH)
+				.setCategory(Notification.CATEGORY_SERVICE)
+				.setSmallIcon(App.GS.isNotificationIconShow ? R.drawable.notify_auto : 0)
+				.setWhen(System.currentTimeMillis())
+				.build();
+		startForeground( NOTIFICATION_SERVICE_ID, notification);
+
 
 		if ((flags & START_FLAG_RETRY) == 0) {
 			// TODO Если это повторный запуск, выполнить какие-то действия.

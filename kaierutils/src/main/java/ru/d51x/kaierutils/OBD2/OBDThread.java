@@ -81,12 +81,14 @@ public class OBDThread extends Thread {
 
                 } else {
                     //try to connect
-                        App.obd.isConnected = App.obd.connect();
-                        if ( App.obd.isConnected ) {
+//                        if (App.GS.btState) {
+                            App.obd.isConnected = App.obd.connect();
+                            if (App.obd.isConnected) {
                                 App.obd.prepareData();
-                        } else {
-                            Thread.sleep(3000);
-                        }
+                            } else {
+                                Thread.sleep(3000);
+                            }
+//                        }
                 }
             }
 

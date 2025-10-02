@@ -1,14 +1,21 @@
 package ru.d51x.kaierutils.OBD2;
 
+import static android.support.v4.content.ContextCompat.getSystemService;
+
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import java.io.IOException;
@@ -27,6 +34,7 @@ import pt.lighthouselabs.obd.commands.protocol.SelectHeaderObdCommand;
 import pt.lighthouselabs.obd.commands.protocol.SelectProtocolObdCommand;
 import pt.lighthouselabs.obd.commands.temperature.EngineCoolantTemperatureObdCommand;
 import pt.lighthouselabs.obd.enums.ObdProtocols;
+import pt.lighthouselabs.obd.exceptions.MisunderstoodCommandException;
 import pt.lighthouselabs.obd.exceptions.NoDataException;
 import pt.lighthouselabs.obd.exceptions.NonNumericResponseException;
 import pt.lighthouselabs.obd.exceptions.StoppedException;
@@ -40,7 +48,9 @@ import ru.d51x.kaierutils.utils.OBDCalculations;
 /**
  */
 public class OBDII  {
+    public static final boolean localDebug = false;
 
+    public static final String TAG = "OBD2";
     public static final String OBD_BROADCAST_ACTION_STATUS_CHANGED = "ru.d51x.kaierutils.action.OBD_STATUS_CHANGED";
     public static final String OBD_BROADCAST_ACTION_SPEED_CHANGED = "ru.d51x.kaierutils.action.OBD_SPEED_CHANGED";
     public static final String OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED = "ru.d51x.kaierutils.action.OBD_ENGINE_RPM_CHANGED";
@@ -196,39 +206,46 @@ public class OBDII  {
     }
 
     public boolean connect() {
-	    Log.d("OBD2->connect()", "useOBD is " + String.valueOf (useOBD));
+	    Log.d(TAG, "OBD2->connect(), useOBD is " + String.valueOf (useOBD));
         if ( !useOBD ) return false;
-        if ( deviceAddress == null) return false;
-	    Log.d("OBD2->connect()", "isConnected is " + String.valueOf (isConnected));
+        if ( deviceAddress == null) {
+            Log.w(TAG, "No device selected");
+            return false;
+        }
+	    Log.d(TAG, "OBD2->connect(), isConnected is " + String.valueOf (isConnected));
         //if ( isConnected ) return;
-        BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothManager btManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
+        BluetoothAdapter btAdapter = btManager.getAdapter();
+
         BluetoothDevice device = btAdapter.getRemoteDevice(deviceAddress);
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
         try {
             try {
-                btAdapter.cancelDiscovery();
+                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+                    btAdapter.cancelDiscovery();
+                }
             } catch (Exception e11) {
-                Log.d("OBD2->connect()", e11.getMessage());
+                Log.d(TAG, "OBD2->connect(): " + e11.getMessage());
                 return false;
             }
             socket = device.createInsecureRfcommSocketToServiceRecord(uuid);
             //
             if ( socket != null ) {
                 Thread.sleep(1000);
-                Log.d("OBD2->connect()", "try to connect to socket ");
+                Log.d(TAG, "OBD2->connect(), try to connect to socket ");
                 socket.connect();
-                Log.d("OBD2->connect()", "sleep after connect, waiting....");
+                Log.d(TAG, "OBD2->connect(), sleep after connect, waiting....");
                 Thread.sleep(1000);
                 boolean res = init();
                 SendBroadcastAction(OBD_BROADCAST_ACTION_STATUS_CHANGED, "Status", res);
                 return res;
             } else {
-                Log.d("OBD2->connect()", "socket is NULL....");
+                Log.d(TAG, "OBD2->connect(), socket is NULL....");
                 return false;
             }
 
        } catch (Exception e) {
-            Log.d("OBDII-->connect()", e.toString());
+            Log.d(TAG, "OBDII-->connect(): " + e.toString());
             return false;
         }
     }
@@ -236,12 +253,12 @@ public class OBDII  {
     public void disconnect() {
         try {
             new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
-            Log.d("OBD2->connect()", "try to close socked ");
+            Log.d(TAG, "OBD2->disconnect(): try to close socked ");
             socket.close();
-	        Log.d("OBD2->connect()", "socket is closed");
+	        Log.d(TAG, "OBD2->disconnect() socket is closed");
 
         } catch (Exception e) {
-            Log.d("OBDII-->disconnect()", e.toString());
+            Log.d(TAG, "OBDII-->disconnect(): " + e.toString());
         }
         notify_disconnect();
     }
@@ -250,35 +267,41 @@ public class OBDII  {
         boolean res = true;
 	    Log.d("OBD2->init()", "_");
         try {
-
+            String result = "";
             new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
             // echo off: "AT E0"
+            Log.d(TAG, "Send AT E0");
             EchoOffObdCommand cmd1 = new EchoOffObdCommand();
             cmd1.run(socket.getInputStream(), socket.getOutputStream());
-            Log.d("OBD2->init(): ", "echoOff result:  !" + cmd1.getFormattedResult());
-            res = res && (cmd1.getFormattedResult().equalsIgnoreCase("OK"));
+            result = cmd1.getFormattedResult().replace("\n", "");
+            Log.d(TAG, "echoOff result: " + result);
+            res = res && (result.equalsIgnoreCase("OK"));
             if ( !res ) return res;
 
             // "AT L0"
+            Log.d(TAG, "Send AT L0");
             LineFeedOffObdCommand cmd2 = new LineFeedOffObdCommand();
             cmd2.run(socket.getInputStream(), socket.getOutputStream());
-            Log.d("OBD2->init(): ", "LineFeedOff result:  !" + cmd2.getFormattedResult());
-            res = res && (cmd2.getFormattedResult().equalsIgnoreCase("OK"));
+            result = cmd2.getFormattedResult();
+            Log.d(TAG, "LineFeedOff result: " + result);
+            res = res && (result.equalsIgnoreCase("OK"));
             if ( !res ) return res;
 
             // AT ST
             //new TimeoutObdCommand(0).run(socket.getInputStream(), socket.getOutputStream());
 
             // AT SP
-	        Log.d("OBD2->init()", "set protocol to ISO 15765-4 CAN");
+            Log.d(TAG, "Send AT SP 6");
+	        Log.d(TAG, "set protocol to ISO 15765-4 CAN");
             SelectProtocolObdCommand cmd3 = new SelectProtocolObdCommand(ObdProtocols.ISO_15765_4_CAN);
             cmd3.run(socket.getInputStream(), socket.getOutputStream());
-            Log.d("OBD2->init(): ", "SelectProtocol result:  !" + cmd3.getFormattedResult());
-            res = res && (cmd3.getFormattedResult().equalsIgnoreCase("OK"));
+            result = cmd3.getFormattedResult();
+            Log.d(TAG, "SelectProtocol result: " + result);
+            res = res && (result.equalsIgnoreCase("OK"));
             if ( !res ) return res;
             return res;
         } catch (Exception e2) {
-            Log.d("OBDII-->init()", e2.toString());
+            Log.d(TAG, e2.toString());
             return false;
         }
     }
@@ -324,8 +347,11 @@ public class OBDII  {
         if ( App.GS.isReverseMode ) return;
         activeOther = true;
         try {
+            long t = System.currentTimeMillis();
             engineRpmCommand.run(socket.getInputStream(), socket.getOutputStream());
             obdData.rpm = engineRpmCommand.getRPM();
+            Log.d(TAG, String.format("Command RPM :: %d ms", System.currentTimeMillis() - t));
+
             SendBroadcastAction(OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED, "engineRPM", engineRpmCommand.getFormattedResult());
            // Log.d("OBDII-->processOBD_EngineRPM()", "RPM: " + engineRpmCommand.getFormattedResult());
         } catch ( NonNumericResponseException e5) {
@@ -333,21 +359,9 @@ public class OBDII  {
             disconnect();
             Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
         }
-        catch ( StoppedException e6) {
-            activeOther = false;
-            Log.d("OBDII-->processOBD_EngineRPM()", e6.toString());
-        }
-
-        catch ( NoDataException e) {
-            activeOther = false;
-            Log.d("OBDII-->processOBD_EngineRPM()", e.toString());
-        } catch (UnableToConnectException e3) {
+        catch (UnableToConnectException | IOException e3) {
             activeOther = false;
             Log.d("OBDII-->processOBD_EngineRPM()", e3.toString());
-            disconnect();
-        } catch (IOException e4) {
-            activeOther = false;
-            Log.d("OBDII-->processOBD_EngineRPM()", e4.toString());
             disconnect();
         } catch ( Exception e2) {
             activeOther = false;
@@ -362,9 +376,11 @@ public class OBDII  {
         if ( App.GS.isReverseMode ) return;
         activeOther = true;
         try {
-
+            long t = System.currentTimeMillis();
             speedCommand.run(socket.getInputStream(), socket.getOutputStream());
             obdData.speed = speedCommand.getMetricSpeed();
+            Log.d(TAG, String.format("Command Speed :: %d ms", System.currentTimeMillis() - t));
+
             SendBroadcastAction(OBD_BROADCAST_ACTION_SPEED_CHANGED, "speed", speedCommand.getFormattedResult());
             //Log.d("OBDII-->processOBD_Speed()", "Speed: " + speedCommand.getFormattedResult());
         }  catch ( NonNumericResponseException e5) {
@@ -376,16 +392,9 @@ public class OBDII  {
             activeOther = false;
             Log.d("OBDII-->processOBD_Speed()", e6.toString());
         }
-        catch ( NoDataException e) {
-            activeOther = false;
-            Log.d("processOBD_Speed()", e.toString());
-        } catch (UnableToConnectException e3) {
+        catch (UnableToConnectException | IOException e3) {
             activeOther = false;
             Log.d("processOBD_Speed()", e3.toString());
-            disconnect();
-        } catch (IOException e4) {
-            activeOther = false;
-            Log.d("processOBD_Speed()", e4.toString());
             disconnect();
         } catch ( Exception e2) {
             activeOther = false;
@@ -401,13 +410,15 @@ public class OBDII  {
 
         Coolant_TimeStamp2 = System.currentTimeMillis();
         long t = Coolant_TimeStamp2 - Coolant_TimeStamp1;
-        if ( t < ( engine_temp_update_time * 1000 )) {return;}
+        if ( t < ( engine_temp_update_time * 1000L)) {return;}
 
 
         activeOther = true;
         try {
+            long tt = System.currentTimeMillis();
             coolantTempCommand.run(socket.getInputStream(), socket.getOutputStream());
             obdData.coolant = coolantTempCommand.getTemperature();
+            Log.d(TAG, String.format("Command Coolant :: %d ms", System.currentTimeMillis() - tt));
 
             Coolant_TimeStamp1 = Coolant_TimeStamp2;
 
@@ -428,16 +439,9 @@ public class OBDII  {
             activeOther = false;
             Log.d("OBDII-->processOBD_coolantTemp()", e6.toString());
         }
-        catch ( NoDataException e) {
-            activeOther = false;
-            Log.d("processOBD_coolantTemp()", e.toString());
-        } catch (UnableToConnectException e3) {
+        catch (UnableToConnectException | IOException e3) {
             activeOther = false;
             Log.d("processOBD_coolantTemp()", e3.toString());
-            disconnect();
-        } catch (IOException e4) {
-            activeOther = false;
-            Log.d("processOBD_coolantTemp()", e4.toString());
             disconnect();
         } catch ( Exception e2) {
             activeOther = false;
@@ -452,12 +456,15 @@ public class OBDII  {
 
         Voltage_TimeStamp2 = System.currentTimeMillis();
         long t = Voltage_TimeStamp2 - Voltage_TimeStamp1;
-        if ( t < ( voltage_update_time * 1000 )) {return;}
+        if ( t < ( voltage_update_time * 1000L)) {return;}
 
         activeOther = true;
         try {
+            long tt = System.currentTimeMillis();
             cmuVoltageCommand.run(socket.getInputStream(), socket.getOutputStream());
             obdData.voltage = cmuVoltageCommand.getVoltage();
+            Log.d(TAG, String.format("Command Voltage :: %d ms", System.currentTimeMillis() - tt));
+
             Voltage_TimeStamp1 = Voltage_TimeStamp2;
 
             Intent intent = new Intent();
@@ -472,20 +479,9 @@ public class OBDII  {
             disconnect();
             Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
         }
-        catch ( StoppedException e6) {
-            activeOther = false;
-            Log.d("OBDII-->processOBD_CMVoltage()", e6.toString());
-        }
-        catch ( NoDataException e) {
-            activeOther = false;
-            Log.d("OBDII-->processOBD_CMVoltage()", e.toString());
-        } catch (UnableToConnectException e3) {
+        catch (UnableToConnectException | IOException e3) {
             activeOther = false;
             Log.d("OBDII-->processOBD_CMVoltage()", e3.toString());
-            disconnect();
-        } catch (IOException e4) {
-            activeOther = false;
-            Log.d("OBDII-->processOBD_CMVoltage()", e4.toString());
             disconnect();
         } catch ( Exception e2) {
             activeOther = false;
@@ -501,8 +497,11 @@ public class OBDII  {
             // TODO: убрать костыль, когда найду нужный пид
             SetHeaders("7E0", "7E8", false);
             activeMAF = true;
+
+            long tt = System.currentTimeMillis();
             MAFObdCommand.run(socket.getInputStream(), socket.getOutputStream());
             obdData.maf = MAFObdCommand.getMAF();
+            Log.d(TAG, String.format("Command RPM :: %d ms", System.currentTimeMillis() - tt));
 
             MAF_TimeStamp2 = System.currentTimeMillis();
             long t = MAF_TimeStamp2 - MAF_TimeStamp1;
@@ -535,15 +534,8 @@ public class OBDII  {
             activeOther = false;
             Log.d("OBDII-->processOBD_EngineRPM()", e6.toString());
         }
-        catch ( NoDataException e) {
-            Log.d("OBDII-->processOBD_MAF()", e.toString());
-            activeMAF = false;
-        } catch (UnableToConnectException e3) {
+        catch (UnableToConnectException | IOException e3) {
             Log.d("OBDII-->processOBD_MAF()", e3.toString());
-            activeMAF = false;
-            disconnect();
-        } catch (IOException e4) {
-            Log.d("OBDII-->processOBD_MAF()", e4.toString());
             activeMAF = false;
             disconnect();
         } catch ( Exception e2) {
@@ -556,18 +548,18 @@ public class OBDII  {
 
     }
 
-    public ArrayList<Integer> request_CAN_ECU(String PID, String ReceiverAddress, String SenderAddress, boolean flowControl) {
+    public ArrayList<Integer> request_CAN_ECU(String PID, String CanAddress, String SenderAddress, boolean flowControl) {
         ArrayList<Integer> buffer = null;
         if ( activeMAF ) return buffer;
         activeOther = true;
-        String function = "processCAN_" + PID + "__" + ReceiverAddress + "()";
+        String function = "processCAN_" + PID + "__" + CanAddress + "()";
 
         try {
               //SetHeaders(ReceiverAddress, SenderAddress, flowControl);
-
+            long tt = System.currentTimeMillis();
             CanObdCommand cmd =  new CanObdCommand(PID);
             cmd.run(socket.getInputStream(), socket.getOutputStream());
-
+            Log.d(TAG, String.format("Command %s %s :: %d ms", CanAddress, PID, System.currentTimeMillis() - tt));
 
             buffer = cmd.getBuffer();
 
@@ -681,39 +673,32 @@ public class OBDII  {
         saveFuelTank();
     }
 
-    private void SetHeaders(String receiver, String sender, boolean flowControl) {
+    private void SetHeaders(String canAddr, String txAddr, boolean flowControl) {
+        if (localDebug) return;
         if ( activeMAF ) return;
         activeOther = true;
         try {
-            new SelectHeaderObdCommand("ATSH " + receiver).run(socket.getInputStream(), socket.getOutputStream());
+            long tt = System.currentTimeMillis();
+            new SelectHeaderObdCommand("ATSH " + canAddr).run(socket.getInputStream(), socket.getOutputStream());
             if (flowControl) {
-                new SelectHeaderObdCommand("ATFCSH " + receiver).run(socket.getInputStream(), socket.getOutputStream());
+                new SelectHeaderObdCommand("ATFCSH " + canAddr).run(socket.getInputStream(), socket.getOutputStream());
                 new SelectHeaderObdCommand("ATFCSD 30080A").run(socket.getInputStream(), socket.getOutputStream());
                 new SelectHeaderObdCommand("ATFCSM 1").run(socket.getInputStream(), socket.getOutputStream());
             }
-            new SelectHeaderObdCommand("ATCRA " + sender).run(socket.getInputStream(), socket.getOutputStream());
+            new SelectHeaderObdCommand("ATCRA " + txAddr).run(socket.getInputStream(), socket.getOutputStream());
+            Log.d(TAG, String.format("SetHeader %s :: %d ms", flowControl ? "with flow control" : "", System.currentTimeMillis() - tt));
             activeOther = false;
         }
-
-        catch ( NonNumericResponseException e1) {
-            activeOther = false;
-            Log.d("OBDII-->SetHeaders()", e1.toString());
+        catch (MisunderstoodCommandException e) {
+            Log.e("OBD2", e.toString());
         }
-        catch ( StoppedException e2) {
+        catch (NonNumericResponseException | StoppedException | NoDataException e) {
             activeOther = false;
-            Log.d("OBDII-->SetHeaders()", e2.toString());
+            Log.d("OBDII-->SetHeaders()", e.toString());
         }
-        catch ( NoDataException e3) {
-            activeOther = false;
-            Log.d("OBDII-->SetHeaders()", e3.toString());
-        }
-
-        catch (InterruptedException e4) {
+        catch (InterruptedException | IOException e4) {
             activeOther = false;
             e4.printStackTrace();
-        } catch (IOException e5) {
-            activeOther = false;
-            e5.printStackTrace();
         } finally {
             activeOther = false;
         }
