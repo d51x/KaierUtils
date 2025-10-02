@@ -14,3 +14,5 @@
 /gradlew
 /gradlew.bat
 /.idea/
+/kaierutils/release/*
+/kaierutils/release/output-metadata.json
