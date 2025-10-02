@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout2"
-        android:layout_alignRight="@+id/layout_gps_info"
         android:layout_gravity="left|top"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="0dp"
