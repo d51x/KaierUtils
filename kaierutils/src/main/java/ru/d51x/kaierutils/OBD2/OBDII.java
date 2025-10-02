@@ -20,6 +20,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 
 import pt.lighthouselabs.obd.commands.SpeedObdCommand;
@@ -744,9 +745,9 @@ public class OBDII  {
             long t_degr = canMmcData.CVT_oil_degr_TimeStamp2 - canMmcData.CVT_oil_degr_TimeStamp1;
 
             if (
-                    ( t_degr < (canMmcData.can_mmc_cvt_degradation_update_time * 1000) )
+                    ( t_degr < (canMmcData.can_mmc_cvt_degradation_update_time * 1000L) )
                     &&
-                    ( t_temp < (canMmcData.can_mmc_cvt_temp_update_time * 1000))
+                    ( t_temp < (canMmcData.can_mmc_cvt_temp_update_time * 1000L))
                )
             {
                 // пропускаем, время не вышло ни у одного параметра
@@ -756,7 +757,7 @@ public class OBDII  {
             activeOther = true;
             SetHeaders("7E1", "7E9", true);
             if ( canMmcData.can_mmc_cvt_temp_show ) {
-                if ( t_temp < (canMmcData.can_mmc_cvt_temp_update_time * 1000) ) return; //время не вышло
+                if ( t_temp < (canMmcData.can_mmc_cvt_temp_update_time * 1000L) ) return; //время не вышло
                 buffer = request_CAN_ECU("2103", "7E1", "7E9", true); // // cvt_temp_count
                 sendObdMessage("2103", "7E1", buffer);
                 canMmcData.CVT_oil_temp_TimeStamp1 = canMmcData.CVT_oil_temp_TimeStamp2;
@@ -766,7 +767,7 @@ public class OBDII  {
 
             // TODO: можно выполнять не часто, раз в 10 сек вполне достаточно или даже реже
             if ( canMmcData.can_mmc_cvt_degr_show ) {
-                if ( t_temp < (canMmcData.can_mmc_cvt_degradation_update_time * 1000) ) return; //время не вышло
+                if ( t_temp < (canMmcData.can_mmc_cvt_degradation_update_time * 1000L) ) return; //время не вышло
                 buffer = request_CAN_ECU("2110", "7E1", "7E9", true); // cvt_oil_degradation
                 sendObdMessage("2110", "7E1", buffer);
                 canMmcData.CVT_oil_degr_TimeStamp1 = canMmcData.CVT_oil_degr_TimeStamp2;
@@ -783,7 +784,7 @@ public class OBDII  {
             App.obd.canMmcData.FuelLevel_TimeStamp2 = System.currentTimeMillis();
             long t = App.obd.canMmcData.FuelLevel_TimeStamp2- App.obd.canMmcData.FuelLevel_TimeStamp1;
 
-            if ( t < (canMmcData.can_mmc_fuel_remain_update_time * 1000) ) { return; }
+            if ( t < (canMmcData.can_mmc_fuel_remain_update_time * 1000L) ) { return; }
 
             activeOther = true;
             ArrayList<Integer> buffer = null;
@@ -882,18 +883,19 @@ public class OBDII  {
                  SendBroadcastAction(OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED, "combine_meter_fuel_level", message.arg1);
                  break;
              case MESSAGE_OBD_CAN_PARKING_SENSORS:
+                 if (Objects.nonNull(message.obj)) {
+                     ArrayList<Integer> buffer = (ArrayList<Integer>) message.obj;
 
-                 ArrayList<Integer> buffer = (ArrayList<Integer>) message.obj;
-
-                 Intent intent = new Intent();
-                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                 intent.setAction(OBD_BROADCAST_ACTION_PARKING_SENSORS_CHANGED);
-                 intent.putExtra("parking_sensors", buffer);
-                 //intent.putExtra("parking_sensors_rear_left_inner", rear_inner_left);
-                 //intent.putExtra("parking_sensors_rear_left_outer", rear_outer_left);
-                 //intent.putExtra("parking_sensors_rear_right_inner", rear_inner_right);
-                 //intent.putExtra("parking_sensors_rear_right_outer", rear_outer_right);
-                 App.getInstance ().sendBroadcast(intent);
+                     Intent intent = new Intent();
+                     intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                     intent.setAction(OBD_BROADCAST_ACTION_PARKING_SENSORS_CHANGED);
+                     intent.putExtra("parking_sensors", buffer);
+                     //intent.putExtra("parking_sensors_rear_left_inner", rear_inner_left);
+                     //intent.putExtra("parking_sensors_rear_left_outer", rear_outer_left);
+                     //intent.putExtra("parking_sensors_rear_right_inner", rear_inner_right);
+                     //intent.putExtra("parking_sensors_rear_right_outer", rear_outer_right);
+                     App.getInstance().sendBroadcast(intent);
+                 }
                  break;
 
              default:
