@@ -17,6 +17,8 @@ public class GlSets {
     public static final String GPS_BROADCAST_ACTION_AGPS_RESET = "ru.d51x.kaierutils.action.GPS_EVENT_AGPS_RESET";
     public static final String PWRAMP_BROADCAST_ACTION_TRACK_CHANGED = "ru.d51x.kaierutils.action.TRACK_CHANGED";
 
+    public Boolean btState = false;
+
     public Radio radio;
 	private int Volume;
 

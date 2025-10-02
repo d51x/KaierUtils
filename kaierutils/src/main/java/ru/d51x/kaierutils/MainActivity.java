@@ -1,11 +1,14 @@
 package ru.d51x.kaierutils;
 
+import static android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE;
 import static android.widget.Toast.LENGTH_LONG;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -70,6 +73,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private static final int REQUEST_CODE_PERMISSION = 6;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 7;
     private static final int REQUEST_CODE_BLUETOOTH_PERMISSION = 8;
+    private static final int REQUEST_CODE_BLUETOOTH_ACTION = 9;
     private TextView tvCurrentVolume;
 
     private int modeFuelTank = 0;
@@ -161,7 +165,45 @@ public class MainActivity extends Activity implements View.OnClickListener,
         floatingWindow = new FloatingWindow(getApplicationContext());
 
         requestPermissions();
+        bluetoothTurnOn();
+
 	}
+
+    private void bluetoothTurnOn() {
+        Log.i("BT", "Bluetooth turn on ....");
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S ) {
+            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (!mBluetoothAdapter.isEnabled()) {
+                mBluetoothAdapter.isEnabled();
+                App.GS.btState = mBluetoothAdapter.isEnabled();
+            }
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            Log.i("BT", "Bluetooth turn on .... Check permission BLUETOOTH_CONNECT");
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                Log.i("BT", "Permission granted. .... Turn on bt");
+                BluetoothManager btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+                BluetoothAdapter btAdapter = btManager.getAdapter();
+                if (!btAdapter.isEnabled()) {
+                    Log.i("BT", "BT adapter disabled. Enable it");
+                    btAdapter.enable();
+                    App.GS.btState = btAdapter.isEnabled();
+                } else {
+                    Log.i("BT", "BT adapter already enabled.");
+                }
+            }
+        } else {
+            Log.i("BT", "Bluetooth turn on .... Check permission BLUETOOTH_CONNECT");
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                Log.i("BT", "Permission granted. .... Send intent");
+                Intent intent = new Intent(ACTION_REQUEST_ENABLE);
+                startActivityForResult(intent, REQUEST_CODE_BLUETOOTH_ACTION);
+            } else {
+                Log.i("BT", "Permission not granted.");
+            }
+        }
+    }
 
 	public void initComponents() {
 		tvCurrentVolume = findViewById(R.id.tvCurrentVolume);
@@ -307,6 +349,15 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 }
                 break;
             case REQUEST_CODE_LOCATION_PERMISSION:
+                break;
+            case REQUEST_CODE_BLUETOOTH_ACTION:
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.i("BT", "BT adapter enabled, data " + data);
+                    App.GS.btState = true;
+                } else {
+                    Log.i("BT", "BT adapter fail to turn on, data " + data);
+                    App.GS.btState = false;
+                }
                 break;
             default: break;
         }
@@ -508,7 +559,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         startActivityForResult(intent, REQUEST_CODE_DRAW_OVERLAY_PERMISSION);
     }
 
-
     private void requestPermissions() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return;
 
@@ -561,9 +611,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-
-
-
 
     public void showBluetoothPermissionsAlertDialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
