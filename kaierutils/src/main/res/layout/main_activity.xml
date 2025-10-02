@@ -9,6 +9,115 @@
 	android:paddingBottom="@dimen/activity_vertical_margin"
 	tools:context=".SettingsActivity">
 
+	<LinearLayout
+		android:id="@+id/layout_radio_music_info"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="74dp"
+		android:orientation="vertical">
+
+		<LinearLayout
+			android:id="@+id/layout_radio_info"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:orientation="vertical"
+			android:visibility="gone">
+
+			<ImageView
+				android:id="@+id/ivRadioInfo"
+				android:layout_width="64dp"
+				android:layout_height="64dp"
+				android:layout_gravity="center_horizontal"
+				android:contentDescription="@string/radio_info"
+				android:src="@drawable/toast_radio" />
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:gravity="center_horizontal"
+				android:orientation="vertical"
+				android:paddingTop="10dp"
+				android:visibility="visible">
+
+				<TextView
+					android:id="@+id/tvRadioInfo1"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_horizontal"
+					android:gravity="center_horizontal"
+					android:text="Medium Text"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textSize="32sp" />
+
+				<TextView
+					android:id="@+id/tvRadioInfo2"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_horizontal"
+					android:gravity="center_horizontal"
+					android:text="Medium Text"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textColor="@android:color/holo_blue_dark" />
+			</LinearLayout>
+		</LinearLayout>
+
+		<LinearLayout
+			android:id="@+id/layout_music_info"
+			android:layout_width="480dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:focusableInTouchMode="false"
+			android:orientation="vertical"
+			android:visibility="visible">
+
+			<ImageView
+				android:id="@+id/ivAlbumArt"
+				android:layout_width="144dp"
+				android:layout_height="144dp"
+				android:layout_gravity="center_horizontal"
+				android:contentDescription="@string/album_art"
+				android:src="@drawable/toast_music" />
+
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:orientation="vertical"
+				android:paddingTop="10dp"
+				android:visibility="visible">
+
+				<TextView
+					android:id="@+id/tvMusicInfo1"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_horizontal"
+					android:ellipsize="marquee"
+					android:gravity="center"
+					android:text="Medium Text"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textSize="26sp" />
+
+				<TextView
+					android:id="@+id/tvMusicInfo2"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_horizontal"
+					android:gravity="center"
+					android:text="Medium Text"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textColor="@android:color/holo_blue_dark" />
+
+			</LinearLayout>
+
+		</LinearLayout>
+
+
+	</LinearLayout>
 
 	<LinearLayout
 		android:id="@+id/linearLayout"
@@ -237,116 +346,6 @@
 		</LinearLayout>
 
 	</RelativeLayout>
-
-	<LinearLayout
-		android:id="@+id/layout_radio_music_info"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentTop="true"
-		android:layout_centerHorizontal="true"
-		android:layout_marginTop="74dp"
-		android:orientation="vertical">
-
-		<LinearLayout
-			android:id="@+id/layout_radio_info"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
-			android:orientation="vertical"
-			android:visibility="gone">
-
-			<ImageView
-				android:id="@+id/ivRadioInfo"
-				android:layout_width="64dp"
-				android:layout_height="64dp"
-				android:layout_gravity="center_horizontal"
-                android:contentDescription="@string/radio_info"
-                android:src="@drawable/toast_radio" />
-
-			<LinearLayout
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-				android:orientation="vertical"
-				android:paddingTop="10dp"
-				android:visibility="visible">
-
-				<TextView
-					android:id="@+id/tvRadioInfo1"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_horizontal"
-					android:gravity="center_horizontal"
-					android:text="Medium Text"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:textSize="32sp" />
-
-				<TextView
-					android:id="@+id/tvRadioInfo2"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_horizontal"
-					android:gravity="center_horizontal"
-					android:text="Medium Text"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:textColor="@android:color/holo_blue_dark" />
-			</LinearLayout>
-		</LinearLayout>
-
-		<LinearLayout
-			android:id="@+id/layout_music_info"
-			android:layout_width="480dp"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
-			android:focusableInTouchMode="false"
-			android:orientation="vertical"
-			android:visibility="visible">
-
-			<ImageView
-				android:id="@+id/ivAlbumArt"
-				android:layout_width="144dp"
-				android:layout_height="144dp"
-				android:layout_gravity="center_horizontal"
-                android:contentDescription="@string/album_art"
-                android:src="@drawable/toast_music" />
-
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="vertical"
-				android:paddingTop="10dp"
-				android:visibility="visible">
-
-				<TextView
-					android:id="@+id/tvMusicInfo1"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_horizontal"
-					android:ellipsize="marquee"
-					android:gravity="center"
-					android:text="Medium Text"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:textSize="26sp" />
-
-				<TextView
-					android:id="@+id/tvMusicInfo2"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_horizontal"
-					android:gravity="center"
-					android:text="Medium Text"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:textColor="@android:color/holo_blue_dark" />
-
-			</LinearLayout>
-
-		</LinearLayout>
-
-
-	</LinearLayout>
 
 	<LinearLayout
 		android:id="@+id/layout_general_info"

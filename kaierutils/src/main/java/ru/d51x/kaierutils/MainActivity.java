@@ -2,6 +2,7 @@ package ru.d51x.kaierutils;
 
 import static android.widget.Toast.LENGTH_LONG;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,12 +12,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -37,8 +43,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.TimeZone;
 
@@ -59,6 +67,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private static final int TEXT_SIZE_AFTER_DOT = 16;
 
     private static final int REQUEST_CODE_DRAW_OVERLAY_PERMISSION = 5;
+    private static final int REQUEST_CODE_PERMISSION = 6;
+    private static final int REQUEST_CODE_LOCATION_PERMISSION = 7;
+    private static final int REQUEST_CODE_BLUETOOTH_PERMISSION = 8;
     private TextView tvCurrentVolume;
 
     private int modeFuelTank = 0;
@@ -78,8 +89,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private TextView tvAverageSpeed;
     private TextView tvMaxSpeed;
 
-
-	private LinearLayout layout_radio_music_info;
 
     private ImageView ivVolumeLevel;
     private ImageView ivSpeed;
@@ -150,6 +159,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		registerReceivers(receiver);
 
         floatingWindow = new FloatingWindow(getApplicationContext());
+
+        requestPermissions();
 	}
 
 	public void initComponents() {
@@ -165,8 +176,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		layout_tracktime.setOnClickListener(this);
 
 
-
-        layout_radio_music_info = findViewById (R.id.layout_radio_music_info);
+        LinearLayout layout_radio_music_info = findViewById(R.id.layout_radio_music_info);
         layout_radio_music_info.setOnLongClickListener(this);
 
 		// gps info
@@ -296,9 +306,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     Toast.makeText(getApplicationContext(), "Permission is not granted!", LENGTH_LONG).show();
                 }
                 break;
+            case REQUEST_CODE_LOCATION_PERMISSION:
+                break;
             default: break;
         }
     }
+
+
 
     public void setInitData() {
 
@@ -488,9 +502,147 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private void startManageDrawOverlaysPermission() {
         Intent intent = new Intent(
                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:${applicationContext.packageName}")
+                //Uri.parse("package:${applicationContext.packageName}")
+                Uri.parse("package:" + getPackageName())
         );
         startActivityForResult(intent, REQUEST_CODE_DRAW_OVERLAY_PERMISSION);
+    }
+
+
+    private void requestPermissions() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return;
+
+        String[] permissions = {
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                //Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                Manifest.permission.BLUETOOTH_CONNECT,
+                Manifest.permission.BLUETOOTH_SCAN
+        };
+
+        List<String> permissionsToRequest = new ArrayList<>();
+
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                Log.e("Permissions", String.format("Permission %s is not granted", permission));
+                permissionsToRequest.add(permission);
+            }
+        }
+
+        if (!permissionsToRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    permissionsToRequest.toArray(new String[0]), // Convert list to array
+                    REQUEST_CODE_PERMISSION // Pass the request code
+            );
+        } else {
+            Log.i("Permissions", "All permissions already granted");
+        }
+    }
+
+    public void showFineLocationPermissionsAlertDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+
+        alertDialogBuilder.setTitle("Нужно разрешение");
+        alertDialogBuilder.setMessage("Приложению необходимо разрешение на получение геолокации. Продолжить?");
+        //alertDialogBuilder.setIcon(R.drawable.fuel_tank_full);
+
+        alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                //Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                        }, REQUEST_CODE_PERMISSION);
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+
+
+
+    public void showBluetoothPermissionsAlertDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+
+        alertDialogBuilder.setTitle("Нужно разрешение");
+        alertDialogBuilder.setMessage("Приложению необходимо разрешение обнаружение и подключение к Bluetooth устройствам. Продолжить?");
+        //alertDialogBuilder.setIcon(R.drawable.fuel_tank_full);
+
+        alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{
+                                    Manifest.permission.BLUETOOTH_CONNECT,
+                                    Manifest.permission.BLUETOOTH_SCAN
+                            }, REQUEST_CODE_PERMISSION);
+                }
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_PERMISSION) {
+            List<String> deniedPermissions = new ArrayList<>();
+
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    deniedPermissions.add(permissions[i]);
+                }
+            }
+
+            if (deniedPermissions.isEmpty()) {
+                Log.i("Permissions", "All permissions granted");
+            } else {
+                Log.e("Permissions", "Permissions denied: " + deniedPermissions);
+                boolean needOpenSettings = false;
+                for (String permission : deniedPermissions) {
+                    switch (permission) {
+                        case Manifest.permission.ACCESS_COARSE_LOCATION:
+                        //case Manifest.permission.ACCESS_BACKGROUND_LOCATION:
+                        //case Manifest.permission.ACCESS_FINE_LOCATION:
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                                showFineLocationPermissionsAlertDialog();
+                            } else {
+                                needOpenSettings = true;
+                            }
+                            break;
+                        case Manifest.permission.BLUETOOTH_CONNECT:
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                    Manifest.permission.BLUETOOTH_CONNECT)) {
+                                showBluetoothPermissionsAlertDialog();
+                            } else {
+                                needOpenSettings = true;
+                            }
+                            break;
+                        case Manifest.permission.BLUETOOTH_SCAN:
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                    Manifest.permission.BLUETOOTH_SCAN)) {
+                                showBluetoothPermissionsAlertDialog();
+                            } else {
+                                needOpenSettings = true;
+                            }
+                            break;
+                    }
+                }
+                if (needOpenSettings) {
+                    Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(appSettingsIntent, REQUEST_CODE_PERMISSION);
+                }
+            }
+        }
+
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
