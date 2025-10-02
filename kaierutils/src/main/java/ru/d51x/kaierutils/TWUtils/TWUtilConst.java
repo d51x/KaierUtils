@@ -14,8 +14,6 @@ public class TWUtilConst {
 
 	public static final String TW_BROADCAST_ACTION_VOLUME_CHANGED = "ru.d51x.kaierutils.action.VOLUME_CHANGED";
 
-	public static final String TW_BROADCAST_ACTION_EQ_CHANGED = "ru.d51x.kaierutils.action.EQ_CHANGED";
-
 	public static final String TW_BROADCAST_ACTION_KEY_PRESSED = "ru.d51x.kaierutils.action.KEY_TW_PRESSED";
 	public static final String TW_BROADCAST_ACTION_RADIO_CHANGED = "ru.d51x.kaierutils.action.RADIO_CHANGED";
 	public static final String TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED = "ru.d51x.kaierutils.action.AUDIO_FOCUS_CHANGED";

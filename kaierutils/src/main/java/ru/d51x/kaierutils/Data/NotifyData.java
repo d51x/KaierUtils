@@ -74,7 +74,7 @@ public class NotifyData {
         notification.flags |= this.flags;
         notification.number =  this.number;
         if ( this.ActivityClass != null) {
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, this.ActivityClass), 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, this.ActivityClass), PendingIntent.FLAG_IMMUTABLE);
             //notification.setLatestEventInfo(context,  this.Title, this.Text, pendingIntent);
         }
         notificationManager.notify(this.NotifyID, notification);

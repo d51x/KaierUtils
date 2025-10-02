@@ -52,24 +52,8 @@ public class SettingsGeneralFragment extends PreferenceFragment implements Share
 		else if ( key.equals ( "kaierutils_show_statistics" ) ) {
 			App.GS.isShowStatistics = sharedPreferences.getBoolean ( key, true);
 		}
-		else if ( key.equals ( "kaierutils_show_eq" )  ) {
-			App.GS.isShowEQData = sharedPreferences.getBoolean ( key, false);
-		}
-        else if ( key.equals ( "kaierutils_show_buttons" )  ) {
-            App.GS.isShowButtons = sharedPreferences.getBoolean ( key, false);
-        }
         else if ( key.equals ( "kaierutils_hide_header" )  ) {
 			App.GS.isHideHeader = sharedPreferences.getBoolean ( key, false);
 		}
-        else if ( key.equals("kaierutils_show_gps_satellities")) {
-            App.GS.isShowGPSSAtellities = sharedPreferences.getBoolean ( key, true);
-        }
-		else if ( key.equals ( "kaierutils_show_clock" )  ) {
-			App.GS.isShowClock = sharedPreferences.getBoolean ( key, false);
-		}
-		else if (key.equals ("kaierutils_clock_size")) {
-			App.GS.ClockSize = sharedPreferences.getInt (key, 60);
-		}
-
 	}
 }

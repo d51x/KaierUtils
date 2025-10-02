@@ -11,4 +11,8 @@ public class SettingsActivity extends PreferenceActivity {
 		loadHeadersFromResource(R.xml.pref_heads, target);
 	}
 
+	@Override
+	protected boolean isValidFragment(String fragmentName) {
+		return true;
+	}
 }

@@ -1,5 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:seekbar="http://schemas.android.com/apk/res/ru.d51x.kaierutils"
+                  xmlns:seekbar="http://schemas.android.com/apk/res-auto"
 	>
 
 	<SwitchPreference   android:key="kaierutils_show_notification_icon"
@@ -22,33 +22,7 @@
 	                    android:title="@string/menu_general_show_statistics_title"
 	                    android:defaultValue="true"
 		/>
-	<SwitchPreference   android:key="kaierutils_show_eq"
-	                    android:title="@string/menu_general_show_eq_title"
-	                    android:summary="@string/menu_general_show_eq_summary"
-	                    android:defaultValue="false"
-		/>
-	<SwitchPreference   android:key="kaierutils_show_gps_satellities"
-	                    android:title="@string/menu_general_show_gps_satellities_title"
-	                    android:defaultValue="false"
-		/>
-    <SwitchPreference   android:key="kaierutils_show_buttons"
-                        android:title="@string/menu_general_show_buttons_title"
-                        android:defaultValue="false"
-        />
-	<SwitchPreference   android:key="kaierutils_show_clock"
-                        android:title="@string/menu_general_show_clock_title"
-						android:summary="@string/menu_general_show_clock_summary"
-                        android:defaultValue="false"
-        />
-	<ru.d51x.kaierutils.Settings.SeekBarPreference
-        android:key="kaierutils_clock_size"
-		android:title="@string/menu_general_clock_size_title"
-		android:summary="@string/menu_general_clock_size_summary"
-		android:dialogTitle="@string/menu_general_clock_size_title"
-		android:defaultValue="60"
-		seekbar:maxValue="100"
-		seekbar:minValue="20"
-		android:dependency="kaierutils_show_clock"
-		/>
+
+
 </PreferenceScreen>
 

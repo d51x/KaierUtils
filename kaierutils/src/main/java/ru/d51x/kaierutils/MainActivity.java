@@ -1,56 +1,60 @@
 package ru.d51x.kaierutils;
 
+import static android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE;
+import static android.widget.Toast.LENGTH_LONG;
+
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.Notification;
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MotionEvent;
-import android.widget.DigitalClock;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.view.Window;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.Button;
-import android.view.View;
-import android.view.View.OnLongClickListener;
-import android.app.AlertDialog;
-import android.view.Window;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.content.DialogInterface;
 
-import java.util.Date;
-
-import java.util.List;
-import java.util.TimeZone;
+import java.util.ArrayList;
 import java.util.Calendar;
-import android.widget.PopupWindow;
-
-import com.maxmpz.poweramp.player.PowerampAPI;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.TimeZone;
 
 import ru.d51x.kaierutils.Data.CanMmcData;
 import ru.d51x.kaierutils.Data.ClimateData;
-import ru.d51x.kaierutils.GPS.GpsProcessing;
 import ru.d51x.kaierutils.OBD2.OBDII;
 import ru.d51x.kaierutils.Radio.Radio;
 import ru.d51x.kaierutils.TWUtils.TWUtilConst;
@@ -59,19 +63,18 @@ import ru.d51x.kaierutils.TWUtils.TWUtilEx;
 public class MainActivity extends Activity implements View.OnClickListener,
 													  OnLongClickListener{
 
-    private static int TEXT_SIZE_BEFORE_DOT = 40;
-    private static int TEXT_SIZE_BEFORE_DOT_2 = 26;
-    private static int TEXT_SIZE_BEFORE_DOT_3 = 2;
-    private static int TEXT_SIZE_BEFORE_DOT_4 = 44;
-    private static int TEXT_SIZE_AFTER_DOT = 16;
+    private static final int TEXT_SIZE_BEFORE_DOT = 40;
+    private static final int TEXT_SIZE_BEFORE_DOT_2 = 26;
+    private static final int TEXT_SIZE_BEFORE_DOT_3 = 2;
+    private static final int TEXT_SIZE_BEFORE_DOT_4 = 44;
+    private static final int TEXT_SIZE_AFTER_DOT = 16;
 
-	private Handler mHandler;
-	private PopupWindow pwindo;
+    private static final int REQUEST_CODE_DRAW_OVERLAY_PERMISSION = 5;
+    private static final int REQUEST_CODE_PERMISSION = 6;
+    private static final int REQUEST_CODE_LOCATION_PERMISSION = 7;
+    private static final int REQUEST_CODE_BLUETOOTH_PERMISSION = 8;
+    private static final int REQUEST_CODE_BLUETOOTH_ACTION = 9;
     private TextView tvCurrentVolume;
-    private LinearLayout layout_gps_speed;
-    private LinearLayout layout_waypoints;
-    private LinearLayout layout_tracktime;
-    private LinearLayout layout_gps_info;
 
     private int modeFuelTank = 0;
     private int modeEngineTemp = 0;
@@ -79,16 +82,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private int modeFuelConsump = 0;
 
 	private TextView tvGPSDistance;
-	private ImageView ivGPSDistance;
     private ImageView ivTrackTime;
-    private TextView tvGPSSatellitesTotal;
-    private TextView tvGPSSatellitesGoodQACount;
-    private TextView tvGPSSatellitesInUse;
 
-    //private TextView tvGPSAccuracy;
-    //private TextView tvGPSAltitude;
-    //private TextView tvGPSLatitude;
-//    private TextView tvGPSLongitude;
     private TextView tvGPSSpeed;
     private TextView tvTrackTime;
     private TextView tvTrackTime2;
@@ -99,21 +94,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private TextView tvMaxSpeed;
 
 
-	private LinearLayout layout_eq_data;
-	private LinearLayout layout_radio_music_info;
-	private LinearLayout layout_clock;
-	private LinearLayout layout_buttons;
-
-    private DigitalClock digitalClock;
-	private TextView tv_eq_bass;
-	private TextView tv_eq_mid;
-	private TextView tv_eq_tre;
-
-    private Button btnAGPSReset;
-
     private ImageView ivVolumeLevel;
     private ImageView ivSpeed;
-    private ImageView ivSpeedChange;
 
     private TextView tvRadioInfo1;
     private TextView tvRadioInfo2;
@@ -160,16 +142,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private TextView tv_air_cond_temp;
 
-	private Button btnTest2, btnTest1;
-	private SharedPreferences prefs;
-
     private RelativeLayout layout_MMC_climate;
-    private LinearLayout layout_ac_indicators;
-    private LinearLayout layout_ac_blow_direction;
 
-    private ImageView ivBtnRadio;
-    private ImageView ivBtnMusic;
-
+    private FloatingWindow floatingWindow;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -181,194 +156,219 @@ public class MainActivity extends Activity implements View.OnClickListener,
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView (R.layout.main_activity);
 		Log.d ("MainActivity", "onCreate");
-		prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance ());
-		startService(new Intent(this, BackgroundService.class));
-		TWUtilEx.initEqData();
+
+        startService(new Intent(this, BackgroundService.class));
 		initComponents();
 		setInitData();
 		registerReceivers(receiver);
+
+        floatingWindow = new FloatingWindow(getApplicationContext());
+
+        requestPermissions();
+        bluetoothTurnOn();
+
 	}
 
+    private void bluetoothTurnOn() {
+        Log.i("BT", "Bluetooth turn on ....");
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S ) {
+            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (!mBluetoothAdapter.isEnabled()) {
+                mBluetoothAdapter.isEnabled();
+                App.GS.btState = mBluetoothAdapter.isEnabled();
+            }
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            Log.i("BT", "Bluetooth turn on .... Check permission BLUETOOTH_CONNECT");
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                Log.i("BT", "Permission granted. .... Turn on bt");
+                BluetoothManager btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+                BluetoothAdapter btAdapter = btManager.getAdapter();
+                if (!btAdapter.isEnabled()) {
+                    Log.i("BT", "BT adapter disabled. Enable it");
+                    btAdapter.enable();
+                    App.GS.btState = btAdapter.isEnabled();
+                } else {
+                    Log.i("BT", "BT adapter already enabled.");
+                }
+            }
+        } else {
+            Log.i("BT", "Bluetooth turn on .... Check permission BLUETOOTH_CONNECT");
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                Log.i("BT", "Permission granted. .... Send intent");
+                Intent intent = new Intent(ACTION_REQUEST_ENABLE);
+                startActivityForResult(intent, REQUEST_CODE_BLUETOOTH_ACTION);
+            } else {
+                Log.i("BT", "Permission not granted.");
+            }
+        }
+    }
+
 	public void initComponents() {
-		tvCurrentVolume = (TextView) findViewById(R.id.tvCurrentVolum);
+		tvCurrentVolume = findViewById(R.id.tvCurrentVolume);
 
 		// color speed
-		layout_gps_speed = (LinearLayout) findViewById(R.id.layout_gps_speed);
+        LinearLayout layout_gps_speed = findViewById(R.id.layout_gps_speed);
 		layout_gps_speed.setOnClickListener(this);
 
 		// track time
-		layout_tracktime = (LinearLayout) findViewById(R.id.layout_tracktime);
+        LinearLayout layout_tracktime = findViewById(R.id.layout_tracktime);
 		layout_tracktime.setOnLongClickListener(this);
 		layout_tracktime.setOnClickListener(this);
 
 
-
-        layout_radio_music_info = (LinearLayout) findViewById (R.id.layout_radio_music_info);
-        layout_clock = (LinearLayout) findViewById (R.id.layout_clock);
-
-        //layout_radio_music_info.setOnTouchListener(this);
+        LinearLayout layout_radio_music_info = findViewById(R.id.layout_radio_music_info);
         layout_radio_music_info.setOnLongClickListener(this);
 
-        digitalClock = (DigitalClock) findViewById(R.id.digitalClock);
-        digitalClock.setTextSize( App.GS.ClockSize );
-
-        layout_buttons = (LinearLayout) findViewById (R.id.layout_buttons);
-        layout_eq_data = (LinearLayout) findViewById (R.id.layout_eq_data);
-		tv_eq_bass = (TextView) findViewById (R.id.tv_eq_bass);
-		tv_eq_mid = (TextView) findViewById (R.id.tv_eq_mid);
-		tv_eq_tre = (TextView) findViewById (R.id.tv_eq_tre);
-
-        layout_gps_info = (LinearLayout) findViewById(R.id.layout_gps_info);
-
 		// gps info
-		tvGPSSatellitesTotal = (TextView) findViewById(R.id.text_satellites_total);
-		tvGPSSatellitesGoodQACount = (TextView) findViewById(R.id.text_satellites_good);
-		tvGPSSatellitesInUse = (TextView) findViewById(R.id.text_satellites_inuse);
-		//tvGPSAccuracy = (TextView) findViewById(R.id.text_gps_accuracy);
-		//tvGPSAltitude = (TextView) findViewById(R.id.text_gps_altitude);
-		//tvGPSLatitude = (TextView) findViewById(R.id.text_gps_latitude);
-		//tvGPSLongitude = (TextView) findViewById(R.id.text_gps_longitude);
-		tvGPSSpeed = (TextView) findViewById(R.id.text_gps_speed_value);
+		tvGPSSpeed = findViewById(R.id.text_gps_speed_value);
 
 		// track distance
-		tvTrackTime = (TextView) findViewById(R.id.tvTrackTime);
-		tvTrackTime2 = (TextView) findViewById(R.id.tvTrackTime2);
-		tvTrackTimeMinOrSec = (TextView) findViewById(R.id.tvTrackTimeMinOrSec);
-		tvTrackTimeHourOrMin = (TextView) findViewById(R.id.tvTrackTimeHourOrMin);
-		tvGPSDistance = (TextView) findViewById(R.id.tvGPSDistance);
-		layout_waypoints = (LinearLayout) findViewById(R.id.layout_waypoints);
+		tvTrackTime = findViewById(R.id.tvTrackTime);
+		tvTrackTime2 = findViewById(R.id.tvTrackTime2);
+		tvTrackTimeMinOrSec = findViewById(R.id.tvTrackTimeMinOrSec);
+		tvTrackTimeHourOrMin = findViewById(R.id.tvTrackTimeHourOrMin);
+		tvGPSDistance = findViewById(R.id.tvGPSDistance);
+        LinearLayout layout_waypoints = findViewById(R.id.layout_waypoints);
 		layout_waypoints.setOnLongClickListener(this);
-		ivTrackTime = (ImageView) findViewById(R.id.ivTrackTime);
-		tvAverageSpeed = (TextView) findViewById(R.id.tvAverageSpeed);
-		tvMaxSpeed = (TextView) findViewById(R.id.tvMaxSpeed);
+		ivTrackTime = findViewById(R.id.ivTrackTime);
+		tvAverageSpeed = findViewById(R.id.tvAverageSpeed);
+		tvMaxSpeed = findViewById(R.id.tvMaxSpeed);
 
-		ivVolumeLevel = (ImageView) findViewById(R.id.ivVolumeLevel);
-		ivSpeed = (ImageView) findViewById(R.id.ivSpeed);
-		ivSpeedChange = (ImageView) findViewById(R.id.ivSpeedChange);
-		ivSpeedChange.setVisibility(View.INVISIBLE);
+		ivVolumeLevel = findViewById(R.id.ivVolumeLevel);
+		ivSpeed = findViewById(R.id.ivSpeed);
 
-        ivOBD2Status = (ImageView) findViewById(R.id.ivOBD2Status);
+        ivOBD2Status = findViewById(R.id.ivOBD2Status);
         ivOBD2Status.setOnClickListener(this);
         ivOBD2Status.setOnLongClickListener(this);
 
-        ivOBD_CarBattery = (ImageView) findViewById(R.id.ivOBD_CarBattery);
-        tvOBD_CarBattery = (TextView) findViewById(R.id.tvOBD_CarBattery);
+        ivOBD_CarBattery = findViewById(R.id.ivOBD_CarBattery);
+        tvOBD_CarBattery = findViewById(R.id.tvOBD_CarBattery);
         tvOBD_CarBattery.setText("--");
 
-        ivOBD_CoolantTemp = (ImageView) findViewById(R.id.ivOBD_CoolantTemp);
-        ivOBD_CoolantTempFan = (ImageView) findViewById(R.id.ivOBD_CoolantTempFan);
-        tvOBD_CoolantTemp = (TextView) findViewById(R.id.tvOBD_CoolantTemp);
+        ivOBD_CoolantTemp = findViewById(R.id.ivOBD_CoolantTemp);
+        ivOBD_CoolantTempFan = findViewById(R.id.ivOBD_CoolantTempFan);
+        tvOBD_CoolantTemp = findViewById(R.id.tvOBD_CoolantTemp);
         tvOBD_CoolantTemp.setText("--");
 
-        ivOBD_CVT_Data = (ImageView) findViewById(R.id.ivOBD_CVT_Data);
-        tvOBD_CVT_Data = (TextView) findViewById(R.id.tvOBD_CVT_Data);
+        ivOBD_CVT_Data = findViewById(R.id.ivOBD_CVT_Data);
+        tvOBD_CVT_Data = findViewById(R.id.tvOBD_CVT_Data);
         tvOBD_CVT_Data.setText("--");
 
 
-        ivOBD_FuelTank = (ImageView) findViewById(R.id.ivOBD_FuelTank);
-        tvOBD_FuelTank = (TextView) findViewById(R.id.tvOBD_FuelTank);
+        ivOBD_FuelTank = findViewById(R.id.ivOBD_FuelTank);
+        tvOBD_FuelTank = findViewById(R.id.tvOBD_FuelTank);
         tvOBD_FuelTank.setText("--");
-        tvOBD_FuelTank_desc = (TextView) findViewById(R.id.tvOBD_FuelTank_desc);
+        tvOBD_FuelTank_desc = findViewById(R.id.tvOBD_FuelTank_desc);
 
-        ivOBD_FuelConsump = (ImageView) findViewById(R.id.ivOBD_FuelConsump);
-        tvOBD_FuelConsump = (TextView) findViewById(R.id.tvOBD_FuelConsump);
+        ivOBD_FuelConsump = findViewById(R.id.ivOBD_FuelConsump);
+        tvOBD_FuelConsump = findViewById(R.id.tvOBD_FuelConsump);
         tvOBD_FuelConsump.setText("--");
-        tvOBD_FuelConsump2 = (TextView) findViewById(R.id.tvOBD_FuelConsump2);
+        tvOBD_FuelConsump2 = findViewById(R.id.tvOBD_FuelConsump2);
         tvOBD_FuelConsump2.setText("--");
         tvOBD_FuelConsump2.setVisibility(View.GONE);
 
-		btnTest2 = (Button) findViewById (R.id.btnTest2);
-		btnTest2.setOnClickListener(this);
-
-		btnTest1 = (Button) findViewById (R.id.btnTest1);
-		btnTest1.setOnClickListener(this);
-
-        tvRadioInfo1 = (TextView) findViewById(R.id.tvRadioInfo1);
-        tvRadioInfo2 = (TextView) findViewById(R.id.tvRadioInfo2);
-        tvMusicInfo1 = (TextView) findViewById(R.id.tvMusicInfo1);
-        tvMusicInfo2 = (TextView) findViewById(R.id.tvMusicInfo2);
+        tvRadioInfo1 = findViewById(R.id.tvRadioInfo1);
+        tvRadioInfo2 = findViewById(R.id.tvRadioInfo2);
+        tvMusicInfo1 = findViewById(R.id.tvMusicInfo1);
+        tvMusicInfo2 = findViewById(R.id.tvMusicInfo2);
         tvMusicInfo1.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         tvMusicInfo1.setMarqueeRepeatLimit(-1);
         tvMusicInfo1.setHorizontallyScrolling(true);
         tvMusicInfo1.setSelected(true);
-//        tvMusicInfo2.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-//        tvMusicInfo2.setMarqueeRepeatLimit(-1);
-//        tvMusicInfo2.setHorizontallyScrolling(true);
-//        tvMusicInfo2.setSelected(true);
 
-        ivAlbumArt = (ImageView) findViewById(R.id.ivAlbumArt);
+        ivAlbumArt = findViewById(R.id.ivAlbumArt);
 
 
 
-        layout_radio_info = (LinearLayout) findViewById(R.id.layout_radio_info);
-        layout_music_info = (LinearLayout) findViewById(R.id.layout_music_info);
+        layout_radio_info = findViewById(R.id.layout_radio_info);
+        layout_music_info = findViewById(R.id.layout_music_info);
         layout_radio_info.setVisibility( View.GONE );
         layout_music_info.setVisibility( View.GONE );
 
-        layout_obd_fuel = (LinearLayout) findViewById(R.id.layout_fuel_data);
-        layout_obd2 = (LinearLayout) findViewById(R.id.layoutCanMMC);
+        layout_obd_fuel = findViewById(R.id.layout_fuel_data);
+        layout_obd2 = findViewById(R.id.layoutCanMMC);
         layout_obd_fuel.setOnLongClickListener (this);
         layout_obd_fuel.setOnClickListener (this);
 
-        iv_air_fan_speed = (ImageView) findViewById(R.id.iv_air_fan_speed);
+        iv_air_fan_speed = findViewById(R.id.iv_air_fan_speed);
         iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0);
 
-        iv_air_direction = (ImageView) findViewById(R.id.iv_air_direction);
+        iv_air_direction = findViewById(R.id.iv_air_direction);
         iv_air_direction.setImageResource(R.drawable.air_wind_seat_my_to_face);
 
-        iv_air_ac_state = (ImageView) findViewById(R.id.iv_air_ac_state);
+        iv_air_ac_state = findViewById(R.id.iv_air_ac_state);
         //iv_air_ac_state.setVisibility( View.INVISIBLE );
 
-        iv_air_recirculation = (ImageView) findViewById(R.id.iv_air_recirculation);
+        iv_air_recirculation = findViewById(R.id.iv_air_recirculation);
         iv_air_recirculation.setVisibility( View.INVISIBLE );
 
-        iv_air_defogger = (ImageView) findViewById(R.id.iv_air_defogger);
+        iv_air_defogger = findViewById(R.id.iv_air_defogger);
         iv_air_defogger.setVisibility( View.INVISIBLE );
 
-        iv_ac_blow_auto = (ImageView) findViewById(R.id.iv_ac_blow_auto);
+        iv_ac_blow_auto = findViewById(R.id.iv_ac_blow_auto);
         iv_ac_blow_auto.setVisibility( View.INVISIBLE );
 
-        iv_ac_fan_mode = (ImageView) findViewById(R.id.iv_ac_fan_mode);
+        iv_ac_fan_mode = findViewById(R.id.iv_ac_fan_mode);
         iv_ac_fan_mode.setVisibility( View.INVISIBLE );
 
-        iv_air_temp = (ImageView) findViewById(R.id.iv_air_temp);
+        iv_air_temp = findViewById(R.id.iv_air_temp);
 
-        tv_air_cond_temp = (TextView) findViewById(R.id.tv_air_cond_temp);
+        tv_air_cond_temp = findViewById(R.id.tv_air_cond_temp);
 
-        layout_fuel_consump = (LinearLayout) findViewById(R.id.layout_fuel_consump);
+        layout_fuel_consump = findViewById(R.id.layout_fuel_consump);
         layout_fuel_consump.setOnClickListener (this);
 
-        layout_temp_data = (LinearLayout) findViewById(R.id.layout_temp_data);
+        layout_temp_data = findViewById(R.id.layout_temp_data);
         layout_temp_data.setOnClickListener (this);
 
-        layout_battery = (LinearLayout) findViewById(R.id.layout_battery);
+        layout_battery = findViewById(R.id.layout_battery);
 
-        layout_cvt_data = (LinearLayout) findViewById(R.id.layout_cvt_data);
+        layout_cvt_data = findViewById(R.id.layout_cvt_data);
         layout_cvt_data.setOnClickListener (this);
 
 
-        layout_MMC_climate = (RelativeLayout) findViewById(R.id.layout_MMC_climate);
-        layout_ac_indicators = (LinearLayout) findViewById(R.id.layout_ac_indicators);
-        layout_ac_blow_direction = (LinearLayout) findViewById(R.id.layout_ac_blow_direction);
+        layout_MMC_climate = findViewById(R.id.layout_MMC_climate);
 
-        ivBtnRadio = (ImageView) findViewById(R.id.ivBtnRadio);
-        ivBtnRadio.setOnClickListener (this);
-        ivBtnMusic = (ImageView) findViewById(R.id.ivBtnMusic);
-        ivBtnMusic.setOnClickListener (this);
-
+        ImageButton ibFloatingPanel = findViewById(R.id.ibFloatingPanel);
+        ibFloatingPanel.setOnClickListener (this);
+        layout_battery.setOnClickListener (this);
 	}
 
-	public void setInitData() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CODE_DRAW_OVERLAY_PERMISSION:
+                if (Settings.canDrawOverlays(getApplicationContext())) {
+                    floatingWindow.show();
+                } else {
+                    Log.e("Main", "Permission is not granted!");
+                    Toast.makeText(getApplicationContext(), "Permission is not granted!", LENGTH_LONG).show();
+                }
+                break;
+            case REQUEST_CODE_LOCATION_PERMISSION:
+                break;
+            case REQUEST_CODE_BLUETOOTH_ACTION:
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.i("BT", "BT adapter enabled, data " + data);
+                    App.GS.btState = true;
+                } else {
+                    Log.i("BT", "BT adapter fail to turn on, data " + data);
+                    App.GS.btState = false;
+                }
+                break;
+            default: break;
+        }
+    }
+
+
+
+    public void setInitData() {
 
 
 		// gps info
-		tvGPSSatellitesTotal.setText( "--");
-		tvGPSSatellitesInUse.setText( "--");
-		tvGPSSatellitesGoodQACount.setText( "--" );
-		//tvGPSAccuracy.setText( "---" );
-		//tvGPSAltitude.setText( "---" );
-		//tvGPSLatitude.setText( "--.-----" );
-		//tvGPSLongitude.setText( "--.-----" );
 		tvGPSSpeed.setText( "---" );
 
 		//track distance
@@ -380,7 +380,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvMaxSpeed.setText( String.format(getString(R.string.text_max_speed), "---"));
 		tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), "---"));
 
-		setEQData(App.GS.eqData);
         tvRadioInfo1.setText("");
         tvRadioInfo2.setText("");
         tvMusicInfo1.setText("");
@@ -417,17 +416,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		super.onPause();
 	}
 
-	public void onResume() {
+	@SuppressLint("SetTextI18n")
+    public void onResume() {
 		super.onResume();
 
 		tvCurrentVolume.setText(Integer.toString(App.GS.getVolumeLevel()));
-		layout_buttons.setVisibility(App.GS.isShowButtons ? View.VISIBLE : View.INVISIBLE);
-		layout_eq_data.setVisibility(App.GS.isShowEQData ? View.VISIBLE : View.INVISIBLE);
-
-
-
-        show_hide_clock();
-
 
         setVolumeIcon(ivVolumeLevel, App.GS.getVolumeLevel());
         TWUtilEx.requestAudioFocusState();
@@ -443,13 +436,12 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_cvt_data.setVisibility( (App.obd.MMC_CAN && (App.obd.canMmcData.can_mmc_cvt_degr_show || App.obd.canMmcData.can_mmc_cvt_temp_show)) ? View.VISIBLE : View.GONE);
         layout_MMC_climate.setVisibility( (App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_ac_data_show) ? View.VISIBLE : View.GONE);
         layout_temp_data.setVisibility( App.obd.engine_temp_show ? View.VISIBLE : View.GONE);
-        layout_gps_info.setVisibility( App.GS.isShowGPSSAtellities ? View.VISIBLE : View.INVISIBLE);
+
         // обновить данные OBD
         updateOBD_climate_data(App.obd.climateData);
-
-        digitalClock.setTextSize(App.GS.ClockSize);
 	}
 
+    @SuppressLint("NonConstantResourceId")
     @Override
         public boolean onLongClick(View v) {
             switch (v.getId()) {
@@ -487,7 +479,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     show_obdii_activity(MainActivity.this);
                     return true;
                 case R.id.layout_radio_music_info:
-                    show_hide_clock();
                     return true;
                 default:
                     return false;
@@ -498,26 +489,15 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
     // анализируем, какая кнопка была нажата. Всего один метод для всех кнопок
+    @SuppressLint({"NonConstantResourceId", "CommitPrefEdits"})
     @Override
     public void onClick(View v){
 
         switch (v.getId()) {
-	        case R.id.btnTest1:
-                // radio audio focus
-                //if (App.GS.curAudioFocusID > 0) TWUtilEx.setAudioFocus(128 & App.GS.curAudioFocusID);
-
-
-		        break;
-            case R.id.btnTest2:
-                // music audio focus
-                //if (App.GS.curAudioFocusID > 0) TWUtilEx.setAudioFocus(128 & App.GS.curAudioFocusID);
-
-
-	            break;
             case R.id.layout_gps_speed:
                 color_speed(tvGPSSpeed, App.GS.gpsSpeed);
                 App.GS.isColorSpeed = ! App.GS.isColorSpeed;
-	            PreferenceManager.getDefaultSharedPreferences (App.getInstance ()).edit().putBoolean ("kaierutils_show_color_speed", App.GS.isColorSpeed).commit ();
+	            PreferenceManager.getDefaultSharedPreferences (App.getInstance ()).edit().putBoolean ("kaierutils_show_color_speed", App.GS.isColorSpeed).apply();
                 break;
             case R.id.layout_tracktime:
                 App.GS.gpsTimeAtWay_Type++;
@@ -529,7 +509,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 }
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
                 prefs.edit().putInt("CAR_SETTINGS__GPS_TIME_AT_WAY_TYPE", App.GS.gpsTimeAtWay_Type);
-                prefs.edit().commit();
+                prefs.edit().apply();
                 // сменить иконку, сменить текст
                 showFormatedTrackTime( App.GS.gpsTimeAtWay_Type );
                 break;
@@ -552,106 +532,191 @@ public class MainActivity extends Activity implements View.OnClickListener,
             case R.id.layout_cvt_data:
                 switch_cvt_mode();
                 break;
-            case R.id.ivBtnRadio:
-                TWUtilEx.setAudioFocus(1);
-
-                startService(new Intent("com.tw.radio:RadioService"));
-                TWUtilEx.requestRadioInfo();
-
-                startActivity( getPackageManager().getLaunchIntentForPackage(Radio.PACKAGE_NAME) );
-                //startActivity(new Intent(Radio.PACKAGE_NAME + ".RadioActivity"));
-/*
-
-или так
-
-intent = new Intent();
-                    intent.setClassName("com.tw.eq", "com.tw.eq.EQActivity");
-                    intent.setFlags(268435456);
-                    startActivity(intent);
- */
-                break;
-            case R.id.ivBtnMusic:
-                TWUtilEx.setAudioFocus(3);
-                startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
-                        PowerampAPI.Commands.TOGGLE_PLAY_PAUSE));
-                break;
+            case R.id.ibFloatingPanel:
+            case R.id.layout_battery:
+                showFloatingPanel();
             default:
                 break;
         }
     }
 
 
-	private BroadcastReceiver receiver = new BroadcastReceiver() {
-		@Override
+    private void showFloatingPanel() {
+        if (Settings.canDrawOverlays(getApplicationContext())) {
+            floatingWindow.show();
+        } else {
+            startManageDrawOverlaysPermission();
+        }
+
+    }
+
+    private void startManageDrawOverlaysPermission() {
+        Intent intent = new Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                //Uri.parse("package:${applicationContext.packageName}")
+                Uri.parse("package:" + getPackageName())
+        );
+        startActivityForResult(intent, REQUEST_CODE_DRAW_OVERLAY_PERMISSION);
+    }
+
+    private void requestPermissions() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return;
+
+        String[] permissions = {
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                //Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                Manifest.permission.BLUETOOTH_CONNECT,
+                Manifest.permission.BLUETOOTH_SCAN
+        };
+
+        List<String> permissionsToRequest = new ArrayList<>();
+
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                Log.e("Permissions", String.format("Permission %s is not granted", permission));
+                permissionsToRequest.add(permission);
+            }
+        }
+
+        if (!permissionsToRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    permissionsToRequest.toArray(new String[0]), // Convert list to array
+                    REQUEST_CODE_PERMISSION // Pass the request code
+            );
+        } else {
+            Log.i("Permissions", "All permissions already granted");
+        }
+    }
+
+    public void showFineLocationPermissionsAlertDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+
+        alertDialogBuilder.setTitle("Нужно разрешение");
+        alertDialogBuilder.setMessage("Приложению необходимо разрешение на получение геолокации. Продолжить?");
+        //alertDialogBuilder.setIcon(R.drawable.fuel_tank_full);
+
+        alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                //Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                        }, REQUEST_CODE_PERMISSION);
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    public void showBluetoothPermissionsAlertDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+
+        alertDialogBuilder.setTitle("Нужно разрешение");
+        alertDialogBuilder.setMessage("Приложению необходимо разрешение обнаружение и подключение к Bluetooth устройствам. Продолжить?");
+        //alertDialogBuilder.setIcon(R.drawable.fuel_tank_full);
+
+        alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{
+                                    Manifest.permission.BLUETOOTH_CONNECT,
+                                    Manifest.permission.BLUETOOTH_SCAN
+                            }, REQUEST_CODE_PERMISSION);
+                }
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_PERMISSION) {
+            List<String> deniedPermissions = new ArrayList<>();
+
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    deniedPermissions.add(permissions[i]);
+                }
+            }
+
+            if (deniedPermissions.isEmpty()) {
+                Log.i("Permissions", "All permissions granted");
+            } else {
+                Log.e("Permissions", "Permissions denied: " + deniedPermissions);
+                boolean needOpenSettings = false;
+                for (String permission : deniedPermissions) {
+                    switch (permission) {
+                        case Manifest.permission.ACCESS_COARSE_LOCATION:
+                        //case Manifest.permission.ACCESS_BACKGROUND_LOCATION:
+                        //case Manifest.permission.ACCESS_FINE_LOCATION:
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                                showFineLocationPermissionsAlertDialog();
+                            } else {
+                                needOpenSettings = true;
+                            }
+                            break;
+                        case Manifest.permission.BLUETOOTH_CONNECT:
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                    Manifest.permission.BLUETOOTH_CONNECT)) {
+                                showBluetoothPermissionsAlertDialog();
+                            } else {
+                                needOpenSettings = true;
+                            }
+                            break;
+                        case Manifest.permission.BLUETOOTH_SCAN:
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                    Manifest.permission.BLUETOOTH_SCAN)) {
+                                showBluetoothPermissionsAlertDialog();
+                            } else {
+                                needOpenSettings = true;
+                            }
+                            break;
+                    }
+                }
+                if (needOpenSettings) {
+                    Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(appSettingsIntent, REQUEST_CODE_PERMISSION);
+                }
+            }
+        }
+
+    }
+
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+		@SuppressLint({"SetTextI18n", "StringFormatMatches"})
+        @Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED))
-			{
-				int vol = intent.getIntExtra(TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED, 0);
-				tvCurrentVolume.setText (String.format( Integer.toString(vol)));
-                setVolumeIcon(ivVolumeLevel, vol);
-			}
-            else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH) )
-            {
-                //tvReverseCount.setText( String.format(getString(R.string.text_reverse_count),
-                //                                      App.GS.ReverseActivityCount) );
-            }
-            else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_SLEEP) )
-            {
-//                tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count),
-//                        App.GS.SleepModeCount) );
+            if (action == null) return;
 
-                //if ( App.GS.lastSleep == 0)
-                //{
-                    //tvSleepModeLastTime.setVisibility( View.INVISIBLE );
-                //}
-                //else
-                //{
-                    //Date date = new Date( App.GS.lastSleep );
-                   // SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
-                   // tvSleepModeLastTime.setText( String.format("%s", ft.format(date)) );
-                   // tvSleepModeLastTime.setVisibility( View.VISIBLE );
-                //}
-            }
-            else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP) )
-            {
-	           // tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count),
-			   //         App.GS.SleepModeCount) );
+            switch (action) {
+                case TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED:
+                    int vol = intent.getIntExtra(TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED, 0);
+                    tvCurrentVolume.setText(String.format(Integer.toString(vol)));
+                    setVolumeIcon(ivVolumeLevel, vol);
+                    break;
+                case TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH:
+                    break;
+                case TWUtilConst.TW_BROADCAST_ACTION_SLEEP:
+                    break;
+                case TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP:
+                    break;
+                case GlSets.GPS_BROADCAST_ACTION_AGPS_RESET:
+                    App.GS.cntGpsHangs++;
+                    break;
 
-            }
-			else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_EQ_CHANGED) )
-            {
-	            App.GS.eqData = intent.getByteArrayExtra ("EQ");
-	            setEQData(App.GS.eqData);
-            }
-            else if (action.equals(GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS))
-            {
-                int cntSats = intent.getIntExtra ("SatellitesTotal", 0);
-                int goodSatellitesCount = intent.getIntExtra( "SatellitesGoodQATotal", 0 );
-                int satellitesInUse = intent.getIntExtra( "SatellitesInUse", 0 );
-                tvGPSSatellitesTotal.setText( Integer.toString(cntSats) );
-                tvGPSSatellitesGoodQACount.setText( Integer.toString(goodSatellitesCount) );
-                tvGPSSatellitesInUse.setText( Integer.toString(satellitesInUse) );
-
-                if ( goodSatellitesCount  <  2 ) {
-                    tvGPSSatellitesGoodQACount.setTextColor(Color.RED);
-                } else if ( goodSatellitesCount < GpsProcessing.signal_quality ) {
-                    tvGPSSatellitesGoodQACount.setTextColor(Color.YELLOW);
-                } else {
-                    tvGPSSatellitesGoodQACount.setTextColor(Color.GREEN);
-                }
-
-            }
-            else if (action.equals(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET)) {
-				App.GS.cntGpsHangs++;
-            }
-            else if (action.equals(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED)) {
-                int speed = intent.getIntExtra("Speed", 0);
-                int grow = intent.getIntExtra("SpeedGrow", 0);
-                processDynamicVoume (speed, grow);
-            }
-            else if (action.equals(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED)) {
-                //double latitude = intent.getDoubleExtra("Latitude", 0);
+                case GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED: {
+                    //double latitude = intent.getDoubleExtra("Latitude", 0);
                 /*
                 if ( latitude < 0 ) {
                     //S - south latitude
@@ -662,7 +727,7 @@ intent = new Intent();
                 }
                 */
 
-                //double longitude = intent.getDoubleExtra("Longitude", 0);
+                    //double longitude = intent.getDoubleExtra("Longitude", 0);
                 /*
                 if ( longitude < 0 ) {
                     //W - west longitude
@@ -672,89 +737,115 @@ intent = new Intent();
                     tvGPSLongitude.setText( String.format("E %1$.5f", longitude).replace(",", ".") );
                 }
                 */
-                //tvGPSAccuracy.setText( String.format(getString(R.string.text_gps_accuracy), intent.getStringExtra("Accuracy")) );
-                //tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), intent.getStringExtra("Altitude")).replace(",", ".") );
+                    //tvGPSAccuracy.setText( String.format(getString(R.string.text_gps_accuracy), intent.getStringExtra("Accuracy")) );
+                    //tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), intent.getStringExtra("Altitude")).replace(",", ".") );
 
-				int speed = intent.getIntExtra("Speed", 0);
-                if ( speed > 80) {
-                    ivSpeed.setImageResource(R.drawable.speedo_2);
-                } else {
-                    ivSpeed.setImageResource(R.drawable.speedo_1);
-                }
-				tvGPSSpeed.setText( speed > 0 ? String.format(getString(R.string.text_gps_speed_value), speed) : "---" );
-				color_speed(tvGPSSpeed, speed);
+                    int speed = intent.getIntExtra("Speed", 0);
+                    if (speed > 80) {
+                        ivSpeed.setImageResource(R.drawable.speedo_2);
+                    } else {
+                        ivSpeed.setImageResource(R.drawable.speedo_1);
+                    }
+                    tvGPSSpeed.setText(speed > 0 ? String.format(getString(R.string.text_gps_speed_value), speed) : "---");
+                    color_speed(tvGPSSpeed, speed);
 
-                tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), Integer.toString( App.GS.gpsAverageSpeed)));
-                tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), Integer.toString(App.GS.gpsMaxSpeed)));
+                    tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.GS.gpsAverageSpeed));
+                    tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.GS.gpsMaxSpeed));
 
-                if ( !App.GS.dsc_isAvailable ) {
-                    ivSpeedChange.setVisibility(View.INVISIBLE);
-                }
-                float dist = App.GS.totalDistance / 1000;
+                    float dist = App.GS.totalDistance / 1000;
 
-                tvGPSDistance.setText(dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-");
-                showFormatedTrackTime(App.GS.gpsTimeAtWay_Type);
+                    tvGPSDistance.setText(dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-");
+                    showFormatedTrackTime(App.GS.gpsTimeAtWay_Type);
 
 //                NotifyData notifyData = new NotifyData( App.getInstance () );
 //                notifyData.line_inway_distance = dist > 0 ? "Пройдено: " + String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-";
 //                notifyData.show();
-            }
-			else if ( action.equals( TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED)) {
-				String title = intent.getStringExtra("Title");
-				String freq = intent.getStringExtra ("Frequency");
-                tvRadioInfo1.setText( title );
-                tvRadioInfo1.setVisibility( title.contentEquals( Radio.BLANK_STATION_NAME) ? View.GONE : View.VISIBLE);
-                tvRadioInfo2.setText( freq + " MHz");
-            }
-            else if ( action.equals( TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED)) {
-				int af_id = intent.getIntExtra("audio_focus_id", -1);
-                // update screen
-                updateAudioModeInfo(App.GS.curAudioFocusID);
-
-            }
-            else if ( action.equals( GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED)) {
-                if ( App.GS.interactWithPowerAmp && App.GS.isShowMusicInfo && App.GS.isPowerAmpPlaying )
-                {
-                    //String TrackTitle = intent.getStringExtra("TrackTitle");
-                    //String AlbumArtist = intent.getStringExtra ("AlbumArtist");
-                    Bitmap AlbumArt = (Bitmap) intent.getParcelableExtra("AlbumArt");
-                    //tvMusicInfo1.setText( TrackTitle );
-                    tvMusicInfo1.setText(App.GS.PowerAmp_TrackTitle);
-                    //tvMusicInfo2.setText( AlbumArtist );
-                    tvMusicInfo2.setText(App.GS.PowerAmp_AlbumArtist);
-                    //if (!AlbumArt.equals(App.GS.PowerAmp_AlbumArt))
-                    //if ( AlbumArt != null ) {
-                        ivAlbumArt.setImageBitmap(AlbumArt);
-                    //} else {
-                      //  ivAlbumArt.setImageResource( R.drawable.toast_music);
-                    //}
+                    break;
                 }
-            } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_STATUS_CHANGED )) {
-                boolean obd_status = intent.getBooleanExtra("Status", false);
-                updateOBDStatus(obd_status);
-            } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED )) {
-                updateOBD_CarBattery(App.obd.obdData.voltage);
-            } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED )) {
-                updateOBD_CoolantTemp(modeEngineTemp, App.obd.canMmcData.fan_state);
-            } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED )) {
-                updateOBD_FuelConsump( App.obd.oneTrip.fuel_cons_lph );
-                updateOBD_FuelTank( App.obd.totalTrip.fuel_remains );
-            } else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED )) {
+                case TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED:
+                    String title = intent.getStringExtra("Title");
+                    if (title == null) break;
+                    String freq = intent.getStringExtra("Frequency");
+                    tvRadioInfo1.setText(title);
+                    tvRadioInfo1.setVisibility(title.contentEquals(Radio.BLANK_STATION_NAME) ? View.GONE : View.VISIBLE);
+                    tvRadioInfo2.setText(freq + " MHz");
+                    break;
+                case TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED:
+                    // update screen
+                    updateAudioModeInfo(App.GS.curAudioFocusID);
 
+                    break;
+                case GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED:
+                    if (App.GS.interactWithPowerAmp && App.GS.isShowMusicInfo && App.GS.isPowerAmpPlaying) {
+                        //String TrackTitle = intent.getStringExtra("TrackTitle");
+                        //String AlbumArtist = intent.getStringExtra ("AlbumArtist");
+                        Bitmap AlbumArt = intent.getParcelableExtra("AlbumArt");
+                        //tvMusicInfo1.setText( TrackTitle );
+                        tvMusicInfo1.setText(App.GS.PowerAmp_TrackTitle);
+                        //tvMusicInfo2.setText( AlbumArtist );
+                        tvMusicInfo2.setText(App.GS.PowerAmp_AlbumArtist);
+                        //if (!AlbumArt.equals(App.GS.PowerAmp_AlbumArt))
+                        //if ( AlbumArt != null ) {
+                        ivAlbumArt.setImageBitmap(AlbumArt);
+                        //} else {
+                        //  ivAlbumArt.setImageResource( R.drawable.toast_music);
+                        //}
+                    }
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_STATUS_CHANGED:
+                    boolean obd_status = intent.getBooleanExtra("Status", false);
+                    updateOBDStatus(obd_status);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED:
+                    updateOBD_CarBattery(App.obd.obdData.voltage);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED:
+                    updateOBD_CoolantTemp(modeEngineTemp, App.obd.canMmcData.fan_state);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED:
+                    updateOBD_FuelConsump(App.obd.oneTrip.fuel_cons_lph);
+                    updateOBD_FuelTank(App.obd.totalTrip.fuel_remains);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED:
+
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED:
+                    updateOBD_CoolantTemp(modeEngineTemp, App.obd.canMmcData.fan_state);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED:
+                    updateOBD_CVT_data(modeCVT);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED:
+                    updateOBD_CVT_data(modeCVT);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED:
+                    updateOBD_air_cond_fan_speed(ClimateData.FanSpeed.values()[intent.getIntExtra("air_cond_fan_speed_position", -1)]);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED:
+                    updateOBD_air_cond_fan_mode(ClimateData.FanMode.values()[intent.getIntExtra("air_cond_fan_mode", -1)]);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED:
+                    updateOBD_air_cond_temperature(intent.getStringExtra("air_cond_set_temperature"));
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED:
+                    updateOBD_air_cond_ext_temperature(intent.getIntExtra("air_cond_external_temp", -255));
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED:
+                    updateOBD_air_cond_blow_direction(ClimateData.BlowDirection.values()[intent.getIntExtra("air_cond_blow_direction_position", -1)]);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_BLOW_MODE_CHANGED:
+                    updateOBD_air_cond_blow_mode(ClimateData.BlowMode.values()[intent.getIntExtra("air_cond_blow_mode", -1)]);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED:
+                    updateOBD_air_cond_defogger(ClimateData.State.values()[intent.getIntExtra("air_cond_defogger_state", -1)]);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED:
+                    updateOBD_air_cond_recirculation(ClimateData.State.values()[intent.getIntExtra("air_cond_recirculation_state", -1)]);
+                    break;
+                case OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED:
+                    updateOBD_air_cond_state(ClimateData.State.values()[intent.getIntExtra("air_cond_state", -1)]);
+                    break;
             }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED )) { updateOBD_CoolantTemp(modeEngineTemp, App.obd.canMmcData.fan_state); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_DEGR_CHANGED )) { updateOBD_CVT_data(modeCVT); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED )) { updateOBD_CVT_data(modeCVT); }
-
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED )) { updateOBD_air_cond_fan_speed(ClimateData.FanSpeed.values()[intent.getIntExtra("air_cond_fan_speed_position", -1)]); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED )) { updateOBD_air_cond_fan_mode(ClimateData.FanMode.values()[intent.getIntExtra("air_cond_fan_mode", -1)]);}
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED )) { updateOBD_air_cond_temperature(intent.getStringExtra("air_cond_set_temperature"));  }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED )) { updateOBD_air_cond_ext_temperature(intent.getIntExtra("air_cond_external_temp", -255)); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED )) { updateOBD_air_cond_blow_direction(ClimateData.BlowDirection.values()[intent.getIntExtra("air_cond_blow_direction_position", -1)]); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_BLOW_MODE_CHANGED )) { updateOBD_air_cond_blow_mode(ClimateData.BlowMode.values()[intent.getIntExtra("air_cond_blow_mode", -1)]); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED )) { updateOBD_air_cond_defogger(ClimateData.State.values()[intent.getIntExtra("air_cond_defogger_state", -1)]); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED )) { updateOBD_air_cond_recirculation(ClimateData.State.values()[intent.getIntExtra("air_cond_recirculation_state", -1)]); }
-            else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED )) { updateOBD_air_cond_state( ClimateData.State.values()[ intent.getIntExtra("air_cond_state", -1) ] ); }
 
 		}
 	};
@@ -774,6 +865,7 @@ intent = new Intent();
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -804,6 +896,7 @@ intent = new Intent();
 			it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			startActivity(it);
 		} catch (Exception e) {
+            Log.e("Main", Objects.requireNonNull(e.getMessage()));
 		}
 
 
@@ -820,44 +913,6 @@ intent = new Intent();
             iv.setImageResource(R.drawable.volume_high);
         }
 
-    }
-
-    private void  processDynamicVoume(int speed, int grow) {
-        if ( !App.GS.dsc_isAvailable) return;
-        int  t = Math.abs(speed - App.GS.dsc_FirstSpeed) / App.GS.dsc_StepSpeed;
-        switch ( grow ){
-            case -1:
-                ivSpeedChange.setImageResource(R.drawable.speed_down);
-                ivSpeedChange.setVisibility(View.VISIBLE);
-
-
-                //if ( Math.abs( speed - (App.GS.dsc_FirstSpeed + t*App.GS.dsc_StepSpeed) ) > App.GS.dsc_DeltaToChange  ) {
-                    //ivSpeedChange2.setImageResource(R.drawable.speed_down_2);
-                    //ivSpeedChange2.setVisibility(View.VISIBLE);
-                //} else {
-
-                //}
-                break;
-            case 1:
-                ivSpeedChange.setImageResource(R.drawable.speed_up);
-                ivSpeedChange.setVisibility(View.VISIBLE);
-
-                //if ( Math.abs( speed - (App.GS.dsc_FirstSpeed + t*App.GS.dsc_StepSpeed) ) > App.GS.dsc_DeltaToChange  ) {
-                    //ivSpeedChange2.setImageResource(R.drawable.speed_up_2);
-                    //ivSpeedChange2.setVisibility(View.VISIBLE);
-                //} else {
-
-                //}
-
-
-                break;
-            default:
-                ivSpeedChange.setVisibility(View.INVISIBLE);
-                //ivSpeedChange2.setVisibility(View.INVISIBLE);
-
-                break;
-        }
-        App.GS.gpsPrevSpeed = speed;
     }
 
     private void show_obdii_activity(Context context) {
@@ -889,6 +944,7 @@ intent = new Intent();
         }
 	}
 
+    @SuppressLint("DefaultLocale")
     private void showFormatedTrackTime(int wayType) {
         long tm = 0;
         if ( wayType == 0)
@@ -922,18 +978,16 @@ intent = new Intent();
         }
     }
 
-	private void registerReceivers(BroadcastReceiver receiver) {
+	@SuppressLint("UnspecifiedRegisterReceiverFlag")
+    private void registerReceivers(BroadcastReceiver receiver) {
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED));
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH));
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP));
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED));
-		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_EQ_CHANGED));
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED));
 
-
-		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SATELLITE_STATUS));
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED));
-		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_SPEED_CHANGED));
+
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_FIRST_FIX));
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET));
 		registerReceiver(receiver, new IntentFilter(GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED));
@@ -972,22 +1026,6 @@ intent = new Intent();
 		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED));
 	}
 
-
-
-
-	public void setEQData(byte[] bArr) {
-	//bass bArr[1], mid  bArr[2], tree bArr[3], loud bArr[5]
-	            /*
-					0	1	2	3	4	5	6	7	8	9	10	11	12	13	14
-					-7	-6	-5	-4	-3	-2	-1	0	1	2	3	4	5	6	7
-	             */
-		if ( bArr != null ) {
-			tv_eq_bass.setText( Integer.toString ( bArr[1] - 7 ));
-			tv_eq_mid.setText( Integer.toString (bArr[2] - 7));
-			tv_eq_tre.setText( Integer.toString (bArr[3] - 7));
-		}
-	}
-
     public void updateAudioModeInfo(int id) {
         layout_radio_info.setVisibility( View.GONE );
         layout_music_info.setVisibility( View.GONE );
@@ -1018,6 +1056,7 @@ intent = new Intent();
         }
     }
 
+    @SuppressLint("DefaultLocale")
     public void updateOBD_CarBattery(double voltage) {
         if (App.obd.battery_show) {
             layout_battery.setVisibility(View.VISIBLE);
@@ -1032,6 +1071,7 @@ intent = new Intent();
         }
     }
 
+    @SuppressLint("DefaultLocale")
     public void updateOBD_CoolantTemp(int mode, CanMmcData.State state){
         if ( App.obd.engine_temp_show ) {
             layout_temp_data.setVisibility( View.VISIBLE );
@@ -1060,6 +1100,7 @@ intent = new Intent();
         }
     }
 
+    @SuppressLint("SetTextI18n")
     public void updateOBD_CVT_data(int mode) {
         if ( App.obd.MMC_CAN && (App.obd.canMmcData.can_mmc_cvt_degr_show || App.obd.canMmcData.can_mmc_cvt_temp_show)) {
             layout_cvt_data.setVisibility( View.VISIBLE);
@@ -1161,6 +1202,7 @@ intent = new Intent();
     }
 
     // диалог редактирования остатка кол-ва топлива в баке и  объема бака
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     public void show_obd_fuel_detail(){
         AlertDialog.Builder fuelDialog = new AlertDialog.Builder(MainActivity.this);
         fuelDialog.setTitle(getString(R.string.text_fuel_tank_detail));
@@ -1187,6 +1229,7 @@ intent = new Intent();
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float fltank = Float.parseFloat(etFuelTankCapacity.getText().toString());
@@ -1316,6 +1359,7 @@ intent = new Intent();
     }
 
     // отобразить данные о текущем расходе топлива
+    @SuppressLint("DefaultLocale")
     private void show_fuel_consumption(int mode) {
         switch (mode) {
             case 0:
@@ -1343,6 +1387,7 @@ intent = new Intent();
     }
 
     // TODO: отобразить данные  о количестве топлива в баке (учесть показания с приборки)
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     private void show_fuel_tank_data(int mode) {
         if ( ! App.obd.fuel_data_show ) {
             layout_obd_fuel.setVisibility( View.GONE );
@@ -1495,7 +1540,7 @@ intent = new Intent();
             case feet: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_feet); break;
             case from_feet_to_feet_and_window: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_window); break;
             case feet_and_window: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_feet_and_window); break;
-            case from_feet_and_window_to_window: iv_air_direction.setImageResource(R.drawable.air_wind_seat_my_to_beetwen_window_and_feet_and_window); break;
+            case from_feet_and_window_to_window: iv_air_direction.setImageResource(R.drawable.air_wind_seat_my_to_between_window_and_feet_and_window); break;
             case window: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_window); break;
             default:  break;
         }
@@ -1527,6 +1572,7 @@ intent = new Intent();
         iv_ac_blow_auto.setVisibility((blowMode == ClimateData.BlowMode.auto) ? View.VISIBLE : View.INVISIBLE);
     }
 
+    @SuppressLint("DefaultLocale")
     private void updateOBD_climate_data(ClimateData climateData) {
         updateOBD_air_cond_state(climateData.ac_state);
         updateOBD_air_cond_blow_mode(climateData.blow_mode);
@@ -1552,43 +1598,6 @@ intent = new Intent();
         tv.setText(ss);
     }
 
-
-    private void show_hide_clock()
-    {
-        if ( App.GS.isShowClock )
-        {
-            if (App.GS.radio.showInfo || (App.GS.interactWithPowerAmp && App.GS.isShowMusicInfo))
-            {
-                App.GS.clock_show_mode++;
-                if (App.GS.clock_show_mode > 1) App.GS.clock_show_mode = 0;
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
-                prefs.edit().putInt("kaierutils_clock_show_mode", App.GS.clock_show_mode).apply();
-
-
-                if ( App.GS.clock_show_mode == 1 ) {
-                    layout_music_info.setVisibility(View.INVISIBLE);
-                    layout_radio_info.setVisibility(View.INVISIBLE);
-                    layout_clock.setVisibility(View.VISIBLE);
-                } else {
-                    layout_clock.setVisibility(View.INVISIBLE);
-                    switch ( App.GS.curAudioFocusID ) {
-                        case TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID:
-                                layout_radio_info.setVisibility(View.VISIBLE);
-                                break;
-                        case TWUtilConst.TW_AUDIO_FOCUS_MUSIC_ID:
-                        case 0:
-                                layout_radio_music_info.setVisibility(View.VISIBLE);
-                                break;
-                        default:
-                                break;
-                    }
-                }
-            } else {
-                layout_clock.setVisibility(View.VISIBLE);
-            }
-        } else
-            layout_clock.setVisibility(View.INVISIBLE);
-    }
 }
 
 

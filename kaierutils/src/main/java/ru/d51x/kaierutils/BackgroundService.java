@@ -1,10 +1,15 @@
 package ru.d51x.kaierutils;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 import android.app.Notification;
@@ -16,7 +21,8 @@ import ru.d51x.kaierutils.PowerAmp.PowerAmpProcessingThread;
 import ru.d51x.kaierutils.TWUtils.TWUtilProcessingThread;
 
 public class BackgroundService extends Service {
-
+	private static Integer NOTIFICATION_SERVICE_ID = 1;
+	private static String NOTIFICATION_CHANNEL_ID = "KaierUtils";
 	private TWUtilProcessingThread twUtilProcessingThread;
     private PowerAmpProcessingThread powerAmpProcessingThread;
     private GpsProcessingThread gpsProcessingThread;
@@ -52,19 +58,25 @@ public class BackgroundService extends Service {
 		App.GS.isNotificationIconShow = prefs.getBoolean ("kaierutils_show_notification_icon", true);
         App.GS.curAudioFocusID = prefs.getInt("last_audio_focus_id", -1);
 
-        NotifyData notifyData = new  NotifyData( getApplicationContext() );
-        notifyData.NotifyID = NotifyData.NOTIFY_ID;
-        notifyData.Title = NotifyData.NOTIFICATION_TITLE;
-        notifyData.smallIcon = App.GS.isNotificationIconShow ? R.drawable.notify_auto : 0;
-        notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-        Notification notification = notifyData.show();
-        startForeground( NotifyData.NOTIFY_ID, notification);
 
-        //if ( App.GS.interactWithPowerAmp &&
-        //        App.GS.needWatchBootUpPowerAmp ) {
-            //Radio.checkRadioActivityStarted(false);
-            //if ( App.GS.isRadioActivityRunning ) TWUtilEx.setAudioFocus( 3 );
-        //}
+
+		NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "KaierUtils", NotificationManager.IMPORTANCE_HIGH);
+		channel.setDescription("KaierUtils background service");
+		NotificationManager manager = getSystemService(NotificationManager.class);
+		manager.createNotificationChannel(channel);
+
+		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+		Notification notification = notificationBuilder.setOngoing(true)
+				.setContentTitle("KaierUtils")
+				.setContentText("KaierUtils")
+				.setAutoCancel(false)
+				.setPriority(NotificationManager.IMPORTANCE_HIGH)
+				.setCategory(Notification.CATEGORY_SERVICE)
+				.setSmallIcon(App.GS.isNotificationIconShow ? R.drawable.notify_auto : 0)
+				.setWhen(System.currentTimeMillis())
+				.build();
+		startForeground( NOTIFICATION_SERVICE_ID, notification);
+
 
 		if ((flags & START_FLAG_RETRY) == 0) {
 			// TODO Если это повторный запуск, выполнить какие-то действия.
@@ -76,8 +88,8 @@ public class BackgroundService extends Service {
 
 		}
 
-		startTWUtilProcessingThread();
-		startPowerAmpProcessingThread();
+		//startTWUtilProcessingThread();
+		//startPowerAmpProcessingThread();
 		startRadioProcessingThread();
         startGpsProcessingThread();
         startOBDThread();

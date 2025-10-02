@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils.Settings;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -36,38 +37,39 @@ public class AboutFragment extends Fragment {
         // Inflate the layout for this fragment
         View mV = inflater.inflate(R.layout.fragment_about, container, false);
         // statistics
-        tvReverseCount = (TextView) mV.findViewById(R.id.tv_reverse_count);
-        tvSleepModeCount = (TextView) mV.findViewById(R.id.tv_sleep_mode_count);
-        tvSleepModeLastTime = (TextView) mV.findViewById(R.id.tv_sleep_mode_last_time);
-        tvWorkingStart = (TextView) mV.findViewById(R.id.tv_working_start);
-        tvDeviceName = (TextView) mV.findViewById(R.id.txtDeviceName);
-        tvProgramVersion = (TextView) mV.findViewById(R.id.tvProgramVersion);
+        tvReverseCount = mV.findViewById(R.id.tv_reverse_count);
+        tvSleepModeCount = mV.findViewById(R.id.tv_sleep_mode_count);
+        tvSleepModeLastTime = mV.findViewById(R.id.tv_sleep_mode_last_time);
+        tvWorkingStart = mV.findViewById(R.id.tv_working_start);
+        tvDeviceName = mV.findViewById(R.id.txtDeviceName);
+        tvProgramVersion = mV.findViewById(R.id.tvProgramVersion);
 
-        process_statistics_layout_and_elements();
+        showStatistics();
 
 
         return mV;
     }
 
-    private void  process_statistics_layout_and_elements() {
+    @SuppressLint("SetTextI18n")
+    private void showStatistics() {
 
-        String string_device_name = String.format(getString(R.string.text_device_name), TWUtilEx.GetDeviceID());
+        String string_device_name = String.format(getResources().getString(R.string.text_device_name), TWUtilEx.GetDeviceID());
         tvDeviceName.setText( string_device_name );
 
-            tvReverseCount.setText( String.format(getString(R.string.text_reverse_count), App.GS.ReverseActivityCount) );
-            tvSleepModeCount.setText( String.format(getString(R.string.text_sleep_mode_count), App.GS.SleepModeCount) );
+            tvReverseCount.setText( String.format(getResources().getString(R.string.text_reverse_count), App.GS.ReverseActivityCount) );
+            tvSleepModeCount.setText( String.format(getResources().getString(R.string.text_sleep_mode_count), App.GS.SleepModeCount) );
 
             if ( App.GS.lastSleep == 0) {
                 tvSleepModeLastTime.setVisibility( View.INVISIBLE );
             } else {
                 Date date = new Date( App.GS.lastSleep );
-                SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
-                tvSleepModeLastTime.setText( String.format(getString(R.string.text_sleep_mode_last_time), ft.format(date)) );
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
+                tvSleepModeLastTime.setText( String.format(getResources().getString(R.string.text_sleep_mode_last_time), ft.format(date)) );
                 tvSleepModeLastTime.setVisibility( View.VISIBLE );
             }
             Date date = new Date( App.GS.startDate );
-            SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
-            tvWorkingStart.setText( String.format(getString(R.string.text_working_start), ft.format(date)) );
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.yyyy HH:mm");
+            tvWorkingStart.setText( String.format(getResources().getString(R.string.text_working_start), ft.format(date)) );
 
             tvProgramVersion.setText( "KaierUtils ver. " +  BuildConfig.VERSION_NAME);
     }

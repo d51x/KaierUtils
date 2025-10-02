@@ -227,4 +227,23 @@
 	<string name="todo">TODO</string>
 	<string name="_2">2</string>
 	<string name="_10">10</string>
+    <string name="unit_km_h">км/ч</string>
+	<string name="empty_str_2_dashes">--</string>
+	<string name="track_time">track time</string>
+	<string name="gps_distance">gps distance</string>
+	<string name="album_art">album art</string>
+	<string name="obd2_status">obd2 status</string>
+	<string name="air_defogger">air deffoger</string>
+	<string name="air_recirculation">air recirculation</string>
+	<string name="air_ac_state">air ac state</string>
+	<string name="bg_seat">bg seat</string>
+	<string name="air_direction">air direction</string>
+	<string name="ac_blow_auto">ac blow auto</string>
+	<string name="air_fan_speed">air fan speed</string>
+	<string name="ac_fan_mode">ac fan mode</string>
+	<string name="radio_info">radio info</string>
+	<string name="air_temp">air temp</string>
+	<string name="vol_mute">vol mute</string>
+	<string name="empty_temp">--.-</string>
+	<string name="speed">speed</string>
 </resources>
