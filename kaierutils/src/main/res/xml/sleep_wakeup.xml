@@ -1,5 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:seekbar="http://schemas.android.com/apk/res/ru.d51x.kaierutils"
+                  xmlns:seekbar="http://schemas.android.com/apk/res-auto"
 	>
 	<PreferenceCategory android:title="@string/menu_category_startup_change_volume">
 	    <CheckBoxPreference

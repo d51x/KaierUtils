@@ -1,6 +1,4 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:seekbar="http://schemas.android.com/apk/res/ru.d51x.kaierutils"
-	>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory android:title="@string/menu_category_toasts_radio_title">
 		<EditTextPreference
 			android:key="CAR_SETTINGS__RADIO_TOAST_TEXT1_SIZE"

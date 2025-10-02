@@ -1,6 +1,4 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:seekbar="http://schemas.android.com/apk/res/ru.d51x.kaierutils"
-	>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<SwitchPreference   android:key="CAR_SETTINGS__RADIO_SHOW_TOAST"
 	                    android:title="@string/menu_radio_show_toast_title"

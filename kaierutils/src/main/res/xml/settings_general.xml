@@ -1,28 +1,19 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:seekbar="http://schemas.android.com/apk/res-auto"
-	>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<SwitchPreference   android:key="kaierutils_show_notification_icon"
 	                    android:title="@string/menu_general_show_notification_icon_title"
-	                    android:defaultValue="true"
-	/>
+	                    android:defaultValue="true" />
 	<SwitchPreference   android:key="kaierutils_auto_start"
 	                    android:title="@string/menu_general_auto_start"
-	                    android:defaultValue="false"
-	/>
+	                    android:defaultValue="false" />
     <SwitchPreference   android:key="kaierutils_hide_header"
                         android:title="@string/menu_general_hide_header"
-                        android:defaultValue="false"
-        />
+                        android:defaultValue="false" />
 	<SwitchPreference   android:key="kaierutils_show_color_speed"
 	                    android:title="@string/menu_general_color_speed_title"
-	                    android:defaultValue="false"
-		/>
+	                    android:defaultValue="false" />
 	<SwitchPreference   android:key="kaierutils_show_statistics"
 	                    android:title="@string/menu_general_show_statistics_title"
-	                    android:defaultValue="true"
-		/>
-
-
+	                    android:defaultValue="true" />
 </PreferenceScreen>
 
