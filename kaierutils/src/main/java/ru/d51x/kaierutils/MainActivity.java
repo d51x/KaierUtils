@@ -1622,7 +1622,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        showFloatingPanelButton = savedInstanceState.getBoolean("showFloatingButton");
+//        showFloatingPanelButton = savedInstanceState.getBoolean("showFloatingButton");
         ibFloatingPanel.setVisibility(showFloatingPanelButton ? View.VISIBLE : View.INVISIBLE);
     }
 
@@ -1633,7 +1633,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean("showFloatingPanelButton", showFloatingPanelButton);
+//        outState.putBoolean("showFloatingPanelButton", showFloatingPanelButton);
         super.onSaveInstanceState(outState);
     }
 
