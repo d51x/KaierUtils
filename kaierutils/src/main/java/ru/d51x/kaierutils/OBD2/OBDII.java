@@ -673,7 +673,7 @@ public class OBDII  {
         saveFuelTank();
     }
 
-    private void                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          SetHeaders(String canAddr, String txAddr, boolean flowControl) {
+    private void SetHeaders(String canAddr, String txAddr, boolean flowControl) {
         if (localDebug) return;
         if ( activeMAF ) return;
         activeOther = true;
@@ -694,6 +694,10 @@ public class OBDII  {
             new SelectHeaderObdCommand("ATCRA " + txAddr).run(socket.getInputStream(), socket.getOutputStream());
             Log.d(TAG, String.format("SetHeader %s :: %d ms", flowControl ? "with flow control" : "", System.currentTimeMillis() - tt));
             activeOther = false;
+        }
+        catch (NullPointerException e) {
+            Log.e(TAG, e.toString());
+            Log.e(TAG, e.getMessage());
         }
         catch (MisunderstoodCommandException e) {
             Log.e("OBD2", e.toString());
