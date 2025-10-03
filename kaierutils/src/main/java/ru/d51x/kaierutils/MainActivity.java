@@ -522,11 +522,12 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 showFormatedTrackTime( App.GS.gpsTimeAtWay_Type );
                 break;
             case R.id.ivOBD2Status:
-                if ( App.obd.isConnected ) {
-                    BackgroundService.stopOBDThread();
-                } else {
-                    BackgroundService.startOBDThread();
-                }
+//                if ( App.obd.isConnected ) {
+//                    BackgroundService.stopOBDThread();
+//                } else {
+//                    BackgroundService.startOBDThread();
+//                }
+                this.openOptionsMenu();
                 break;
             case R.id.layout_fuel_data:
                 switch_fuel_tank_mode(true);
