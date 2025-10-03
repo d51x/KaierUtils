@@ -147,7 +147,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private RelativeLayout layout_MMC_climate;
     private ImageButton ibFloatingPanel;
 
-    private Boolean showFloatingPanelButton = true;
     private FloatingWindow floatingWindow;
 
 	@Override
@@ -163,9 +162,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         if (savedInstanceState == null){
             startService(new Intent(this, BackgroundService.class));
-        } else {
-            showFloatingPanelButton = savedInstanceState.getBoolean("showFloatingPanelButton", true);
         }
+
         registerReceivers(receiver);
         floatingWindow = new FloatingWindow(getApplicationContext());
 		initComponents();
@@ -331,6 +329,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_temp_data.setOnClickListener (this);
 
         layout_battery = findViewById(R.id.layout_battery);
+        layout_battery.setOnClickListener(this);
 
         layout_cvt_data = findViewById(R.id.layout_cvt_data);
         layout_cvt_data.setOnClickListener (this);
@@ -340,7 +339,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         ibFloatingPanel = findViewById(R.id.ibFloatingPanel);
 
-        //ibFloatingPanel.setVisibility(showFloatingPanelButton ? View.VISIBLE : View.INVISIBLE);
         ibFloatingPanel.setOnClickListener (this);
         floatingWindow.ibHideFloatingPanel.setOnClickListener(this);
 	}
@@ -445,6 +443,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_cvt_data.setVisibility( (App.obd.MMC_CAN && (App.obd.canMmcData.can_mmc_cvt_degr_show || App.obd.canMmcData.can_mmc_cvt_temp_show)) ? View.VISIBLE : View.GONE);
         layout_MMC_climate.setVisibility( (App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_ac_data_show) ? View.VISIBLE : View.GONE);
         layout_temp_data.setVisibility( App.obd.engine_temp_show ? View.VISIBLE : View.GONE);
+        ibFloatingPanel.setVisibility(!App.GS.isShowingFloatingPanel ? View.VISIBLE : View.INVISIBLE);
 
         // обновить данные OBD
         updateOBD_climate_data(App.obd.climateData);
@@ -542,17 +541,22 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 switch_cvt_mode();
                 break;
             case R.id.ibFloatingPanel:
-                showFloatingPanelButton = false;
+                App.GS.showFloatingPanelButton = false;
                 App.GS.isShowingFloatingPanel = true;
                 ibFloatingPanel.setVisibility(View.INVISIBLE);
                 showFloatingPanel();
                 break;
             case R.id.ibHideFloatingPanel:
                 App.GS.isShowingFloatingPanel = false;
-                ibFloatingPanel.setVisibility(View.VISIBLE);
-                showFloatingPanelButton = true;
+                App.GS.showFloatingPanelButton = true;
                 floatingWindow.dismiss();
+                ibFloatingPanel.setVisibility(View.VISIBLE);
+                ibFloatingPanel.invalidate();
                 break;
+            case R.id.layout_battery:
+                boolean isVisible = ibFloatingPanel.getVisibility() == View.VISIBLE;
+                ibFloatingPanel.setVisibility(isVisible ? View.INVISIBLE : View.VISIBLE);
+
             default:
                 break;
         }
@@ -1622,25 +1626,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-//        showFloatingPanelButton = savedInstanceState.getBoolean("showFloatingButton");
-        ibFloatingPanel.setVisibility(showFloatingPanelButton ? View.VISIBLE : View.INVISIBLE);
+        ibFloatingPanel.setVisibility(!App.GS.isShowingFloatingPanel ? View.VISIBLE : View.INVISIBLE);
     }
 
-    @Override
-    public void onRestoreInstanceState(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState);
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        outState.putBoolean("showFloatingPanelButton", showFloatingPanelButton);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-    }
 }
 
 

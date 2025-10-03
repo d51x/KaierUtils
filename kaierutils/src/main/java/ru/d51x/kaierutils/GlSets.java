@@ -124,6 +124,7 @@ public class GlSets {
     public boolean dontShowMusicInfoWhenMainActive = true;
 
     public boolean isShowingFloatingPanel = false;
+    public boolean showFloatingPanelButton = true;
 	public GlSets() {
 		Volume = 3;
 		//Brightness = 7;

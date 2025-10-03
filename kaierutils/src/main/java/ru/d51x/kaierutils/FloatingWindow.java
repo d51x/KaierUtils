@@ -96,7 +96,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibHideFloatingPanel:
-                dismiss();
+                //dismiss();
                 break;
             default:
                 break;
