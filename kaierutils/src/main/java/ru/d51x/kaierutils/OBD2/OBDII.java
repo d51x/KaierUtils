@@ -433,7 +433,7 @@ public class OBDII  {
         }  catch ( NonNumericResponseException e5) {
             activeOther = false;
             disconnect();
-            Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
+            Log.d("OBDII-->processOBD_coolantTemp()", e5.toString());
         }
         catch ( StoppedException e6) {
             activeOther = false;
@@ -477,7 +477,7 @@ public class OBDII  {
         }  catch ( NonNumericResponseException e5) {
             activeOther = false;
             disconnect();
-            Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
+            Log.d("OBDII-->processOBD_CMVoltage()", e5.toString());
         }
         catch (UnableToConnectException | IOException e3) {
             activeOther = false;
@@ -501,7 +501,7 @@ public class OBDII  {
             long tt = System.currentTimeMillis();
             MAFObdCommand.run(socket.getInputStream(), socket.getOutputStream());
             obdData.maf = MAFObdCommand.getMAF();
-            Log.d(TAG, String.format("Command RPM :: %d ms", System.currentTimeMillis() - tt));
+            Log.d(TAG, String.format("Command MAF :: %d ms", System.currentTimeMillis() - tt));
 
             MAF_TimeStamp2 = System.currentTimeMillis();
             long t = MAF_TimeStamp2 - MAF_TimeStamp1;
@@ -528,11 +528,11 @@ public class OBDII  {
         }  catch ( NonNumericResponseException e5) {
             activeMAF = false;
             disconnect();
-            Log.d("OBDII-->processOBD_EngineRPM()", e5.toString());
+            Log.d("OBDII-->processOBD_MAF()", e5.toString());
         }
         catch ( StoppedException e6) {
             activeOther = false;
-            Log.d("OBDII-->processOBD_EngineRPM()", e6.toString());
+            Log.d("OBDII-->processOBD_MAF()", e6.toString());
         }
         catch (UnableToConnectException | IOException e3) {
             Log.d("OBDII-->processOBD_MAF()", e3.toString());
@@ -555,7 +555,7 @@ public class OBDII  {
         String function = "processCAN_" + PID + "__" + CanAddress + "()";
 
         try {
-              //SetHeaders(ReceiverAddress, SenderAddress, flowControl);
+            SetHeaders(CanAddress, SenderAddress, flowControl); // избыточная операция, можно сразу задать один раз зашловок с FC или без, а потом читать пиды с или без FC группой
             long tt = System.currentTimeMillis();
             CanObdCommand cmd =  new CanObdCommand(PID);
             cmd.run(socket.getInputStream(), socket.getOutputStream());
@@ -563,7 +563,7 @@ public class OBDII  {
 
             buffer = cmd.getBuffer();
 
-            //Log.d("OBDII-->" + function, "PID: " + PID + ", H: " + ReceiverAddress + ": " + cmd.getFormattedResult());
+            //Log.d("OBDII-->" + function, "PID: " + PID + ", H: " + CanAddress + ": " + cmd.getFormattedResult());
             activeOther = false;
 
         }  catch ( NonNumericResponseException e5) {
@@ -673,17 +673,23 @@ public class OBDII  {
         saveFuelTank();
     }
 
-    private void SetHeaders(String canAddr, String txAddr, boolean flowControl) {
+    private void                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          SetHeaders(String canAddr, String txAddr, boolean flowControl) {
         if (localDebug) return;
         if ( activeMAF ) return;
         activeOther = true;
         try {
             long tt = System.currentTimeMillis();
-            new SelectHeaderObdCommand("ATSH " + canAddr).run(socket.getInputStream(), socket.getOutputStream());
+            new SelectHeaderObdCommand("ATSH " + canAddr).run(socket.getInputStream(), socket.getOutputStream()); // возможно, для flow control это лишнее действие
+
             if (flowControl) {
+                // по всем 3-м командам сразу:
+                // среднее время - 291 ms, максимальное - 395 ms
                 new SelectHeaderObdCommand("ATFCSH " + canAddr).run(socket.getInputStream(), socket.getOutputStream());
-                new SelectHeaderObdCommand("ATFCSD 30080A").run(socket.getInputStream(), socket.getOutputStream());
-                new SelectHeaderObdCommand("ATFCSM 1").run(socket.getInputStream(), socket.getOutputStream());
+                new SelectHeaderObdCommand("ATFCSD 30080A").run(socket.getInputStream(), socket.getOutputStream()); // возможно, можно это сделать 1 раз после подключения и перехода на MMC PIDs
+                new SelectHeaderObdCommand("ATFCSM 1").run(socket.getInputStream(), socket.getOutputStream());      // возможно, можно это сделать 1 раз после подключения и перехода на MMC PIDs
+            } else {
+                // среднее время - 113 ms, максимальное - 208 ms
+                // new SelectHeaderObdCommand("ATSH " + canAddr).run(socket.getInputStream(), socket.getOutputStream());
             }
             new SelectHeaderObdCommand("ATCRA " + txAddr).run(socket.getInputStream(), socket.getOutputStream());
             Log.d(TAG, String.format("SetHeader %s :: %d ms", flowControl ? "with flow control" : "", System.currentTimeMillis() - tt));
@@ -929,7 +935,7 @@ public class OBDII  {
                 // CVT Temp Count
                 OBDCalculations.sendOBD_CVT_Temp(MESSAGE_OBD_CAN_CVT_OIL_TEMP, mHandler, buffer);
             } else if ( PID.equalsIgnoreCase("2110")) {
-                // CVT oil degradation 2110
+                // CVT oil degradation, total working hours + hot working hours
                 OBDCalculations.sendOBD_CVT_Degradation(MESSAGE_OBD_CAN_CVT_OIL_DEGR,  mHandler, buffer);
             }
         }

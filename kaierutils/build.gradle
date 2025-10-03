@@ -38,7 +38,7 @@ android {
 			debuggable true
 			signingConfig signingConfigs.debug
 			buildConfigField "Boolean", "USE_TWUTIL", "false"
-			buildConfigField "Boolean", "SIMULATE_OBD", "true"
+			buildConfigField "Boolean", "SIMULATE_OBD", "false"
 		}
 		release {
 			minifyEnabled true

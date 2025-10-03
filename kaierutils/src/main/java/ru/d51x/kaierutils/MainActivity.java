@@ -21,9 +21,11 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
@@ -143,7 +145,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private TextView tv_air_cond_temp;
 
     private RelativeLayout layout_MMC_climate;
+    private ImageButton ibFloatingPanel;
 
+    private Boolean showFloatingPanelButton = true;
     private FloatingWindow floatingWindow;
 
 	@Override
@@ -157,12 +161,15 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		setContentView (R.layout.main_activity);
 		Log.d ("MainActivity", "onCreate");
 
-        startService(new Intent(this, BackgroundService.class));
+        if (savedInstanceState == null){
+            startService(new Intent(this, BackgroundService.class));
+        } else {
+            showFloatingPanelButton = savedInstanceState.getBoolean("showFloatingPanelButton", true);
+        }
+        registerReceivers(receiver);
+        floatingWindow = new FloatingWindow(getApplicationContext());
 		initComponents();
 		setInitData();
-		registerReceivers(receiver);
-
-        floatingWindow = new FloatingWindow(getApplicationContext());
 
         requestPermissions();
         bluetoothTurnOn();
@@ -331,9 +338,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         layout_MMC_climate = findViewById(R.id.layout_MMC_climate);
 
-        ImageButton ibFloatingPanel = findViewById(R.id.ibFloatingPanel);
+        ibFloatingPanel = findViewById(R.id.ibFloatingPanel);
+
+        //ibFloatingPanel.setVisibility(showFloatingPanelButton ? View.VISIBLE : View.INVISIBLE);
         ibFloatingPanel.setOnClickListener (this);
-        layout_battery.setOnClickListener (this);
+        floatingWindow.ibHideFloatingPanel.setOnClickListener(this);
 	}
 
     @Override
@@ -533,17 +542,29 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 switch_cvt_mode();
                 break;
             case R.id.ibFloatingPanel:
-            case R.id.layout_battery:
+                showFloatingPanelButton = false;
+                App.GS.isShowingFloatingPanel = true;
+                ibFloatingPanel.setVisibility(View.INVISIBLE);
                 showFloatingPanel();
+                break;
+            case R.id.ibHideFloatingPanel:
+                App.GS.isShowingFloatingPanel = false;
+                ibFloatingPanel.setVisibility(View.VISIBLE);
+                showFloatingPanelButton = true;
+                floatingWindow.dismiss();
+                break;
             default:
                 break;
         }
+
     }
 
 
     private void showFloatingPanel() {
         if (Settings.canDrawOverlays(getApplicationContext())) {
-            floatingWindow.show();
+            if (!floatingWindow.isShowing()) {
+                floatingWindow.show();
+            }
         } else {
             startManageDrawOverlaysPermission();
         }
@@ -1598,6 +1619,28 @@ public class MainActivity extends Activity implements View.OnClickListener,
         tv.setText(ss);
     }
 
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        showFloatingPanelButton = savedInstanceState.getBoolean("showFloatingButton");
+        ibFloatingPanel.setVisibility(showFloatingPanelButton ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void onRestoreInstanceState(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putBoolean("showFloatingPanelButton", showFloatingPanelButton);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
 }
 
 

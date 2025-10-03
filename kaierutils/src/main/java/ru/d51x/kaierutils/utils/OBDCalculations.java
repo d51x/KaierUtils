@@ -57,6 +57,9 @@ public class OBDCalculations {
             mHandler.sendMessage(message);
             App.obd.canMmcDataPrev.can_mmc_cvt_degradation_level = App.obd.canMmcData.can_mmc_cvt_degradation_level;
         }
+
+        // total working hours  (data[6] * 256 + data[7]) / 6           (data[6] << 8 | data[7]) / 6
+        // hot working hours    (data[26] * 256 + data[27]) / 6         (data[26] << 8 | data[27]) / 6
     }
 
     public static void sendOBD_AC_ExtTemp(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {

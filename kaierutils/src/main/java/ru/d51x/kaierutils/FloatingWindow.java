@@ -3,7 +3,10 @@ package ru.d51x.kaierutils;
 import static java.lang.Math.abs;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -11,6 +14,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.TextView;
+
+import ru.d51x.kaierutils.OBD2.OBDII;
 
 public class FloatingWindow implements View.OnClickListener, View.OnTouchListener {
 
@@ -25,6 +31,9 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     private int lastY = 0;
     private int firstX = 0;
     private int firstY = 0;
+    public ImageButton ibHideFloatingPanel;
+    private final TextView tvOBD_CoolantTemp;
+    private BroadcastReceiver receiver;
 
     @SuppressLint("InflateParams")
     public FloatingWindow(Context context) {
@@ -32,8 +41,10 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel, null);
         floatingView.setOnTouchListener(this);
 
-        ImageButton ibFloatingPanel = floatingView.findViewById(R.id.ibFloatingPanel);
-        ibFloatingPanel.setOnClickListener (this);
+        ibHideFloatingPanel = floatingView.findViewById(R.id.ibHideFloatingPanel);
+        //ibHideFloatingPanel.setOnClickListener (this);
+
+        tvOBD_CoolantTemp = floatingView.findViewById(R.id.tvOBD_CoolantTemp);
 
         layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -44,9 +55,20 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
 
     public void show() {
         if (Settings.canDrawOverlays(context)) {
-            dismiss();
+            // dismiss();
             isShowing = true;
             getWindowManager().addView(floatingView, layoutParams);
+
+            receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    String action = intent.getAction();
+                    if (action.equals(OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED)) {
+                        tvOBD_CoolantTemp.setText(String.format(context.getString(R.string.text_obd_coolant_temp_f), intent.getStringExtra("coolantTemp")));
+                    }
+                }
+            };
+            context.registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED));
         }
     }
 
@@ -54,9 +76,14 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         if (isShowing) {
             getWindowManager().removeView(floatingView);
             isShowing = false;
+            context.unregisterReceiver(receiver);
+            App.GS.isShowingFloatingPanel = false;
         }
     }
 
+    public boolean isShowing() {
+        return isShowing;
+    }
     public WindowManager getWindowManager() {
         if (windowManager == null) {
             windowManager = (WindowManager) this.context.getSystemService(Context.WINDOW_SERVICE);
@@ -68,7 +95,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ibFloatingPanel:
+            case R.id.ibHideFloatingPanel:
                 dismiss();
                 break;
             default:
