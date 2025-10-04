@@ -178,12 +178,17 @@ public class MainActivity extends Activity implements View.OnClickListener,
         Log.i("BT", "Bluetooth turn on ....");
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S ) {
-            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            if (!mBluetoothAdapter.isEnabled()) {
-                mBluetoothAdapter.isEnabled();
-                App.GS.btState = mBluetoothAdapter.isEnabled();
+            BluetoothManager btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            BluetoothAdapter btAdapter = btManager.getAdapter();
+            if (!btAdapter.isEnabled()) {
+                Log.i("BT", "BT adapter disabled. Enable it");
+                btAdapter.enable();
+                App.GS.btState = btAdapter.isEnabled();
+            } else {
+                Log.i("BT", "BT adapter already enabled.");
             }
-        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        } else
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             Log.i("BT", "Bluetooth turn on .... Check permission BLUETOOTH_CONNECT");
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                 Log.i("BT", "Permission granted. .... Turn on bt");
@@ -196,6 +201,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 } else {
                     Log.i("BT", "BT adapter already enabled.");
                 }
+            }  else {
+                Log.e("BT", "Permission not granted.");
             }
         } else {
             Log.i("BT", "Bluetooth turn on .... Check permission BLUETOOTH_CONNECT");
@@ -205,7 +212,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 Intent intent = new Intent(ACTION_REQUEST_ENABLE);
                 startActivityForResult(intent, REQUEST_CODE_BLUETOOTH_ACTION);
             } else {
-                Log.i("BT", "Permission not granted.");
+                Log.e("BT", "Permission not granted.");
             }
         }
     }

@@ -1,17 +1,22 @@
 package ru.d51x.kaierutils.OBD2;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -144,7 +149,27 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         ArrayList<String> deviceStrs = new ArrayList<String>();
         final ArrayList<String> devices = new ArrayList<String>();
         final ArrayList<String> devicesName = new ArrayList<String>();
-        BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+
+
+        BluetoothManager btManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+        BluetoothAdapter btAdapter = btManager.getAdapter();
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            Log.i("BT", "Bluetooth turn on .... Check permission BLUETOOTH_CONNECT");
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                if (!btAdapter.isEnabled()) {
+                    Log.i("BT", "BT adapter disabled. Enable it");
+                    btAdapter.enable();
+                    App.GS.btState = btAdapter.isEnabled();
+                } else {
+                    Log.i("BT", "BT adapter already enabled.");
+                }
+            }
+        }
+
+
+
+        //BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
