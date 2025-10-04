@@ -851,33 +851,49 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 case OBDII.OBD_BROADCAST_ACTION_ECU_CVT_OIL_TEMP_CHANGED:
                     updateOBD_CVT_data(modeCVT);
                     break;
-                case OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED:
-                    updateOBD_air_cond_fan_speed(ClimateData.FanSpeed.values()[intent.getIntExtra("air_cond_fan_speed_position", -1)]);
-                    break;
-                case OBDII.OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED:
-                    updateOBD_air_cond_fan_mode(ClimateData.FanMode.values()[intent.getIntExtra("air_cond_fan_mode", -1)]);
-                    break;
-                case OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED:
-                    updateOBD_air_cond_temperature(intent.getStringExtra("air_cond_set_temperature"));
-                    break;
+//                case OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED:
+//                    updateOBD_air_cond_fan_speed(ClimateData.FanSpeed.values()[intent.getIntExtra("air_cond_fan_speed_position", -1)]);
+//                    break;
+//                case OBDII.OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED:
+//                    updateOBD_air_cond_fan_mode(ClimateData.FanMode.values()[intent.getIntExtra("air_cond_fan_mode", -1)]);
+//                    break;
+//                case OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED:
+//                    updateOBD_air_cond_temperature(intent.getStringExtra("air_cond_set_temperature"));
+//                    break;
                 case OBDII.OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED:
                     updateOBD_air_cond_ext_temperature(intent.getIntExtra("air_cond_external_temp", -255));
                     break;
-                case OBDII.OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED:
-                    updateOBD_air_cond_blow_direction(ClimateData.BlowDirection.values()[intent.getIntExtra("air_cond_blow_direction_position", -1)]);
+                case OBDII.ACTION_AIR_COND_2160: {
+                        ClimateData climateData = (ClimateData) intent.getSerializableExtra("air_cond_2160");
+                        updateOBD_air_cond_fan_mode(climateData.fan_mode);
+                        updateOBD_air_cond_blow_mode(climateData.blow_mode);
+                        updateOBD_air_cond_temperature(Double.toString(climateData.temperature));
+                    }
                     break;
-                case OBDII.OBD_BROADCAST_ACTION_AC_BLOW_MODE_CHANGED:
-                    updateOBD_air_cond_blow_mode(ClimateData.BlowMode.values()[intent.getIntExtra("air_cond_blow_mode", -1)]);
+                case OBDII.ACTION_AIR_COND_2161: {
+                        ClimateData climateData = (ClimateData) intent.getSerializableExtra("air_cond_2161");
+                        updateOBD_air_cond_blow_direction(climateData.blow_direction);
+                        updateOBD_air_cond_fan_speed(climateData.fan_speed);
+                        updateOBD_air_cond_state(climateData.ac_state);
+                        updateOBD_air_cond_recirculation(climateData.recirculation_state);
+                        updateOBD_air_cond_defogger(climateData.defogger_state);
+                    }
                     break;
-                case OBDII.OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED:
-                    updateOBD_air_cond_defogger(ClimateData.State.values()[intent.getIntExtra("air_cond_defogger_state", -1)]);
-                    break;
-                case OBDII.OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED:
-                    updateOBD_air_cond_recirculation(ClimateData.State.values()[intent.getIntExtra("air_cond_recirculation_state", -1)]);
-                    break;
-                case OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED:
-                    updateOBD_air_cond_state(ClimateData.State.values()[intent.getIntExtra("air_cond_state", -1)]);
-                    break;
+//                case OBDII.OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED:
+//                    updateOBD_air_cond_blow_direction(ClimateData.BlowDirection.values()[intent.getIntExtra("air_cond_blow_direction_position", -1)]);
+//                    break;
+//                case OBDII.OBD_BROADCAST_ACTION_AC_BLOW_MODE_CHANGED:
+//                    updateOBD_air_cond_blow_mode(ClimateData.BlowMode.values()[intent.getIntExtra("air_cond_blow_mode", -1)]);
+//                    break;
+//                case OBDII.OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED:
+//                    updateOBD_air_cond_defogger(ClimateData.State.values()[intent.getIntExtra("air_cond_defogger_state", -1)]);
+//                    break;
+//                case OBDII.OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED:
+//                    updateOBD_air_cond_recirculation(ClimateData.State.values()[intent.getIntExtra("air_cond_recirculation_state", -1)]);
+//                    break;
+//                case OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED:
+//                    updateOBD_air_cond_state(ClimateData.State.values()[intent.getIntExtra("air_cond_state", -1)]);
+//                    break;
             }
 
 		}
@@ -1044,17 +1060,20 @@ public class MainActivity extends Activity implements View.OnClickListener,
         registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED));
 
 
-        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED));
-        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED));
-        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED));
-		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBDII.ACTION_AIR_COND_2160));
+        registerReceiver(receiver, new IntentFilter(OBDII.ACTION_AIR_COND_2161));
 
-		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_BLOW_MODE_CHANGED));
-		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED));
-
-		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED));
-		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED));
-		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED));
+//        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_TEMP_CHANGED));
+//        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED));
+//        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_FAN_SPEED_CHANGED));
+//		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_FAN_MODE_CHANGED));
+//
+//		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_BLOW_MODE_CHANGED));
+//		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_BLOW_DIRECTION_CHANGED));
+//
+//		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_DEFOGGER_CHANGED));
+//		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_RECIRCULATION_CHANGED));
+//		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_AC_STATE_CHANGED));
 
 		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED));
 	}

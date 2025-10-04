@@ -1,7 +1,9 @@
 package ru.d51x.kaierutils.Data;
 
 
-public class ClimateData {
+import java.io.Serializable;
+
+public class ClimateData implements Serializable {
 
     public enum FanMode { auto, off, manual, unknown};
     public enum BlowMode { auto, manual, unknown};
@@ -25,20 +27,20 @@ public class ClimateData {
     public FanMode fan_mode;
     public BlowDirection blow_direction;
     public BlowMode blow_mode;
-    public double temperature ;                  // остаток топлива в баке
-    public int ext_temperature ;                  // остаток топлива в баке
-    public State ac_state ;                  // остаток топлива в баке
-    public State recirculation_state ;                  // остаток топлива в баке
-    public State defogger_state ;                  // остаток топлива в баке
+    public double temperature ;
+    public int ext_temperature ;
+    public State ac_state ;
+    public State recirculation_state ;
+    public State defogger_state ;
 
 
   public ClimateData() {
-      fan_speed = FanSpeed.unknown;                  // остаток топлива в баке
-      blow_direction = BlowDirection.unknown;                  // остаток топлива в баке
-      temperature = -255;                  // остаток топлива в баке
-      ext_temperature = -255;                  // остаток топлива в баке
-      ac_state = State.off;                  // остаток топлива в баке
-      recirculation_state = State.off;                  // остаток топлива в баке
+      fan_speed = FanSpeed.unknown;
+      blow_direction = BlowDirection.unknown;
+      temperature = -255;
+      ext_temperature = -255;
+      ac_state = State.off;
+      recirculation_state = State.off;
       defogger_state = State.off;
       fan_mode = FanMode.unknown;
       blow_mode = BlowMode.unknown;
