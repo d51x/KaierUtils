@@ -10,15 +10,25 @@ public class CanMmcData {
     public int can_mmc_speed;                  // скорость по CAN
     public int can_mmc_rpm;                  // обороты по CAN
 
-    public int can_mmc_fuel_remain;                  // остаток топлива в баке
+    public int canMmcMileage;
+    public float canMmcMeterVehicleSpeed;
+    public float canMmcMeterTripA;
+    public float canMmcMeterTripB;
+    public float canMmcMeterVoltage;
+    public int serviceReminderDistance;
+    public int serviceReminderPeriod;
+    public int canMmcMeterEngineRpm;
+    public int canMmcFuelRemain;                  // остаток топлива в баке
     public int can_mmc_fuel_remain_update_time;       // время обновления данных об остатке топлива в баке
     public boolean can_mmc_fuel_remain_show;        // читать остаток топлива по can
 
-    public int can_mmc_cvt_temp;                    // температура масла в CVT
+    public int canMmcCvtTemp;                    // температура масла в CVT
     public int can_mmc_cvt_temp_update_time;        // время обновления температуры масла CVT
     public boolean can_mmc_cvt_temp_show;        // читать температуру CVT
 
-    public int can_mmc_cvt_degradation_level;     // степень деградации масла в CVT
+    public int canMmcCvtOilDegradation;     // степень деградации масла в CVT
+    public float canMmcCvtWorkHoursTotal;
+    public float canMmcCvtWorkHoursHot;
     public int can_mmc_cvt_degradation_update_time;     // время обновления степени деградации масла в CVT
     public boolean can_mmc_cvt_degr_show;        // читать деградацию CVT
 
@@ -45,15 +55,15 @@ public enum State {off, on};
 
       can_mmc_speed = -1;
       can_mmc_rpm = -1;
-      can_mmc_fuel_remain = -1;
+      canMmcFuelRemain = -1;
       can_mmc_fuel_remain_update_time = -1;
       can_mmc_fuel_remain_show = false;
 
-      can_mmc_cvt_temp = -255;
+      canMmcCvtTemp = -255;
       can_mmc_cvt_temp_update_time = -1;
       can_mmc_cvt_temp_show = false;
 
-      can_mmc_cvt_degradation_level = -255;
+      canMmcCvtOilDegradation = -255;
       can_mmc_cvt_degradation_update_time = -1;
       can_mmc_cvt_degr_show = false;
 
