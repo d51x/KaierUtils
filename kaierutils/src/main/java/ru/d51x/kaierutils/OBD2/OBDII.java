@@ -93,7 +93,7 @@ public class OBDII  {
     public static final int MESSAGE_OBD_CAN_AIR_COND_BLOW_MODE = 0x06880004;
     public static final int MESSAGE_OBD_CAN_AIR_COND_BLOW_DIRECTION = 0x06880005;
     public static final int MESSAGE_OBD_CAN_AIR_COND_TEMPERATURE = 0x06880006;
-    public static final int MESSAGE_OBD_CAN_AIR_COND_EXTERNAL_TEMPERATURE = 0x06880007;
+    public static final int MESSAGE_OBD_CAN_AIR_COND_AMBIENT_TEMPERATURE = 0x06880007;
     public static final int MESSAGE_OBD_CAN_AIR_COND_RECIRCULATION_STATE = 0x06880008;
     public static final int MESSAGE_OBD_CAN_AIR_COND_DEFOGGER_STATE = 0x06880009;
     public static final int MESSAGE_OBD_CAN_COMBINE_METER = 0x06A00000;
@@ -322,10 +322,50 @@ public class OBDII  {
 
         if ( MMC_CAN )  {
             // переходим на режим работы MMC CAN и пиды 21хх
+            /* время на выполнение команд max = 1250 ms
+                header - 200 m
+                RPM    - 180
+                Speed  - 170
+                Coolan - 160
+                Voltag - 150
+                21 01  - xxx        voltage, speed, rpm
+                21 02  - xxx        coolant
+                21 03  - xxx        air flow
+                21 1D  - 200        off cond
+                21 1E  - 150        fuel relay
+             */
             request_MMC_ECU_ENGINE();
 
+            /* время на выполнение команд max = 1000 ms
+                header - 400 m
+                21 03  - 250       cvt temp
+                21 10  - 330        oil degr, work time
+             */
             request_MMC_ECU_CVT();
+
+            /* время на выполнение команд max = 1625 ms
+                header - 400 ms
+                21 A1  - 150        speed
+                21 A2  - 160        rpm
+                21 A3  - 125        fuel
+                21 A6  - 110        luminocity day/night + backlight on/off
+                21 A8  - 150        lights - high beam, low beam, fog lights, turn l/r, handbrake
+                21 AD  - 110        mileage
+                21 AE  - 170 (FC)   tripA, tripB
+                21 AF  - 100        voltage
+                21 BC  - 150 (FC)   service reminder
+             */
             request_MMC_ECU_COMBINATION_METER();
+
+            /* время на выполнение команд max = 1000 ms
+               header - 220 ms
+                21 10 - 130         coolant t, air t, interior t
+                21 11 - 150         ambient t
+                21 13 - xxx         extern t, rpm, speed
+                21 23 - 200         leak indicator
+                21 60 - 120         btn/knob position
+                21 61 - 150         ac indications
+             */
             request_MMC_ECU_AIR_COND();
             //request_MMC_ECU_AWC();
 
@@ -548,7 +588,34 @@ public class OBDII  {
 
     }
 
-    public ArrayList<Integer> request_CAN_ECU(String PID, String CanAddress, String SenderAddress, boolean flowControl) {
+    private void requestCanCVT() {
+        ArrayList<Integer> buffer = null;
+        try {
+            // установка общего хедера с флоу-контрол
+            SetHeaders("7E1", "7E9", true);
+            // 21 03
+            CanObdCommand cmd =  new CanObdCommand("2103");
+            long tt = System.currentTimeMillis();
+            cmd.run(socket.getInputStream(), socket.getOutputStream());
+            Log.d(TAG, String.format("7E1 2103 :: %d ms", System.currentTimeMillis() - tt));
+            buffer = cmd.getBuffer();
+            // TODO: process buffer
+
+            // 21 10
+            cmd = new CanObdCommand("2110");
+            tt = System.currentTimeMillis();
+            cmd.run(socket.getInputStream(), socket.getOutputStream());
+            Log.d(TAG, String.format("7E1 2110 :: %d ms", System.currentTimeMillis() - tt));
+            buffer = cmd.getBuffer();
+            // TODO: process buffer
+
+            //TODOO: process data
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ArrayList<Integer> request_CAN_ECU(String PID, String CanAddress /*, String SenderAddress, boolean flowControl*/) {
         ArrayList<Integer> buffer = null;
         if ( activeMAF ) return buffer;
         activeOther = true;
@@ -727,10 +794,24 @@ public class OBDII  {
         processOBD_CMVoltage();         // Voltage:         01 42
 
         ArrayList<Integer> buffer = null;
-        //buffer = request_CAN_ECU("211D", "7E0", "7E8", false);
+
+        // voltage, speed, rpm
+        buffer = request_CAN_ECU("2101", "7E0");
+        sendObdMessage("2101", "7E0", buffer);
+
+        // coolant
+        buffer = request_CAN_ECU("2102", "7E0");
+        sendObdMessage("2102", "7E0", buffer);
+
+        // air flow
+        buffer = request_CAN_ECU("2103", "7E0");
+        sendObdMessage("2103", "7E0", buffer);
+
+        // off cond
         buffer = request_CAN_ECU("211D", "7E0");
         sendObdMessage("211D", "7E0", buffer);
-        //buffer = request_CAN_ECU("211E", "7E0", "7E8", false);
+
+        // fuel relay
         buffer = request_CAN_ECU("211E", "7E0");
         sendObdMessage("211E", "7E0", buffer);
         // TODO брать данные для:
@@ -767,9 +848,9 @@ public class OBDII  {
 
             activeOther = true;
             SetHeaders("7E1", "7E9", true);
+
             if ( canMmcData.can_mmc_cvt_temp_show ) {
                 if ( t_temp < (canMmcData.can_mmc_cvt_temp_update_time * 1000L) ) return; //время не вышло
-                //buffer = request_CAN_ECU("2103", "7E1", "7E9", true); // // cvt_temp_count
                 buffer = request_CAN_ECU("2103", "7E1"); // // cvt_temp_count
                 sendObdMessage("2103", "7E1", buffer);
                 canMmcData.CVT_oil_temp_TimeStamp1 = canMmcData.CVT_oil_temp_TimeStamp2;
@@ -780,7 +861,6 @@ public class OBDII  {
             // TODO: можно выполнять не часто, раз в 10 сек вполне достаточно или даже реже
             if ( canMmcData.can_mmc_cvt_degr_show ) {
                 if ( t_temp < (canMmcData.can_mmc_cvt_degradation_update_time * 1000L) ) return; //время не вышло
-                //buffer = request_CAN_ECU("2110", "7E1", "7E9", true); // cvt_oil_degradation
                 buffer = request_CAN_ECU("2110", "7E1"); // cvt_oil_degradation
                 sendObdMessage("2110", "7E1", buffer);
                 canMmcData.CVT_oil_degr_TimeStamp1 = canMmcData.CVT_oil_degr_TimeStamp2;
@@ -802,11 +882,35 @@ public class OBDII  {
             activeOther = true;
             ArrayList<Integer> buffer = null;
             // set COMBINE METER ECU addresses
-            //SetHeaders("6A0", "514", false);
             SetHeaders("6A0", "514", true);
-            //buffer = request_CAN_ECU("21A3", "6A0", "514", false);
+
+            buffer = request_CAN_ECU("21A1", "6A0"); // speed
+            sendObdMessage("21A1", "6A0", buffer);
+
+            buffer = request_CAN_ECU("21A2", "6A0"); // rpm
+            sendObdMessage("21A2", "6A0", buffer);
+
             buffer = request_CAN_ECU("21A3", "6A0"); // fuel
             sendObdMessage("21A3", "6A0", buffer);
+
+            buffer = request_CAN_ECU("21A6", "6A0"); // luminocity and day/night
+            sendObdMessage("21A6", "6A0", buffer);
+
+            buffer = request_CAN_ECU("21A8", "6A0"); // lights - габариты, дальний, противотуманки перед/зад, поворотники, ручнник
+            sendObdMessage("21A8", "6A0", buffer);
+
+            buffer = request_CAN_ECU("21AD", "6A0"); // mileage
+            sendObdMessage("21AD", "6A0", buffer);
+
+            buffer = request_CAN_ECU("21AE", "6A0"); // trpA, tripB
+            sendObdMessage("21AE", "6A0", buffer);
+
+            buffer = request_CAN_ECU("21AF", "6A0"); // voltage
+            sendObdMessage("21AF", "6A0", buffer);
+
+            buffer = request_CAN_ECU("21BC", "6A0"); // service reminder
+            sendObdMessage("21BC", "6A0", buffer);
+
             canMmcData.FuelLevel_TimeStamp1 = canMmcData.FuelLevel_TimeStamp2;
             activeOther = false;
         }
@@ -820,17 +924,23 @@ public class OBDII  {
         if (App.obd.canMmcData.can_mmc_ac_data_show) {
             activeOther = true;
             SetHeaders("688", "511", false);
-            // внешняя температура
-            //buffer = request_CAN_ECU("2111", "688", "511", false);
+
+            // coolant t, air t, interior t
+            buffer = request_CAN_ECU("2110", "688");
+            sendObdMessage("2110", "688", buffer);
+
+            // ambient temperature
             buffer = request_CAN_ECU("2111", "688");
             sendObdMessage("2111", "688", buffer);
-            //request_CAN_ECU("2123", "688", "511", true, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
-            // положения крутилок
-            //buffer = request_CAN_ECU("2160", "688", "511", false);
+
+            // cond leak indicator
+            // buffer = request_CAN_ECU("2123", "688");
+
+            // положение крутилок
             buffer = request_CAN_ECU("2160", "688");
             sendObdMessage("2160", "688", buffer);
+
             // состояния индикаторов
-            //buffer = request_CAN_ECU("2161", "688", "511", false);
             buffer = request_CAN_ECU("2161", "688");
             sendObdMessage("2161", "688", buffer);
             activeOther = false;
@@ -841,7 +951,6 @@ public class OBDII  {
         if ( activeMAF ) return;
         ArrayList<Integer> buffer = null;
         SetHeaders( "7B6", "7B7", true);
-        //buffer = request_CAN_ECU("2130", "7B6", "7B7", true);
         buffer = request_CAN_ECU("2130", "7B6");
         sendObdMessage("2130", "7B6", buffer);
     }
@@ -863,7 +972,7 @@ public class OBDII  {
                  break;
 
              // AIR CONDITIONER
-             case MESSAGE_OBD_CAN_AIR_COND_EXTERNAL_TEMPERATURE:
+             case MESSAGE_OBD_CAN_AIR_COND_AMBIENT_TEMPERATURE:
                  SendBroadcastAction(OBD_BROADCAST_ACTION_AC_EXT_TEMP_CHANGED, "air_cond_external_temp", message.arg1);
                  break;
              case MESSAGE_OBD_CAN_AIR_COND_TEMPERATURE:
@@ -922,51 +1031,83 @@ public class OBDII  {
          }
     }
 
-    public void sendObdMessage(String PID, String Addr, ArrayList<Integer> buffer) {
+    public void sendObdMessage(String pid, String blockId, ArrayList<Integer> buffer) {
         if ( buffer == null ) return;
 
         Message msg = new Message();
         // BLOCK: INGINE
-        if ( Addr.equalsIgnoreCase("7E0")) {
+        if ( "7E0".equalsIgnoreCase(blockId)) {
             // process engine
-            if ( PID.equalsIgnoreCase("2101")) {
-                //OBDCalculations.sendOBD_CVT_Temp(MESSAGE_OBD_CAN_CVT_OIL_TEMP, mHandler, buffer);
+            if ( "2101".equalsIgnoreCase(pid)) {
+//                OBDCalculations.sendOBD_ENGINE_Battery_Voltage(MESSAGE_OBD_CAN_ENGINE_BATTERY_VOLTAGE, mHandler, buffer);
+//                OBDCalculations.sendOBD_ENGINE_Speed(MESSAGE_OBD_CAN_ENGINE_SPEED, mHandler, buffer);
+//                OBDCalculations.sendOBD_ENGINE_Rpm(MESSAGE_OBD_CAN_ENGINE_RPM, mHandler, buffer);
+                OBDCalculations.sendOBD_ENGINE_2101(0, mHandler, buffer);
             }
-            else if ( PID.equalsIgnoreCase("2102")) {
-                //OBDCalculations.sendOBD_CVT_Temp(MESSAGE_OBD_CAN_CVT_OIL_TEMP, mHandler, buffer);
+            else if ( "2102".equalsIgnoreCase(pid)) {
+                // OBDCalculations.sendOBD_ENGINE_CoolantTemperature(MESSAGE_OBD_CAN_ENGINE_COOLANT_TEMPERATURE, mHandler, buffer);
+                OBDCalculations.sendOBD_ENGINE_2102(0, mHandler, buffer);
             }
-            else if ( PID.equalsIgnoreCase("211D")) {
+            else if ( "2103".equalsIgnoreCase(pid)) {
+//                OBDCalculations.sendOBD_ENGINE_AirFlowSensor(MESSAGE_OBD_CAN_ENGINE_AIR_FLOW_SENSOR, mHandler, buffer);
+                OBDCalculations.sendOBD_ENGINE_2103(0, mHandler, buffer);
+            }
+            else if ( "211D".equalsIgnoreCase(pid)) {
                 OBDCalculations.sendOBD_ENGINE_Fan_State(MESSAGE_OBD_CAN_ENGINE_FAN_STATE, mHandler, buffer);
             }
-            else if ( PID.equalsIgnoreCase("211E")) {
-                //OBDCalculations.sendOBD_CVT_Temp(MESSAGE_OBD_CAN_CVT_OIL_TEMP, mHandler, buffer);
+            else if ( "211E".equalsIgnoreCase(pid)) {
+//                OBDCalculations.sendOBD_ENGINE_FuelRelay(MESSAGE_OBD_CAN_ENGINE_FUEL_RELAY, mHandler, buffer);
+                OBDCalculations.sendOBD_ENGINE_211E(0, mHandler, buffer);
             }
         }
         // BLOCK: CVT
-        else if (Addr.equalsIgnoreCase("7E1")) {
+        else if ("7E1".equalsIgnoreCase(blockId)) {
             //process CVT
-            if ( PID.equalsIgnoreCase("2103")) {
+            if ( "2103".equalsIgnoreCase(pid)) {
                 // CVT Temp Count
                 OBDCalculations.sendOBD_CVT_Temp(MESSAGE_OBD_CAN_CVT_OIL_TEMP, mHandler, buffer);
-            } else if ( PID.equalsIgnoreCase("2110")) {
+            }
+            else if ( "2110".equalsIgnoreCase(pid)) {
                 // CVT oil degradation, total working hours + hot working hours
-                OBDCalculations.sendOBD_CVT_Degradation(MESSAGE_OBD_CAN_CVT_OIL_DEGR,  mHandler, buffer);
+                OBDCalculations.sendOBD_CVT_OilDegradation(MESSAGE_OBD_CAN_CVT_OIL_DEGR,  mHandler, buffer);
+//                OBDCalculations.sendOBD_CVT_WorkHoursTotal(MESSAGE_OBD_CAN_CVT_WORK_HOURS_TOTAL,  mHandler, buffer);
+//                OBDCalculations.sendOBD_CVT_WorkHoursHot(MESSAGE_OBD_CAN_CVT_WORK_HOURS_HOT,  mHandler, buffer);
+                OBDCalculations.sendOBD_CVT_2110(0, mHandler, buffer);
             }
         }
         // BLOCK: AIR CONDITION
-        else if ( Addr.equalsIgnoreCase("688")) {
+        else if ( "688".equalsIgnoreCase(blockId)) {
             // process Air Condition
-            if ( PID.equalsIgnoreCase( "2111") ) {
-                // external value
-                OBDCalculations.sendOBD_AC_ExtTemp(MESSAGE_OBD_CAN_AIR_COND_EXTERNAL_TEMPERATURE, mHandler, buffer);
+            if ( "2110".equalsIgnoreCase(pid) ) {
+//                OBDCalculations.sendOBD_AC_InteriorTemperature(MESSAGE_OBD_CAN_AC_INTERIOR_TEMP, mHandler, buffer);
+//                OBDCalculations.sendOBD_AC_AirThermoSensor(MESSAGE_OBD_CAN_AC_AIR_THERMO_SENSOR, mHandler, buffer);
+//                OBDCalculations.sendOBD_AC_Pressure(MESSAGE_OBD_CAN_AC_PRESSURE, mHandler, buffer);
+//                OBDCalculations.sendOBD_AC_CoolantTemperature(MESSAGE_OBD_CAN_AC_COOLANT_TEMP, mHandler, buffer);
+//                OBDCalculations.sendOBD_AC_SolarSensor(MESSAGE_OBD_CAN_AC_SOLAR_SENSOR, mHandler, buffer);
+                OBDCalculations.sendOBD_AC_2110(0, mHandler, buffer);
             }
-            else if ( PID.equalsIgnoreCase("2160")) {
+            else if ( "2111".equalsIgnoreCase(pid) ) {
+                // external value
+                OBDCalculations.sendOBD_AC_AmbientTemp(MESSAGE_OBD_CAN_AIR_COND_AMBIENT_TEMPERATURE, mHandler, buffer);
+            }
+            else if ( "2113".equalsIgnoreCase(pid) ) {
+//                OBDCalculations.sendOBD_AC_ExternalTemp(MESSAGE_OBD_CAN_AIR_COND_EXTERNAL_TEMPERATURE, mHandler, buffer);
+//                OBDCalculations.sendOBD_AC_EngineRpm(MESSAGE_OBD_CAN_AIR_COND_ENGINE_RPM, mHandler, buffer);
+//                OBDCalculations.sendOBD_AC_VehicleSpeed(MESSAGE_OBD_CAN_AIR_COND_VEHICLE_SPEED, mHandler, buffer);
+                OBDCalculations.sendOBD_AC_2113(0, mHandler, buffer);
+            }
+            else if ( "2132".equalsIgnoreCase(pid) ) {
+//                OBDCalculations.sendOBD_AC_LeakIndicator(MESSAGE_OBD_CAN_AIR_COND_LEAK_INDICATOR, mHandler, buffer);
+//                OBDCalculations.sendOBD_AC_LeakIndicator20(MESSAGE_OBD_CAN_AIR_COND_LEAK_INDICATOR_20, mHandler, buffer);
+                OBDCalculations.sendOBD_AC_2132(0, mHandler, buffer);
+            }
+            else if ( "2160".equalsIgnoreCase(pid)) {
                // buttons & knob positions
                 OBDCalculations.sendOBD_AC_Fan_Mode(MESSAGE_OBD_CAN_AIR_COND_FAN_MODE, mHandler, buffer);
                 OBDCalculations.sendOBD_AC_Blow_Mode(MESSAGE_OBD_CAN_AIR_COND_BLOW_MODE, mHandler, buffer);
                 OBDCalculations.sendOBD_AC_Temp(MESSAGE_OBD_CAN_AIR_COND_TEMPERATURE, mHandler, buffer);
             }
-            else if ( PID.equalsIgnoreCase("2161")) {
+            else if ( "2161".equalsIgnoreCase(pid)) {
               // ac indications
                 OBDCalculations.sendOBD_AC_Blow_direction(MESSAGE_OBD_CAN_AIR_COND_BLOW_DIRECTION,  mHandler, buffer);
                 OBDCalculations.sendOBD_AC_Fan_Speed(MESSAGE_OBD_CAN_AIR_COND_FAN_SPEED, mHandler, buffer);
@@ -976,14 +1117,61 @@ public class OBDII  {
             }
         }
         // BLOCK: COMBINATION METER
-        else if (Addr.equalsIgnoreCase("6A0")) {
+        else if ("6A0".equalsIgnoreCase(blockId)) {
             // process Combination Meter
-            OBDCalculations.sendOBD_CombineMeter_FuelLevel(MESSAGE_OBD_CAN_COMBINE_METER_FUEL_TANK, mHandler, buffer);
+            if ( "21A1".equalsIgnoreCase(pid) ) {
+//                OBDCalculations.sendOBD_CombineMeter_Speed(MESSAGE_OBD_CAN_COMBINE_METER_SPEED, mHandler, buffer);
+                OBDCalculations.sendOBD_Meter_21A1(0, mHandler, buffer);
+            }
+            else if ( "21A2".equalsIgnoreCase(pid) ) {
+//                OBDCalculations.sendOBD_CombineMeter_Rpm(MESSAGE_OBD_CAN_COMBINE_METER_RPM, mHandler, buffer);
+                OBDCalculations.sendOBD_Meter_21A2(0, mHandler, buffer);
+            }
+            else if ( "21A3".equalsIgnoreCase(pid) ) {
+                OBDCalculations.sendOBD_CombineMeter_FuelLevel(MESSAGE_OBD_CAN_COMBINE_METER_FUEL_TANK, mHandler, buffer);
+            }
+            else if ( "21A6".equalsIgnoreCase(pid) ) {
+//                OBDCalculations.sendOBD_CombineMeter_Backlight(MESSAGE_OBD_CAN_COMBINE_METER_BACKLIGHT, mHandler, buffer);
+//                OBDCalculations.sendOBD_CombineMeter_LuminocityDay(MESSAGE_OBD_CAN_COMBINE_METER_LUMINOCITY_DAY, mHandler, buffer);
+//                OBDCalculations.sendOBD_CombineMeter_LuminocityNight(MESSAGE_OBD_CAN_COMBINE_METER_LUMINOCITY_NIGHT, mHandler, buffer);
+                OBDCalculations.sendOBD_Meter_21A6(0, mHandler, buffer);
+            }
+            else if ( "21A8".equalsIgnoreCase(pid) ) {
+//                OBDCalculations.sendOBD_CombineMeter_Handbreak(MESSAGE_OBD_CAN_COMBINE_METER_HANDBREAK, mHandler, buffer);
+//                OBDCalculations.sendOBD_CombineMeter_HighBeam(MESSAGE_OBD_CAN_COMBINE_METER_HIGH_BEAM, mHandler, buffer);
+//                OBDCalculations.sendOBD_CombineMeter_LowBeam(MESSAGE_OBD_CAN_COMBINE_METER_LOW_BEAM, mHandler, buffer);
+//                OBDCalculations.sendOBD_CombineMeter_FrontFog(MESSAGE_OBD_CAN_COMBINE_METER_FRONT_FOG, mHandler, buffer);
+//                OBDCalculations.sendOBD_CombineMeter_RearFog(MESSAGE_OBD_CAN_COMBINE_METER_REAR_FOG, mHandler, buffer);
+//                OBDCalculations.sendOBD_CombineMeter_TurnLeft(MESSAGE_OBD_CAN_COMBINE_METER_TURN_LEFT, mHandler, buffer);
+//                OBDCalculations.sendOBD_CombineMeter_TurnRight(MESSAGE_OBD_CAN_COMBINE_METER_TURN_RIGHT, mHandler, buffer);
+//                OBDCalculations.sendOBD_CombineMeter_IgnitionStarted(MESSAGE_OBD_CAN_COMBINE_METER_IGNITION_STARTED, mHandler, buffer);
+                OBDCalculations.sendOBD_Meter_21A8(0, mHandler, buffer);
+            }
+            else if ( "21AD".equalsIgnoreCase(pid) ) {
+//                OBDCalculations.sendOBD_CombineMeter_Mileage(MESSAGE_OBD_CAN_COMBINE_METER_MILEAGE, mHandler, buffer);
+                OBDCalculations.sendOBD_Meter_21AD(0, mHandler, buffer);
+            }
+            else if ( "21AE".equalsIgnoreCase(pid) ) {
+//                OBDCalculations.sendOBD_CombineMeter_TripA(MESSAGE_OBD_CAN_COMBINE_METER_TRIP_A, mHandler, buffer);
+//                OBDCalculations.sendOBD_CombineMeter_TripB(MESSAGE_OBD_CAN_COMBINE_METER_TRIP_B, mHandler, buffer);
+                OBDCalculations.sendOBD_Meter_21AE(0, mHandler, buffer);
+            }
+            else if ( "21AF".equalsIgnoreCase(pid) ) {
+//                OBDCalculations.sendOBD_CombineMeter_Voltage(MESSAGE_OBD_CAN_COMBINE_METER_VOLTAGE, mHandler, buffer);
+                OBDCalculations.sendOBD_Meter_21AF(0, mHandler, buffer);
+            }
+            else if ( "21BC".equalsIgnoreCase(pid) ) {
+//                OBDCalculations.sendOBD_CombineMeter_ServiceReminderKm(MESSAGE_OBD_CAN_COMBINE_SERVICE_REMINDER_KM, mHandler, buffer);
+//                OBDCalculations.sendOBD_CombineMeter_ServiceReminderMonth(MESSAGE_OBD_CAN_COMBINE_SERVICE_REMINDER_MONTH, mHandler, buffer);
+                OBDCalculations.sendOBD_Meter_21BC(0, mHandler, buffer);
+            }
 
         }
         // BLOCK: PARKING SENSORS
-        else if ( Addr.equalsIgnoreCase("763")) {
-            OBDCalculations.sendOBD_ParkingSensors(MESSAGE_OBD_CAN_PARKING_SENSORS, mHandler, buffer);
+        else if ( "763".equalsIgnoreCase(blockId)) {
+            if ( "2101".equalsIgnoreCase(pid) ) {
+                OBDCalculations.sendOBD_ParkingSensors(MESSAGE_OBD_CAN_PARKING_SENSORS, mHandler, buffer);
+            }
         }
     }
 
