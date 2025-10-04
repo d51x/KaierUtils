@@ -727,9 +727,11 @@ public class OBDII  {
         processOBD_CMVoltage();         // Voltage:         01 42
 
         ArrayList<Integer> buffer = null;
-        buffer = request_CAN_ECU("211D", "7E0", "7E8", false);
+        //buffer = request_CAN_ECU("211D", "7E0", "7E8", false);
+        buffer = request_CAN_ECU("211D", "7E0");
         sendObdMessage("211D", "7E0", buffer);
-        buffer = request_CAN_ECU("211E", "7E0", "7E8", false);
+        //buffer = request_CAN_ECU("211E", "7E0", "7E8", false);
+        buffer = request_CAN_ECU("211E", "7E0");
         sendObdMessage("211E", "7E0", buffer);
         // TODO брать данные для:
         // RPM (01 0C)
@@ -767,7 +769,8 @@ public class OBDII  {
             SetHeaders("7E1", "7E9", true);
             if ( canMmcData.can_mmc_cvt_temp_show ) {
                 if ( t_temp < (canMmcData.can_mmc_cvt_temp_update_time * 1000L) ) return; //время не вышло
-                buffer = request_CAN_ECU("2103", "7E1", "7E9", true); // // cvt_temp_count
+                //buffer = request_CAN_ECU("2103", "7E1", "7E9", true); // // cvt_temp_count
+                buffer = request_CAN_ECU("2103", "7E1"); // // cvt_temp_count
                 sendObdMessage("2103", "7E1", buffer);
                 canMmcData.CVT_oil_temp_TimeStamp1 = canMmcData.CVT_oil_temp_TimeStamp2;
             }
@@ -777,7 +780,8 @@ public class OBDII  {
             // TODO: можно выполнять не часто, раз в 10 сек вполне достаточно или даже реже
             if ( canMmcData.can_mmc_cvt_degr_show ) {
                 if ( t_temp < (canMmcData.can_mmc_cvt_degradation_update_time * 1000L) ) return; //время не вышло
-                buffer = request_CAN_ECU("2110", "7E1", "7E9", true); // cvt_oil_degradation
+                //buffer = request_CAN_ECU("2110", "7E1", "7E9", true); // cvt_oil_degradation
+                buffer = request_CAN_ECU("2110", "7E1"); // cvt_oil_degradation
                 sendObdMessage("2110", "7E1", buffer);
                 canMmcData.CVT_oil_degr_TimeStamp1 = canMmcData.CVT_oil_degr_TimeStamp2;
             }
@@ -798,8 +802,10 @@ public class OBDII  {
             activeOther = true;
             ArrayList<Integer> buffer = null;
             // set COMBINE METER ECU addresses
-            SetHeaders("6A0", "514", false);
-            buffer = request_CAN_ECU("21A3", "6A0", "514", false);
+            //SetHeaders("6A0", "514", false);
+            SetHeaders("6A0", "514", true);
+            //buffer = request_CAN_ECU("21A3", "6A0", "514", false);
+            buffer = request_CAN_ECU("21A3", "6A0"); // fuel
             sendObdMessage("21A3", "6A0", buffer);
             canMmcData.FuelLevel_TimeStamp1 = canMmcData.FuelLevel_TimeStamp2;
             activeOther = false;
@@ -815,14 +821,17 @@ public class OBDII  {
             activeOther = true;
             SetHeaders("688", "511", false);
             // внешняя температура
-            buffer = request_CAN_ECU("2111", "688", "511", false);
+            //buffer = request_CAN_ECU("2111", "688", "511", false);
+            buffer = request_CAN_ECU("2111", "688");
             sendObdMessage("2111", "688", buffer);
             //request_CAN_ECU("2123", "688", "511", true, OBD_BROADCAST_ACTION_ECU_AIRCOND_CHANGED);
             // положения крутилок
-            buffer = request_CAN_ECU("2160", "688", "511", false);
+            //buffer = request_CAN_ECU("2160", "688", "511", false);
+            buffer = request_CAN_ECU("2160", "688");
             sendObdMessage("2160", "688", buffer);
             // состояния индикаторов
-            buffer = request_CAN_ECU("2161", "688", "511", false);
+            //buffer = request_CAN_ECU("2161", "688", "511", false);
+            buffer = request_CAN_ECU("2161", "688");
             sendObdMessage("2161", "688", buffer);
             activeOther = false;
         }
@@ -832,7 +841,8 @@ public class OBDII  {
         if ( activeMAF ) return;
         ArrayList<Integer> buffer = null;
         SetHeaders( "7B6", "7B7", true);
-        buffer = request_CAN_ECU("2130", "7B6", "7B7", true);
+        //buffer = request_CAN_ECU("2130", "7B6", "7B7", true);
+        buffer = request_CAN_ECU("2130", "7B6");
         sendObdMessage("2130", "7B6", buffer);
     }
 
@@ -1002,7 +1012,8 @@ public class OBDII  {
             SetHeaders("763", "764", false);
 
             Log.d("request_MMC_ECU_PARKING_SENSORS: --->", "send command...   2101");
-            buffer = request_CAN_ECU("2101", "763", "764", false);
+            //buffer = request_CAN_ECU("2101", "763", "764", false);
+            buffer = request_CAN_ECU("2101", "763");
 
             Log.d("request_MMC_ECU_PARKING_SENSORS: --->", "buffer:  " + buffer.toString());
             sendObdMessage("2101", "763", buffer);
