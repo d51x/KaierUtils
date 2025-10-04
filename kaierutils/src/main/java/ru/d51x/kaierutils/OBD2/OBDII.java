@@ -555,7 +555,7 @@ public class OBDII  {
         String function = "processCAN_" + PID + "__" + CanAddress + "()";
 
         try {
-            SetHeaders(CanAddress, SenderAddress, flowControl); // избыточная операция, можно сразу задать один раз зашловок с FC или без, а потом читать пиды с или без FC группой
+            //SetHeaders(CanAddress, SenderAddress, flowControl); // избыточная операция, можно сразу задать один раз зашловок с FC или без, а потом читать пиды с или без FC группой
             long tt = System.currentTimeMillis();
             CanObdCommand cmd =  new CanObdCommand(PID);
             cmd.run(socket.getInputStream(), socket.getOutputStream());
