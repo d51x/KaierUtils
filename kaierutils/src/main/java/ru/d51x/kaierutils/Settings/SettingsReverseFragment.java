@@ -36,15 +36,15 @@ public class SettingsReverseFragment extends PreferenceFragment implements OnSha
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if ( key.equals ("CAR_SETTINGS__VOLUME_AT_REVERSE__DO_CHANGE")) {
-			App.GS.isNeedSoundDecreaseAtReverse = sharedPreferences.getBoolean (key, false);
+			App.GS.volumeOptions.isNeedSoundDecreaseAtReverse = sharedPreferences.getBoolean (key, false);
 		} else if ( key.equals ("CAR_SETTINGS__VOLUME_AT_REVERSE__FIXED_LEVEL_AVAILABLE")) {
-			App.GS.isFixedVolumeAtReverse = sharedPreferences.getBoolean (key, false);
+			App.GS.volumeOptions.isFixedVolumeAtReverse = sharedPreferences.getBoolean (key, false);
 		} else if ( key.equals ("CAR_SETTINGS__VOLUME_AT_REVERSE__PERCENTAGE_LEVEL_AVAILABLE")) {
-			App.GS.isPercentVolumeAtReverse = sharedPreferences.getBoolean (key, false);
+			App.GS.volumeOptions.isPercentVolumeAtReverse = sharedPreferences.getBoolean (key, false);
 		} else if ( key.equals ("CAR_SETTINGS__VOLUME_AT_REVERSE__FIXED_LEVEL")) {
-			App.GS.FixedVolumeLevelAtReverse = sharedPreferences.getInt(key, 4);
+			App.GS.volumeOptions.fixedVolumeLevelAtReverse = sharedPreferences.getInt(key, 4);
 		} else if ( key.equals ("CAR_SETTINGS__VOLUME_AT_REVERSE__PERCENTAGE_LEVEL")) {
-			App.GS.PercentVolumeLevelAtReverse = sharedPreferences.getInt(key, 40);
+			App.GS.volumeOptions.percentVolumeLevelAtReverse = sharedPreferences.getInt(key, 40);
 		}
 	}
 }

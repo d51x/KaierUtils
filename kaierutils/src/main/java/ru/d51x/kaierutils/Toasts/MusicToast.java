@@ -53,10 +53,10 @@ public class MusicToast {
 	public void showToast() {
         cancel();
 
-		tvTrackTitle.setTextSize ( App.GS.musicToastLine1TextSize );
-		tvArtistAlbum.setTextSize ( App.GS.musicToastLine2TextSize );
+		tvTrackTitle.setTextSize ( App.GS.popupWindowOption.musicToastLine1TextSize );
+		tvArtistAlbum.setTextSize ( App.GS.popupWindowOption.musicToastLine2TextSize );
 
-		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( App.GS.musicToastPictureWidth, App.GS.musicToastPictureHeight );
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( App.GS.popupWindowOption.musicToastPictureWidth, App.GS.popupWindowOption.musicToastPictureHeight );
 		ivAlbumArt.setLayoutParams(layoutParams);
 
 /*

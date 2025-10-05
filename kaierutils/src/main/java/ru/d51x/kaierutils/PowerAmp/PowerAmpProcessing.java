@@ -106,7 +106,7 @@ public class PowerAmpProcessing {
             else if (action.equals(PowerampAPI.ACTION_STATUS_CHANGED)) {
                 int status = intent.getIntExtra(PowerampAPI.STATUS, -1);
                 boolean paused = intent.getBooleanExtra(PowerampAPI.PAUSED, false);
-                App.GS.isPowerAmpPlaying = ((status == PowerampAPI.Status.TRACK_PLAYING) && (!paused));
+                App.GS.powerAmpOpt.isPowerAmpPlaying = ((status == PowerampAPI.Status.TRACK_PLAYING) && (!paused));
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
                 prefs.edit().putInt("kaierutils_power_amp_status", status).apply();
@@ -118,24 +118,24 @@ public class PowerAmpProcessing {
 	            String artist = bundle.getString(Track.ARTIST);
 	            String album = bundle.getString(Track.ALBUM);
 	            String track = bundle.getString(Track.TITLE);
-	            App.GS.PowerAmp_TrackTitle = (track != null) ? track : "";
-	            App.GS.PowerAmp_AlbumArtist = "";
+	            App.GS.powerAmpOpt.PowerAmp_TrackTitle = (track != null) ? track : "";
+	            App.GS.powerAmpOpt.PowerAmp_AlbumArtist = "";
 	            if (artist != null) {
-		            App.GS.PowerAmp_AlbumArtist = artist;
+		            App.GS.powerAmpOpt.PowerAmp_AlbumArtist = artist;
 	            }
 	            if (album != null) {
-		            App.GS.PowerAmp_AlbumArtist += " (" + album + ")";
+		            App.GS.powerAmpOpt.PowerAmp_AlbumArtist += " (" + album + ")";
 	            }
 
 	            Intent intent2 = new Intent();
 	            intent2.setAction(GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED);
-	            intent2.putExtra("TrackTitle", App.GS.PowerAmp_TrackTitle);
-	            intent2.putExtra("AlbumArtist", App.GS.PowerAmp_AlbumArtist);
-	            intent2.putExtra("AlbumArt", App.GS.PowerAmp_AlbumArt);
+	            intent2.putExtra("TrackTitle", App.GS.powerAmpOpt.PowerAmp_TrackTitle);
+	            intent2.putExtra("AlbumArtist", App.GS.powerAmpOpt.PowerAmp_AlbumArtist);
+	            intent2.putExtra("AlbumArt", App.GS.powerAmpOpt.PowerAmp_AlbumArt);
 
 	            App.getInstance().sendBroadcast(intent2);
 
-	            if ( App.GS.interactWithPowerAmp && App.GS.isShowTrackInfoToast && App.GS.isPowerAmpPlaying )
+	            if ( App.GS.powerAmpOpt.interactWithPowerAmp && App.GS.powerAmpOpt.isShowTrackInfoToast && App.GS.powerAmpOpt.isPowerAmpPlaying )
 	            {
                     if ( !(App.GS.curAudioFocusID == TWUtilConst.TW_AUDIO_FOCUS_MUSIC_ID || App.GS.curAudioFocusID == 0 )) return;
                     ActivityManager activityManager = (ActivityManager) context.getSystemService("activity");
@@ -147,12 +147,12 @@ public class PowerAmpProcessing {
 	                     !(activeWnd.equalsIgnoreCase (PowerampAPI.PACKAGE_NAME))
 				       )
 		            {
-			            if ( App.GS.dontShowMusicInfoWhenMainActive &&
+			            if ( App.GS.uiOptions.dontShowMusicInfoWhenMainActive &&
                                 activeWnd.equalsIgnoreCase("ru.d51x.kaierutils") &&
                                 activeActivity.equalsIgnoreCase("ru.d51x.kaierutils.MainActivity")) return;
 						App.mToast.cancel();
-						App.mToast.setTrackTitle (App.GS.PowerAmp_TrackTitle);
-			            App.mToast.setArtistAlbum ( App.GS.PowerAmp_AlbumArtist);
+						App.mToast.setTrackTitle (App.GS.powerAmpOpt.PowerAmp_TrackTitle);
+			            App.mToast.setArtistAlbum ( App.GS.powerAmpOpt.PowerAmp_AlbumArtist);
 						App.mToast.showToast();
 		            }
 	            }
@@ -162,24 +162,24 @@ public class PowerAmpProcessing {
 
 
 
-	            if ( App.GS.interactWithPowerAmp && App.GS.isShowTrackInfoToast && App.GS.isPowerAmpPlaying)
+	            if ( App.GS.powerAmpOpt.interactWithPowerAmp && App.GS.powerAmpOpt.isShowTrackInfoToast && App.GS.powerAmpOpt.isPowerAmpPlaying)
 	            {
                     //if ( !bmp.sameAs( App.GS.PowerAmp_AlbumArt )) {
                     Intent intent3 = new Intent();
                     intent3.setAction(GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED);
-                    intent3.putExtra("TrackTitle", App.GS.PowerAmp_TrackTitle);
-                    intent3.putExtra("AlbumArtist", App.GS.PowerAmp_AlbumArtist);
+                    intent3.putExtra("TrackTitle", App.GS.powerAmpOpt.PowerAmp_TrackTitle);
+                    intent3.putExtra("AlbumArtist", App.GS.powerAmpOpt.PowerAmp_AlbumArtist);
                     intent3.putExtra("AlbumArt", bmp);
 
                    // if ( bmp != null )    {
-                        App.GS.PowerAmp_AlbumArt = bmp;
+                        App.GS.powerAmpOpt.PowerAmp_AlbumArt = bmp;
                     //} else {
 
                     //}
                     //intent3.putExtra("AlbumArt", App.GS.PowerAmp_AlbumArt);
                     //intent3.putExtra("AlbumArt", App.GS.PowerAmp_AlbumArt);
                     App.getInstance().sendBroadcast(intent3);
-                        App.mToast.setAlbumArt (App.GS.PowerAmp_AlbumArt);
+                        App.mToast.setAlbumArt (App.GS.powerAmpOpt.PowerAmp_AlbumArt);
                    // }
 
 	            }
@@ -188,11 +188,11 @@ public class PowerAmpProcessing {
     }
 
     private void setPowerAmpPaused() {
-        if (App.GS.interactWithPowerAmp &&
-            App.GS.needWatchSleepPowerAmp &&
-            App.GS.isPowerAmpPlaying)
+        if (App.GS.powerAmpOpt.interactWithPowerAmp &&
+            App.GS.powerAmpOpt.needWatchSleepPowerAmp &&
+            App.GS.powerAmpOpt.isPowerAmpPlaying)
         {
-	        App.GS.isNeedPowerAmpToPlayAfterWakeup = true;
+	        App.GS.powerAmpOpt.isNeedPowerAmpToPlayAfterWakeup = true;
 	        context.startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
                                             PowerampAPI.Commands.PAUSE));
         }
@@ -201,23 +201,23 @@ public class PowerAmpProcessing {
     private void setPowerAmpResumed() {
 	    // всегда запускает poweramp после sleep, даже елси до этого он не играл?
 
-        if (App.GS.interactWithPowerAmp &&
-            App.GS.needWatchWakeUpPowerAmp &&
-		    App.GS.isNeedPowerAmpToPlayAfterWakeup)
+        if (App.GS.powerAmpOpt.interactWithPowerAmp &&
+            App.GS.powerAmpOpt.needWatchWakeUpPowerAmp &&
+		    App.GS.powerAmpOpt.isNeedPowerAmpToPlayAfterWakeup)
         {
-	        App.GS.isNeedPowerAmpToPlayAfterWakeup = false;
+	        App.GS.powerAmpOpt.isNeedPowerAmpToPlayAfterWakeup = false;
 	        mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     context.startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
                                                     PowerampAPI.Commands.RESUME));
                 }
-            }, App.GS.resumeDelayForPowerAmp);
+            }, App.GS.powerAmpOpt.resumeDelayForPowerAmp);
         }
     }
 
     private void setPowerAmpPlayed() {
-        if (App.GS.interactWithPowerAmp) {
+        if (App.GS.powerAmpOpt.interactWithPowerAmp) {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -230,8 +230,8 @@ public class PowerAmpProcessing {
 
     private void setPowerAmpStarted() {
 	    Log.d("setPowerAmpStarted", "started");
-        if ( App.GS.interactWithPowerAmp &&
-             App.GS.needWatchBootUpPowerAmp )
+        if ( App.GS.powerAmpOpt.interactWithPowerAmp &&
+             App.GS.powerAmpOpt.needWatchBootUpPowerAmp )
         {
             //TWUtilEx.setAudioFocus( 3 );
             mHandler.postDelayed(new Runnable() {
@@ -240,27 +240,27 @@ public class PowerAmpProcessing {
                     context.startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
                                                     PowerampAPI.Commands.RESUME));
                 }
-            }, App.GS.startDelayForPowerAmp);
+            }, App.GS.powerAmpOpt.startDelayForPowerAmp);
            
         }
     }
 
     private void sendSetNextFolder() {
-        if (App.GS.pressNextFolderPowerAmp) {
+        if (App.GS.powerAmpOpt.pressNextFolderPowerAmp) {
             context.startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
                                             PowerampAPI.Commands.NEXT_IN_CAT));
         }
     }
 
     private void sendSetPrevFolder() {
-        if (App.GS.pressPrevFolderPowerAmp) {
+        if (App.GS.powerAmpOpt.pressPrevFolderPowerAmp) {
             context.startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
                                             PowerampAPI.Commands.PREVIOUS_IN_CAT));
         }
     }
 
     private void sendPowerAmpKeyPressed(int key) {
-        if (App.GS.interactWithPowerAmp &&  App.GS.isPowerAmpPlaying) {
+        if (App.GS.powerAmpOpt.interactWithPowerAmp &&  App.GS.powerAmpOpt.isPowerAmpPlaying) {
             switch (key) {
                 case TWUtilConst.TW_SVC_BUTTON_NEXT:
                     sendSetNextFolder();

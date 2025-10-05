@@ -2,8 +2,8 @@ package ru.d51x.kaierutils.OBD2;
 
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E1_PID_2103;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E1_PID_2110;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CAN_CVT_2103;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CAN_CVT_2110;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CVT_2103;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CVT_2110;
 import static ru.d51x.kaierutils.utils.MessageUtils.sendMessage;
 
 import android.os.Handler;
@@ -11,7 +11,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.Data.CvtData;
 
 public class ObdCvt {
@@ -23,7 +22,6 @@ public class ObdCvt {
         CvtData cvtData = new CvtData();
         cvtData.setTemperature(oilTemperature);
         sendMessage(mHandler, msgId, cvtData);
-        App.obd.canMmcData.canMmcCvtTemp = oilTemperature;
         Log.d(TAG, "7E1 2103 Cvt Oil Temperature: " + oilTemperature);
     }
 
@@ -41,10 +39,6 @@ public class ObdCvt {
 
         sendMessage(mHandler, msgId, cvtData);
 
-        App.obd.canMmcDataPrev.canMmcCvtOilDegradation = oilDegradation;
-        App.obd.canMmcDataPrev.canMmcCvtWorkHoursTotal = workHoursTotal;
-        App.obd.canMmcDataPrev.canMmcCvtWorkHoursHot = workHoursHot;
-
         Log.d(TAG, "7E1 2110 Oil Degradation Level: " + oilDegradation);
         Log.d(TAG, "7E1 2110 Work Hours Total: " + workHoursTotal);
         Log.d(TAG, "7E1 2110 Work Hours Hot: " + workHoursHot);
@@ -53,10 +47,10 @@ public class ObdCvt {
     public static void processResult(Handler mHandler, String pid, ArrayList<Integer> buffer) {
         switch (pid) {
             case BLOCK_7E1_PID_2103:
-                processPid2103(MESSAGE_OBD_CAN_CVT_2103, mHandler, buffer);
+                processPid2103(MESSAGE_OBD_CVT_2103, mHandler, buffer);
                 break;
             case BLOCK_7E1_PID_2110:
-                processPid2110(MESSAGE_OBD_CAN_CVT_2110, mHandler, buffer);
+                processPid2110(MESSAGE_OBD_CVT_2110, mHandler, buffer);
                 break;
         }
     }

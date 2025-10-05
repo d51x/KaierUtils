@@ -52,7 +52,7 @@ public class BackgroundService extends Service {
 		startCount = startId;
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
-		App.GS.isNotificationIconShow = prefs.getBoolean ("kaierutils_show_notification_icon", true);
+		App.GS.uiOptions.isNotificationIconShow = prefs.getBoolean ("kaierutils_show_notification_icon", true);
         App.GS.curAudioFocusID = prefs.getInt("last_audio_focus_id", -1);
 
 
@@ -69,7 +69,7 @@ public class BackgroundService extends Service {
 				.setAutoCancel(false)
 				.setPriority(NotificationManager.IMPORTANCE_HIGH)
 				.setCategory(Notification.CATEGORY_SERVICE)
-				.setSmallIcon(App.GS.isNotificationIconShow ? R.drawable.notify_auto : 0)
+				.setSmallIcon(App.GS.uiOptions.isNotificationIconShow ? R.drawable.notify_auto : 0)
 				.setWhen(System.currentTimeMillis())
 				.build();
 		startForeground( NOTIFICATION_SERVICE_ID, notification);

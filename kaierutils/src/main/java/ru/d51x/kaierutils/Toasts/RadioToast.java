@@ -49,8 +49,8 @@ public class RadioToast {
         if ( App.GS.radio.skipSeekingMode && (( Text1.contentEquals( Radio.BLANK_STATION_NAME)) || Text1 == null)) return;
         cancel();
 
-        tvRadioText1.setTextSize ( App.GS.radioToastLine1TextSize );
-        tvRadioText2.setTextSize ( App.GS.radioToastLine2TextSize );
+        tvRadioText1.setTextSize ( App.GS.popupWindowOption.radioToastLine1TextSize );
+        tvRadioText2.setTextSize ( App.GS.popupWindowOption.radioToastLine2TextSize );
         if ( isShowSecondLine ) {
             tvRadioText1.setText ( Text1 );
             tvRadioText2.setText ( Text2 );

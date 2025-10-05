@@ -142,15 +142,6 @@
 
 
     <string name="dsc_available">Включить динамическое изменение громкости</string>
-    <string name="dsc_firstspeed_title">Минимальная скорость</string>
-    <string name="dsc_firstspeed_summary">Значение минимальной скорости, при которой динамически начнет изменяться громкость (текущее значение %1$d)</string>
-    <string name="dsc_firstspeed_dialogtitle">Выберите минимальную скорость</string>
-    <string name="dsc_stepspeed_title">Шаг изменения скорости</string>
-    <string name="dsc_stepspeed_summary">Шаг изменения скорости, при котором срабатывает динамическое изменение громкости (текущее значение %1$d)</string>
-    <string name="dsc_stepspeed_dialogtitle">Выберите интервал скорости</string>
-    <string name="dsc_stepvolume_title">Шаг изменения громкости</string>
-    <string name="dsc_stepvolume_summary">Шаг изменения громкости, на который измениться громкость (текущее значение %1$d)</string>
-    <string name="dsc_stepvolume_dialogtitle">Выберите шаг громкости</string>
     <string name="dsc_time_to_change_title">Время срабатывания (сек)</string>
     <string name="dsc_time_to_change_summary">Время, через которое сработает изменение громкости, если скорость вышла из интервала погрешности (текущее значение %1$d)</string>
     <string name="dsc_time_to_change_dialogtitle">Выберите время срабатывания</string>

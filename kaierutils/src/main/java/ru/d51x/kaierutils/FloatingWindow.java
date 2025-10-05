@@ -2,6 +2,8 @@ package ru.d51x.kaierutils;
 
 import static java.lang.Math.abs;
 
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED;
+
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -63,12 +65,12 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     String action = intent.getAction();
-                    if (action.equals(OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED)) {
+                    if (action.equals(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED)) {
                         tvOBD_CoolantTemp.setText(String.format(context.getString(R.string.text_obd_coolant_temp_f), intent.getStringExtra("coolantTemp")));
                     }
                 }
             };
-            context.registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED));
+            context.registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED));
         }
     }
 

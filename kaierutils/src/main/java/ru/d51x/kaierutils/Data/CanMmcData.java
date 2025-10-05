@@ -7,67 +7,53 @@ import android.preference.PreferenceManager;
 
 public class CanMmcData {
     private Context mContext;
-    public int can_mmc_speed;                  // скорость по CAN
-    public int can_mmc_rpm;                  // обороты по CAN
 
-    public int canMmcMileage;
-    public float canMmcMeterVehicleSpeed;
-    public float canMmcMeterTripA;
-    public float canMmcMeterTripB;
-    public float canMmcMeterVoltage;
-    public int serviceReminderDistance;
-    public int serviceReminderPeriod;
-    public int canMmcMeterEngineRpm;
-    public int canMmcFuelRemain;                  // остаток топлива в баке
+    public EngineData engine = new EngineData();
+    public CvtData cvt = new CvtData();
+    public CombineMeterData meter = new CombineMeterData();
+    public ClimateData climate = new ClimateData();
+
     public int can_mmc_fuel_remain_update_time;       // время обновления данных об остатке топлива в баке
     public boolean can_mmc_fuel_remain_show;        // читать остаток топлива по can
 
-    public int canMmcCvtTemp;                    // температура масла в CVT
     public int can_mmc_cvt_temp_update_time;        // время обновления температуры масла CVT
     public boolean can_mmc_cvt_temp_show;        // читать температуру CVT
 
-    public int canMmcCvtOilDegradation;     // степень деградации масла в CVT
-    public float canMmcCvtWorkHoursTotal;
-    public float canMmcCvtWorkHoursHot;
     public int can_mmc_cvt_degradation_update_time;     // время обновления степени деградации масла в CVT
     public boolean can_mmc_cvt_degr_show;        // читать деградацию CVT
-
-    public int can_mmc_engine_temp;                  // температура ОЖ
 
     public boolean can_mmc_ac_data_show;            // отображать и читать данные климата
     public boolean can_mmc_parking_data_show;            // отображать и читать данные парковочных сенсоров
 
     public boolean engine_fan_show;
 
-    public long FuelLevel_TimeStamp1, FuelLevel_TimeStamp2;
-    public long CVT_oil_degr_TimeStamp1, CVT_oil_degr_TimeStamp2;
-    public long CVT_oil_temp_TimeStamp1, CVT_oil_temp_TimeStamp2;
+    public long FuelLevel_TimeStamp1, FuelLevel_TimeStamp2; // требуется для выполнения запроса раз в 5 сек
+    public long CVT_oil_degr_TimeStamp1, CVT_oil_degr_TimeStamp2;   // требуется для выполнения запроса раз в 5 сек
+    public long CVT_oil_temp_TimeStamp1, CVT_oil_temp_TimeStamp2;   // требуется для выполнения запроса раз в 5 сек
 
 
-public enum State {off, on};
+    public enum State {off, on};
 
-    public State fan_state;
 
   public CanMmcData(Context context) {
       mContext = context;
 
-      fan_state = State.off;
-
-      can_mmc_speed = -1;
-      can_mmc_rpm = -1;
-      canMmcFuelRemain = -1;
+      engine.setAcFanRelay(State.off);
+      engine.setSpeed(-1);
+      engine.setRpm(-1);
+      meter.setFuelLevel(-1);
       can_mmc_fuel_remain_update_time = -1;
       can_mmc_fuel_remain_show = false;
 
-      canMmcCvtTemp = -255;
+      cvt.setTemperature(-255);
       can_mmc_cvt_temp_update_time = -1;
       can_mmc_cvt_temp_show = false;
 
-      canMmcCvtOilDegradation = -255;
+      cvt.setOilDegradation(-255);
       can_mmc_cvt_degradation_update_time = -1;
       can_mmc_cvt_degr_show = false;
 
-      can_mmc_engine_temp = -1;
+      engine.setCoolantTemperature(-1); // TODO:  ?????
 
       engine_fan_show = true;
       can_mmc_ac_data_show = false;

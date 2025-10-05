@@ -84,7 +84,7 @@ public class EngineData implements Serializable {
 
     public EngineData() {
         voltage = 0;
-        speed = 0;
+        speed = -1;
         rpm = 0;
         coolantTemperature = -255;
         airFlowSensor = 0;

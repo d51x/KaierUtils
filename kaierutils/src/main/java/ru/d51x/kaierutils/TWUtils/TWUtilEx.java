@@ -115,14 +115,14 @@ public class TWUtilEx {
 						break;
 
                     case TWUtilConst.TW_COMMAND_KEY_PRESS:
-                        if ( message.arg2 == App.GS.codeNextFolder ) {
+                        if ( message.arg2 == App.GS.powerAmpOpt.codeNextFolder ) {
                             //case TWUtilConst.TW_SVC_BUTTON_NEXT:
                                 if ( message.arg1 == 2) {  // долгое нажатие
                                     SendBroadcastAction(TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED,
                                             TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED,
                                             TWUtilConst.TW_SVC_BUTTON_NEXT);
                                 }
-                        } else if ( message.arg2 == App.GS.codePrevFolder ) {
+                        } else if ( message.arg2 == App.GS.powerAmpOpt.codePrevFolder ) {
                             //case TWUtilConst.TW_SVC_BUTTON_PREV:
                             if ( message.arg1 == 2) {  // долгое нажатие
                                 SendBroadcastAction(TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED,

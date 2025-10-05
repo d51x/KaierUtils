@@ -27,6 +27,13 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2132;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2160;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2161;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2180;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2110;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2111;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2113;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2132;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2160;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2161;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2180;
 import static ru.d51x.kaierutils.utils.MessageUtils.sendMessage;
 
 import android.os.Handler;
@@ -37,17 +44,8 @@ import java.util.ArrayList;
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.Data.ClimateData;
 
-public class ObdAirCond {
-    public static final String TAG = "OBD2AirCond";
-
-    // MESSAGES AIR COND
-    public static final int MESSAGE_OBD_CAN_AIR_COND_2110 = 0x068802110;
-    public static final int MESSAGE_OBD_CAN_AIR_COND_2111 = 0x068802111;
-    public static final int MESSAGE_OBD_CAN_AIR_COND_2113 = 0x068802113;
-    public static final int MESSAGE_OBD_CAN_AIR_COND_2132 = 0x068802132;
-    public static final int MESSAGE_OBD_CAN_AIR_COND_2160 = 0x068802160;
-    public static final int MESSAGE_OBD_CAN_AIR_COND_2161 = 0x068802161;
-    public static final int MESSAGE_OBD_CAN_AIR_COND_2180 = 0x068802180;
+public class ObdClimate {
+    public static final String TAG = "OBD2Climate";
 
     private static void processPid2110(int msgId, Handler mHandler, ArrayList<Integer> buffer) {
         if (buffer.isEmpty() || (buffer.size() < 7)) return;
@@ -74,7 +72,6 @@ public class ObdAirCond {
         float temp = getAcAmbientTemperature(buffer);
         ClimateData climateData = new ClimateData();
         climateData.ambientTemperature = temp;
-        App.obd.climateData.ambientTemperature = temp;
 
         sendMessage(mHandler, msgId, climateData);
 
@@ -94,13 +91,9 @@ public class ObdAirCond {
         climateData.vehicleSpeed = speed;
         sendMessage(mHandler, msgId, climateData);
 
-        App.obd.climateData.externalTemperature = externalTemp;
-        App.obd.climateData.engineRpm = rpm;
-        App.obd.climateData.vehicleSpeed = speed;
-
-        Log.w(TAG, "688 2113 External Temperature: " + externalTemp);
-        Log.w(TAG, "688 2113 Rpm: " + rpm);
-        Log.w(TAG, "688 2113 Speed: " + speed);
+        Log.d(TAG, "688 2113 External Temperature: " + externalTemp);
+        Log.d(TAG, "688 2113 Rpm: " + rpm);
+        Log.d(TAG, "688 2113 Speed: " + speed);
     }
 
     private static void processPid2132(int msgId, Handler mHandler, ArrayList<Integer> buffer) {
@@ -114,8 +107,8 @@ public class ObdAirCond {
         climateData.leak20 = leak20;
         sendMessage(mHandler, msgId, climateData);
 
-        Log.w(TAG, "688 2132 Leak Indicator: " + leak);
-        Log.w(TAG, "688 2132 Leak Indicator 20%: " + leak20);
+        Log.d(TAG, "688 2132 Leak Indicator: " + leak);
+        Log.d(TAG, "688 2132 Leak Indicator 20%: " + leak20);
     }
 
     private static void processPid2160(int msgId, Handler mHandler, ArrayList<Integer> buffer) {
@@ -125,11 +118,6 @@ public class ObdAirCond {
         climateData.fan_mode = getAcFanMode(buffer);
         climateData.blow_mode = getAcBlowMode(buffer);
         climateData.temperature = getAcSetTemperature(buffer);
-
-        App.obd.climateData.fan_mode = climateData.fan_mode;
-        App.obd.climateData.blow_mode = climateData.blow_mode;
-        App.obd.climateData.temperature = climateData.temperature;
-
         sendMessage(mHandler, msgId, climateData);
     }
 
@@ -143,11 +131,6 @@ public class ObdAirCond {
         climateData.recirculation_state = getRecirculationState(buffer);
         climateData.defogger_state = getDefoggerState(buffer);
 
-        App.obd.climateData.blow_direction = climateData.blow_direction;
-        App.obd.climateData.fan_speed = climateData.fan_speed;
-        App.obd.climateData.ac_state = climateData.ac_state;
-        App.obd.climateData.defogger_state = climateData.defogger_state;
-
         sendMessage(mHandler, msgId, climateData);
     }
 
@@ -158,34 +141,33 @@ public class ObdAirCond {
         ClimateData climateData = new ClimateData();
         climateData.condSysWorkTime = condSysWorkTime;
 
-        App.obd.climateData.condSysWorkTime = condSysWorkTime;
         sendMessage(mHandler, msgId, climateData);
 
-        Log.w(TAG, "688 2180 AC System Work Time Sec: " + condSysWorkTime);
+        Log.d(TAG, "688 2180 AC System Work Time Sec: " + condSysWorkTime);
     }
 
     public static void processResult(Handler mHandler, String pid, ArrayList<Integer> buffer) {
         switch (pid) {
             case BLOCK_688_PID_2110:
-                processPid2110(MESSAGE_OBD_CAN_AIR_COND_2110, mHandler, buffer);
+                processPid2110(MESSAGE_OBD_CLIMATE_2110, mHandler, buffer);
                 break;
             case BLOCK_688_PID_2111:
-                processPid2111(MESSAGE_OBD_CAN_AIR_COND_2111, mHandler, buffer);
+                processPid2111(MESSAGE_OBD_CLIMATE_2111, mHandler, buffer);
                 break;
             case BLOCK_688_PID_2113:
-                processPid2113(MESSAGE_OBD_CAN_AIR_COND_2113, mHandler, buffer);
+                processPid2113(MESSAGE_OBD_CLIMATE_2113, mHandler, buffer);
                 break;
             case BLOCK_688_PID_2132:
-                processPid2132(MESSAGE_OBD_CAN_AIR_COND_2132, mHandler, buffer);
+                processPid2132(MESSAGE_OBD_CLIMATE_2132, mHandler, buffer);
                 break;
             case BLOCK_688_PID_2160:
-                processPid2160(MESSAGE_OBD_CAN_AIR_COND_2160, mHandler, buffer);
+                processPid2160(MESSAGE_OBD_CLIMATE_2160, mHandler, buffer);
                 break;
             case BLOCK_688_PID_2161:
-                processPid2161(MESSAGE_OBD_CAN_AIR_COND_2161, mHandler, buffer);
+                processPid2161(MESSAGE_OBD_CLIMATE_2161, mHandler, buffer);
                 break;
             case BLOCK_688_PID_2180:
-                processPid2180(MESSAGE_OBD_CAN_AIR_COND_2180, mHandler, buffer);
+                processPid2180(MESSAGE_OBD_CLIMATE_2180, mHandler, buffer);
                 break;
         }
     }

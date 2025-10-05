@@ -6,7 +6,7 @@ public class ObdData {
     public float coolant;
     public float maf;
     public float voltage;
-    public float fuel_tank; // читаем из преференсов
+    public float fuelTankCapacity; // читаем из преференсов
 
 
     public ObdData() {
@@ -15,6 +15,6 @@ public class ObdData {
         coolant = 0;
         maf = 0;
         voltage = 0;
-        fuel_tank = 0;
+        fuelTankCapacity = 0;
     }
 }

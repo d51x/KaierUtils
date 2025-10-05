@@ -1,15 +1,15 @@
 package ru.d51x.kaierutils.OBD2;
 
-import static ru.d51x.kaierutils.OBD2.OBDII.MESSAGE_OBD_CAN_ENGINE_2101;
-import static ru.d51x.kaierutils.OBD2.OBDII.MESSAGE_OBD_CAN_ENGINE_2102;
-import static ru.d51x.kaierutils.OBD2.OBDII.MESSAGE_OBD_CAN_ENGINE_2103;
-import static ru.d51x.kaierutils.OBD2.OBDII.MESSAGE_OBD_CAN_ENGINE_211E;
-import static ru.d51x.kaierutils.OBD2.OBDII.MESSAGE_OBD_CAN_ENGINE_211D;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E0_PID_2101;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E0_PID_2102;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E0_PID_2103;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E0_PID_211D;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E0_PID_211E;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_2101;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_2102;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_2103;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_211D;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_211E;
 import static ru.d51x.kaierutils.OBD2.ObdEngineUtils.getAirFlowSensore;
 import static ru.d51x.kaierutils.OBD2.ObdEngineUtils.getEngineAcFanState;
 import static ru.d51x.kaierutils.OBD2.ObdEngineUtils.getEngineCoolantTemperature;
@@ -24,7 +24,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.Data.CanMmcData;
 import ru.d51x.kaierutils.Data.EngineData;
 
@@ -42,6 +41,7 @@ public class ObdEngine {
         engineData.setSpeed(speed);
         engineData.setRpm(rpm);
         sendMessage(handler, msgId, engineData);
+
         Log.d(TAG, "7E0 2101 Engine voltage: " + voltage);
         Log.d(TAG, "7E0 2101 Vehicle speed: " + speed);
         Log.d(TAG, "7E0 2101 Engine rpm: " + rpm);
@@ -64,7 +64,8 @@ public class ObdEngine {
         EngineData engineData = new EngineData();
         engineData.setAirFlowSensor(airFlow);
         sendMessage(handler, msgId, engineData);
-        Log.w(TAG, "7E0 2103 Air Flow Sensor (V): " + airFlow);
+
+        Log.d(TAG, "7E0 2103 Air Flow Sensor (V): " + airFlow);
     }
 
     private static void processPid211D(int msgId, Handler handler, ArrayList<Integer> buffer) {
@@ -74,7 +75,6 @@ public class ObdEngine {
         EngineData engineData = new EngineData();
         engineData.setAcFanRelay(state);
         sendMessage(handler, msgId, engineData);
-        App.obd.canMmcData.fan_state = state;
     }
 
     private static void processPid211E(int msgId, Handler handler, ArrayList<Integer> buffer) {
@@ -88,19 +88,19 @@ public class ObdEngine {
     public static void processResult(Handler handler, String pid, ArrayList<Integer> buffer) {
         switch (pid) {
             case BLOCK_7E0_PID_2101:
-                processPid2101(MESSAGE_OBD_CAN_ENGINE_2101, handler, buffer);
+                processPid2101(MESSAGE_OBD_ENGINE_2101, handler, buffer);
                 break;
             case BLOCK_7E0_PID_2102:
-                processPid2102(MESSAGE_OBD_CAN_ENGINE_2102, handler, buffer);
+                processPid2102(MESSAGE_OBD_ENGINE_2102, handler, buffer);
                 break;
             case BLOCK_7E0_PID_2103:
-                processPid2103(MESSAGE_OBD_CAN_ENGINE_2103, handler, buffer);
+                processPid2103(MESSAGE_OBD_ENGINE_2103, handler, buffer);
                 break;
             case BLOCK_7E0_PID_211D:
-                processPid211D(MESSAGE_OBD_CAN_ENGINE_211D, handler, buffer);
+                processPid211D(MESSAGE_OBD_ENGINE_211D, handler, buffer);
                 break;
             case BLOCK_7E0_PID_211E:
-                processPid211E(MESSAGE_OBD_CAN_ENGINE_211E, handler, buffer);
+                processPid211E(MESSAGE_OBD_ENGINE_211E, handler, buffer);
                 break;
         }
     }

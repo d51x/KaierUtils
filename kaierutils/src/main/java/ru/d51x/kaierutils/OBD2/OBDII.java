@@ -1,29 +1,38 @@
 package ru.d51x.kaierutils.OBD2;
 
-
-import static ru.d51x.kaierutils.OBD2.ObdAirCond.MESSAGE_OBD_CAN_AIR_COND_2110;
-import static ru.d51x.kaierutils.OBD2.ObdAirCond.MESSAGE_OBD_CAN_AIR_COND_2111;
-import static ru.d51x.kaierutils.OBD2.ObdAirCond.MESSAGE_OBD_CAN_AIR_COND_2160;
-import static ru.d51x.kaierutils.OBD2.ObdAirCond.MESSAGE_OBD_CAN_AIR_COND_2161;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_AIR_COND_2110;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_AIR_COND_2111;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_AIR_COND_2160;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_AIR_COND_2161;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_CVT_2103;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_CVT_2110;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2110_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2111_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2113_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2132_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2160_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2161_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2180_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CVT_2103_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CVT_2110_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2101_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2102_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2103_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_211D_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A1_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A2_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A3_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A6_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A8_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AD_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AE_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AF_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21BC_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_PARKING_2101_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2110;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2111;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2113;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2160;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2161;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2180;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21A1;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21A2;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21A3;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21A6;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21A8;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21AD;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21AE;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21AF;
@@ -40,10 +49,35 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E1_PID_2110;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_RX_511;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_RX_514;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_RX_7E9;
-
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CAN_COMBINE_METER_21A3;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CAN_CVT_2103;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CAN_CVT_2110;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2110;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2111;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2113;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2132;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2160;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2161;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2180;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A1;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A2;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A3;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A6;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A8;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21AD;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21AE;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21AF;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21BC;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CVT_2103;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CVT_2110;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_2101;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_2102;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_2103;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_211D;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_211E;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_PARKING_SENSORS;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_MAF_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_SPEED_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_STATUS_CHANGED;
 import static ru.d51x.kaierutils.utils.MessageUtils.SendBroadcastAction;
 
@@ -63,7 +97,6 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
@@ -89,7 +122,10 @@ import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.BuildConfig;
 import ru.d51x.kaierutils.Data.CanMmcData;
 import ru.d51x.kaierutils.Data.ClimateData;
+import ru.d51x.kaierutils.Data.CombineMeterData;
 import ru.d51x.kaierutils.Data.CvtData;
+import ru.d51x.kaierutils.Data.EngineData;
+import ru.d51x.kaierutils.Data.Fuel;
 import ru.d51x.kaierutils.Data.ObdData;
 import ru.d51x.kaierutils.Data.TripData;
 
@@ -100,45 +136,6 @@ public class OBDII  {
 
     public static final String TAG = "OBD2";
 
-    public static final String OBD_BROADCAST_ACTION_SPEED_CHANGED = "ru.d51x.kaierutils.action.OBD_SPEED_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED = "ru.d51x.kaierutils.action.OBD_ENGINE_RPM_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED = "ru.d51x.kaierutils.action.OBD_COOLANT_TEMP_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED = "ru.d51x.kaierutils.action.OBD_CMU_VOLTAGE_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED = "ru.d51x.kaierutils.action.OBD_FUEL_CONSUMPTION_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_MAF_CHANGED = "ru.d51x.kaierutils.action.OBD_MAF_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ENGINE_FAN_STATE_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_ENGINE_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_ECU_CVT_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_CVT_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_COMBINEMETER_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_COMBINEMETER_FUEL_TANK_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_ECU_AWC_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_ECU_AWC_CHANGED";
-
-    public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_LEFT_INNER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_LEFT_INNER_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_LEFT_OUTER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_LEFT_OUTER_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_RIGHT_INNER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_RIGHT_INNER_CHANGED";
-    public static final String OBD_BROADCAST_ACTION_PARKING_SENSORS_REAR_RIGHT_OUTER_CHANGED = "ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_REAR_RIGHT_OUTER_CHANGED";
-
-    public static final int MESSAGE_OBD_CAN_ENGINE = 0x07E00000;
-    public static final int MESSAGE_OBD_CAN_ENGINE_2101 = 0x07E02101;
-    public static final int MESSAGE_OBD_CAN_ENGINE_2102 = 0x07E02102;
-    public static final int MESSAGE_OBD_CAN_ENGINE_2103 = 0x07E02103;
-    public static final int MESSAGE_OBD_CAN_ENGINE_2110 = 0x07E02110;
-    public static final int MESSAGE_OBD_CAN_ENGINE_211E = 0x07E0211E;
-    public static final int MESSAGE_OBD_CAN_ENGINE_211D = 0x07E00001;
-
-    public static final int MESSAGE_OBD_CAN_CVT = 0x07E10000;
-
-
-    public static final int MESSAGE_OBD_CAN_AIR_COND = 0x06880000;
-
-
-    public static final int MESSAGE_OBD_CAN_COMBINE_METER = 0x06A00000;
-
-    // public static final int MESSAGE_OBD_CAN_COMBINE_METER_FUEL_TANK = 0x06A00001;
-    public static final int MESSAGE_OBD_CAN_PARKING_SENSORS = 0x07630000;
-    public static final int MESSAGE_OBD_CAN_PARKING_SENSORS_2101 = 0x076302101;
-    public static final int MESSAGE_OBD_CAN_AWC_2130 = 0x07B602130;
 
     public boolean isConnected;
     public boolean battery_show = false;
@@ -160,11 +157,8 @@ public class OBDII  {
     public TripData totalTrip;
     public TripData oneTrip;
     public TripData todayTrip;
-    public ClimateData climateData;
-    public ClimateData climateDataPrev;
-    public CanMmcData canMmcData;
-    public CanMmcData canMmcDataPrev;
-    protected int timeout;
+
+    public CanMmcData can;
     private Context mContext;
     private String deviceName;
     private String deviceAddress;
@@ -173,6 +167,7 @@ public class OBDII  {
     private long MAF_TimeStamp1, MAF_TimeStamp2;
     private long Voltage_TimeStamp1, Voltage_TimeStamp2;
     private long Coolant_TimeStamp1, Coolant_TimeStamp2;
+    public Fuel fuel = new Fuel();
 
     public OBDII(Context context) {
         mContext = context;
@@ -201,12 +196,8 @@ public class OBDII  {
         oneTrip = new TripData("trip", false);
         todayTrip = new TripData("today", true);
 
-        climateData = new ClimateData();
-        climateDataPrev = new ClimateData();
-
-        canMmcData = new CanMmcData(mContext);
-        canMmcDataPrev = new CanMmcData(mContext);
-        loadFuelTank();
+        can = new CanMmcData(mContext);
+        fuel.load();
         // запустить бесконечный цикл
         // если подключены, то выполняем команды
         // если не подключены, то пытаемся подключиться
@@ -222,7 +213,7 @@ public class OBDII  {
         mHandler = new Handler() {
             @Override
             public void handleMessage(Message message) {
-                process_handler(message);
+                processHandler(message);
             }
         };
     }
@@ -415,14 +406,14 @@ public class OBDII  {
                 21 1D  - 200        off cond
                 21 1E  - 150        fuel relay
              */
-            request_MMC_ECU_ENGINE();
+            requestMmcEngine();
 
             /* время на выполнение команд max = 1000 ms
                 header - 400 m
                 21 03  - 250       cvt temp
                 21 10  - 330        oil degr, work time
              */
-            request_MMC_ECU_CVT();
+            requestMmcCvt();
 
             /* время на выполнение команд max = 1625 ms
                 header - 400 ms
@@ -436,7 +427,7 @@ public class OBDII  {
                 21 AF  - 100        voltage
                 21 BC  - 150 (FC)   service reminder
              */
-            request_MMC_ECU_COMBINATION_METER();
+            requestMmcCombineMeter();
 
             /* время на выполнение команд max = 1000 ms
                header - 220 ms
@@ -447,7 +438,7 @@ public class OBDII  {
                 21 60 - 120         btn/knob position
                 21 61 - 150         ac indications
              */
-            request_MMC_ECU_AIR_COND();
+            requestMmcAirCond();
             //request_MMC_ECU_AWC();
 
         } else {
@@ -713,7 +704,7 @@ public class OBDII  {
         }
     }
 
-    private ArrayList<Integer> runCanCommand(String PID, BluetoothSocket sock) {
+    private ArrayList<Integer> runObdCommand(String PID, BluetoothSocket sock) {
         try {
             CanObdCommand cmd = new CanObdCommand(PID);
             cmd.run(sock.getInputStream(), sock.getOutputStream());
@@ -729,7 +720,7 @@ public class OBDII  {
         activeOther = true;
 
         try {
-            buffer = runCanCommand(PID, socket);
+            buffer = runObdCommand(PID, socket);
             activeOther = false;
 
         }  catch ( NonNumericResponseException e5) {
@@ -768,38 +759,23 @@ public class OBDII  {
         SendBroadcastAction(OBD_BROADCAST_ACTION_STATUS_CHANGED, "Status", false);
     }
 
-
-
-    public void saveFuelTank() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
-        prefs.edit().putFloat("kaierutils_fuel_tank", obdData.fuel_tank).apply();
-        //prefs.edit().putFloat("kaierutils_fuel_usage", obdData.fuel_usage2).apply();
-
-    }
-
-    public void loadFuelTank() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
-        obdData.fuel_tank = prefs.getFloat("kaierutils_fuel_tank", 60f);
-        //obdData.fuel_usage2 = prefs.getFloat("kaierutils_fuel_usage", 0f);
-    }
-
     // заправили полный бак
     public void setFullTank() {
 
-        oneTrip.updateData( true, obdData.fuel_tank, obdData.fuel_tank);
-        todayTrip.updateData( true, obdData.fuel_tank, obdData.fuel_tank);
-        totalTrip.updateData( true, obdData.fuel_tank, obdData.fuel_tank);
-        saveFuelTank();
+        oneTrip.updateData( true, obdData.fuelTankCapacity, obdData.fuelTankCapacity);
+        todayTrip.updateData( true, obdData.fuelTankCapacity, obdData.fuelTankCapacity);
+        totalTrip.updateData( true, obdData.fuelTankCapacity, obdData.fuelTankCapacity);
+        fuel.save();
     }
 
     // заправили не полный бак / коррекция значений
     public void setCustomTank(float tank_volume, float fuel_remain) {
-        obdData.fuel_tank = tank_volume;
+        obdData.fuelTankCapacity = tank_volume;
 
         oneTrip.updateData( false, fuel_remain, tank_volume);
         todayTrip.updateData( false, fuel_remain, tank_volume);
         totalTrip.updateData( false, fuel_remain, tank_volume);
-        saveFuelTank();
+        fuel.save();
     }
 
     private void SetHeaders(String canAddr, String txAddr, boolean flowControl) {
@@ -843,7 +819,7 @@ public class OBDII  {
         activeOther = false;
     }
 
-    private void request_MMC_ECU_ENGINE(){
+    private void requestMmcEngine(){
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
         // set ENGINE ECU addresses
@@ -872,19 +848,19 @@ public class OBDII  {
 //        processObdCommandResult(BLOCK_7E0_PID_211E, BLOCK_7E0, buffer);
     }
 
-    private void request_MMC_ECU_CVT(){
+    private void requestMmcCvt(){
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
 
         ArrayList<Integer> buffer;
-        if ( canMmcData.can_mmc_cvt_temp_show || canMmcData.can_mmc_cvt_degr_show) {
-            canMmcData.CVT_oil_temp_TimeStamp2 = System.currentTimeMillis();
-            canMmcData.CVT_oil_degr_TimeStamp2 = System.currentTimeMillis();
-            long t_temp = canMmcData.CVT_oil_temp_TimeStamp2 - canMmcData.CVT_oil_temp_TimeStamp1;
-            long t_degr = canMmcData.CVT_oil_degr_TimeStamp2 - canMmcData.CVT_oil_degr_TimeStamp1;
+        if ( can.can_mmc_cvt_temp_show || can.can_mmc_cvt_degr_show) {
+            can.CVT_oil_temp_TimeStamp2 = System.currentTimeMillis();
+            can.CVT_oil_degr_TimeStamp2 = System.currentTimeMillis();
+            long t_temp = can.CVT_oil_temp_TimeStamp2 - can.CVT_oil_temp_TimeStamp1;
+            long t_degr = can.CVT_oil_degr_TimeStamp2 - can.CVT_oil_degr_TimeStamp1;
 
-            if ((t_degr < (canMmcData.can_mmc_cvt_degradation_update_time * 1000L))
-                    && (t_temp < (canMmcData.can_mmc_cvt_temp_update_time * 1000L)))
+            if ((t_degr < (can.can_mmc_cvt_degradation_update_time * 1000L))
+                    && (t_temp < (can.can_mmc_cvt_temp_update_time * 1000L)))
             {
                 // пропускаем, время не вышло ни у одного параметра
                 return;
@@ -893,35 +869,35 @@ public class OBDII  {
             activeOther = true;
             SetHeaders(BLOCK_7E1, BLOCK_RX_7E9, true);
 
-            if ( canMmcData.can_mmc_cvt_temp_show ) {
-                if ( t_temp < (canMmcData.can_mmc_cvt_temp_update_time * 1000L) ) return; //время не вышло
+            if ( can.can_mmc_cvt_temp_show ) {
+                if ( t_temp < (can.can_mmc_cvt_temp_update_time * 1000L) ) return; //время не вышло
                 buffer = requestCanEcu(BLOCK_7E1_PID_2103, BLOCK_7E1); // // cvt_temp_count
                 processObdCommandResult(BLOCK_7E1_PID_2103, BLOCK_7E1, buffer);
-                canMmcData.CVT_oil_temp_TimeStamp1 = canMmcData.CVT_oil_temp_TimeStamp2;
+                can.CVT_oil_temp_TimeStamp1 = can.CVT_oil_temp_TimeStamp2;
             }
 
             // request_CAN_ECU("2107", "7E1", "7E9", false, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED);  // selector position
 
             // TODO: можно выполнять не часто, раз в 10 сек вполне достаточно или даже реже
-            if ( canMmcData.can_mmc_cvt_degr_show ) {
-                if ( t_temp < (canMmcData.can_mmc_cvt_degradation_update_time * 1000L) ) return; //время не вышло
+            if ( can.can_mmc_cvt_degr_show ) {
+                if ( t_temp < (can.can_mmc_cvt_degradation_update_time * 1000L) ) return; //время не вышло
                 buffer = requestCanEcu(BLOCK_7E1_PID_2110, BLOCK_7E1); // cvt_oil_degradation
                 processObdCommandResult(BLOCK_7E1_PID_2110, BLOCK_7E1, buffer);
-                canMmcData.CVT_oil_degr_TimeStamp1 = canMmcData.CVT_oil_degr_TimeStamp2;
+                can.CVT_oil_degr_TimeStamp1 = can.CVT_oil_degr_TimeStamp2;
             }
             activeOther = false;
         }
     }
 
-    private void request_MMC_ECU_COMBINATION_METER(){
+    private void requestMmcCombineMeter(){
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
 
-        if ( App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_fuel_remain_show ) {
-            App.obd.canMmcData.FuelLevel_TimeStamp2 = System.currentTimeMillis();
-            long t = App.obd.canMmcData.FuelLevel_TimeStamp2- App.obd.canMmcData.FuelLevel_TimeStamp1;
+        if ( App.obd.MMC_CAN && App.obd.can.can_mmc_fuel_remain_show ) {
+            App.obd.can.FuelLevel_TimeStamp2 = System.currentTimeMillis();
+            long t = App.obd.can.FuelLevel_TimeStamp2- App.obd.can.FuelLevel_TimeStamp1;
 
-            if ( t < (canMmcData.can_mmc_fuel_remain_update_time * 1000L) ) { return; }
+            if ( t < (can.can_mmc_fuel_remain_update_time * 1000L) ) { return; }
 
             activeOther = true;
             ArrayList<Integer> buffer;
@@ -955,17 +931,17 @@ public class OBDII  {
             buffer = requestCanEcu(BLOCK_6A0_PID_21BC, BLOCK_6A0); // service reminder
             processObdCommandResult(BLOCK_6A0_PID_21BC, BLOCK_6A0, buffer);
 
-            canMmcData.FuelLevel_TimeStamp1 = canMmcData.FuelLevel_TimeStamp2;
+            can.FuelLevel_TimeStamp1 = can.FuelLevel_TimeStamp2;
             activeOther = false;
         }
     }
 
-    private void request_MMC_ECU_AIR_COND(){
+    private void requestMmcAirCond(){
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
 
         ArrayList<Integer> buffer;
-        if (App.obd.canMmcData.can_mmc_ac_data_show) {
+        if (App.obd.can.can_mmc_ac_data_show) {
             activeOther = true;
             SetHeaders(BLOCK_688, BLOCK_RX_511, false);
 
@@ -997,7 +973,18 @@ public class OBDII  {
         }
     }
 
-    private void request_MMC_ECU_AWC(){
+    private void requestMmcParkingSensors(){
+        if (activeOther || activeMAF || !App.GS.isReverseMode ) return;
+
+        if (App.obd.can.can_mmc_parking_data_show) {
+            ArrayList<Integer> buffer;
+            SetHeaders(BLOCK_763, "764", false);
+            buffer = requestCanEcu(BLOCK_763_PID_2101, BLOCK_763);
+            processObdCommandResult(BLOCK_763_PID_2101, BLOCK_763, buffer);
+        }
+    }
+
+    private void requestMmcAwc(){
         if ( activeMAF ) return;
         ArrayList<Integer> buffer = null;
         SetHeaders( "7B6", "7B7", true);
@@ -1005,47 +992,140 @@ public class OBDII  {
         processObdCommandResult("2130", "7B6", buffer);
     }
 
-    public void process_handler(Message message) {
+    public void processHandler(Message message) {
          switch ( message.what ) {
-             // ENGINE
-             case MESSAGE_OBD_CAN_ENGINE_211D:
-                 CanMmcData.State fanState = CanMmcData.State.values()[ message.arg1 ];
-                 SendBroadcastAction(OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED, "can_mmc_engine_fan_state", fanState.ordinal());
+             // ************ ENGINE ********************************************
+             case MESSAGE_OBD_ENGINE_2101:
+                 App.obd.can.engine.setSpeed(((EngineData) message.obj).getSpeed());
+                 App.obd.can.engine.setRpm(((EngineData) message.obj).getRpm());
+                 App.obd.can.engine.setVoltage(((EngineData) message.obj).getVoltage());
+
+                 SendBroadcastAction(ACTION_OBD_ENGINE_2101_CHANGED, "obd_engine_2101", (EngineData) message.obj);
+                 break;
+             case MESSAGE_OBD_ENGINE_2102:
+                 App.obd.can.engine.setCoolantTemperature(((EngineData) message.obj).getCoolantTemperature());
+
+                 SendBroadcastAction(ACTION_OBD_ENGINE_2102_CHANGED, "obd_engine_2102", (EngineData) message.obj);
+                 break;
+             case MESSAGE_OBD_ENGINE_2103:
+                 App.obd.can.engine.setAirFlowSensor(((EngineData) message.obj).getAirFlowSensor());
+
+                 SendBroadcastAction(ACTION_OBD_ENGINE_2103_CHANGED, "obd_engine_2103", (EngineData) message.obj);
+                 break;
+             case MESSAGE_OBD_ENGINE_211D:
+                 App.obd.can.engine.setAcFanRelay(((EngineData) message.obj).isAcFanRelay());
+                 SendBroadcastAction(ACTION_OBD_ENGINE_211D_CHANGED, "can_mmc_engine_fan_state",
+                         App.obd.can.engine.isAcFanRelay().ordinal());
+                 break;
+             case MESSAGE_OBD_ENGINE_211E:
+                 App.obd.can.engine.setFuelPumpRelay(((EngineData) message.obj).isFuelPumpRelay());
+
+                 SendBroadcastAction(ACTION_OBD_CVT_2103_CHANGED, "obd_engine_211E", (EngineData) message.obj);
                  break;
 
-             // CVT
-             case MESSAGE_OBD_CAN_CVT_2110:
-                 SendBroadcastAction(ACTION_CVT_2110, "obd_cvt_2110", (CvtData) message.obj);
+             // *********************** CVT ***********************************
+             case MESSAGE_OBD_CVT_2103:
+                 App.obd.can.cvt.setTemperature(((CvtData) message.obj).getTemperature());
+                 SendBroadcastAction(ACTION_OBD_CVT_2103_CHANGED, "obd_cvt_2103", (CvtData) message.obj);
                  break;
-             case MESSAGE_OBD_CAN_CVT_2103:
-                 SendBroadcastAction(ACTION_CVT_2103, "obd_cvt_2103", (CvtData) message.obj);
-                 break;
-
-             // AIR CONDITIONER
-             case MESSAGE_OBD_CAN_AIR_COND_2110:
-                 SendBroadcastAction(ACTION_AIR_COND_2110, "air_cond_2110", (ClimateData) message.obj);
-                 break;
-             case MESSAGE_OBD_CAN_AIR_COND_2111:
-                 SendBroadcastAction(ACTION_AIR_COND_2111, "air_cond_2111", (ClimateData) message.obj);
-                 break;
-             case MESSAGE_OBD_CAN_AIR_COND_2160:
-                 SendBroadcastAction(ACTION_AIR_COND_2160, "air_cond_2160", (ClimateData) message.obj);
-                 break;
-             case MESSAGE_OBD_CAN_AIR_COND_2161:
-                  SendBroadcastAction(ACTION_AIR_COND_2161, "air_cond_2161", (ClimateData) message.obj);
+             case MESSAGE_OBD_CVT_2110:
+                 App.obd.can.cvt.setOilDegradation(((CvtData) message.obj).getOilDegradation());
+                 App.obd.can.cvt.setWorkHoursHot(((CvtData) message.obj).getWorkHoursHot());
+                 App.obd.can.cvt.setWorkHoursTotal(((CvtData) message.obj).getWorkHoursTotal());
+                 SendBroadcastAction(ACTION_OBD_CVT_2110_CHANGED, "obd_cvt_2110", (CvtData) message.obj);
                  break;
 
 
-             case MESSAGE_OBD_CAN_COMBINE_METER_21A3:
-                 SendBroadcastAction(OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED, "combine_meter_fuel_level", message.arg1);
+             // ****************** CLIMATE **************************************
+             case MESSAGE_OBD_CLIMATE_2110:
+                 App.obd.can.climate.interiorTemperature = ((ClimateData) message.obj).interiorTemperature;
+                 App.obd.can.climate.pressure = ((ClimateData) message.obj).pressure;
+                 App.obd.can.climate.solarSensor = ((ClimateData) message.obj).solarSensor;
+                 App.obd.can.climate.coolantTemperature = ((ClimateData) message.obj).coolantTemperature;
+                 App.obd.can.climate.airThermoSensor = ((ClimateData) message.obj).airThermoSensor;
+
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2110_CHANGED, "air_cond_2110", (ClimateData) message.obj);
                  break;
-             case MESSAGE_OBD_CAN_PARKING_SENSORS:
+             case MESSAGE_OBD_CLIMATE_2111:
+                 App.obd.can.climate.ambientTemperature = ((ClimateData) message.obj).ambientTemperature;
+
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2111_CHANGED, "air_cond_2111", (ClimateData) message.obj);
+                 break;
+             case MESSAGE_OBD_CLIMATE_2113:
+                 App.obd.can.climate.externalTemperature = ((ClimateData) message.obj).externalTemperature;
+                 App.obd.can.climate.engineRpm = ((ClimateData) message.obj).engineRpm;
+                 App.obd.can.climate.vehicleSpeed = ((ClimateData) message.obj).vehicleSpeed;
+
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2113_CHANGED, "air_cond_2113", (ClimateData) message.obj);
+                 break;
+             case MESSAGE_OBD_CLIMATE_2132:
+                 App.obd.can.climate.leak = ((ClimateData) message.obj).leak;
+                 App.obd.can.climate.leak20 = ((ClimateData) message.obj).leak20;
+
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2132_CHANGED, "air_cond_2132", (ClimateData) message.obj);
+                 break;
+             case MESSAGE_OBD_CLIMATE_2160:
+                 App.obd.can.climate.fan_mode = ((ClimateData) message.obj).fan_mode;
+                 App.obd.can.climate.blow_mode = ((ClimateData) message.obj).blow_mode;
+                 App.obd.can.climate.temperature = ((ClimateData) message.obj).temperature;
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2160_CHANGED, "air_cond_2160", (ClimateData) message.obj);
+                 break;
+             case MESSAGE_OBD_CLIMATE_2161:
+                 App.obd.can.climate.blow_direction = ((ClimateData) message.obj).blow_direction;
+                 App.obd.can.climate.fan_speed = ((ClimateData) message.obj).fan_speed;
+                 App.obd.can.climate.ac_state = ((ClimateData) message.obj).ac_state;
+                 App.obd.can.climate.defogger_state = ((ClimateData) message.obj).defogger_state;
+                  SendBroadcastAction(ACTION_OBD_CLIMATE_2161_CHANGED, "air_cond_2161", (ClimateData) message.obj);
+                 break;
+             case MESSAGE_OBD_CLIMATE_2180:
+                 App.obd.can.climate.condSysWorkTime = ((ClimateData) message.obj).condSysWorkTime;
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2180_CHANGED, "air_cond_2180", (ClimateData) message.obj);
+                 break;
+
+             // ******************* COMBINE METER ***********************************************
+             case MESSAGE_OBD_COMBINE_METER_21A1:
+                 App.obd.can.meter.setVehicleSpeed(((CombineMeterData) message.obj).getVehicleSpeed());
+                 SendBroadcastAction(ACTION_OBD_METER_21A1_CHANGED, "meter_21A1", (CombineMeterData) message.obj);
+                 break;
+             case MESSAGE_OBD_COMBINE_METER_21A2:
+                 App.obd.can.meter.setEngineRpm(((CombineMeterData) message.obj).getEngineRpm());
+                 SendBroadcastAction(ACTION_OBD_METER_21A2_CHANGED, "meter_21A2", (CombineMeterData) message.obj);
+                 break;
+             case MESSAGE_OBD_COMBINE_METER_21A3:
+                 App.obd.can.meter.setFuelLevel(((CombineMeterData) message.obj).getFuelLevel());
+                 SendBroadcastAction(ACTION_OBD_METER_21A3_CHANGED, "meter_21A3", (CombineMeterData) message.obj);
+                 break;
+             case MESSAGE_OBD_COMBINE_METER_21A6:
+                 SendBroadcastAction(ACTION_OBD_METER_21A6_CHANGED, "meter_21A6", (CombineMeterData) message.obj);
+                 break;
+             case MESSAGE_OBD_COMBINE_METER_21A8:
+                 SendBroadcastAction(ACTION_OBD_METER_21A8_CHANGED, "meter_21A8", (CombineMeterData) message.obj);
+                 break;
+             case MESSAGE_OBD_COMBINE_METER_21AD:
+                 App.obd.can.meter.setMileage(((CombineMeterData) message.obj).getMileage());
+                 SendBroadcastAction(ACTION_OBD_METER_21AD_CHANGED, "meter_21AD", (CombineMeterData) message.obj);
+                 break;
+             case MESSAGE_OBD_COMBINE_METER_21AE:
+                 App.obd.can.meter.setTripA(((CombineMeterData) message.obj).getTripA());
+                 App.obd.can.meter.setTripB(((CombineMeterData) message.obj).getTripB());
+                 SendBroadcastAction(ACTION_OBD_METER_21AE_CHANGED, "meter_21AE", (CombineMeterData) message.obj);
+                 break;
+             case MESSAGE_OBD_COMBINE_METER_21AF:
+                 App.obd.can.meter.setVoltage(((CombineMeterData) message.obj).getVoltage());
+                 SendBroadcastAction(ACTION_OBD_METER_21AF_CHANGED, "meter_21AF", (CombineMeterData) message.obj);
+                 break;
+             case MESSAGE_OBD_COMBINE_METER_21BC:
+                 App.obd.can.meter.setServiceReminderDistance(((CombineMeterData) message.obj).getServiceReminderDistance());
+                 App.obd.can.meter.setServiceReminderPeriod(((CombineMeterData) message.obj).getServiceReminderPeriod());
+                 SendBroadcastAction(ACTION_OBD_METER_21BC_CHANGED, "meter_21BC", (CombineMeterData) message.obj);
+                 break;
+             case MESSAGE_OBD_PARKING_SENSORS:
                  if (Objects.nonNull(message.obj)) {
                      ArrayList<Integer> buffer = (ArrayList<Integer>) message.obj;
 
                      Intent intent = new Intent();
                      intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                     intent.setAction(OBD_BROADCAST_ACTION_PARKING_SENSORS_CHANGED);
+                     intent.setAction(ACTION_OBD_PARKING_2101_CHANGED);
                      intent.putExtra("parking_sensors", buffer);
                      App.getInstance().sendBroadcast(intent);
                  }
@@ -1062,7 +1142,7 @@ public class OBDII  {
         switch (blockId) {
             case BLOCK_7E0: ObdEngine.processResult(mHandler, pid, buffer); break;
             case BLOCK_7E1: ObdCvt.processResult(mHandler, pid, buffer); break;
-            case BLOCK_688: ObdAirCond.processResult(mHandler, pid, buffer); break;
+            case BLOCK_688: ObdClimate.processResult(mHandler, pid, buffer); break;
             case BLOCK_6A0: ObdCombineMeter.processResult(mHandler, pid, buffer); break;
             case BLOCK_763: OdbParking.processResult(mHandler, pid, buffer); break;
             case BLOCK_7B6: ObdAwc.processObdAwcResult(mHandler, pid, buffer); break;
@@ -1070,19 +1150,7 @@ public class OBDII  {
     }
 
     public void process_parking_sensors() {
-        request_MMC_ECU_PARKING_SENSORS();
+        requestMmcParkingSensors();
     }
-
-    private void request_MMC_ECU_PARKING_SENSORS(){
-        if (activeOther || activeMAF || !App.GS.isReverseMode ) return;
-
-        if (App.obd.canMmcData.can_mmc_parking_data_show) {
-            ArrayList<Integer> buffer;
-            SetHeaders(BLOCK_763, "764", false);
-            buffer = requestCanEcu(BLOCK_763_PID_2101, BLOCK_763);
-            processObdCommandResult(BLOCK_763_PID_2101, BLOCK_763, buffer);
-        }
-    }
-
 
  }

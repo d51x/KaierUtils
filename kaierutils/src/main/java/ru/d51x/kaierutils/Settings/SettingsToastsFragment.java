@@ -36,17 +36,17 @@ public class SettingsToastsFragment extends PreferenceFragment implements OnShar
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if ( key.equals ( "CAR_SETTINGS__RADIO_TOAST_TEXT1_SIZE" )) {
-			App.GS.radioToastLine1TextSize = Integer.parseInt(sharedPreferences.getString ( key, "48"));
+			App.GS.popupWindowOption.radioToastLine1TextSize = Integer.parseInt(sharedPreferences.getString ( key, "48"));
 		} else if ( key.equals ( "CAR_SETTINGS__RADIO_TOAST_TEXT2_SIZE" )) {
-			App.GS.radioToastLine2TextSize = Integer.parseInt(sharedPreferences.getString ( key, "25"));
+			App.GS.popupWindowOption.radioToastLine2TextSize = Integer.parseInt(sharedPreferences.getString ( key, "25"));
 		} else if ( key.equals ( "CAR_SETTINGS__MUSIC_TOAST_TEXT1_SIZE" )) {
-			App.GS.musicToastLine1TextSize = Integer.parseInt(sharedPreferences.getString ( key, "32"));
+			App.GS.popupWindowOption.musicToastLine1TextSize = Integer.parseInt(sharedPreferences.getString ( key, "32"));
 		} else if ( key.equals ( "CAR_SETTINGS__MUSIC_TOAST_TEXT2_SIZE" )) {
-			App.GS.musicToastLine2TextSize = Integer.parseInt(sharedPreferences.getString ( key, "22"));
+			App.GS.popupWindowOption.musicToastLine2TextSize = Integer.parseInt(sharedPreferences.getString ( key, "22"));
 		} else if ( key.equals ( "CAR_SETTINGS__MUSIC_TOAST_PICTURE_WIDTH" )) {
-			App.GS.musicToastPictureWidth = Integer.parseInt(sharedPreferences.getString ( key, "128"));
+			App.GS.popupWindowOption.musicToastPictureWidth = Integer.parseInt(sharedPreferences.getString ( key, "128"));
 		} else if ( key.equals ( "CAR_SETTINGS__MUSIC_TOAST_PICTURE_HEIGHT" )) {
-			App.GS.musicToastPictureHeight = Integer.parseInt(sharedPreferences.getString ( key, "128"));
+			App.GS.popupWindowOption.musicToastPictureHeight = Integer.parseInt(sharedPreferences.getString ( key, "128"));
 		}
 	}
 }

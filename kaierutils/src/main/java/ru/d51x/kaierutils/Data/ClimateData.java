@@ -27,7 +27,9 @@ public class ClimateData implements Serializable {
     public FanMode fan_mode;
     public BlowDirection blow_direction;
     public BlowMode blow_mode;
+
     public double temperature ;
+    public float interiorTemperature ;
     public float ambientTemperature ;
     public float externalTemperature;
     public State ac_state ;
@@ -36,17 +38,22 @@ public class ClimateData implements Serializable {
 
     public int engineRpm;
     public float vehicleSpeed;
+    public int coolantTemperature;
+    public float airThermoSensor;
     public boolean leak;
     public boolean leak20;
     public long condSysWorkTime;
-
+    public float pressure;
+    public float solarSensor;
 
   public ClimateData() {
       fan_speed = FanSpeed.unknown;
       blow_direction = BlowDirection.unknown;
       temperature = -255;
+      interiorTemperature = -255;
       externalTemperature = -255;
       ambientTemperature = -255;
+      coolantTemperature = -255;
       ac_state = State.off;
       recirculation_state = State.off;
       defogger_state = State.off;
@@ -57,6 +64,8 @@ public class ClimateData implements Serializable {
       leak = false;
       leak20 = false;
       condSysWorkTime = 0;
+      pressure = 0;
+      solarSensor = 0;
   }
 
 

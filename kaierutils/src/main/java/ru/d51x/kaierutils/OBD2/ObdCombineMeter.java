@@ -16,15 +16,15 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21AD;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21AE;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21AF;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21BC;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CAN_COMBINE_METER_21A1;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CAN_COMBINE_METER_21A2;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CAN_COMBINE_METER_21A3;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CAN_COMBINE_METER_21A6;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CAN_COMBINE_METER_21A8;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CAN_COMBINE_METER_21AD;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CAN_COMBINE_METER_21AE;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CAN_COMBINE_METER_21AF;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CAN_COMBINE_METER_21BC;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A1;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A2;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A3;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A6;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A8;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21AD;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21AE;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21AF;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21BC;
 import static ru.d51x.kaierutils.utils.MessageUtils.sendMessage;
 
 import android.os.Handler;
@@ -33,7 +33,6 @@ import android.util.Pair;
 
 import java.util.ArrayList;
 
-import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.Data.CombineMeterData;
 
 public class ObdCombineMeter {
@@ -45,7 +44,7 @@ public class ObdCombineMeter {
         CombineMeterData combineMeterData = new CombineMeterData();
         combineMeterData.setVehicleSpeed(speed);
         sendMessage(mHandler, msgId, combineMeterData);
-        App.obd.canMmcData.canMmcMeterVehicleSpeed = speed;
+
         Log.d(TAG, "6A0 21A1 Speed: " + speed);
     }
 
@@ -56,7 +55,7 @@ public class ObdCombineMeter {
         CombineMeterData combineMeterData = new CombineMeterData();
         combineMeterData.setEngineRpm(rpm);
         sendMessage(mHandler, msgId, combineMeterData);
-        App.obd.canMmcData.canMmcMeterEngineRpm = rpm;
+
         Log.d(TAG, "6A0 21A2 RPM: " + rpm);
     }
 
@@ -67,7 +66,7 @@ public class ObdCombineMeter {
         CombineMeterData combineMeterData = new CombineMeterData();
         combineMeterData.setFuelLevel(level);
         sendMessage(mHandler, msgId, combineMeterData);
-        App.obd.canMmcData.canMmcFuelRemain = level;
+
         Log.d(TAG, "6A0 21A3 Fuel Level: " + level);
     }
 
@@ -91,14 +90,14 @@ public class ObdCombineMeter {
         boolean batterySignal =  (buffer.get(4) & (1 << 2)) > 0;
         boolean espSignal =  (buffer.get(4) & (1 << 3)) > 0;
 
-        Log.w(TAG, "6A0 21A8 Turn Left: " + turnLeft);
-        Log.w(TAG, "6A0 21A8 Turn Right: " + turnRight);
-        Log.w(TAG, "6A0 21A8 Front Fog: " + frontFog);
-        Log.w(TAG, "6A0 21A8 Rear Fog: " + rearFog);
-        Log.w(TAG, "6A0 21A8 High Beam: " + highBeam);
-        Log.w(TAG, "6A0 21A8 Hand Break: " + handBreak);
-        Log.w(TAG, "6A0 21A8 Battery Indicator: " + batterySignal);
-        Log.w(TAG, "6A0 21A8 Esp Indicator: " + espSignal);
+        Log.d(TAG, "6A0 21A8 Turn Left: " + turnLeft);
+        Log.d(TAG, "6A0 21A8 Turn Right: " + turnRight);
+        Log.d(TAG, "6A0 21A8 Front Fog: " + frontFog);
+        Log.d(TAG, "6A0 21A8 Rear Fog: " + rearFog);
+        Log.d(TAG, "6A0 21A8 High Beam: " + highBeam);
+        Log.d(TAG, "6A0 21A8 Hand Break: " + handBreak);
+        Log.d(TAG, "6A0 21A8 Battery Indicator: " + batterySignal);
+        Log.d(TAG, "6A0 21A8 Esp Indicator: " + espSignal);
     }
 
     private static void processPid21AD(int msgId, Handler mHandler, ArrayList<Integer> buffer) {
@@ -107,7 +106,6 @@ public class ObdCombineMeter {
         CombineMeterData combineMeterData = new CombineMeterData();
         combineMeterData.setMileage(mileage);
         sendMessage(mHandler, msgId, combineMeterData);
-        App.obd.canMmcData.canMmcMileage = mileage;
         Log.d(TAG, "6A0 21AD Mileage: " + mileage);
     }
 
@@ -118,8 +116,6 @@ public class ObdCombineMeter {
         combineMeterData.setTripA(trips.first);
         combineMeterData.setTripB(trips.second);
         sendMessage(mHandler, msgId, combineMeterData);
-        App.obd.canMmcData.canMmcMeterTripA = trips.first;
-        App.obd.canMmcData.canMmcMeterTripB = trips.second;
         Log.d(TAG, "6A0 21AE Trip A: " + trips.first);
         Log.d(TAG, "6A0 21AE Trip B: " + trips.second);
     }
@@ -130,7 +126,6 @@ public class ObdCombineMeter {
         CombineMeterData combineMeterData = new CombineMeterData();
         combineMeterData.setVoltage(voltage);
         sendMessage(mHandler, msgId, combineMeterData);
-        App.obd.canMmcData.canMmcMeterVoltage = voltage;
         Log.d(TAG, "6A0 21AF Meter Voltage: " + voltage);
     }
 
@@ -143,8 +138,6 @@ public class ObdCombineMeter {
         combineMeterData.setServiceReminderDistance(serviceReminder.first);
         combineMeterData.setServiceReminderPeriod(serviceReminder.second);
         sendMessage(mHandler, msgId, combineMeterData);
-        App.obd.canMmcData.serviceReminderDistance = serviceReminder.first;
-        App.obd.canMmcData.serviceReminderPeriod = serviceReminder.second;
 
         Log.d(TAG, "6A0 21BC Service Reminder Km: " + km);
         Log.d(TAG, "6A0 21BC Service Reminder Month: " + month);
@@ -153,31 +146,31 @@ public class ObdCombineMeter {
     public static void processResult(Handler mHandler, String pid, ArrayList<Integer> buffer) {
         switch (pid) {
             case BLOCK_6A0_PID_21A1:
-                processPid21A1(MESSAGE_OBD_CAN_COMBINE_METER_21A1, mHandler, buffer);
+                processPid21A1(MESSAGE_OBD_COMBINE_METER_21A1, mHandler, buffer);
                 break;
             case BLOCK_6A0_PID_21A2:
-                processPid21A2(MESSAGE_OBD_CAN_COMBINE_METER_21A2, mHandler, buffer);
+                processPid21A2(MESSAGE_OBD_COMBINE_METER_21A2, mHandler, buffer);
                 break;
             case BLOCK_6A0_PID_21A3:
-                processPid21A3(MESSAGE_OBD_CAN_COMBINE_METER_21A3, mHandler, buffer);
+                processPid21A3(MESSAGE_OBD_COMBINE_METER_21A3, mHandler, buffer);
                 break;
             case BLOCK_6A0_PID_21A6:
-                processPid21A6(MESSAGE_OBD_CAN_COMBINE_METER_21A6, mHandler, buffer);
+                processPid21A6(MESSAGE_OBD_COMBINE_METER_21A6, mHandler, buffer);
                 break;
             case BLOCK_6A0_PID_21A8:
-                processPid21A8(MESSAGE_OBD_CAN_COMBINE_METER_21A8, mHandler, buffer);
+                processPid21A8(MESSAGE_OBD_COMBINE_METER_21A8, mHandler, buffer);
                 break;
             case BLOCK_6A0_PID_21AD:
-                processPid21AD(MESSAGE_OBD_CAN_COMBINE_METER_21AD, mHandler, buffer);
+                processPid21AD(MESSAGE_OBD_COMBINE_METER_21AD, mHandler, buffer);
                 break;
             case BLOCK_6A0_PID_21AE:
-                processPid21AE(MESSAGE_OBD_CAN_COMBINE_METER_21AE, mHandler, buffer);
+                processPid21AE(MESSAGE_OBD_COMBINE_METER_21AE, mHandler, buffer);
                 break;
             case BLOCK_6A0_PID_21AF:
-                processPid21AF(MESSAGE_OBD_CAN_COMBINE_METER_21AF, mHandler, buffer);
+                processPid21AF(MESSAGE_OBD_COMBINE_METER_21AF, mHandler, buffer);
                 break;
             case BLOCK_6A0_PID_21BC:
-                processPid21BC(MESSAGE_OBD_CAN_COMBINE_METER_21BC, mHandler, buffer);
+                processPid21BC(MESSAGE_OBD_COMBINE_METER_21BC, mHandler, buffer);
                 break;
         }
     }

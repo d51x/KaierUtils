@@ -3,13 +3,37 @@ package ru.d51x.kaierutils;
 import static android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE;
 import static android.widget.Toast.LENGTH_LONG;
 
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_AIR_COND_2110;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_AIR_COND_2111;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_AIR_COND_2160;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_AIR_COND_2161;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_CVT_2103;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_CVT_2110;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_METER_21A3;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_AWC_2130_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2110_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2111_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2113_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2132_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2160_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2161_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2180_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CVT_2103_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CVT_2110_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2101_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2102_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2103_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_211D_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_211E_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A1_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A2_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A3_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A6_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A8_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AD_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AE_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AF_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21BC_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_PARKING_2101_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_MAF_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_SPEED_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_STATUS_CHANGED;
 
 import android.Manifest;
@@ -162,7 +186,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate (savedInstanceState);
         // Убираем заголовок
-        if ( App.GS.isHideHeader ) this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        if ( App.GS.uiOptions.isHideHeader ) this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // Убираем панель уведомлений
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -456,13 +480,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_obd_fuel.setVisibility( (App.obd.fuel_data_show) ? View.VISIBLE : View.GONE);
         layout_fuel_consump.setVisibility( (App.obd.fuel_consump_show) ? View.VISIBLE : View.GONE);
 
-        layout_cvt_data.setVisibility( (App.obd.MMC_CAN && (App.obd.canMmcData.can_mmc_cvt_degr_show || App.obd.canMmcData.can_mmc_cvt_temp_show)) ? View.VISIBLE : View.GONE);
-        layout_MMC_climate.setVisibility( (App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_ac_data_show) ? View.VISIBLE : View.GONE);
+        layout_cvt_data.setVisibility( (App.obd.MMC_CAN && (App.obd.can.can_mmc_cvt_degr_show || App.obd.can.can_mmc_cvt_temp_show)) ? View.VISIBLE : View.GONE);
+        layout_MMC_climate.setVisibility( (App.obd.MMC_CAN && App.obd.can.can_mmc_ac_data_show) ? View.VISIBLE : View.GONE);
         layout_temp_data.setVisibility( App.obd.engine_temp_show ? View.VISIBLE : View.GONE);
         ibFloatingPanel.setVisibility(!App.GS.isShowingFloatingPanel ? View.VISIBLE : View.INVISIBLE);
 
         // обновить данные OBD
-        updateOBD_climate_data(App.obd.climateData);
+        updateOBD_climate_data(App.obd.can.climate);
 	}
 
     @SuppressLint("NonConstantResourceId")
@@ -470,19 +494,19 @@ public class MainActivity extends Activity implements View.OnClickListener,
         public boolean onLongClick(View v) {
             switch (v.getId()) {
                 case R.id.layout_waypoints:
-                    App.GS.totalDistance = 0;
+                    App.GS.gpsData.totalDistance = 0;
                     tvGPSDistance.setText( "----.-" );
                     Toast.makeText(this, "Счетчик был сброшен", Toast.LENGTH_SHORT).show ();
                     return true;
                 case R.id.layout_tracktime:
-	                switch(App.GS.gpsTimeAtWay_Type) {
+	                switch(App.GS.gpsData.timeAtWayType) {
 		                case 0:
-			                App.GS.gpsTimeAtWay = 0;
-			                App.GS.gpsPrevTimeAtWay = 0;
+			                App.GS.gpsData.timeAtWay = 0;
+			                App.GS.gpsData.prevTimeAtWay = 0;
 			                break;
 		                case 1:
-			                App.GS.gpsTimeAtWayWithoutStops = 0;
-			                App.GS.gpsPrevTimeAtWayWithoutStops = 0;
+			                App.GS.gpsData.timeAtWayWithoutStops = 0;
+			                App.GS.gpsData.prevTimeAtWayWithoutStops = 0;
 			                break;
 		                default:
 			                break;
@@ -519,23 +543,23 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         switch (v.getId()) {
             case R.id.layout_gps_speed:
-                color_speed(tvGPSSpeed, App.GS.gpsSpeed);
-                App.GS.isColorSpeed = ! App.GS.isColorSpeed;
-	            PreferenceManager.getDefaultSharedPreferences (App.getInstance ()).edit().putBoolean ("kaierutils_show_color_speed", App.GS.isColorSpeed).apply();
+                color_speed(tvGPSSpeed, App.GS.gpsData.speed);
+                App.GS.uiOptions.isColorSpeed = ! App.GS.uiOptions.isColorSpeed;
+	            PreferenceManager.getDefaultSharedPreferences (App.getInstance ()).edit().putBoolean ("kaierutils_show_color_speed", App.GS.uiOptions.isColorSpeed).apply();
                 break;
             case R.id.layout_tracktime:
-                App.GS.gpsTimeAtWay_Type++;
-                if ( App.GS.gpsTimeAtWay_Type > 1) App.GS.gpsTimeAtWay_Type = 0;
-                if ( App.GS.gpsTimeAtWay_Type == 0) {
+                App.GS.gpsData.timeAtWayType++;
+                if ( App.GS.gpsData.timeAtWayType > 1) App.GS.gpsData.timeAtWayType = 0;
+                if ( App.GS.gpsData.timeAtWayType == 0) {
                     Toast.makeText(this, "Пройденное время с учетом простоя", Toast.LENGTH_SHORT).show();
-                } else if (App.GS.gpsTimeAtWay_Type == 1) {
+                } else if (App.GS.gpsData.timeAtWayType == 1) {
                     Toast.makeText(this, "Пройденное время без учета простоя", Toast.LENGTH_SHORT).show();
                 }
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
-                prefs.edit().putInt("CAR_SETTINGS__GPS_TIME_AT_WAY_TYPE", App.GS.gpsTimeAtWay_Type);
+                prefs.edit().putInt("CAR_SETTINGS__GPS_TIME_AT_WAY_TYPE", App.GS.gpsData.timeAtWayType);
                 prefs.edit().apply();
                 // сменить иконку, сменить текст
-                showFormatedTrackTime( App.GS.gpsTimeAtWay_Type );
+                showFormatedTrackTime( App.GS.gpsData.timeAtWayType);
                 break;
             case R.id.ivOBD2Status:
 //                if ( App.obd.isConnected ) {
@@ -734,6 +758,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     }
 
+
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
 		@SuppressLint({"SetTextI18n", "StringFormatMatches"})
         @Override
@@ -754,7 +779,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 case TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP:
                     break;
                 case GlSets.GPS_BROADCAST_ACTION_AGPS_RESET:
-                    App.GS.cntGpsHangs++;
+                    App.GS.gpsData.cntGpsHangs++;
                     break;
 
                 case GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED: {
@@ -791,13 +816,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     tvGPSSpeed.setText(speed > 0 ? String.format(getString(R.string.text_gps_speed_value), speed) : "---");
                     color_speed(tvGPSSpeed, speed);
 
-                    tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.GS.gpsAverageSpeed));
-                    tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.GS.gpsMaxSpeed));
+                    tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.GS.gpsData.averageSpeed));
+                    tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.GS.gpsData.maxSpeed));
 
-                    float dist = App.GS.totalDistance / 1000;
+                    float dist = App.GS.gpsData.totalDistance / 1000;
 
                     tvGPSDistance.setText(dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-");
-                    showFormatedTrackTime(App.GS.gpsTimeAtWay_Type);
+                    showFormatedTrackTime(App.GS.gpsData.timeAtWayType);
 
 //                NotifyData notifyData = new NotifyData( App.getInstance () );
 //                notifyData.line_inway_distance = dist > 0 ? "Пройдено: " + String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-";
@@ -818,14 +843,14 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
                     break;
                 case GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED:
-                    if (App.GS.interactWithPowerAmp && App.GS.isShowMusicInfo && App.GS.isPowerAmpPlaying) {
+                    if (App.GS.powerAmpOpt.interactWithPowerAmp && App.GS.uiOptions.isShowMusicInfo && App.GS.powerAmpOpt.isPowerAmpPlaying) {
                         //String TrackTitle = intent.getStringExtra("TrackTitle");
                         //String AlbumArtist = intent.getStringExtra ("AlbumArtist");
                         Bitmap AlbumArt = intent.getParcelableExtra("AlbumArt");
                         //tvMusicInfo1.setText( TrackTitle );
-                        tvMusicInfo1.setText(App.GS.PowerAmp_TrackTitle);
+                        tvMusicInfo1.setText(App.GS.powerAmpOpt.PowerAmp_TrackTitle);
                         //tvMusicInfo2.setText( AlbumArtist );
-                        tvMusicInfo2.setText(App.GS.PowerAmp_AlbumArtist);
+                        tvMusicInfo2.setText(App.GS.powerAmpOpt.PowerAmp_AlbumArtist);
                         //if (!AlbumArt.equals(App.GS.PowerAmp_AlbumArt))
                         //if ( AlbumArt != null ) {
                         ivAlbumArt.setImageBitmap(AlbumArt);
@@ -838,54 +863,71 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     boolean obd_status = intent.getBooleanExtra("Status", false);
                     updateOBDStatus(obd_status);
                     break;
-                case OBDII.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED:
+                //*********** ACTIONS: COMMON OBD COMMANDS ***********************************
+                case OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED:
                     updateOBD_CarBattery(App.obd.obdData.voltage);
                     break;
-                case OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED:
-                    updateOBD_CoolantTemp(modeEngineTemp, App.obd.canMmcData.fan_state);
+                case OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED:
+                    updateOBD_CoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
                     break;
-                case OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED:
+                case OBD_BROADCAST_ACTION_MAF_CHANGED:
                     updateOBD_FuelConsump(App.obd.oneTrip.fuel_cons_lph);
                     updateOBD_FuelTank(App.obd.totalTrip.fuel_remains);
                     break;
-                case OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED:
+                case OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED:
 
                     break;
-                case OBDII.OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED:
-                    updateOBD_CoolantTemp(modeEngineTemp, App.obd.canMmcData.fan_state);
+                //************ ACTIONS: MMC CAN BLOCK 7E0 - ENGINE ********************************
+                case ACTION_OBD_ENGINE_2101_CHANGED:
+
                     break;
-                case ACTION_CVT_2103: {
+                case ACTION_OBD_ENGINE_2102_CHANGED:
+
+                    break;
+                case ACTION_OBD_ENGINE_2103_CHANGED:
+
+                    break;
+                case ACTION_OBD_ENGINE_211D_CHANGED:
+                    updateOBD_CoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
+                    break;
+                case ACTION_OBD_ENGINE_211E_CHANGED:
+
+                    break;
+                //************ ACTIONS: MMC CAN BLOCK 7E1 - CVT ***********************************
+                case ACTION_OBD_CVT_2103_CHANGED: {
                         CvtData cvtData = (CvtData) intent.getSerializableExtra("obd_cvt_2103");
                         updateOBD_CVT_data(modeCVT/*, obdCvtData*/);
                     }
                     break;
-                case ACTION_CVT_2110: {
+                case ACTION_OBD_CVT_2110_CHANGED: {
                         CvtData cvtData = (CvtData) intent.getSerializableExtra("obd_cvt_2110");
                         updateOBD_CVT_data(modeCVT/*, obdCvtData*/);
                     }
                     break;
-                case ACTION_METER_21A3: {
+                //************ ACTIONS: MMC CAN BLOCK 6A0 - COMBINE METER **************************
+                case ACTION_OBD_METER_21A3_CHANGED: {
                         CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra("combine_meter_21A3");
                         updateOBD_FuelTank(meterData.getFuelLevel());
                     }
                     break;
-                case ACTION_AIR_COND_2110: {
+                //************ ACTIONS: MMC CAN BLOCK 688 - AIR CONDITION **************************
+                case ACTION_OBD_CLIMATE_2110_CHANGED: {
                         ClimateData climateData = (ClimateData) intent.getSerializableExtra("air_cond_2110");
                     }
                     break;
-                case ACTION_AIR_COND_2111: {
+                case ACTION_OBD_CLIMATE_2111_CHANGED: {
                     ClimateData climateData = (ClimateData) intent.getSerializableExtra("air_cond_2111");
                     updateOBD_air_cond_ext_temperature(climateData.externalTemperature);
                 }
                 break;
-                case ACTION_AIR_COND_2160: {
+                case ACTION_OBD_CLIMATE_2160_CHANGED: {
                         ClimateData climateData = (ClimateData) intent.getSerializableExtra("air_cond_2160");
                         updateOBD_air_cond_fan_mode(climateData.fan_mode);
                         updateOBD_air_cond_blow_mode(climateData.blow_mode);
                         updateOBD_air_cond_temperature(Double.toString(climateData.temperature));
                     }
                     break;
-                case ACTION_AIR_COND_2161: {
+                case ACTION_OBD_CLIMATE_2161_CHANGED: {
                         ClimateData climateData = (ClimateData) intent.getSerializableExtra("air_cond_2161");
                         updateOBD_air_cond_blow_direction(climateData.blow_direction);
                         updateOBD_air_cond_fan_speed(climateData.fan_speed);
@@ -980,7 +1022,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
 	private void color_speed(TextView tv, int speed) {
-		if ( App.GS.isColorSpeed ) {
+		if ( App.GS.uiOptions.isColorSpeed ) {
 			if ( speed < 10 ) tv.setTextColor( Color.LTGRAY);
 			else if ( speed < 40 ) tv.setTextColor( Color.rgb(0,255,255));
 			else if ( speed < 60 ) tv.setTextColor( Color.rgb(0,255,144));
@@ -998,11 +1040,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
         long tm = 0;
         if ( wayType == 0)
         {
-            tm = App.GS.gpsTimeAtWay;// - TimeZone.getDefault().getOffset(0L);
+            tm = App.GS.gpsData.timeAtWay;// - TimeZone.getDefault().getOffset(0L);
             // поменять значек
             ivTrackTime.setImageResource(R.drawable.track_time_0);
         } else if ( wayType == 1) {
-            tm =  App.GS.gpsTimeAtWayWithoutStops;// - TimeZone.getDefault().getOffset(0L);
+            tm =  App.GS.gpsData.timeAtWayWithoutStops;// - TimeZone.getDefault().getOffset(0L);
             ivTrackTime.setImageResource(R.drawable.track_time_1);
 
         }
@@ -1042,29 +1084,56 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		registerReceiver(receiver, new IntentFilter(GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED));
 
 		registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_STATUS_CHANGED));
-		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED));
-		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED));
-		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_MAF_CHANGED));
-		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED));
 
+        //********* OBD: COMMON COMMANDS **********************************************************
+        // OBD GENERIC
+        registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_SPEED_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_MAF_CHANGED));
 
-        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_ENGINE_CHANGED));
-        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ENGINE_FAN_STATE_CHANGED));
+        // ENGINE
+        //registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2101_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2102_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2103_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_211E_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_211D_CHANGED));
 
+        // CVT
+        //registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_CVT_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_CVT_2103_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_CVT_2110_CHANGED));
 
-        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_CVT_CHANGED));
-        registerReceiver(receiver, new IntentFilter(ACTION_CVT_2103));
-        registerReceiver(receiver, new IntentFilter(ACTION_CVT_2110));
+        // CLIMATE
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_CLIMATE_2110_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_CLIMATE_2111_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_CLIMATE_2113_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_CLIMATE_2132_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_CLIMATE_2160_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_CLIMATE_2161_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_CLIMATE_2180_CHANGED));
 
+        // COMBINE METER
+        //registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21A1_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21A2_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21A3_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21A6_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21A8_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21AD_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21AE_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21AF_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21BC_CHANGED));
 
-        registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_CHANGED));
+        // PARKING SENSORS
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_PARKING_2101_CHANGED));
 
-
-        registerReceiver(receiver, new IntentFilter(ACTION_AIR_COND_2110));
-        registerReceiver(receiver, new IntentFilter(ACTION_AIR_COND_2160));
-        registerReceiver(receiver, new IntentFilter(ACTION_AIR_COND_2161));
-
-		registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_COMBINEMETER_FUEL_TANK_CHANGED));
+        // AWC
+        // registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_AWC_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_AWC_2130_CHANGED));
 	}
 
     public void updateAudioModeInfo(int id) {
@@ -1079,7 +1148,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 break;
             case 0:
             case TWUtilConst.TW_AUDIO_FOCUS_MUSIC_ID:
-                if ( App.GS.interactWithPowerAmp && App.GS.isShowMusicInfo ) {
+                if ( App.GS.powerAmpOpt.interactWithPowerAmp && App.GS.uiOptions.isShowMusicInfo ) {
                     layout_music_info.setVisibility(View.VISIBLE);
                 }
                 break;
@@ -1121,7 +1190,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
             switch (mode) {
                 case 0:
                     ivOBD_CoolantTempFan.setVisibility(((state == CanMmcData.State.on) &&
-                            App.obd.MMC_CAN && App.obd.canMmcData.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
+                            App.obd.MMC_CAN && App.obd.can.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
                     if (temp < 80) {
                         ivOBD_CoolantTemp.setImageResource(R.drawable.coolant_temp_min);
                     } else if (temp < 99) {
@@ -1143,8 +1212,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     @SuppressLint("SetTextI18n")
     public void updateOBD_CVT_data(int mode) {
-        if ( App.obd.MMC_CAN && (App.obd.canMmcData.can_mmc_cvt_degr_show
-                || App.obd.canMmcData.can_mmc_cvt_temp_show)) {
+        if ( App.obd.MMC_CAN && (App.obd.can.can_mmc_cvt_degr_show
+                || App.obd.can.can_mmc_cvt_temp_show)) {
             layout_cvt_data.setVisibility( View.VISIBLE);
         } else {
             layout_cvt_data.setVisibility( View.GONE);
@@ -1153,18 +1222,18 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         switch (mode) {
             case 0:
-                if ( App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_cvt_temp_show) {
+                if ( App.obd.MMC_CAN && App.obd.can.can_mmc_cvt_temp_show) {
 
-                    if (App.obd.canMmcData.canMmcCvtTemp > -255) {
-                        tvOBD_CVT_Data.setText(Integer.toString(App.obd.canMmcData.canMmcCvtTemp));
+                    if (App.obd.can.cvt.getTemperature() > -255) {
+                        tvOBD_CVT_Data.setText(Integer.toString(App.obd.can.cvt.getTemperature()));
                     } else {
                         tvOBD_CVT_Data.setText("--");
                     }
-                    if (App.obd.canMmcData.canMmcCvtTemp < 71) {
+                    if (App.obd.can.cvt.getTemperature() < 71) {
                         ivOBD_CVT_Data.setImageResource(R.drawable.cvt_temp_min);
-                    } else if (App.obd.canMmcData.canMmcCvtTemp < 91) {
+                    } else if (App.obd.can.cvt.getTemperature() < 91) {
                         ivOBD_CVT_Data.setImageResource(R.drawable.cvt_temp_nom_green);
-                    } else if (App.obd.canMmcData.canMmcCvtTemp < 103) {
+                    } else if (App.obd.can.cvt.getTemperature() < 103) {
                         ivOBD_CVT_Data.setImageResource(R.drawable.cvt_temp_nom_yellow);
                     } else {
                         ivOBD_CVT_Data.setImageResource(R.drawable.cvt_temp_nom_orange);
@@ -1172,9 +1241,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 }
                 break;
             case 1:
-                if ( App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_cvt_degr_show) {
+                if ( App.obd.MMC_CAN && App.obd.can.can_mmc_cvt_degr_show) {
                     ivOBD_CVT_Data.setImageResource(R.drawable.cvt_degr_nom);
-                    tvOBD_CVT_Data.setText(Integer.toString(App.obd.canMmcData.canMmcCvtOilDegradation));
+                    tvOBD_CVT_Data.setText(Integer.toString(App.obd.can.cvt.getOilDegradation()));
                 }
                 break;
             default:
@@ -1256,10 +1325,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
         final SeekBar seekBarFuel = (SeekBar) linearlayout.findViewById(R.id.seekBarFuel);
         final TextView tvFuelPercent = (TextView) linearlayout.findViewById(R.id.tvFuelPercent);
 
-        etFuelTankCapacity.setText( String.format("%1$.0f", App.obd.obdData.fuel_tank));
+        etFuelTankCapacity.setText( String.format("%1$.0f", (float) App.obd.fuel.getTankCapacity()));
         etFuelTankRemain.setText( String.format("%1$.0f", App.obd.totalTrip.fuel_remains));
         seekBarFuel.setMax( 100 );
-        int percent = Math.round(App.obd.totalTrip.fuel_remains * 100 / App.obd.obdData.fuel_tank);
+        int percent = Math.round(App.obd.totalTrip.fuel_remains * 100 / App.obd.fuel.getTankCapacity());
         seekBarFuel.setProgress(percent);
         tvFuelPercent.setText(String.valueOf(percent) + " %");
         seekBarFuel.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -1345,7 +1414,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         modeEngineTemp++;
         if ( modeEngineTemp > 0) modeEngineTemp = 0;
 
-        updateOBD_CoolantTemp(modeEngineTemp, App.obd.canMmcData.fan_state);
+        updateOBD_CoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
 
     }
 
@@ -1437,10 +1506,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
             layout_obd_fuel.setVisibility( View.VISIBLE );
             switch (mode) {
                 case 0:
-                    if (App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_fuel_remain_show) {
+                    if (App.obd.MMC_CAN && App.obd.can.can_mmc_fuel_remain_show) {
                         // по кан
-                        if ( App.obd.canMmcData.canMmcFuelRemain > 0 )
-                            tvOBD_FuelTank.setText(String.format("%1$s", Integer.toString(App.obd.canMmcData.canMmcFuelRemain)));
+                        if ( App.obd.can.meter.getFuelLevel() > 0)
+                            tvOBD_FuelTank.setText(String.format("%1$s", App.obd.can.meter.getFuelLevel()));
                             else tvOBD_FuelTank.setText(String.format("%1$s", "--"));
                     } else {
                         // вычисляем
@@ -1458,14 +1527,14 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     break;
                 case 1:
 
-                    if (App.obd.MMC_CAN && App.obd.canMmcData.can_mmc_fuel_remain_show) {
+                    if (App.obd.MMC_CAN && App.obd.can.can_mmc_fuel_remain_show) {
                         // по кан
-                        if ( App.obd.canMmcData.canMmcFuelRemain < 0 )
+                        if ( App.obd.can.meter.getFuelLevel() < 0)
                         tvOBD_FuelTank.setText(String.format("%1$s", "--"));
-                        else tvOBD_FuelTank.setText(String.format("%1$s", Integer.toString(Math.round(App.obd.canMmcData.canMmcFuelRemain / (App.obd.obdData.fuel_tank / 100))))  + "\\%");
+                        else tvOBD_FuelTank.setText(String.format("%1$s", Math.round(App.obd.can.meter.getFuelLevel() / (App.obd.fuel.getTankCapacity() / 100)))  + "\\%");
                     } else {
                         // вычисляем
-                        tvOBD_FuelTank.setText(String.format("%1$.0f", (float) ((App.obd.totalTrip.fuel_remains * 100) / App.obd.obdData.fuel_tank)) + "\\%");
+                        tvOBD_FuelTank.setText(String.format("%1$.0f", (App.obd.totalTrip.fuel_remains * 100) / App.obd.fuel.getTankCapacity()) + "\\%");
                     }
 
 
@@ -1561,11 +1630,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         TextViewToSpans(tv_air_cond_temp, temp, TEXT_SIZE_BEFORE_DOT_4, TEXT_SIZE_AFTER_DOT);
 
-        if ( App.obd.climateData.temperature < 19f )
+        if ( App.obd.can.climate.temperature < 19f )
             iv_air_temp.setImageResource(R.drawable.ac_temp_blue);
-        else if ( App.obd.climateData.temperature < 21f )
+        else if ( App.obd.can.climate.temperature < 21f )
             iv_air_temp.setImageResource(R.drawable.ac_temp_green);
-        else if ( App.obd.climateData.temperature < 23f )
+        else if ( App.obd.can.climate.temperature < 23f )
             iv_air_temp.setImageResource(R.drawable.ac_temp_orange);
         else
             iv_air_temp.setImageResource(R.drawable.ac_temp_red);

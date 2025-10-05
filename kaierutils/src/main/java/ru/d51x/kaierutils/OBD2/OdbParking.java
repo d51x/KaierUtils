@@ -1,7 +1,7 @@
 package ru.d51x.kaierutils.OBD2;
 
-import static ru.d51x.kaierutils.OBD2.OBDII.MESSAGE_OBD_CAN_PARKING_SENSORS;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_763_PID_2101;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_PARKING_SENSORS;
 
 import android.os.Handler;
 import android.os.Message;
@@ -19,7 +19,7 @@ public class OdbParking {
 
     public static void processResult(Handler mHandler, String pid, ArrayList<Integer> buffer) {
         if ( BLOCK_763_PID_2101.equalsIgnoreCase(pid) ) {
-            OdbParking.processPid2101(MESSAGE_OBD_CAN_PARKING_SENSORS, mHandler, buffer);
+            OdbParking.processPid2101(MESSAGE_OBD_PARKING_SENSORS, mHandler, buffer);
         }
     }
 }

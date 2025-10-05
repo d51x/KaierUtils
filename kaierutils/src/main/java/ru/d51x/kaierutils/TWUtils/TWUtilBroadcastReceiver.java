@@ -1,5 +1,7 @@
 package ru.d51x.kaierutils.TWUtils;
 
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_PARKING_2101_CHANGED;
+
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.BroadcastReceiver;
@@ -42,7 +44,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
         // устройство загрузилось, запустим фоновый сервис
 		if ( action.equals (Intent.ACTION_BOOT_COMPLETED ) ) {
 			context.startService(new Intent(context, BackgroundService.class));
-			if (App.GS.isAutoStart) {
+			if (App.GS.uiOptions.isAutoStart) {
 				Intent mIntent = new Intent(context, MainActivity.class);
 				mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(mIntent);
@@ -55,7 +57,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 				  action.equals ( TWUtilConst.TW_BROADCAST_ACTION_SHUTDOWN))
 		{	// изменение уровня громкости при выключении
 			SetVolumeAtStartUp();
-            App.obd.saveFuelTank();
+            App.obd.fuel.save();
             App.obd.oneTrip.saveData();
             App.obd.todayTrip.saveData();
             App.obd.totalTrip.saveData();
@@ -71,7 +73,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             // запомним время ухода в SleepMode
             App.GS.lastSleep = System.currentTimeMillis();
             App.GS.isStopedAfterWakeUp = false;
-            App.obd.saveFuelTank();
+            App.obd.fuel.save();
             App.obd.oneTrip.saveData();
             App.obd.todayTrip.saveData();
             App.obd.totalTrip.saveData();
@@ -86,7 +88,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 	        App.GS.SleepModeCount++; // увеличим счетчик просыпаний
             App.GS.isStopedAfterWakeUp = true;
             App.GS.wakeUpTime =  System.currentTimeMillis();
-            App.obd.loadFuelTank();
+            App.obd.fuel.load();
             App.obd.oneTrip.loadData();
             App.obd.todayTrip.loadData();
             App.obd.totalTrip.loadData();
@@ -133,7 +135,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 
 
 		}
-        else if ( action.equals( OBDII.OBD_BROADCAST_ACTION_PARKING_SENSORS_CHANGED )) {
+        else if ( action.equals( ACTION_OBD_PARKING_2101_CHANGED )) {
 //            int rear_inner_left = intent.getIntExtra("parking_sensors_rear_left_inner", -1);
 //            int rear_outer_left = intent.getIntExtra("parking_sensors_rear_left_outer", -1);
 //            int rear_inner_right = intent.getIntExtra("parking_sensors_rear_right_inner", -1);
@@ -152,33 +154,33 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 	private void changeVolumeAtReverse() {
 		Log.d ("TWUtilBroadcastReceiver", "changeVolumeAtReverse ");
         // не нужно уменьшать громкость при включении заднего хода
-		if ( !App.GS.isNeedSoundDecreaseAtReverse  ) {	return; }
+		if ( !App.GS.volumeOptions.isNeedSoundDecreaseAtReverse  ) {	return; }
 
         // уменьшаем гроскость
-		if ( App.GS.isFixedVolumeAtReverse ) {
+		if ( App.GS.volumeOptions.isFixedVolumeAtReverse ) {
             // уменьшаем громкость до фиксированного значения, если громкость до включения была выше этого значения
-			if ( App.GS.FixedVolumeLevelAtReverse <= prevVolume ) {
-				TWUtilEx.setVolumeLevel( App.GS.FixedVolumeLevelAtReverse );
+			if ( App.GS.volumeOptions.fixedVolumeLevelAtReverse <= prevVolume ) {
+				TWUtilEx.setVolumeLevel( App.GS.volumeOptions.fixedVolumeLevelAtReverse);
 			}
-		} else if (  App.GS.isPercentVolumeAtReverse ) {
+		} else if (  App.GS.volumeOptions.isPercentVolumeAtReverse ) {
             // уменьшаем громкость до заданного процента от текущей
-			int newLevel = Math.round(prevVolume * App.GS.PercentVolumeLevelAtReverse / 100);
+			int newLevel = Math.round(prevVolume * App.GS.volumeOptions.percentVolumeLevelAtReverse / 100);
 			TWUtilEx.setVolumeLevel( newLevel );
 		}
 	}
 
 	private void SetVolumeAtStartUp(){
 		Log.d ("TWUtilBroadcastReceiver", "SetVolumeAtStartUp ");
-		if ( App.GS.isNeedSoundDecreaseAtStartUp ) {
-			int level = App.GS.VolumeLevelAtStartUp;
+		if ( App.GS.volumeOptions.isNeedSoundDecreaseAtStartUp ) {
+			int level = App.GS.volumeOptions.volumeLevelAtStartUp;
 			App.GS.setVolumeLevel(level, true);
 		}
 	}
 
 	private void SetVolumeAtWakeUp(){
 		Log.d ("TWUtilBroadcastReceiver", "SetVolumeAtWakeUp ");
-		if ( App.GS.isNeedSoundDecreaseAtWakeUp ) {
-			int level = App.GS.VolumeLevelAtWakeUp;
+		if ( App.GS.volumeOptions.isNeedSoundDecreaseAtWakeUp ) {
+			int level = App.GS.volumeOptions.volumeLevelAtWakeUp;
 			App.GS.setVolumeLevel(level, true);
 		}
 	}
