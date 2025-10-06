@@ -53,7 +53,7 @@ public class CanMmcData {
       can_mmc_cvt_degradation_update_time = -1;
       can_mmc_cvt_degr_show = false;
 
-      engine.setCoolantTemperature(-1); // TODO:  ?????
+      engine.setCoolantTemperature(-255); // TODO:  ?????
 
       engine_fan_show = true;
       can_mmc_ac_data_show = false;
