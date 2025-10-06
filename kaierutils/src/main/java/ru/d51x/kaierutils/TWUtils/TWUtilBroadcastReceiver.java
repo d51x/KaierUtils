@@ -1,6 +1,7 @@
 package ru.d51x.kaierutils.TWUtils;
 
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_PARKING_2101_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_PARKING_2101;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
@@ -18,7 +19,6 @@ import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.BackgroundService;
 import ru.d51x.kaierutils.DebugLogger;
 import ru.d51x.kaierutils.MainActivity;
-import ru.d51x.kaierutils.OBD2.OBDII;
 import ru.d51x.kaierutils.Radio.Radio;
 
 public class TWUtilBroadcastReceiver extends BroadcastReceiver {
@@ -140,7 +140,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 //            int rear_outer_left = intent.getIntExtra("parking_sensors_rear_left_outer", -1);
 //            int rear_inner_right = intent.getIntExtra("parking_sensors_rear_right_inner", -1);
 //            int rear_outer_right = intent.getIntExtra("parking_sensors_rear_right_outer", -1);
-           ArrayList<Integer> buffer = intent.getIntegerArrayListExtra("parking_sensors");
+           ArrayList<Integer> buffer = intent.getIntegerArrayListExtra(KEY_OBD_PARKING_2101);
 
             if ( App.GS.isReverseMode ) {
                 App.sensorsToast.cancel();

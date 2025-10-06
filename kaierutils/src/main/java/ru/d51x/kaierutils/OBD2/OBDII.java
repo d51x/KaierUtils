@@ -49,6 +49,7 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E1_PID_2110;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_RX_511;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_RX_514;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_RX_7E9;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_PARKING_2101;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2110;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2111;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2113;
@@ -247,7 +248,9 @@ public class OBDII  {
         //if ( isConnected ) return;
         BluetoothManager btManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter btAdapter = btManager.getAdapter();
-
+        if (!btAdapter.isEnabled()) {
+            btAdapter.enable();
+        }
         BluetoothDevice device = btAdapter.getRemoteDevice(deviceAddress);
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
         try {
@@ -270,10 +273,12 @@ public class OBDII  {
                     Log.d(TAG, "OBD2->connect(), sleep after connect, waiting....");
                     Thread.sleep(1000);
                     boolean res = init();
-//                    if (!res) {
+                    if (!res) {
+                        new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
+                        // коннект с сокетом есть, надо остановить все отправки и сделать резет и новую инициализацию
 //                        socket.close();
 //                        socket = null;
-//                    }
+                    }
                     SendBroadcastAction(OBD_BROADCAST_ACTION_STATUS_CHANGED, "Status", res);
                     return res;
                 } else {
@@ -286,6 +291,7 @@ public class OBDII  {
                     socket.close();
                 } catch (IOException closeException) {
                     Log.e(TAG, "Fail to close connection");
+                    btAdapter.disable();
                 }
                 // java.io.IOException: Connection reset by peer
                 e.printStackTrace();
@@ -343,7 +349,7 @@ public class OBDII  {
             cmd2.run(socket.getInputStream(), socket.getOutputStream());
             result = cmd2.getFormattedResult();
             Log.d(TAG, "LineFeedOff result: " + result);
-            res = res && (result.equalsIgnoreCase("OK"));
+            res = res && (result.equalsIgnoreCase("OK")); // тут можем получить что то другое, но коннект с сокетом есть, рвать не надо
             if ( !res ) return res;
 
             // AT ST
@@ -787,6 +793,8 @@ public class OBDII  {
             new SelectHeaderObdCommand("ATSH " + canAddr).run(socket.getInputStream(), socket.getOutputStream());
 
             if (flowControl) {
+                //String str = "ATFCSH" + canAddr + "\n\r" + "ATFCSD30080A" + "\n\r" + "ATFCSM1";
+               // new SelectHeaderObdCommand(str).run(socket.getInputStream(), socket.getOutputStream());
                 new SelectHeaderObdCommand("ATFCSH " + canAddr).run(socket.getInputStream(), socket.getOutputStream());
                 new SelectHeaderObdCommand("ATFCSD 30080A").run(socket.getInputStream(), socket.getOutputStream());
                 new SelectHeaderObdCommand("ATFCSM 1").run(socket.getInputStream(), socket.getOutputStream());
@@ -1044,80 +1052,80 @@ public class OBDII  {
                  App.obd.can.climate.coolantTemperature = ((ClimateData) message.obj).coolantTemperature;
                  App.obd.can.climate.airThermoSensor = ((ClimateData) message.obj).airThermoSensor;
 
-                 SendBroadcastAction(ACTION_OBD_CLIMATE_2110_CHANGED, "air_cond_2110", (ClimateData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2110_CHANGED, "obd_climate_2110", (ClimateData) message.obj);
                  break;
              case MESSAGE_OBD_CLIMATE_2111:
                  App.obd.can.climate.ambientTemperature = ((ClimateData) message.obj).ambientTemperature;
 
-                 SendBroadcastAction(ACTION_OBD_CLIMATE_2111_CHANGED, "air_cond_2111", (ClimateData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2111_CHANGED, "obd_climate_2111", (ClimateData) message.obj);
                  break;
              case MESSAGE_OBD_CLIMATE_2113:
                  App.obd.can.climate.externalTemperature = ((ClimateData) message.obj).externalTemperature;
                  App.obd.can.climate.engineRpm = ((ClimateData) message.obj).engineRpm;
                  App.obd.can.climate.vehicleSpeed = ((ClimateData) message.obj).vehicleSpeed;
 
-                 SendBroadcastAction(ACTION_OBD_CLIMATE_2113_CHANGED, "air_cond_2113", (ClimateData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2113_CHANGED, "obd_climate_2113", (ClimateData) message.obj);
                  break;
              case MESSAGE_OBD_CLIMATE_2132:
                  App.obd.can.climate.leak = ((ClimateData) message.obj).leak;
                  App.obd.can.climate.leak20 = ((ClimateData) message.obj).leak20;
 
-                 SendBroadcastAction(ACTION_OBD_CLIMATE_2132_CHANGED, "air_cond_2132", (ClimateData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2132_CHANGED, "obd_climate_2132", (ClimateData) message.obj);
                  break;
              case MESSAGE_OBD_CLIMATE_2160:
                  App.obd.can.climate.fan_mode = ((ClimateData) message.obj).fan_mode;
                  App.obd.can.climate.blow_mode = ((ClimateData) message.obj).blow_mode;
                  App.obd.can.climate.temperature = ((ClimateData) message.obj).temperature;
-                 SendBroadcastAction(ACTION_OBD_CLIMATE_2160_CHANGED, "air_cond_2160", (ClimateData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2160_CHANGED, "obd_climate_2160", (ClimateData) message.obj);
                  break;
              case MESSAGE_OBD_CLIMATE_2161:
                  App.obd.can.climate.blow_direction = ((ClimateData) message.obj).blow_direction;
                  App.obd.can.climate.fan_speed = ((ClimateData) message.obj).fan_speed;
                  App.obd.can.climate.ac_state = ((ClimateData) message.obj).ac_state;
                  App.obd.can.climate.defogger_state = ((ClimateData) message.obj).defogger_state;
-                  SendBroadcastAction(ACTION_OBD_CLIMATE_2161_CHANGED, "air_cond_2161", (ClimateData) message.obj);
+                  SendBroadcastAction(ACTION_OBD_CLIMATE_2161_CHANGED, "obd_climate_2161", (ClimateData) message.obj);
                  break;
              case MESSAGE_OBD_CLIMATE_2180:
                  App.obd.can.climate.condSysWorkTime = ((ClimateData) message.obj).condSysWorkTime;
-                 SendBroadcastAction(ACTION_OBD_CLIMATE_2180_CHANGED, "air_cond_2180", (ClimateData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2180_CHANGED, "obd_climatee_2180", (ClimateData) message.obj);
                  break;
 
              // ******************* COMBINE METER ***********************************************
              case MESSAGE_OBD_COMBINE_METER_21A1:
                  App.obd.can.meter.setVehicleSpeed(((CombineMeterData) message.obj).getVehicleSpeed());
-                 SendBroadcastAction(ACTION_OBD_METER_21A1_CHANGED, "meter_21A1", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21A1_CHANGED, "obd_meter_21A1", (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21A2:
                  App.obd.can.meter.setEngineRpm(((CombineMeterData) message.obj).getEngineRpm());
-                 SendBroadcastAction(ACTION_OBD_METER_21A2_CHANGED, "meter_21A2", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21A2_CHANGED, "obd_meter_21A2", (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21A3:
                  App.obd.can.meter.setFuelLevel(((CombineMeterData) message.obj).getFuelLevel());
-                 SendBroadcastAction(ACTION_OBD_METER_21A3_CHANGED, "meter_21A3", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21A3_CHANGED, "obd_meter_21A3", (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21A6:
-                 SendBroadcastAction(ACTION_OBD_METER_21A6_CHANGED, "meter_21A6", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21A6_CHANGED, "obd_meter_21A6", (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21A8:
-                 SendBroadcastAction(ACTION_OBD_METER_21A8_CHANGED, "meter_21A8", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21A8_CHANGED, "obd_meter_21A8", (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21AD:
                  App.obd.can.meter.setMileage(((CombineMeterData) message.obj).getMileage());
-                 SendBroadcastAction(ACTION_OBD_METER_21AD_CHANGED, "meter_21AD", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21AD_CHANGED, "obd_meter_21AD", (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21AE:
                  App.obd.can.meter.setTripA(((CombineMeterData) message.obj).getTripA());
                  App.obd.can.meter.setTripB(((CombineMeterData) message.obj).getTripB());
-                 SendBroadcastAction(ACTION_OBD_METER_21AE_CHANGED, "meter_21AE", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21AE_CHANGED, "obd_meter_21AE", (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21AF:
                  App.obd.can.meter.setVoltage(((CombineMeterData) message.obj).getVoltage());
-                 SendBroadcastAction(ACTION_OBD_METER_21AF_CHANGED, "meter_21AF", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21AF_CHANGED, "obd_meter_21AF", (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21BC:
                  App.obd.can.meter.setServiceReminderDistance(((CombineMeterData) message.obj).getServiceReminderDistance());
                  App.obd.can.meter.setServiceReminderPeriod(((CombineMeterData) message.obj).getServiceReminderPeriod());
-                 SendBroadcastAction(ACTION_OBD_METER_21BC_CHANGED, "meter_21BC", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21BC_CHANGED, "obd_meter_21BC", (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_PARKING_SENSORS:
                  if (Objects.nonNull(message.obj)) {
@@ -1126,7 +1134,7 @@ public class OBDII  {
                      Intent intent = new Intent();
                      intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
                      intent.setAction(ACTION_OBD_PARKING_2101_CHANGED);
-                     intent.putExtra("parking_sensors", buffer);
+                     intent.putExtra(KEY_OBD_PARKING_2101, buffer);
                      App.getInstance().sendBroadcast(intent);
                  }
                  break;

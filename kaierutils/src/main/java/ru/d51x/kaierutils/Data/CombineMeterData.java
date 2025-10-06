@@ -53,7 +53,7 @@ public class CombineMeterData implements Serializable {
     }
 
     public int getFuelLevel() {
-        return fuelLevel;
+        return fuelLevel < 67 ? fuelLevel : 0;
     }
 
     public void setFuelLevel(int fuelLevel) {

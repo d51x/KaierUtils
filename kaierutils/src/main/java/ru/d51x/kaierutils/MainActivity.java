@@ -28,6 +28,24 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AE_CHANGED
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AF_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21BC_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_PARKING_2101_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CLIMATE_2110;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CLIMATE_2111;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CLIMATE_2113;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CLIMATE_2160;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CLIMATE_2161;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CVT_2103;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CVT_2110;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_2101;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_2102;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_2103;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_211D;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_211E;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A1;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A2;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A3;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AD;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AE;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21BC;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED;
@@ -90,6 +108,7 @@ import ru.d51x.kaierutils.Data.CanMmcData;
 import ru.d51x.kaierutils.Data.ClimateData;
 import ru.d51x.kaierutils.Data.CombineMeterData;
 import ru.d51x.kaierutils.Data.CvtData;
+import ru.d51x.kaierutils.Data.EngineData;
 import ru.d51x.kaierutils.OBD2.OBDII;
 import ru.d51x.kaierutils.Radio.Radio;
 import ru.d51x.kaierutils.TWUtils.TWUtilConst;
@@ -807,6 +826,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     //tvGPSAccuracy.setText( String.format(getString(R.string.text_gps_accuracy), intent.getStringExtra("Accuracy")) );
                     //tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), intent.getStringExtra("Altitude")).replace(",", ".") );
 
+                    // TODO: 06.10.2025 select speed type from preferences
                     int speed = intent.getIntExtra("Speed", 0);
                     if (speed > 80) {
                         ivSpeed.setImageResource(R.drawable.speedo_2);
@@ -865,9 +885,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     break;
                 //*********** ACTIONS: COMMON OBD COMMANDS ***********************************
                 case OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED:
+                    // TODO: 06.10.2025 select speed type from preferences
                     updateOBD_CarBattery(App.obd.obdData.voltage);
                     break;
                 case OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED:
+                    // TODO: 06.10.2025 select coolant type from preferences
                     updateOBD_CoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
                     break;
                 case OBD_BROADCAST_ACTION_MAF_CHANGED:
@@ -878,57 +900,117 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
                     break;
                 //************ ACTIONS: MMC CAN BLOCK 7E0 - ENGINE ********************************
-                case ACTION_OBD_ENGINE_2101_CHANGED:
+                case ACTION_OBD_ENGINE_2101_CHANGED: {
+                        EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_2101);
+                        //updateOBD_CarBattery();
+                        // speed
+                        // TODO: 06.10.2025 select speed type from preferences
+                        int speed = engine.getSpeed();
+                        if (speed > 80) {
+                            ivSpeed.setImageResource(R.drawable.speedo_2);
+                        } else {
+                            ivSpeed.setImageResource(R.drawable.speedo_1);
+                        }
+                        tvGPSSpeed.setText(speed > 0 ? String.format(getString(R.string.text_gps_speed_value), speed) : "---");
+                        color_speed(tvGPSSpeed, speed);
 
+                        // TODO: 06.10.2025 select voltage type from preferences
+                        //voltage
+                        float voltage = engine.getVoltage();
+                        updateOBD_CarBattery(voltage);
+                        //updateOBD_CarBattery(App.obd.can.engine.getVoltage());
+                    }
                     break;
-                case ACTION_OBD_ENGINE_2102_CHANGED:
-
+                case ACTION_OBD_ENGINE_2102_CHANGED: {
+                        // coolant
+                        // TODO: 06.10.2025 select coolant type from preferences
+                        EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_2102);
+                        updateOBD_CoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
+                    }
                     break;
-                case ACTION_OBD_ENGINE_2103_CHANGED:
-
+                case ACTION_OBD_ENGINE_2103_CHANGED: {
+                    // air flow sensor
+                        EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_2103);
+                        }
                     break;
-                case ACTION_OBD_ENGINE_211D_CHANGED:
-                    updateOBD_CoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
+                case ACTION_OBD_ENGINE_211D_CHANGED: {
+                        EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_211D);
+                        updateOBD_CoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
+                    }
                     break;
-                case ACTION_OBD_ENGINE_211E_CHANGED:
-
+                case ACTION_OBD_ENGINE_211E_CHANGED: {
+                        EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_211E);
+                    }
                     break;
                 //************ ACTIONS: MMC CAN BLOCK 7E1 - CVT ***********************************
                 case ACTION_OBD_CVT_2103_CHANGED: {
-                        CvtData cvtData = (CvtData) intent.getSerializableExtra("obd_cvt_2103");
+                        CvtData cvtData = (CvtData) intent.getSerializableExtra(KEY_OBD_CVT_2103);
                         updateOBD_CVT_data(modeCVT/*, obdCvtData*/);
                     }
                     break;
                 case ACTION_OBD_CVT_2110_CHANGED: {
-                        CvtData cvtData = (CvtData) intent.getSerializableExtra("obd_cvt_2110");
+                        CvtData cvtData = (CvtData) intent.getSerializableExtra(KEY_OBD_CVT_2110);
                         updateOBD_CVT_data(modeCVT/*, obdCvtData*/);
                     }
                     break;
                 //************ ACTIONS: MMC CAN BLOCK 6A0 - COMBINE METER **************************
+                case ACTION_OBD_METER_21A1_CHANGED: {
+                    CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A1);
+                    //speed
+                    }
+                    break;
+                case ACTION_OBD_METER_21A2_CHANGED: {
+                    CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A2);
+                    //rpm
+                    }
+                    break;
                 case ACTION_OBD_METER_21A3_CHANGED: {
-                        CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra("combine_meter_21A3");
+                        CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A3);
                         updateOBD_FuelTank(meterData.getFuelLevel());
+                    }
+                    break;
+                case ACTION_OBD_METER_21AD_CHANGED: {
+                    CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AD);
+                    //mileage
+                    }
+                    break;
+                case ACTION_OBD_METER_21AE_CHANGED: {
+                    CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AE);
+                    // tripA tripB
+                    }
+                    break;
+                case ACTION_OBD_METER_21BC_CHANGED: {
+                    CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21BC);
+                    //service reminder
                     }
                     break;
                 //************ ACTIONS: MMC CAN BLOCK 688 - AIR CONDITION **************************
                 case ACTION_OBD_CLIMATE_2110_CHANGED: {
-                        ClimateData climateData = (ClimateData) intent.getSerializableExtra("air_cond_2110");
+                        ClimateData climateData = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2110);
+                        // coolant temp
                     }
                     break;
                 case ACTION_OBD_CLIMATE_2111_CHANGED: {
-                    ClimateData climateData = (ClimateData) intent.getSerializableExtra("air_cond_2111");
+                    ClimateData climateData = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2111);
                     updateOBD_air_cond_ext_temperature(climateData.externalTemperature);
                 }
                 break;
+                case ACTION_OBD_CLIMATE_2113_CHANGED: {
+                    ClimateData climateData = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2113);
+                    //external temp
+                    //rpm
+                    //speed
+                }
+                break;
                 case ACTION_OBD_CLIMATE_2160_CHANGED: {
-                        ClimateData climateData = (ClimateData) intent.getSerializableExtra("air_cond_2160");
+                        ClimateData climateData = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2160);
                         updateOBD_air_cond_fan_mode(climateData.fan_mode);
                         updateOBD_air_cond_blow_mode(climateData.blow_mode);
                         updateOBD_air_cond_temperature(Double.toString(climateData.temperature));
                     }
                     break;
                 case ACTION_OBD_CLIMATE_2161_CHANGED: {
-                        ClimateData climateData = (ClimateData) intent.getSerializableExtra("air_cond_2161");
+                        ClimateData climateData = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2161);
                         updateOBD_air_cond_blow_direction(climateData.blow_direction);
                         updateOBD_air_cond_fan_speed(climateData.fan_speed);
                         updateOBD_air_cond_state(climateData.ac_state);
@@ -1186,7 +1268,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
         if ( App.obd.engine_temp_show ) {
             layout_temp_data.setVisibility( View.VISIBLE );
 
-            float temp = App.obd.obdData.coolant;
+            // TODO: 06.10.2025 select coolant type from preferences
+            //float temp = App.obd.obdData.coolant;
+            float temp = App.obd.can.engine.getCoolantTemperature();
             switch (mode) {
                 case 0:
                     ivOBD_CoolantTempFan.setVisibility(((state == CanMmcData.State.on) &&
