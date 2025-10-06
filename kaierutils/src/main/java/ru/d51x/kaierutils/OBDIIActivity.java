@@ -1,4 +1,4 @@
-package ru.d51x.kaierutils.OBD2;
+package ru.d51x.kaierutils;
 
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_AWC_2130_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2110_CHANGED;
@@ -62,11 +62,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Set;
 
-import ru.d51x.kaierutils.App;
-import ru.d51x.kaierutils.BackgroundService;
 import ru.d51x.kaierutils.Data.CombineMeterData;
 import ru.d51x.kaierutils.Data.CvtData;
-import ru.d51x.kaierutils.R;
 
 
 public class OBDIIActivity extends Activity implements View.OnClickListener {
@@ -322,7 +319,9 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
         tvFuelLevel.setText(String.format( getString( R.string.text_obd_can_fuel_level), "---"));
 
-
+        App.obd.readExtendMeter = true;
+        App.obd.readExtendCvt = true;
+        App.obd.readExtendClimate = true;
 
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_STATUS_CHANGED));
 
@@ -451,6 +450,10 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
     protected void onDestroy() {
         unregisterReceiver(receiver);
+        App.obd.readExtendMeter = false;
+        App.obd.readExtendCvt = false;
+        App.obd.readExtendClimate = false;
+
         super.onDestroy();
     }
 

@@ -25,17 +25,13 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21BC_CHANGED
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_PARKING_2101_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2110;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2111;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2113;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2160;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2161;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21A1;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21A2;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21A3;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21AD;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21AE;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21AF;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21BC;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_763;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_763_PID_2101;
@@ -43,6 +39,7 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7B6;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E0;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E0_PID_2101;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E0_PID_2102;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E0_PID_211D;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E1;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E1_PID_2103;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E1_PID_2110;
@@ -139,7 +136,8 @@ public class OBDII  {
 
 
     public boolean isConnected;
-    public boolean battery_show = false;
+    public boolean useOBD;
+       public boolean battery_show = false;
     public boolean engine_temp_show = false;
     public boolean fuel_data_show = false;
     public boolean fuel_consump_show = false;
@@ -150,10 +148,14 @@ public class OBDII  {
     public EngineCoolantTemperatureObdCommand coolantTempCommand;
     public ControlModuleVoltageObdCommand cmuVoltageCommand;
     public MassAirFlowObdCommand MAFObdCommand;
-    public boolean useOBD;
+
     public ObdData obdData;
-    public boolean activeMAF = false;
-    public boolean activeOther = true;
+    public boolean activeMAF = false;    // процесс чтения MAF
+    public boolean activeOther = true;   // процесс чтения других PID
+    public boolean readExtendCvt = false;
+    public boolean readExtendMeter = false;
+    public boolean readExtendClimate = false;
+    public boolean newObdProcess = true;
     public boolean MMC_CAN;
     public TripData totalTrip;
     public TripData oneTrip;
@@ -392,6 +394,20 @@ public class OBDII  {
         cmuVoltageCommand = new ControlModuleVoltageObdCommand();
         MAFObdCommand = new MassAirFlowObdCommand();
 
+    }
+
+     public void newProcessAllData() {
+        // новый тип мониторинга без таймеров, просто сплошняком
+        // блок 1 - примерно 1000-1200 мсек  без расширенных данных
+        processOBD_MAF();
+        requestMmcEngine(false, false);
+        requestMmcAirCond(App.obd.readExtendClimate);
+        // блок 2 - примерно 800-900 мсек без расширенных данных
+        processOBD_MAF();
+        requestMmcCvt(App.obd.readExtendCvt);
+        // блок 3 - примерно 800 - 900 мсек без расширенных данных
+        processOBD_MAF();
+        requestMmcCombineMeter(App.obd.readExtendMeter);
      }
 
     public void processData() {
@@ -400,51 +416,10 @@ public class OBDII  {
 
         if ( MMC_CAN )  {
             // переходим на режим работы MMC CAN и пиды 21хх
-            /* время на выполнение команд max = 1250 ms
-                header - 200 m
-                RPM    - 180
-                Speed  - 170
-                Coolan - 160
-                Voltag - 150
-                21 01  - xxx        voltage, speed, rpm
-                21 02  - xxx        coolant
-                21 03  - xxx        air flow
-                21 1D  - 200        off cond
-                21 1E  - 150        fuel relay
-             */
-            requestMmcEngine();
-
-            /* время на выполнение команд max = 1000 ms
-                header - 400 m
-                21 03  - 250       cvt temp
-                21 10  - 330        oil degr, work time
-             */
-            requestMmcCvt();
-
-            /* время на выполнение команд max = 1625 ms
-                header - 400 ms
-                21 A1  - 150        speed
-                21 A2  - 160        rpm
-                21 A3  - 125        fuel
-                21 A6  - 110        luminocity day/night + backlight on/off
-                21 A8  - 150        lights - high beam, low beam, fog lights, turn l/r, handbrake
-                21 AD  - 110        mileage
-                21 AE  - 170 (FC)   tripA, tripB
-                21 AF  - 100        voltage
-                21 BC  - 150 (FC)   service reminder
-             */
-            requestMmcCombineMeter();
-
-            /* время на выполнение команд max = 1000 ms
-               header - 220 ms
-                21 10 - 130         coolant t, air t, interior t
-                21 11 - 150         ambient t
-                21 13 - xxx         extern t, rpm, speed
-                21 23 - 200         leak indicator
-                21 60 - 120         btn/knob position
-                21 61 - 150         ac indications
-             */
-            requestMmcAirCond();
+            requestMmcEngine(false, false);
+            requestMmcCvt(App.obd.readExtendCvt);
+            requestMmcCombineMeter(App.obd.readExtendMeter);
+            requestMmcAirCond(App.obd.readExtendClimate);
             //request_MMC_ECU_AWC();
 
         } else {
@@ -683,33 +658,6 @@ public class OBDII  {
 
     }
 
-    private void requestCanCVT() {
-        ArrayList<Integer> buffer = null;
-        try {
-            // установка общего хедера с флоу-контрол
-            SetHeaders("7E1", "7E9", true);
-            // 21 03
-            CanObdCommand cmd =  new CanObdCommand("2103");
-            long tt = System.currentTimeMillis();
-            cmd.run(socket.getInputStream(), socket.getOutputStream());
-            Log.d(TAG, String.format("7E1 2103 :: %d ms", System.currentTimeMillis() - tt));
-            buffer = cmd.getBuffer();
-            // TODO: process buffer
-
-            // 21 10
-            cmd = new CanObdCommand("2110");
-            tt = System.currentTimeMillis();
-            cmd.run(socket.getInputStream(), socket.getOutputStream());
-            Log.d(TAG, String.format("7E1 2110 :: %d ms", System.currentTimeMillis() - tt));
-            buffer = cmd.getBuffer();
-            // TODO: process buffer
-
-            //TODOO: process data
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private ArrayList<Integer> runObdCommand(String PID, BluetoothSocket sock) {
         try {
             CanObdCommand cmd = new CanObdCommand(PID);
@@ -827,14 +775,17 @@ public class OBDII  {
         activeOther = false;
     }
 
-    private void requestMmcEngine(){
+    private void requestMmcEngine(boolean setHeader, boolean extended){
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
         // set ENGINE ECU addresses
-        SetHeaders(BLOCK_7E0, "7E8", false);
+        // если предыдущий запрос был по MAF, то здесь хедер можно не устанвливать,
+        // т.к. он такой же, это экономит 100-200 ms, т.е. +1 лишний реквест в 7E0
+        if (setHeader) {
+            SetHeaders(BLOCK_7E0, "7E8", false);
+        }
 
         ArrayList<Integer> buffer;
-
         // voltage, speed, rpm
         buffer = requestCanEcu(BLOCK_7E0_PID_2101, BLOCK_7E0);
         processObdCommandResult(BLOCK_7E0_PID_2101, BLOCK_7E0, buffer);
@@ -848,27 +799,32 @@ public class OBDII  {
 //        processObdCommandResult(BLOCK_7E0_PID_2103, BLOCK_7E0, buffer);
 
         // a/c cond relay
-//        buffer = request_CAN_ECU(BLOCK_7E0_PID_211D, BLOCK_7E0);
-//        processObdCommandResult(BLOCK_7E0_PID_211D, BLOCK_7E0, buffer);
+        buffer = requestCanEcu(BLOCK_7E0_PID_211D, BLOCK_7E0);
+        processObdCommandResult(BLOCK_7E0_PID_211D, BLOCK_7E0, buffer);
 
         // fuel pump relay
 //        buffer = request_CAN_ECU(BLOCK_7E0_PID_211E, BLOCK_7E0);
 //        processObdCommandResult(BLOCK_7E0_PID_211E, BLOCK_7E0, buffer);
     }
 
-    private void requestMmcCvt(){
+    private void requestMmcCvt(boolean extended){
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
-
+            /* время на выполнение команд max = 1000 ms
+                header - 400 m
+                21 03  - 250       cvt temp
+                21 10  - 330        oil degr, work time
+             */
         ArrayList<Integer> buffer;
         if ( can.can_mmc_cvt_temp_show || can.can_mmc_cvt_degr_show) {
             can.CVT_oil_temp_TimeStamp2 = System.currentTimeMillis();
-            can.CVT_oil_degr_TimeStamp2 = System.currentTimeMillis();
+            //can.CVT_oil_degr_TimeStamp2 = System.currentTimeMillis();
             long t_temp = can.CVT_oil_temp_TimeStamp2 - can.CVT_oil_temp_TimeStamp1;
-            long t_degr = can.CVT_oil_degr_TimeStamp2 - can.CVT_oil_degr_TimeStamp1;
+            //long t_degr = can.CVT_oil_degr_TimeStamp2 - can.CVT_oil_degr_TimeStamp1;
 
-            if ((t_degr < (can.can_mmc_cvt_degradation_update_time * 1000L))
-                    && (t_temp < (can.can_mmc_cvt_temp_update_time * 1000L)))
+//            if ((t_degr < (can.can_mmc_cvt_degradation_update_time * 1000L))
+//                    && (t_temp < (can.can_mmc_cvt_temp_update_time * 1000L)))
+            if (t_temp < (can.can_mmc_cvt_temp_update_time * 1000L))
             {
                 // пропускаем, время не вышло ни у одного параметра
                 return;
@@ -887,17 +843,20 @@ public class OBDII  {
             // request_CAN_ECU("2107", "7E1", "7E9", false, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED);  // selector position
 
             // TODO: можно выполнять не часто, раз в 10 сек вполне достаточно или даже реже
-            if ( can.can_mmc_cvt_degr_show ) {
-                if ( t_temp < (can.can_mmc_cvt_degradation_update_time * 1000L) ) return; //время не вышло
-                buffer = requestCanEcu(BLOCK_7E1_PID_2110, BLOCK_7E1); // cvt_oil_degradation
-                processObdCommandResult(BLOCK_7E1_PID_2110, BLOCK_7E1, buffer);
-                can.CVT_oil_degr_TimeStamp1 = can.CVT_oil_degr_TimeStamp2;
+            if (extended) {
+                if (can.can_mmc_cvt_degr_show) {
+//                    if (t_temp < (can.can_mmc_cvt_degradation_update_time * 1000L))
+//                        return; //время не вышло
+                    buffer = requestCanEcu(BLOCK_7E1_PID_2110, BLOCK_7E1); // cvt_oil_degradation
+                    processObdCommandResult(BLOCK_7E1_PID_2110, BLOCK_7E1, buffer);
+                    //can.CVT_oil_degr_TimeStamp1 = can.CVT_oil_degr_TimeStamp2;
+                }
             }
             activeOther = false;
         }
     }
 
-    private void requestMmcCombineMeter(){
+    private void requestMmcCombineMeter(boolean extended){
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
 
@@ -909,14 +868,25 @@ public class OBDII  {
 
             activeOther = true;
             ArrayList<Integer> buffer;
-
+            /* время на выполнение команд max = 1625 ms
+                header - 400 ms
+                21 A1  - 150        speed
+                21 A2  - 160        rpm
+                21 A3  - 125        fuel
+                21 A6  - 110        luminocity day/night + backlight on/off
+                21 A8  - 150        lights - high beam, low beam, fog lights, turn l/r, handbrake
+                21 AD  - 110        mileage
+                21 AE  - 170 (FC)   tripA, tripB
+                21 AF  - 100        voltage
+                21 BC  - 150 (FC)   service reminder
+             */
             SetHeaders(BLOCK_6A0, BLOCK_RX_514, true);
 
             buffer = requestCanEcu(BLOCK_6A0_PID_21A1, BLOCK_6A0); // speed
             processObdCommandResult(BLOCK_6A0_PID_21A1, BLOCK_6A0, buffer);
 
-            buffer = requestCanEcu(BLOCK_6A0_PID_21A2, BLOCK_6A0); // rpm
-            processObdCommandResult(BLOCK_6A0_PID_21A2, BLOCK_6A0, buffer);
+//            buffer = requestCanEcu(BLOCK_6A0_PID_21A2, BLOCK_6A0); // rpm
+//            processObdCommandResult(BLOCK_6A0_PID_21A2, BLOCK_6A0, buffer);
 
             buffer = requestCanEcu(BLOCK_6A0_PID_21A3, BLOCK_6A0); // fuel
             processObdCommandResult(BLOCK_6A0_PID_21A3, BLOCK_6A0, buffer);
@@ -927,24 +897,25 @@ public class OBDII  {
 //            buffer = requestCanEcu(BLOCK_6A0_PID_21A8, BLOCK_6A0); // lights - габариты, дальний, противотуманки перед/зад, поворотники, ручнник
 //            processObdCommandResult(BLOCK_6A0_PID_21A8, BLOCK_6A0, buffer);
 
-            buffer = requestCanEcu(BLOCK_6A0_PID_21AD, BLOCK_6A0); // mileage
-            processObdCommandResult(BLOCK_6A0_PID_21AD, BLOCK_6A0, buffer);
-
             buffer = requestCanEcu(BLOCK_6A0_PID_21AE, BLOCK_6A0); // trpA, tripB
             processObdCommandResult(BLOCK_6A0_PID_21AE, BLOCK_6A0, buffer);
 
-            buffer = requestCanEcu(BLOCK_6A0_PID_21AF, BLOCK_6A0); // voltage
-            processObdCommandResult(BLOCK_6A0_PID_21AF, BLOCK_6A0, buffer);
+//            buffer = requestCanEcu(BLOCK_6A0_PID_21AF, BLOCK_6A0); // voltage
+//            processObdCommandResult(BLOCK_6A0_PID_21AF, BLOCK_6A0, buffer);
 
-            buffer = requestCanEcu(BLOCK_6A0_PID_21BC, BLOCK_6A0); // service reminder
-            processObdCommandResult(BLOCK_6A0_PID_21BC, BLOCK_6A0, buffer);
+            if (extended) {
+                buffer = requestCanEcu(BLOCK_6A0_PID_21AD, BLOCK_6A0); // mileage
+                processObdCommandResult(BLOCK_6A0_PID_21AD, BLOCK_6A0, buffer);
 
+                buffer = requestCanEcu(BLOCK_6A0_PID_21BC, BLOCK_6A0); // service reminder
+                processObdCommandResult(BLOCK_6A0_PID_21BC, BLOCK_6A0, buffer);
+            }
             can.FuelLevel_TimeStamp1 = can.FuelLevel_TimeStamp2;
             activeOther = false;
         }
     }
 
-    private void requestMmcAirCond(){
+    private void requestMmcAirCond(boolean extended){
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
 
@@ -952,17 +923,28 @@ public class OBDII  {
         if (App.obd.can.can_mmc_ac_data_show) {
             activeOther = true;
             SetHeaders(BLOCK_688, BLOCK_RX_511, false);
+            /* время на выполнение команд max = 1000 ms
+               header - 220 ms
+                21 10 - 130         coolant t, air t, interior t
+                21 11 - 150         ambient t
+                21 13 - xxx         extern t, rpm, speed
+                21 23 - 200         leak indicator
+                21 60 - 120         btn/knob position
+                21 61 - 150         ac indications
+             */
 
             // coolant t, air t, interior t
-            buffer = requestCanEcu(BLOCK_688_PID_2110, BLOCK_688);
-            processObdCommandResult(BLOCK_688_PID_2110, BLOCK_688, buffer);
+            if (extended) {
+                buffer = requestCanEcu(BLOCK_688_PID_2110, BLOCK_688);
+                processObdCommandResult(BLOCK_688_PID_2110, BLOCK_688, buffer);
+            }
 
             // ambient temperature - температура окружающей среды
-            buffer = requestCanEcu(BLOCK_688_PID_2111, BLOCK_688);
-            processObdCommandResult(BLOCK_688_PID_2111, BLOCK_688, buffer);
+//            buffer = requestCanEcu(BLOCK_688_PID_2111, BLOCK_688);
+//            processObdCommandResult(BLOCK_688_PID_2111, BLOCK_688, buffer);
 
-            buffer = requestCanEcu(BLOCK_688_PID_2113, BLOCK_688);
-            processObdCommandResult(BLOCK_688_PID_2113, BLOCK_688, buffer);
+//            buffer = requestCanEcu(BLOCK_688_PID_2113, BLOCK_688);
+//            processObdCommandResult(BLOCK_688_PID_2113, BLOCK_688, buffer);
 
             // cond leak indicator
             // buffer = request_CAN_ECU("2132", "688");

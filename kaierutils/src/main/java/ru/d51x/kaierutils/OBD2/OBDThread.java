@@ -12,9 +12,10 @@ import ru.d51x.kaierutils.App;
  */
 public class OBDThread extends Thread {
 
-    private long TimeStamp1, TimeStamp2;
-    Timer mTimer;
-    MAF_TimerTask mMAFTimerTask;
+    private long readingTime1, readingTime2;
+    private long mafRequestTimePrev, mafRequestTime;
+    Timer obdTimer;
+    ObdTimerTask obdTimerTask;
 
 	public OBDThread() {
         super("OBDThread");
@@ -22,12 +23,14 @@ public class OBDThread extends Thread {
     }
     public volatile boolean isActive = false;
 
-    class MAF_TimerTask extends TimerTask {
+    class ObdTimerTask extends TimerTask {
         @Override
         public void run() {
                 if ( ! App.GS.isReverseMode ) {
-                    App.obd.processOBD_MAF();
-                    App.obd.processData();
+                    if (!App.obd.newObdProcess) {
+                        App.obd.processOBD_MAF();
+                        App.obd.processData();
+                    }
                 }
 
             }
@@ -41,11 +44,11 @@ public class OBDThread extends Thread {
         try {
 			Log.d ("OBDThread", "run()");
             //while (true) {
-            TimeStamp1 = System.currentTimeMillis();
-            TimeStamp2 = System.currentTimeMillis();
+            readingTime1 = System.currentTimeMillis();
+            readingTime2 = System.currentTimeMillis();
 
-            mTimer = new Timer();
-            mMAFTimerTask = new MAF_TimerTask();
+            obdTimer = new Timer();
+            obdTimerTask = new ObdTimerTask();
 
 
             while (!Thread.currentThread().isInterrupted() || isActive )
@@ -54,8 +57,20 @@ public class OBDThread extends Thread {
                     // send or process data
 
                     if ( firstStart ) {
-                        mTimer.schedule(mMAFTimerTask, 1000, 1000);
+                        obdTimer.schedule(obdTimerTask, 1000, 1000);
                         firstStart = false;
+                    }
+
+                    if (App.obd.newObdProcess) {
+                        App.obd.newProcessAllData();
+                    }
+
+                    //------- reqiesting MAF period 1 sec
+                    mafRequestTime = System.currentTimeMillis();
+                    if ( (mafRequestTime - mafRequestTimePrev) > 1000) // 1 sec
+                    {
+
+                        mafRequestTimePrev = mafRequestTime;
                     }
                     // получим остальные данные, все кроме MAF
                     // долбим постоянно
@@ -70,14 +85,14 @@ public class OBDThread extends Thread {
 
 
 
-                    TimeStamp2 = System.currentTimeMillis();
+                    readingTime2 = System.currentTimeMillis();
                     //if ( (TimeStamp2 - TimeStamp1) > (1000*60)) // 1 min
-                    if ( (TimeStamp2 - TimeStamp1) > (1000*30)) // 30 sec
+                    if ( (readingTime2 - readingTime1) > (1000*30)) // 30 sec
                     {
                         App.obd.oneTrip.saveData();
                         App.obd.todayTrip.saveData();
                         App.obd.totalTrip.saveData();
-                        TimeStamp1 = TimeStamp2;
+                        readingTime1 = readingTime2;
                     }
 
                 } else {
@@ -93,9 +108,9 @@ public class OBDThread extends Thread {
                 }
             }
 
-            if (mTimer != null) {
-                mTimer.cancel();
-                mTimer = null;
+            if (obdTimer != null) {
+                obdTimer.cancel();
+                obdTimer = null;
             }
 
             App.obd.disconnect();
@@ -107,9 +122,9 @@ public class OBDThread extends Thread {
 	public synchronized void finish() {
 		Log.d ("OBDThread", "finish()");
         interrupt();
-        if (mTimer != null) {
-            mTimer.cancel();
-            mTimer = null;
+        if (obdTimer != null) {
+            obdTimer.cancel();
+            obdTimer = null;
         }
         isActive = false;
         App.obd.disconnect();

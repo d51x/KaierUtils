@@ -111,9 +111,22 @@ public class TripData {
         saveData();
     }
 
+    public void calculateFuelConsumptionbyMAF() {
+        /*
+            Формула расчёта расхода топлива по данным с датчика массового расхода воздуха (MAF):
+            Расход топлива (л/100 км) = (MAF × 0,746 × 100) / (AFR × ρ × V), где:
+            MAF — массовый расход воздуха (г/с);
+            AFR — коэффициент воздух-топливо (стехиометрия: 14,7 для бензина);
+            ρ — плотность бензина (примерно 0,745 кг/л);
+            V — средняя скорость (км/ч).
+        */
+
+    }
+
     public void calculateData(float speed, float maf, long deltaTime) {
         // литры в секунду
-        float fuel_consump_lpsec = ( maf / 14.7f) / 720;
+        float afr = 14.7f;
+        float fuel_consump_lpsec = ( maf / afr) / 720;
         // литры в час
         fuel_cons_lph = fuel_consump_lpsec * 3600;
         //float usedmaf = fuel_consump_lpsec;

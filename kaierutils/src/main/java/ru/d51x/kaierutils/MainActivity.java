@@ -823,30 +823,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     break;
 
                 case GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED: {
-                    //double latitude = intent.getDoubleExtra("Latitude", 0);
-                /*
-                if ( latitude < 0 ) {
-                    //S - south latitude
-                    tvGPSLatitude.setText( String.format("S %1$.5f", latitude*(-1)).replace(",", ".") );
-                } else {
-                    //N - north latitude
-                    tvGPSLatitude.setText( String.format("N %1$.5f", latitude).replace(",", ".") );
-                }
-                */
-
-                    //double longitude = intent.getDoubleExtra("Longitude", 0);
-                /*
-                if ( longitude < 0 ) {
-                    //W - west longitude
-                    tvGPSLongitude.setText( String.format("W %1$.5f", longitude*(-1)).replace(",", ".") );
-                } else {
-                    //E - east longitude
-                    tvGPSLongitude.setText( String.format("E %1$.5f", longitude).replace(",", ".") );
-                }
-                */
-                    //tvGPSAccuracy.setText( String.format(getString(R.string.text_gps_accuracy), intent.getStringExtra("Accuracy")) );
-                    //tvGPSAltitude.setText( String.format(getString(R.string.text_gps_altitude), intent.getStringExtra("Altitude")).replace(",", ".") );
-
                     // TODO: 06.10.2025 select speed type from preferences
                     int speed = intent.getIntExtra("Speed", 0);
                     updateSpeedIcon(ivSpeed, (float) speed);
@@ -922,8 +898,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         //updateOBD_CarBattery();
                         // speed
                         // TODO: 06.10.2025 select speed type from preferences
-                        updateSpeedText(tvGPSSpeed, engine.getSpeed(), App.GS.ui.isColorSpeed);
-                        updateSpeedIcon(ivSpeed, engine.getSpeed());
+                        //updateSpeedText(tvGPSSpeed, engine.getSpeed(), App.GS.ui.isColorSpeed);
+                        //updateSpeedIcon(ivSpeed, engine.getSpeed());
 
                         // TODO: 06.10.2025 select voltage type from preferences
                         //voltage
@@ -1128,7 +1104,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         try {
             Intent it = new Intent();
-            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.OBD2.OBDIIActivity");
+            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.OBDIIActivity");
             //it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(it);

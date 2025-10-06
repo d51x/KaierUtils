@@ -190,8 +190,8 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                     }
                     else if (action.equals(ACTION_OBD_CLIMATE_2113_CHANGED)) {
                         ClimateData climate = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2113);
-                        updateSpeedText(tvSpeed, climate.vehicleSpeed, App.GS.ui.isColorSpeed);
-                        updateSpeedIcon(ivSpeed, climate.vehicleSpeed);
+//                        updateSpeedText(tvSpeed, climate.vehicleSpeed, App.GS.ui.isColorSpeed);
+//                        updateSpeedIcon(ivSpeed, climate.vehicleSpeed);
                     }
                 }
             };
