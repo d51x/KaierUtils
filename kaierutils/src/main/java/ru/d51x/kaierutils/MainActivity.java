@@ -223,8 +223,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
         requestPermissions();
         bluetoothTurnOn();
 
-        //boolean showfloating = getIntent().getBooleanExtra("show_floating", false);
-        boolean showfloating = App.GS.ui.isAutoStartFloating;
+        boolean showfloating = getIntent().getBooleanExtra("show_floating", false);
+        //boolean showfloating = App.GS.ui.isAutoStartFloating;
         if (showfloating) {
             App.GS.showFloatingPanelButton = false;
             App.GS.isShowingFloatingPanel = true;
