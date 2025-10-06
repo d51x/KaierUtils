@@ -36,13 +36,13 @@ public class SettingsSleepWakeUpFragment extends PreferenceFragment implements O
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if ( key.equals ( "CAR_SETTINGS__VOLUME_AT_START_UP__DO_CHANGE" )) {
-			App.GS.isNeedSoundDecreaseAtStartUp = sharedPreferences.getBoolean ( key, false);
+			App.GS.volumeOptions.isNeedSoundDecreaseAtStartUp = sharedPreferences.getBoolean ( key, false);
 		} else if (key.equals ("CAR_SETTINGS__VOLUME_AT_START_UP__LEVEL")) {
-			App.GS.VolumeLevelAtStartUp = sharedPreferences.getInt (key, 3);
+			App.GS.volumeOptions.volumeLevelAtStartUp = sharedPreferences.getInt (key, 3);
 		} else if (key.equals ("CAR_SETTINGS__VOLUME_AT_WAKE_UP__DO_CHANGE")) {
-			App.GS.isNeedSoundDecreaseAtWakeUp = sharedPreferences.getBoolean (key, false);
+			App.GS.volumeOptions.isNeedSoundDecreaseAtWakeUp = sharedPreferences.getBoolean (key, false);
 		} else if (key.equals ("CAR_SETTINGS__VOLUME_AT_WAKE_UP__LEVEL")) {
-			App.GS.VolumeLevelAtWakeUp = sharedPreferences.getInt (key, 3);
+			App.GS.volumeOptions.volumeLevelAtWakeUp = sharedPreferences.getInt (key, 3);
 		}
 	}
 }

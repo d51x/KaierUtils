@@ -36,31 +36,31 @@ public class SettingsPowerAmpFragment extends PreferenceFragment implements OnSh
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if ( key.equals ( "CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE" )) {
-			App.GS.interactWithPowerAmp = sharedPreferences.getBoolean ( key, false);
+			App.GS.powerAmpOpt.interactWithPowerAmp = sharedPreferences.getBoolean ( key, false);
 		} else if (key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_SHOW_TOAST")) {
-			App.GS.isShowTrackInfoToast = sharedPreferences.getBoolean ( key, false);
+			App.GS.powerAmpOpt.isShowTrackInfoToast = sharedPreferences.getBoolean ( key, false);
 		} else if (key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_WATCH_SLEEP")) {
-			App.GS.needWatchSleepPowerAmp = sharedPreferences.getBoolean ( key, false);
+			App.GS.powerAmpOpt.needWatchSleepPowerAmp = sharedPreferences.getBoolean ( key, false);
 		} else if (key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_WATCH_WAKEUP")) {
-			App.GS.needWatchWakeUpPowerAmp = sharedPreferences.getBoolean (key, false);
+			App.GS.powerAmpOpt.needWatchWakeUpPowerAmp = sharedPreferences.getBoolean (key, false);
 		} else if (key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_WATCH_BOOTUP")) {
-			App.GS.needWatchBootUpPowerAmp = sharedPreferences.getBoolean (key, false);
+			App.GS.powerAmpOpt.needWatchBootUpPowerAmp = sharedPreferences.getBoolean (key, false);
 		}  else if ( key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_NEXT_FOLDER")) {
-			App.GS.pressNextFolderPowerAmp = sharedPreferences.getBoolean (key, false);
+			App.GS.powerAmpOpt.pressNextFolderPowerAmp = sharedPreferences.getBoolean (key, false);
 		} else if ( key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_PREV_FOLDER")) {
-			App.GS.pressPrevFolderPowerAmp = sharedPreferences.getBoolean (key, false);
+			App.GS.powerAmpOpt.pressPrevFolderPowerAmp = sharedPreferences.getBoolean (key, false);
 		} else if ( key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_START_DELAY")) {
-			App.GS.startDelayForPowerAmp = sharedPreferences.getInt(key, 3000);
+			App.GS.powerAmpOpt.startDelayForPowerAmp = sharedPreferences.getInt(key, 3000);
 		} else if ( key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_WAKEUP_DELAY")) {
-			App.GS.resumeDelayForPowerAmp = sharedPreferences.getInt(key, 3000);
+			App.GS.powerAmpOpt.resumeDelayForPowerAmp = sharedPreferences.getInt(key, 3000);
 		} else if ( key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_CODE_NEXT_CAT")) {
-			App.GS.codeNextFolder = Integer.parseInt (sharedPreferences.getString (key, "22"));
+			App.GS.powerAmpOpt.codeNextFolder = Integer.parseInt (sharedPreferences.getString (key, "22"));
 		} else if ( key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_CODE_PREV_CAT")) {
-			App.GS.codePrevFolder = Integer.parseInt (sharedPreferences.getString (key, "23"));
+			App.GS.powerAmpOpt.codePrevFolder = Integer.parseInt (sharedPreferences.getString (key, "23"));
 		} else if ( key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_SHOW_MUSIC_INFO")) {
-			App.GS.isShowMusicInfo = sharedPreferences.getBoolean (key, false);
+			App.GS.ui.isShowMusicInfo = sharedPreferences.getBoolean (key, false);
 		} else if ( key.equals ("CAR_SETTINGS__CONTROL_POWERAMP_SHOW_TOAST2")) {
-			App.GS.dontShowMusicInfoWhenMainActive = sharedPreferences.getBoolean (key, true);
+			App.GS.ui.dontShowMusicInfoWhenMainActive = sharedPreferences.getBoolean (key, true);
 		}
 	}
 }

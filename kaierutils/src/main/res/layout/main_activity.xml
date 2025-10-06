@@ -165,14 +165,15 @@
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentBottom="true"
 		android:layout_centerInParent="true"
-		android:background="#573030"
 		android:baselineAligned="false"
 		android:gravity="center_vertical"
 		android:orientation="horizontal"
 		android:paddingStart="8dp"
 		android:paddingTop="8dp"
 		android:paddingEnd="8dp"
-		android:paddingBottom="8dp">
+		android:paddingBottom="8dp"
+		android:background="@drawable/layout_bg"
+		>
 
 		<include layout="@layout/dash_panel" />
 

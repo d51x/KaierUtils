@@ -17,6 +17,7 @@
 	<!-- general menu -->
 	<string name="menu_general_show_notification_icon_title">Иконка статуса</string>
 	<string name="menu_general_auto_start">Показывать главное окно при включении</string>
+	<string name="menu_general_auto_start_floating">Показывать всплывающее окно при включении</string>
 	<string name="menu_general_hide_header">Скрывать заголовок окна</string>
 	<string name="menu_general_color_speed_title">Цветная скорость</string>
 	<string name="menu_general_show_statistics_title">Отображать статистику</string>
@@ -142,15 +143,6 @@
 
 
     <string name="dsc_available">Включить динамическое изменение громкости</string>
-    <string name="dsc_firstspeed_title">Минимальная скорость</string>
-    <string name="dsc_firstspeed_summary">Значение минимальной скорости, при которой динамически начнет изменяться громкость (текущее значение %1$d)</string>
-    <string name="dsc_firstspeed_dialogtitle">Выберите минимальную скорость</string>
-    <string name="dsc_stepspeed_title">Шаг изменения скорости</string>
-    <string name="dsc_stepspeed_summary">Шаг изменения скорости, при котором срабатывает динамическое изменение громкости (текущее значение %1$d)</string>
-    <string name="dsc_stepspeed_dialogtitle">Выберите интервал скорости</string>
-    <string name="dsc_stepvolume_title">Шаг изменения громкости</string>
-    <string name="dsc_stepvolume_summary">Шаг изменения громкости, на который измениться громкость (текущее значение %1$d)</string>
-    <string name="dsc_stepvolume_dialogtitle">Выберите шаг громкости</string>
     <string name="dsc_time_to_change_title">Время срабатывания (сек)</string>
     <string name="dsc_time_to_change_summary">Время, через которое сработает изменение громкости, если скорость вышла из интервала погрешности (текущее значение %1$d)</string>
     <string name="dsc_time_to_change_dialogtitle">Выберите время срабатывания</string>
@@ -211,6 +203,7 @@
 	<string name="text_can_2103_cvt_temp_count">%1$s</string>
 	<string name="text_obd_can_fuel_level">%1$s</string>
     <string name="text_air_cond_external_temp">A/C External temperature: %1$s</string>
+    <string name="cbOBD_new_process">Новый процесс запроса данных</string>
     <string name="cbOBD_show_battery">Отображать заряд аккумулятора</string>
     <string name="cbOBD_show_engine_temp">Отображать теммпературу охлаждающей жидкости</string>
     <string name="cbOBD_show_fuel_detail">Отображать данные о количестве топлива (в баке / потрачено)</string>

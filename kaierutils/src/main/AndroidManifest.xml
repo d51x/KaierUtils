@@ -84,7 +84,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".OBD2.OBDIIActivity"
+            android:name=".OBDIIActivity"
             android:label="@string/title_activity_obdii"
             android:launchMode="singleTop" >
         </activity>

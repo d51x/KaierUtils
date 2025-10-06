@@ -8,8 +8,8 @@ android {
 		minSdkVersion 29
 		//noinspection ExpiredTargetSdkVersion
 		targetSdkVersion 31
-		versionCode 11000
-		versionName '1.10.0'
+		versionCode 11004
+		versionName '1.10.4'
 		multiDexEnabled true
 	}
 

@@ -1,19 +1,28 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<SwitchPreference   android:key="kaierutils_show_notification_icon"
-	                    android:title="@string/menu_general_show_notification_icon_title"
-	                    android:defaultValue="true" />
-	<SwitchPreference   android:key="kaierutils_auto_start"
-	                    android:title="@string/menu_general_auto_start"
-	                    android:defaultValue="false" />
-    <SwitchPreference   android:key="kaierutils_hide_header"
-                        android:title="@string/menu_general_hide_header"
-                        android:defaultValue="false" />
-	<SwitchPreference   android:key="kaierutils_show_color_speed"
-	                    android:title="@string/menu_general_color_speed_title"
-	                    android:defaultValue="false" />
-	<SwitchPreference   android:key="kaierutils_show_statistics"
-	                    android:title="@string/menu_general_show_statistics_title"
-	                    android:defaultValue="true" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="kaierutils_show_notification_icon"
+        android:title="@string/menu_general_show_notification_icon_title" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="kaierutils_auto_start"
+        android:title="@string/menu_general_auto_start" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="kaierutils_auto_start_floating"
+        android:title="@string/menu_general_auto_start_floating" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="kaierutils_hide_header"
+        android:title="@string/menu_general_hide_header" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="kaierutils_show_color_speed"
+        android:title="@string/menu_general_color_speed_title" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="kaierutils_show_statistics"
+        android:title="@string/menu_general_show_statistics_title" />
 </PreferenceScreen>
 

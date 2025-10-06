@@ -37,23 +37,26 @@ public class SettingsGeneralFragment extends PreferenceFragment implements Share
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if ( key.equals ( "kaierutils_show_notification_icon" ) ) {
-			App.GS.isNotificationIconShow = sharedPreferences.getBoolean ( key, true);
+			App.GS.ui.isNotificationIconShow = sharedPreferences.getBoolean ( key, true);
 			NotifyData notifyData = new NotifyData( App.getInstance () );
-			notifyData.smallIcon = (App.GS.isNotificationIconShow) ? R.drawable.notify_auto : 0;
+			notifyData.smallIcon = (App.GS.ui.isNotificationIconShow) ? R.drawable.notify_auto : 0;
 			notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 			notifyData.show();
 		}
 		else if ( key.equals ( "kaierutils_auto_start" ) ) {
-			App.GS.isAutoStart = sharedPreferences.getBoolean ( key, false);
+			App.GS.ui.isAutoStart = sharedPreferences.getBoolean ( key, false);
+		}
+		else if (key.equals("isAutoStartFloating")) {
+			App.GS.ui.isAutoStartFloating = sharedPreferences.getBoolean(key, false);
 		}
 		else if ( key.equals ( "kaierutils_show_color_speed" ) ) {
-			App.GS.isColorSpeed = sharedPreferences.getBoolean ( key, false);
+			App.GS.ui.isColorSpeed = sharedPreferences.getBoolean ( key, false);
 		}
 		else if ( key.equals ( "kaierutils_show_statistics" ) ) {
-			App.GS.isShowStatistics = sharedPreferences.getBoolean ( key, true);
+			App.GS.ui.isShowStatistics = sharedPreferences.getBoolean ( key, true);
 		}
         else if ( key.equals ( "kaierutils_hide_header" )  ) {
-			App.GS.isHideHeader = sharedPreferences.getBoolean ( key, false);
+			App.GS.ui.isHideHeader = sharedPreferences.getBoolean ( key, false);
 		}
 	}
 }
