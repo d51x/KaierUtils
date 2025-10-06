@@ -109,7 +109,6 @@ import ru.d51x.kaierutils.Data.ClimateData;
 import ru.d51x.kaierutils.Data.CombineMeterData;
 import ru.d51x.kaierutils.Data.CvtData;
 import ru.d51x.kaierutils.Data.EngineData;
-import ru.d51x.kaierutils.OBD2.OBDII;
 import ru.d51x.kaierutils.Radio.Radio;
 import ru.d51x.kaierutils.TWUtils.TWUtilConst;
 import ru.d51x.kaierutils.TWUtils.TWUtilEx;
@@ -205,7 +204,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate (savedInstanceState);
         // Убираем заголовок
-        if ( App.GS.uiOptions.isHideHeader ) this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        if ( App.GS.ui.isHideHeader ) this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // Убираем панель уведомлений
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -223,6 +222,16 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         requestPermissions();
         bluetoothTurnOn();
+
+        //boolean showfloating = getIntent().getBooleanExtra("show_floating", false);
+        boolean showfloating = App.GS.ui.isAutoStartFloating;
+        if (showfloating) {
+            App.GS.showFloatingPanelButton = false;
+            App.GS.isShowingFloatingPanel = true;
+            ibFloatingPanel.setVisibility(View.INVISIBLE);
+            showFloatingPanel();
+            finish();
+        }
 
 	}
 
@@ -563,8 +572,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
         switch (v.getId()) {
             case R.id.layout_gps_speed:
                 color_speed(tvGPSSpeed, App.GS.gpsData.speed);
-                App.GS.uiOptions.isColorSpeed = ! App.GS.uiOptions.isColorSpeed;
-	            PreferenceManager.getDefaultSharedPreferences (App.getInstance ()).edit().putBoolean ("kaierutils_show_color_speed", App.GS.uiOptions.isColorSpeed).apply();
+                App.GS.ui.isColorSpeed = ! App.GS.ui.isColorSpeed;
+	            PreferenceManager.getDefaultSharedPreferences (App.getInstance ()).edit().putBoolean ("kaierutils_show_color_speed", App.GS.ui.isColorSpeed).apply();
                 break;
             case R.id.layout_tracktime:
                 App.GS.gpsData.timeAtWayType++;
@@ -863,7 +872,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
                     break;
                 case GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED:
-                    if (App.GS.powerAmpOpt.interactWithPowerAmp && App.GS.uiOptions.isShowMusicInfo && App.GS.powerAmpOpt.isPowerAmpPlaying) {
+                    if (App.GS.powerAmpOpt.interactWithPowerAmp && App.GS.ui.isShowMusicInfo && App.GS.powerAmpOpt.isPowerAmpPlaying) {
                         //String TrackTitle = intent.getStringExtra("TrackTitle");
                         //String AlbumArtist = intent.getStringExtra ("AlbumArtist");
                         Bitmap AlbumArt = intent.getParcelableExtra("AlbumArt");
@@ -1104,7 +1113,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
 	private void color_speed(TextView tv, int speed) {
-		if ( App.GS.uiOptions.isColorSpeed ) {
+		if ( App.GS.ui.isColorSpeed ) {
 			if ( speed < 10 ) tv.setTextColor( Color.LTGRAY);
 			else if ( speed < 40 ) tv.setTextColor( Color.rgb(0,255,255));
 			else if ( speed < 60 ) tv.setTextColor( Color.rgb(0,255,144));
@@ -1230,7 +1239,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 break;
             case 0:
             case TWUtilConst.TW_AUDIO_FOCUS_MUSIC_ID:
-                if ( App.GS.powerAmpOpt.interactWithPowerAmp && App.GS.uiOptions.isShowMusicInfo ) {
+                if ( App.GS.powerAmpOpt.interactWithPowerAmp && App.GS.ui.isShowMusicInfo ) {
                     layout_music_info.setVisibility(View.VISIBLE);
                 }
                 break;

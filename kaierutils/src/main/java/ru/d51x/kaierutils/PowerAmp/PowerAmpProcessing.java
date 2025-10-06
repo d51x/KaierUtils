@@ -147,7 +147,7 @@ public class PowerAmpProcessing {
 	                     !(activeWnd.equalsIgnoreCase (PowerampAPI.PACKAGE_NAME))
 				       )
 		            {
-			            if ( App.GS.uiOptions.dontShowMusicInfoWhenMainActive &&
+			            if ( App.GS.ui.dontShowMusicInfoWhenMainActive &&
                                 activeWnd.equalsIgnoreCase("ru.d51x.kaierutils") &&
                                 activeActivity.equalsIgnoreCase("ru.d51x.kaierutils.MainActivity")) return;
 						App.mToast.cancel();

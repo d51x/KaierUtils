@@ -1,8 +1,5 @@
 package ru.d51x.kaierutils;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import ru.d51x.kaierutils.Data.GpsData;
 import ru.d51x.kaierutils.Data.PopupWindowOption;
 import ru.d51x.kaierutils.Data.PowerAmpOptions;
@@ -50,7 +47,7 @@ public class GlSets {
     String BT_deviceAddress = "unknown";
 
     public PopupWindowOption popupWindowOption = new PopupWindowOption();
-    public UiOptions uiOptions = new UiOptions();
+    public UiOptions ui = new UiOptions();
 
     public int curAudioFocusID = -1;
 
@@ -73,7 +70,7 @@ public class GlSets {
 
 		try {
 			Volume = getVolumeLevel ();
-            uiOptions.load();
+            ui.load();
             volumeOptions.load();
             powerAmpOpt.load();
             popupWindowOption.load();
