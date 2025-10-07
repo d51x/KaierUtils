@@ -25,6 +25,9 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AE_CHANGED
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AF_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21BC_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_PARKING_2101_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CVT_2103;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CVT_2110;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A3;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED;
@@ -159,14 +162,14 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
             else if (action.equals(ACTION_OBD_CVT_2103_CHANGED)) {
                 // CVT: Oil Temperature
-                CvtData cvtData = (CvtData) intent.getSerializableExtra("obd_cvt_2103");
+                CvtData cvtData = (CvtData) intent.getSerializableExtra(KEY_OBD_CVT_2103);
                 int i = cvtData.getTemperature();
                 String s = (i > -255) ? Integer.toString(i) : "---";
                 tv_can_2103_cvt_temp_count.setText(String.format(getString(R.string.text_can_2103_cvt_temp_count), s));
             }
             else if (action.equals(ACTION_OBD_CVT_2110_CHANGED)) {
                 // CVT: Oil Degradation Level
-                CvtData cvtData = (CvtData) intent.getSerializableExtra("obd_cvt_2110");
+                CvtData cvtData = (CvtData) intent.getSerializableExtra(KEY_OBD_CVT_2110);
                 int i = cvtData.getOilDegradation();
                 String s = (i >= 0) ? Integer.toString(i) : "---";
                 tv_can_2110_cvt_oil_degr.setText(String.format(getString(R.string.text_can_2110_cvt_oil_degr), s));
@@ -174,7 +177,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
             //Combination meter: fuel level
             else if (action.equals(ACTION_OBD_METER_21A3_CHANGED)) {
-                CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra("combine_meter_21A3");
+                CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A3 );
                 int i = meterData.getFuelLevel();
                 String s = (i > -1) ? Integer.toString(i) : "---";
                 tvFuelLevel.setText(String.format(getString(R.string.text_obd_can_fuel_level), s));
