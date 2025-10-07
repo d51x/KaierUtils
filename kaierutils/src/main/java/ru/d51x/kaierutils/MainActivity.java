@@ -79,7 +79,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -145,7 +144,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private int modeCVT = 0;
     private int modeFuelConsump = 0;
 
-	private TextView tvGPSDistance;
+	private TextView tvDistance;
     private ImageView ivTrackTime;
 
     private TextView tvGPSSpeed;
@@ -208,6 +207,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private RelativeLayout layout_MMC_climate;
     private ImageButton ibFloatingPanel;
+    private ImageView ivHideFloatingPanel;
 
     private FloatingWindow floatingWindow;
 
@@ -227,7 +227,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         }
 
         registerReceivers(receiver);
-        floatingWindow = new FloatingWindow(getApplicationContext());
+        floatingWindow = new FloatingWindow(getApplicationContext(), App.GS.ui.floatingWindowVertical);
 		initComponents();
 		setInitData();
 
@@ -313,7 +313,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvTrackTime2 = findViewById(R.id.tvTrackTime2);
 		tvTrackTimeMinOrSec = findViewById(R.id.tvTrackTimeMinOrSec);
 		tvTrackTimeHourOrMin = findViewById(R.id.tvTrackTimeHourOrMin);
-		tvGPSDistance = findViewById(R.id.tvGPSDistance);
+		tvDistance = findViewById(R.id.tvGPSDistance);
         LinearLayout layout_waypoints = findViewById(R.id.layout_waypoints);
 		layout_waypoints.setOnLongClickListener(this);
 		ivTrackTime = findViewById(R.id.ivTrackTime);
@@ -419,7 +419,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         ibFloatingPanel = findViewById(R.id.ibFloatingPanel);
 
         ibFloatingPanel.setOnClickListener (this);
-        floatingWindow.ibHideFloatingPanel.setOnClickListener(this);
+        floatingWindow.ivHideFloatingPanel.setOnClickListener(this);
 	}
 
     @Override
@@ -462,7 +462,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvTrackTime2.setText( getString(R.string.text_gps_track_time_null));
 		tvTrackTimeMinOrSec.setText(getString(R.string.text_gps_track_time_format_sec));
 		tvTrackTimeHourOrMin.setText( getString(R.string.text_gps_track_time_format_min));
-		tvGPSDistance.setText( "----.-" );
+		tvDistance.setText( "----.-" );
 		tvMaxSpeed.setText( String.format(getString(R.string.text_max_speed), "---"));
 		tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), "---"));
 
@@ -534,7 +534,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
             switch (v.getId()) {
                 case R.id.layout_waypoints:
                     App.GS.gpsData.totalDistance = 0;
-                    tvGPSDistance.setText( "----.-" );
+                    tvDistance.setText( "----.-" );
                     Toast.makeText(this, "Счетчик был сброшен", Toast.LENGTH_SHORT).show ();
                     return true;
                 case R.id.layout_tracktime:
@@ -627,17 +627,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 ibFloatingPanel.setVisibility(View.INVISIBLE);
                 showFloatingPanel();
                 break;
-            case R.id.ibHideFloatingPanel:
+            case R.id.ivHideFloatingPanel:
                 App.GS.isShowingFloatingPanel = false;
                 App.GS.showFloatingPanelButton = true;
                 floatingWindow.dismiss();
                 ibFloatingPanel.setVisibility(View.VISIBLE);
                 ibFloatingPanel.invalidate();
                 break;
-            case R.id.layout_battery:
-                boolean isVisible = ibFloatingPanel.getVisibility() == View.VISIBLE;
-                ibFloatingPanel.setVisibility(isVisible ? View.INVISIBLE : View.VISIBLE);
-
             default:
                 break;
         }
@@ -832,9 +828,14 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.GS.gpsData.averageSpeed));
                     tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.GS.gpsData.maxSpeed));
 
-                    float dist = App.GS.gpsData.totalDistance / 1000;
-
-                    tvGPSDistance.setText(dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-");
+                    if (App.obd.newDistanceCalc) {
+                        tvDistance.setText(App.obd.oneTrip.distance > 0 ?
+                                String.format(getString(R.string.text_distance), App.obd.oneTrip.distance)
+                                : "----.-");
+                    } else {
+                        float dist = App.GS.gpsData.totalDistance / 1000;
+                        tvDistance.setText(dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-");
+                    }
                     showFormatedTrackTime(App.GS.gpsData.timeAtWayType);
 
 //                NotifyData notifyData = new NotifyData( App.getInstance () );
@@ -972,6 +973,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 case ACTION_OBD_METER_21AE_CHANGED: {
                     CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AE);
                     // tripA tripB
+                        if (App.obd.newDistanceCalc) {
+                            tvDistance.setText(App.obd.oneTrip.distance > 0 ?
+                                    String.format(getString(R.string.text_distance), App.obd.oneTrip.distance)
+                                    : "----.-");
+                        }
                     }
                     break;
                 case ACTION_OBD_METER_21BC_CHANGED: {
@@ -1101,18 +1107,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
     private void show_obdii_activity(Context context) {
-
         try {
             Intent it = new Intent();
             it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.OBDIIActivity");
-            //it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(it);
         } catch (Exception e) {
         }
-//        if ( App.GS.BT_deviceAddress != "unknown" ) {
-//            App.OBD.connect();
-//        }
     }
 
     @SuppressLint("DefaultLocale")
@@ -1338,25 +1339,16 @@ public class MainActivity extends Activity implements View.OnClickListener,
         alertDialogBuilder.setMessage(getString(R.string.text_fuel_tank_full));
         alertDialogBuilder.setIcon(R.drawable.fuel_tank_full);
 
-        alertDialogBuilder.setPositiveButton("Отмена", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            }
+        alertDialogBuilder.setPositiveButton("Отмена", (dialog, which) -> {
         });
 
         // Обработчик на нажатие НЕТ
-        alertDialogBuilder.setNegativeButton("Да", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                App.obd.setFullTank();
-
-            }
-        });
+        alertDialogBuilder.setNegativeButton("Да", (dialog, which) -> App.obd.setFullTank());
 
         // Обработчик на нажатие ОТМЕНА
-        alertDialogBuilder.setNeutralButton("Нет", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // show dialog to enter fuel details
-                show_obd_fuel_detail();
-            }
+        alertDialogBuilder.setNeutralButton("Нет", (dialog, which) -> {
+            // show dialog to enter fuel details
+            show_obd_fuel_detail();
         });
         AlertDialog alertDialog = alertDialogBuilder.create();
         // показываем Alert
@@ -1371,17 +1363,17 @@ public class MainActivity extends Activity implements View.OnClickListener,
         View linearlayout = getLayoutInflater().inflate(R.layout.fuel_dialog, null);
         fuelDialog.setView(linearlayout);
 
-        final EditText etFuelTankCapacity = (EditText)linearlayout.findViewById(R.id.etFuelTankCapacity);
-        final EditText etFuelTankRemain = (EditText)linearlayout.findViewById(R.id.etFuelTankRemain);
-        final SeekBar seekBarFuel = (SeekBar) linearlayout.findViewById(R.id.seekBarFuel);
-        final TextView tvFuelPercent = (TextView) linearlayout.findViewById(R.id.tvFuelPercent);
+        final EditText etFuelTankCapacity = linearlayout.findViewById(R.id.etFuelTankCapacity);
+        final EditText etFuelTankRemain = linearlayout.findViewById(R.id.etFuelTankRemain);
+        final SeekBar seekBarFuel = linearlayout.findViewById(R.id.seekBarFuel);
+        final TextView tvFuelPercent = linearlayout.findViewById(R.id.tvFuelPercent);
 
-        etFuelTankCapacity.setText( String.format("%1$.0f", (float) App.obd.fuel.getTankCapacity()));
+        etFuelTankCapacity.setText( String.format("%1$.0f", App.obd.fuel.getTankCapacity()));
         etFuelTankRemain.setText( String.format("%1$.0f", App.obd.totalTrip.fuel_remains));
         seekBarFuel.setMax( 100 );
         int percent = Math.round(App.obd.totalTrip.fuel_remains * 100 / App.obd.fuel.getTankCapacity());
         seekBarFuel.setProgress(percent);
-        tvFuelPercent.setText(String.valueOf(percent) + " %");
+        tvFuelPercent.setText(percent + " %");
         seekBarFuel.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -1398,7 +1390,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 float flremain = fltank * progress / 100;
 
                 etFuelTankRemain.setText(String.format("%1$.0f", flremain));
-                tvFuelPercent.setText(String.valueOf(progress) + " %");
+                tvFuelPercent.setText(progress + " %");
             }
         });
         fuelDialog.setPositiveButton("Сохранить",
@@ -1411,10 +1403,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 });
 
         fuelDialog.setNegativeButton("Отмена",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                (dialog, which) -> {
 
-                    }
                 });
         fuelDialog.create();
         fuelDialog.show();
@@ -1563,14 +1553,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         updateFuelLevelText(tvOBD_FuelTank, App.obd.can.meter.getFuelLevel());
                     } else {
                         // вычисляем
-//                        String s = String.format("%1$.1f", App.obd.totalTrip.fuel_remains).replace(",", ".");
-//                        SpannableString ss =  new SpannableString(s);
-//                        int dot = s.indexOf(".");
-//                        ss.setSpan(new AbsoluteSizeSpan( 32 ), 0, dot, 0);
-//                        ss.setSpan(new AbsoluteSizeSpan( 16 ), dot+1, s.length()-1, 0);
-//
-//
-//                        tvOBD_FuelTank.setText(ss);
                         TextViewToSpans(tvOBD_FuelTank, String.format("%1$.1f", App.obd.totalTrip.fuel_remains), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                     }
 
@@ -1590,16 +1572,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
                     break;
                 case 2:
-
-//                    String s = String.format("%1$.2f", App.obd.oneTrip.fuel_usage).replace(",", ".");
-//                    SpannableString ss =  new SpannableString(s);
-//                    int dot = s.indexOf(".");
-//                    ss.setSpan(new AbsoluteSizeSpan( 32 ), 0, dot, 0);
-//                    ss.setSpan(new AbsoluteSizeSpan( 16 ), dot+1, s.length()-1, 0);
-//
-//
-//                    tvOBD_FuelTank.setText(ss);
-
                     TextViewToSpans(tvOBD_FuelTank, String.format("%1$.2f", App.obd.oneTrip.fuel_usage), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                     break;
                 default:
@@ -1616,13 +1588,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
         } else {
             layout_fuel_consump.setVisibility( View.VISIBLE );
             if (line2) {
-                // show line 2
-                ////tvOBD_FuelConsump.setTextSize(26);
-                //tvOBD_FuelConsump2.setTextSize(22);
                 tvOBD_FuelConsump2.setVisibility(View.VISIBLE);
             } else {
-                // hide line 2
-                //tvOBD_FuelConsump.setTextSize(40);
                 tvOBD_FuelConsump2.setVisibility(View.GONE);
             }
         }
@@ -1648,36 +1615,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
     private void updateOBD_air_cond_fan_mode( ClimateData.FanMode fanMode) {
-//        iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0);
-//
-//        switch ( App.obd.climateData.fan_speed ) {
-//            case 0x0: break;
-//            case 0x1: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0); break;
-//            case 0x2: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_1); break;
-//            case 0x3: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_2); break;
-//            case 0x4: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_3); break;
-//            case 0x5: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_4); break;
-//            case 0x6: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_5); break;
-//            case 0x7: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_6); break;
-//            case 0x8: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_7); break;
-//            case 0x9: iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_8); break;
-//            default:  break;
-//        }
         iv_ac_fan_mode.setVisibility((fanMode == ClimateData.FanMode.auto) ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void updateOBD_air_cond_temperature(String temp){
-//        //tv_air_cond_temp.setText( String.format("%1$.1f", App.obd.climateData.temperature ));
-//        String s = temp.replace(",", ".");
-//        SpannableString ss =  new SpannableString(s);
-//        int dot = s.indexOf(".");
-//        ss.setSpan(new AbsoluteSizeSpan( 40 ), 0, dot, 0);
-//        ss.setSpan(new AbsoluteSizeSpan( 16 ), dot+1, s.length()-1, 0);
-//
-//
-//        //tv_air_cond_temp.setText( temp );
-//        tv_air_cond_temp.setText( ss );
-
         TextViewToSpans(tv_air_cond_temp, temp, TEXT_SIZE_BEFORE_DOT_4, TEXT_SIZE_AFTER_DOT);
 
         if ( App.obd.can.climate.temperature < 19f )

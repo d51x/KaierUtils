@@ -236,10 +236,13 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
             // TODO а еще надо учесть инфу с сателитов про сигнал и точность
                    App.GS.gpsData.totalDistance += location.distanceTo ( prevLocation );
                    App.GS.gpsData.totalDistanceForAverageSpeed += location.distanceTo ( prevLocation );
-                   if ( App.obd.isConnected && App.obd.obdData.speed > 0) {
-                       App.obd.oneTrip.distance += location.distanceTo ( prevFuelLocation );
-                       App.obd.todayTrip.distance += location.distanceTo ( prevFuelLocation );
-                       App.obd.totalTrip.distance += location.distanceTo ( prevFuelLocation );
+                   if (!App.obd.newDistanceCalc) {
+                       // старый расчет по gps
+                       if (App.obd.isConnected && App.obd.obdData.speed > 0) {
+                           App.obd.oneTrip.distance += location.distanceTo(prevFuelLocation);
+                           App.obd.todayTrip.distance += location.distanceTo(prevFuelLocation);
+                           App.obd.totalTrip.distance += location.distanceTo(prevFuelLocation);
+                       }
                    }
             // что происходит с prevLocation при зависании gps до момента первого получения спутников,
             // надо тестировать вживую руками делая сброс agps
