@@ -8,12 +8,17 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2101_CHANGE
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2102_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A1_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A3_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AE_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CLIMATE_2113;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CVT_2103;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_2102;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A1;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A3;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AE;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_MAF_CHANGED;
+import static ru.d51x.kaierutils.utils.UiUtils.TEXT_SIZE_AFTER_DOT;
+import static ru.d51x.kaierutils.utils.UiUtils.TEXT_SIZE_BEFORE_DOT;
 import static ru.d51x.kaierutils.utils.UiUtils.TextViewToSpans;
 import static ru.d51x.kaierutils.utils.UiUtils.updateBatteryLevelIcon;
 import static ru.d51x.kaierutils.utils.UiUtils.updateBatteryLevelText;
@@ -44,7 +49,6 @@ import ru.d51x.kaierutils.Data.ClimateData;
 import ru.d51x.kaierutils.Data.CombineMeterData;
 import ru.d51x.kaierutils.Data.CvtData;
 import ru.d51x.kaierutils.Data.EngineData;
-import ru.d51x.kaierutils.utils.UiUtils;
 
 public class FloatingWindow implements View.OnClickListener, View.OnTouchListener {
 
@@ -60,7 +64,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     private int lastY = 0;
     private int firstX = 0;
     private int firstY = 0;
-    public ImageButton ibHideFloatingPanel;
+    public ImageView ivHideFloatingPanel;
 
     private ImageView ivSpeed;
 
@@ -75,6 +79,9 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
 
     private final ImageView ivCvtTemperature;
     private final TextView tvCvtTemperature;
+    private final ImageView ivTrip;
+    private final TextView tvTrip;
+    private final TextView tvFuelConsump;
 
     private final TextView tvFuelLevel;
 
@@ -86,7 +93,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel, null);
         floatingView.setOnTouchListener(this);
 
-        ibHideFloatingPanel = floatingView.findViewById(R.id.ibHideFloatingPanel);
+        ivHideFloatingPanel = floatingView.findViewById(R.id.ivHideFloatingPanel);
         //ibHideFloatingPanel.setOnClickListener (this);
 
         ivCoolantTemp = floatingView.findViewById(R.id.ivOBD_CoolantTemp);
@@ -99,9 +106,13 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         ivBatteryLevel = floatingView.findViewById(R.id.ivOBD_CarBattery);
         tvBatteryLevel = floatingView.findViewById(R.id.tvOBD_CarBattery);
 
+        ivTrip = floatingView.findViewById(R.id.ivTrip);
+        tvTrip = floatingView.findViewById(R.id.tvTrip);
+
         ivCvtTemperature = floatingView.findViewById(R.id.ivOBD_CVT_Data);
         tvCvtTemperature = floatingView.findViewById(R.id.tvOBD_CVT_Data);
         tvFuelLevel = floatingView.findViewById(R.id.tvOBD_FuelTank);
+        tvFuelConsump = floatingView.findViewById(R.id.tvFuelConsump);
 
         layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -114,6 +125,8 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         tvCvtTemperature.setText("--");
         tvFuelLevel.setText("--");
         tvSpeed.setText("--");
+        tvTrip.setText("---.-");
+        tvFuelConsump.setText("--.-");
 
         if (App.obd.can.engine.getSpeed() > 0) {
             updateSpeedText(tvSpeed, App.obd.can.engine.getSpeed(), true);
@@ -138,6 +151,17 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         if (App.obd.can.meter.getFuelLevel() > 0 && App.obd.can.meter.getFuelLevel() < 67) {
             updateFuelLevelText(tvFuelLevel, App.obd.can.meter.getFuelLevel());
         }
+        if (App.obd.oneTrip.distance > 0) {
+            tvTrip.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.distance));
+        }
+        if (App.obd.oneTrip.fuel_cons_lp100km_avg > 0) {
+            TextViewToSpans(tvFuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+            tvFuelConsump.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.fuel_cons_lp100km_avg));
+        }
+//        if (App.obd.oneTrip.fuel_cons_lph > 0) {
+//            TextViewToSpans(tvFuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+//            tvFuelConsump.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.fuel_cons_lph));
+//        }
 
     }
 
@@ -153,6 +177,14 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                     String action = intent.getAction();
                     if (action.equals(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED)) {
                         tvCoolantTemp.setText(String.format(context.getString(R.string.text_obd_coolant_temp_f), intent.getStringExtra("coolantTemp")));
+                    }
+                    else if (action.equals(OBD_BROADCAST_ACTION_MAF_CHANGED)) {
+                        if (App.obd.oneTrip.fuel_cons_lp100km_avg > 0) {
+                            TextViewToSpans(tvFuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+                            tvFuelConsump.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.fuel_cons_lp100km_avg));
+                        } else {
+                            tvFuelConsump.setText("--.-");
+                        }
                     }
                     else if (action.equals(ACTION_OBD_ENGINE_2101_CHANGED)) {
                         EngineData engine = (EngineData) intent.getSerializableExtra("obd_engine_2101");
@@ -188,6 +220,14 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                         updateSpeedText(tvSpeed, meter.getVehicleSpeed(), App.GS.ui.isColorSpeed);
                         updateSpeedIcon(ivSpeed, meter.getVehicleSpeed());
                     }
+                    else if (action.equals(ACTION_OBD_METER_21AE_CHANGED)) {
+                        CombineMeterData meter = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AE);
+                        if (App.obd.oneTrip.distance > 0) {
+                            tvTrip.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.distance));
+                        } else {
+                            tvTrip.setText("---.-");
+                        }
+                    }
                     else if (action.equals(ACTION_OBD_CLIMATE_2113_CHANGED)) {
                         ClimateData climate = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2113);
 //                        updateSpeedText(tvSpeed, climate.vehicleSpeed, App.GS.ui.isColorSpeed);
@@ -196,12 +236,14 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                 }
             };
             context.registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED));
+            context.registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_MAF_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2101_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2102_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_CVT_2103_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21A1_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21A3_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_CLIMATE_2113_CHANGED));
+            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21AE_CHANGED));
         }
     }
 
@@ -229,7 +271,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ibHideFloatingPanel:
+            case R.id.ivHideFloatingPanel:
                 //dismiss();
                 break;
             default:

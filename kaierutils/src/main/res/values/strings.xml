@@ -150,6 +150,7 @@
     <string name="dsc_delta_to_change_summary">Дельта скорости, внутри которой не сработает изменение громкости (текущее значение %1$d)</string>
     <string name="dsc_delta_to_change_dialogtitle">Выберите дельту скорости</string>
     <string name="text_obd2_settings">OBD 2</string>
+	<string name="text_distance">%1$.1f</string>
 	<string name="text_gps_distance">%1$.2f</string>
     <string name="text_average_speed">Avg: %1$s км/ч</string>
     <string name="text_max_speed">Max: %1$s км/ч</string>

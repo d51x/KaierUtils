@@ -24,6 +24,7 @@ public class TripData {
     private String mPrefix;
     private boolean isStoreData;
     private long timeStamp;
+    private float prevOffset = 0; // для хранения предыдущего tripA
 
     public TripData(String prefix, boolean isStoreData) {
         mPrefix = prefix;
@@ -148,5 +149,18 @@ public class TripData {
         // остаток топлива в баке
         fuel_remains = fuel_remains - usedmaf;
         if ( fuel_remains < 0 )  fuel_remains = 0;
+    }
+
+    public void updateDistance(float offset) {
+        if (prevOffset == 0 || prevOffset > offset) {
+            // только начали отсчет или был сброс счетчика tripA
+            // с учетом, что данные получаем часто, а за 5 сек много не проедем,
+            // то пропустим одно вычисление
+            prevOffset = offset;
+        }
+        if (prevOffset < offset) {
+            distance += offset - prevOffset;
+            prevOffset = offset;
+        }
     }
 }

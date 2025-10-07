@@ -157,6 +157,7 @@ public class OBDII  {
     public boolean readExtendClimate = false;
     public boolean newObdProcess = true;
     public boolean MMC_CAN;
+    public boolean newDistanceCalc = true;
     public TripData totalTrip;
     public TripData oneTrip;
     public TripData todayTrip;
@@ -1098,6 +1099,7 @@ public class OBDII  {
              case MESSAGE_OBD_COMBINE_METER_21AE:
                  App.obd.can.meter.setTripA(((CombineMeterData) message.obj).getTripA());
                  App.obd.can.meter.setTripB(((CombineMeterData) message.obj).getTripB());
+                 distanceCalculation(((CombineMeterData) message.obj).getTripA());
                  SendBroadcastAction(ACTION_OBD_METER_21AE_CHANGED, "obd_meter_21AE", (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21AF:
@@ -1143,4 +1145,11 @@ public class OBDII  {
         requestMmcParkingSensors();
     }
 
+    public void distanceCalculation(float tripA) {
+        if (App.obd.newDistanceCalc) {
+            App.obd.oneTrip.updateDistance(tripA);
+            App.obd.todayTrip.updateDistance(tripA);
+            App.obd.totalTrip.updateDistance(tripA);
+        }
+    }
  }
