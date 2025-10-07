@@ -227,7 +227,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         }
 
         registerReceivers(receiver);
-        floatingWindow = new FloatingWindow(getApplicationContext());
+        floatingWindow = new FloatingWindow(getApplicationContext(), App.GS.ui.floatingWindowVertical);
 		initComponents();
 		setInitData();
 

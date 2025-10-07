@@ -88,9 +88,14 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     private BroadcastReceiver receiver;
 
     @SuppressLint("InflateParams")
-    public FloatingWindow(Context context) {
+    public FloatingWindow(Context context, boolean vertical) {
         this.context = context;
-        floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel, null);
+        if (vertical) {
+            floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel_vertical, null);
+        } else {
+            floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel, null);
+        }
+        //floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel, null);
         floatingView.setOnTouchListener(this);
 
         ivHideFloatingPanel = floatingView.findViewById(R.id.ivHideFloatingPanel);
