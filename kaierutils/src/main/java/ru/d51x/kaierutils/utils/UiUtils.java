@@ -5,15 +5,20 @@ import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import ru.d51x.kaierutils.App;
+import ru.d51x.kaierutils.Data.ClimateData;
 import ru.d51x.kaierutils.R;
 
 public class UiUtils {
 
     public static final int TEXT_SIZE_BEFORE_DOT = 40;
+    public static final int TEXT_SIZE_BEFORE_DOT_2 = 26;
+    public static final int TEXT_SIZE_BEFORE_DOT_3 = 2;
+    public static final int TEXT_SIZE_BEFORE_DOT_4 = 44;
     public static final int TEXT_SIZE_AFTER_DOT = 16;
 
     public static void TextViewToSpans(TextView tv, String value, int size1, int size2) {
@@ -36,7 +41,7 @@ public class UiUtils {
         }
     }
     public static void updateCvtTemperatureIcon(ImageView view, int temp) {
-        int imageRes = R.drawable.cvt_temp_min;
+        int imageRes;
         if (temp < 71) {
             imageRes = R.drawable.cvt_temp_min;
         } else if (temp < 91) {
@@ -79,7 +84,7 @@ public class UiUtils {
     }
 
     public static void updateCoolantTemperatureIcon(ImageView view, float temp) {
-        int res = R.drawable.coolant_temp_min;
+        int res;
         if (temp < 80) {
             res = R.drawable.coolant_temp_min;
         } else if (temp < 99) {
@@ -121,5 +126,102 @@ public class UiUtils {
         } else {
             view.setImageResource(R.drawable.speedo_1);
         }
+    }
+
+    public static void updateClimateTemperatureText(TextView view, float temp) {
+        if (temp < 15f || temp > 27f) {
+            view.setText("--.-");
+        } else {
+            TextViewToSpans(view, Float.toString(temp), TEXT_SIZE_BEFORE_DOT_4, TEXT_SIZE_AFTER_DOT);
+        }
+    }
+
+    public static void updateClimateTemperatureIcon(ImageView view, float temp){
+        int res;
+        if ( temp < 19f )
+            res = R.drawable.ac_temp_blue;
+        else if ( temp < 21f )
+            res =R.drawable.ac_temp_green;
+        else if ( temp < 23f )
+            res = R.drawable.ac_temp_orange;
+        else
+            res = R.drawable.ac_temp_red;
+        view.setImageResource(res);
+    }
+
+    public static void updateClimateBlowDirection(ImageView view, ClimateData.BlowDirection blowDirection) {
+        int res;
+        switch ( blowDirection ) {
+            case face:
+                res = R.drawable.air_wind_seat_my_to_face;
+                break;
+            case from_face_to_feet_and_face:
+                res = R.drawable.air_wind_seat_my_to_beetwen_feet_and_face_and_feet;
+                break;
+            case feet_and_face:
+                res = R.drawable.air_wind_seat_my_to_face_and_feet;
+                break;
+            case from_feet_and_face_to_feet:
+                res = R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_face;
+                break;
+            case feet:
+                res = R.drawable.air_wind_seat_my_to_feet;
+                break;
+            case from_feet_to_feet_and_window:
+                res = R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_window;
+                break;
+            case feet_and_window:
+                res = R.drawable.air_wind_seat_my_to_feet_and_window;
+                break;
+            case from_feet_and_window_to_window:
+                res = R.drawable.air_wind_seat_my_to_between_window_and_feet_and_window;
+                break;
+            case window:
+                res = R.drawable.air_wind_seat_my_to_window;
+                break;
+            default:  res = R.drawable.air_wind_seat_my_to_face; break;
+        }
+        view.setImageResource( res );
+    }
+
+     public static void updateClimateFanSpeed(ImageView view, ClimateData.FanSpeed fanSpeed) {
+        int res;
+        switch ( fanSpeed ) {
+            case off:       res = R.drawable.air_wind_seat_my_fan_0; break;
+            case speed1:    res = R.drawable.air_wind_seat_my_fan_1; break;
+            case speed2:    res = R.drawable.air_wind_seat_my_fan_2; break;
+            case speed3:    res = R.drawable.air_wind_seat_my_fan_3; break;
+            case speed4:    res = R.drawable.air_wind_seat_my_fan_4; break;
+            case speed5:    res = R.drawable.air_wind_seat_my_fan_5; break;
+            case speed6:    res = R.drawable.air_wind_seat_my_fan_6; break;
+            case speed7:    res = R.drawable.air_wind_seat_my_fan_7; break;
+            case speed8:    res = R.drawable.air_wind_seat_my_fan_8; break;
+            default: res = R.drawable.air_wind_seat_my_fan_0;
+        }
+        view.setImageResource( res );
+    }
+
+    public static void updateClimateFanMode(ImageView view, ClimateData.FanMode fanMode) {
+        view.setVisibility((fanMode == ClimateData.FanMode.auto) ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    public static void updateClimateDefogger(ImageView view, ClimateData.State state){
+        view.setVisibility( (state == ClimateData.State.on)  ? View.VISIBLE : View.INVISIBLE );
+    }
+
+    public static void updateClimateRecirculation(ImageView view, ClimateData.State state){
+        view.setVisibility((state == ClimateData.State.on) ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    public static void updateClimateAcState(ImageView view, ClimateData.State state) {
+        view.setImageResource((state == ClimateData.State.on) ? R.drawable.air_cond__state_on : R.drawable.air_cond__state_off);
+    }
+
+    public static void updateClimateExteriorTemperature (ImageView view, float temp) {
+        // TODO
+    }
+
+    public static void updateClimateBlowMode(ImageView view, ClimateData.BlowMode blowMode){
+        view.setVisibility((blowMode == ClimateData.BlowMode.auto) ? View.VISIBLE : View.INVISIBLE);
     }
 }

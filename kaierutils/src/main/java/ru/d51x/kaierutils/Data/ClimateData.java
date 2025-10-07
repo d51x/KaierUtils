@@ -28,7 +28,7 @@ public class ClimateData implements Serializable {
     public BlowDirection blow_direction;
     public BlowMode blow_mode;
 
-    public double temperature ;
+    public float temperature ;
     public float interiorTemperature ;
     public float ambientTemperature ;
     public float externalTemperature;
