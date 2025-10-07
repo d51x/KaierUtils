@@ -135,20 +135,24 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
             }
             else if (action.equals(OBD_BROADCAST_ACTION_MAF_CHANGED)) {
-                tvOBD_MAF.setText(String.format(getString(R.string.text_obd_fuel_consumption_maf_f), intent.getStringExtra("sMAF")));
-                tvOBD_FuelConsumption_lph.setText(String.format(getString(R.string.text_obd_fuel_consumption_lph_f), App.obd.oneTrip.fuel_cons_lph));
-                tvOBD_FuelConsumption_mpg.setText(String.format(getString(R.string.text_obd_fuel_consumption_mpg_f), App.obd.oneTrip.fuel_cons_lp100km_inst));
-                tvOBD_FuelConsumption_avg.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg_f), App.obd.oneTrip.fuel_cons_lp100km_avg));
-                tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage_f), App.obd.oneTrip.fuel_usage));
-                tvGPS_Distanse.setText(String.format(getString(R.string.text_obd_distanse_f), App.obd.oneTrip.distance / 1000f));
+                tvOBD_MAF.setText(String.format(getString(R.string.text_obd_fuel_consumption_maf_f)
+                        .replace("g/s", ""), intent.getStringExtra("sMAF")));
+                tvOBD_FuelConsumption_lph.setText(String.format(getString(R.string.text_obd_fuel_consumption_lph_f), App.obd.oneTrip.fuel_cons_lph)
+                        .replace(",", "."));
+                tvOBD_FuelConsumption_mpg.setText(String.format(getString(R.string.text_obd_fuel_consumption_mpg_f),
+                        App.obd.oneTrip.fuel_cons_lp100km_inst).replace(",", "."));
+                tvOBD_FuelConsumption_avg.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg_f), App.obd.oneTrip.fuel_cons_lp100km_avg)
+                        .replace(",", "."));
+                tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage_f), App.obd.oneTrip.fuel_usage).replace(",", "."));
+                tvGPS_Distanse.setText(String.format(getString(R.string.text_obd_distanse_f), App.obd.oneTrip.distance / 1000f).replace(",", "."));
 
-                tvOBD_FuelConsumption_total.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg_f), App.obd.totalTrip.fuel_cons_lp100km_avg));
-                tvOBD_FuelUsageTotal.setText(String.format(getString(R.string.text_obd_fuel_usage_f), App.obd.totalTrip.fuel_usage));
+                tvOBD_FuelConsumption_total.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg_f), App.obd.totalTrip.fuel_cons_lp100km_avg).replace(",", "."));
+                tvOBD_FuelUsageTotal.setText(String.format(getString(R.string.text_obd_fuel_usage_f), App.obd.totalTrip.fuel_usage).replace(",", "."));
 
-                tvOBD_FuelConsumption_today.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg_f), App.obd.todayTrip.fuel_cons_lp100km_avg));
-                tvOBD_FuelUsageToday.setText(String.format(getString(R.string.text_obd_fuel_usage_f), App.obd.todayTrip.fuel_usage));
-                tvGPS_Distanse_Today.setText(String.format(getString(R.string.text_obd_distanse_f), App.obd.todayTrip.distance / 1000f));
-                tvGPS_Distanse_Total.setText(String.format(getString(R.string.text_obd_distanse_f), App.obd.totalTrip.distance / 1000f));
+                tvOBD_FuelConsumption_today.setText(String.format(getString(R.string.text_obd_fuel_consumption_avg_f), App.obd.todayTrip.fuel_cons_lp100km_avg).replace(",", "."));
+                tvOBD_FuelUsageToday.setText(String.format(getString(R.string.text_obd_fuel_usage_f), App.obd.todayTrip.fuel_usage).replace(",", "."));
+                tvGPS_Distanse_Today.setText(String.format(getString(R.string.text_obd_distanse_f), App.obd.todayTrip.distance / 1000f).replace(",", "."));
+                tvGPS_Distanse_Total.setText(String.format(getString(R.string.text_obd_distanse_f), App.obd.totalTrip.distance / 1000f).replace(",", "."));
             }
 
             // ----------------------------------------------------------------------------

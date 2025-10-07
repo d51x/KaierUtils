@@ -156,12 +156,16 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         if (App.obd.can.meter.getFuelLevel() > 0 && App.obd.can.meter.getFuelLevel() < 67) {
             updateFuelLevelText(tvFuelLevel, App.obd.can.meter.getFuelLevel());
         }
-        if (App.obd.oneTrip.distance > 0) {
-            tvTrip.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.distance).replace(",", "."));
+        //if (App.obd.oneTrip.distance > 0) {
+        if (App.obd.todayTrip.distance > 0) {
+            //tvTrip.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.distance).replace(",", "."));
+            tvTrip.setText(String.format(context.getString(R.string.text_distance), App.obd.todayTrip.distance)
+                    .replace(",", "."));
         }
         if (App.obd.oneTrip.fuel_cons_lp100km_avg > 0) {
             TextViewToSpans(tvFuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
-            tvFuelConsump.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.fuel_cons_lp100km_avg));
+            tvFuelConsump.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.fuel_cons_lp100km_avg)
+                    .replace(",", "."));
         }
 //        if (App.obd.oneTrip.fuel_cons_lph > 0) {
 //            TextViewToSpans(tvFuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
@@ -185,8 +189,11 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                     }
                     else if (action.equals(OBD_BROADCAST_ACTION_MAF_CHANGED)) {
                         if (App.obd.oneTrip.fuel_cons_lp100km_avg > 0) {
-                            TextViewToSpans(tvFuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
-                            tvFuelConsump.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.fuel_cons_lp100km_avg));
+                            TextViewToSpans(tvFuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg)
+                                    .replace(",", "."),
+                                    TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+                            tvFuelConsump.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.fuel_cons_lp100km_avg)
+                                    .replace(",", "."));
                         } else {
                             tvFuelConsump.setText("--.-");
                         }
@@ -227,8 +234,11 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                     }
                     else if (action.equals(ACTION_OBD_METER_21AE_CHANGED)) {
                         CombineMeterData meter = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AE);
-                        if (App.obd.oneTrip.distance > 0) {
-                            tvTrip.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.distance).replace(",", "."));
+                        //if (App.obd.oneTrip.distance > 0) {
+                        if (App.obd.todayTrip.distance > 0) {
+                            //tvTrip.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.distance).replace(",", "."));
+                            tvTrip.setText(String.format(context.getString(R.string.text_distance),
+                                    App.obd.todayTrip.distance).replace(",", "."));
                         } else {
                             tvTrip.setText("---.-");
                         }

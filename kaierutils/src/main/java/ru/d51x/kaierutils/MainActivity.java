@@ -835,12 +835,16 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.GS.gpsData.maxSpeed));
 
                     if (App.obd.newDistanceCalc) {
-                        tvDistance.setText(App.obd.oneTrip.distance > 0 ?
-                                String.format(getString(R.string.text_distance), App.obd.oneTrip.distance)
+                        //tvDistance.setText(App.obd.oneTrip.distance > 0 ?
+                        tvDistance.setText(App.obd.todayTrip.distance > 0 ?
+                                //String.format(getString(R.string.text_distance), App.obd.oneTrip.distance)
+                                String.format(getString(R.string.text_distance), App.obd.todayTrip.distance)
+                                        .replace(",", ".")
                                 : "----.-");
                     } else {
                         float dist = App.GS.gpsData.totalDistance / 1000;
-                        tvDistance.setText(dist > 0 ? String.format(getString(R.string.text_gps_distance), dist).replace(",", ".") : "----.-");
+                        tvDistance.setText(dist > 0 ? String.format(getString(R.string.text_gps_distance), dist)
+                                .replace(",", ".") : "----.-");
                     }
                     showFormatedTrackTime(App.GS.gpsData.timeAtWayType);
 
@@ -980,8 +984,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AE);
                     // tripA tripB
                         if (App.obd.newDistanceCalc) {
-                            tvDistance.setText(App.obd.oneTrip.distance > 0 ?
-                                    String.format(getString(R.string.text_distance), App.obd.oneTrip.distance)
+                            //tvDistance.setText(App.obd.oneTrip.distance > 0 ?
+                            tvDistance.setText(App.obd.todayTrip.distance > 0 ?
+                                    //String.format(getString(R.string.text_distance), App.obd.oneTrip.distance)
+                                    String.format(getString(R.string.text_distance), App.obd.todayTrip.distance)
                                             .replace(",", ".")
                                     : "----.-");
                         }
@@ -1525,22 +1531,32 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private void show_fuel_consumption(int mode) {
         switch (mode) {
             case 0:
-                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst),
+                TextViewToSpans(tvOBD_FuelConsump,
+                        String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst)
+                                .replace(",", "."),
                         TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                 break;
             case 1:
-                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg),
+                TextViewToSpans(tvOBD_FuelConsump,
+                        String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg)
+                                .replace(",", "."),
                         TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                 break;
             case 2:
-                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph),
+                TextViewToSpans(tvOBD_FuelConsump,
+                        String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph)
+                                .replace(",", "."),
                         TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                 break;
             case 3:
-                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg),
+                TextViewToSpans(tvOBD_FuelConsump,
+                        String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg)
+                                .replace(",", "."),
                         TEXT_SIZE_BEFORE_DOT_2, TEXT_SIZE_AFTER_DOT);
 
-                TextViewToSpans(tvOBD_FuelConsump2, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst),
+                TextViewToSpans(tvOBD_FuelConsump2,
+                        String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst)
+                                .replace(",", "."),
                         TEXT_SIZE_BEFORE_DOT_3, TEXT_SIZE_AFTER_DOT);
                 break;
             default:
