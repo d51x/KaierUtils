@@ -26,6 +26,8 @@ import static ru.d51x.kaierutils.utils.UiUtils.updateCoolantTemperatureIcon;
 import static ru.d51x.kaierutils.utils.UiUtils.updateCoolantTemperatureText;
 import static ru.d51x.kaierutils.utils.UiUtils.updateCvtTemperatureIcon;
 import static ru.d51x.kaierutils.utils.UiUtils.updateCvtTemperatureText;
+import static ru.d51x.kaierutils.utils.UiUtils.updateDistanceText;
+import static ru.d51x.kaierutils.utils.UiUtils.updateFuelConsumptionText;
 import static ru.d51x.kaierutils.utils.UiUtils.updateFuelLevelText;
 import static ru.d51x.kaierutils.utils.UiUtils.updateSpeedIcon;
 import static ru.d51x.kaierutils.utils.UiUtils.updateSpeedText;
@@ -125,48 +127,22 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 
-        tvBatteryLevel.setText("--");
-        tvCoolantTemp.setText("--");
-        tvCvtTemperature.setText("--");
-        tvFuelLevel.setText("--");
-        tvSpeed.setText("--");
-        tvTrip.setText("---.-");
-        tvFuelConsump.setText("--.-");
+        updateSpeedText(tvSpeed, App.obd.can.engine.getSpeed(), App.GS.ui.isColorSpeed);
+        updateSpeedIcon(ivSpeed, App.obd.can.engine.getSpeed());
 
-        if (App.obd.can.engine.getSpeed() > 0) {
-            updateSpeedText(tvSpeed, App.obd.can.engine.getSpeed(), true);
-            updateSpeedIcon(ivSpeed, App.obd.can.engine.getSpeed());
-        }
+        updateBatteryLevelText(tvBatteryLevel, App.obd.can.engine.getVoltage());
+        updateBatteryLevelIcon(ivBatteryLevel, App.obd.can.engine.getVoltage());
 
-        if (App.obd.can.engine.getVoltage() > 0) {
-            updateBatteryLevelText(tvBatteryLevel, App.obd.can.engine.getVoltage());
-            updateBatteryLevelIcon(ivBatteryLevel, App.obd.can.engine.getVoltage());
-        }
+        updateCvtTemperatureText(tvCvtTemperature, App.obd.can.cvt.getTemperature());
+        updateCvtTemperatureIcon(ivCvtTemperature, App.obd.can.cvt.getTemperature());
 
-        if (App.obd.can.cvt.getTemperature() > -255) {
-            updateCvtTemperatureText(tvCvtTemperature, App.obd.can.cvt.getTemperature());
-            updateCvtTemperatureIcon(ivCvtTemperature, App.obd.can.cvt.getTemperature());
-        }
+        updateCoolantTemperatureText(tvCoolantTemp, (float)App.obd.can.engine.getCoolantTemperature());
+        updateCoolantTemperatureIcon(ivCoolantTemp, (float)App.obd.can.engine.getCoolantTemperature());
 
-        if (App.obd.can.engine.getCoolantTemperature() > -255) {
-            updateCoolantTemperatureText(tvCoolantTemp, (float)App.obd.can.engine.getCoolantTemperature());
-            updateCoolantTemperatureIcon(ivCoolantTemp, (float)App.obd.can.engine.getCoolantTemperature());
-        }
+        updateFuelLevelText(tvFuelLevel, App.obd.can.meter.getFuelLevel());
+        updateDistanceText(tvTrip, App.obd.todayTrip.distance);
+        updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
 
-        if (App.obd.can.meter.getFuelLevel() > 0 && App.obd.can.meter.getFuelLevel() < 67) {
-            updateFuelLevelText(tvFuelLevel, App.obd.can.meter.getFuelLevel());
-        }
-        //if (App.obd.oneTrip.distance > 0) {
-        if (App.obd.todayTrip.distance > 0) {
-            //tvTrip.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.distance).replace(",", "."));
-            tvTrip.setText(String.format(context.getString(R.string.text_distance), App.obd.todayTrip.distance)
-                    .replace(",", "."));
-        }
-        if (App.obd.oneTrip.fuel_cons_lp100km_avg > 0) {
-            TextViewToSpans(tvFuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
-            tvFuelConsump.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.fuel_cons_lp100km_avg)
-                    .replace(",", "."));
-        }
 //        if (App.obd.oneTrip.fuel_cons_lph > 0) {
 //            TextViewToSpans(tvFuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
 //            tvFuelConsump.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.fuel_cons_lph));
@@ -185,18 +161,10 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                 public void onReceive(Context context, Intent intent) {
                     String action = intent.getAction();
                     if (action.equals(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED)) {
-                        tvCoolantTemp.setText(String.format(context.getString(R.string.text_obd_coolant_temp_f), intent.getStringExtra("coolantTemp")));
+                        updateCoolantTemperatureText(tvCoolantTemp, intent.getFloatExtra("coolantTempD", -255));
                     }
                     else if (action.equals(OBD_BROADCAST_ACTION_MAF_CHANGED)) {
-                        if (App.obd.oneTrip.fuel_cons_lp100km_avg > 0) {
-                            TextViewToSpans(tvFuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg)
-                                    .replace(",", "."),
-                                    TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
-                            tvFuelConsump.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.fuel_cons_lp100km_avg)
-                                    .replace(",", "."));
-                        } else {
-                            tvFuelConsump.setText("--.-");
-                        }
+                        updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
                     }
                     else if (action.equals(ACTION_OBD_ENGINE_2101_CHANGED)) {
                         EngineData engine = (EngineData) intent.getSerializableExtra("obd_engine_2101");
@@ -234,14 +202,9 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                     }
                     else if (action.equals(ACTION_OBD_METER_21AE_CHANGED)) {
                         CombineMeterData meter = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AE);
-                        //if (App.obd.oneTrip.distance > 0) {
-                        if (App.obd.todayTrip.distance > 0) {
-                            //tvTrip.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.distance).replace(",", "."));
-                            tvTrip.setText(String.format(context.getString(R.string.text_distance),
-                                    App.obd.todayTrip.distance).replace(",", "."));
-                        } else {
-                            tvTrip.setText("---.-");
-                        }
+                        // App.obd.oneTrip.distance - текущая поездка
+                        // App.obd.todayTrip.distance - общая поездка за день
+                        updateDistanceText(tvTrip, App.obd.todayTrip.distance);
                     }
                     else if (action.equals(ACTION_OBD_CLIMATE_2113_CHANGED)) {
                         ClimateData climate = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2113);

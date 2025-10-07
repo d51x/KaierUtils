@@ -55,8 +55,6 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_SPEED_CH
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_STATUS_CHANGED;
 import static ru.d51x.kaierutils.utils.UiUtils.TEXT_SIZE_AFTER_DOT;
 import static ru.d51x.kaierutils.utils.UiUtils.TEXT_SIZE_BEFORE_DOT;
-import static ru.d51x.kaierutils.utils.UiUtils.TEXT_SIZE_BEFORE_DOT_2;
-import static ru.d51x.kaierutils.utils.UiUtils.TEXT_SIZE_BEFORE_DOT_3;
 import static ru.d51x.kaierutils.utils.UiUtils.TextViewToSpans;
 import static ru.d51x.kaierutils.utils.UiUtils.updateBatteryLevelIcon;
 import static ru.d51x.kaierutils.utils.UiUtils.updateBatteryLevelText;
@@ -74,6 +72,10 @@ import static ru.d51x.kaierutils.utils.UiUtils.updateCoolantTemperatureText;
 import static ru.d51x.kaierutils.utils.UiUtils.updateCvtOilDegradationIcon;
 import static ru.d51x.kaierutils.utils.UiUtils.updateCvtTemperatureIcon;
 import static ru.d51x.kaierutils.utils.UiUtils.updateCvtTemperatureText;
+import static ru.d51x.kaierutils.utils.UiUtils.updateDistanceText;
+import static ru.d51x.kaierutils.utils.UiUtils.updateFuelConsumptionText;
+import static ru.d51x.kaierutils.utils.UiUtils.updateFuelConsumptionText2;
+import static ru.d51x.kaierutils.utils.UiUtils.updateFuelConsumptionText3;
 import static ru.d51x.kaierutils.utils.UiUtils.updateFuelLevelText;
 import static ru.d51x.kaierutils.utils.UiUtils.updateSpeedIcon;
 import static ru.d51x.kaierutils.utils.UiUtils.updateSpeedText;
@@ -494,7 +496,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
     public void updataData() {
-        updateOBD_FuelTank(App.obd.totalTrip.fuel_remains);
+        saveFuelTankToStorage(App.obd.totalTrip.fuel_remains);
 
 
 	}
@@ -835,16 +837,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.GS.gpsData.maxSpeed));
 
                     if (App.obd.newDistanceCalc) {
-                        //tvDistance.setText(App.obd.oneTrip.distance > 0 ?
-                        tvDistance.setText(App.obd.todayTrip.distance > 0 ?
-                                //String.format(getString(R.string.text_distance), App.obd.oneTrip.distance)
-                                String.format(getString(R.string.text_distance), App.obd.todayTrip.distance)
-                                        .replace(",", ".")
-                                : "----.-");
+                        updateDistanceText(tvDistance, App.obd.todayTrip.distance);
                     } else {
                         float dist = App.GS.gpsData.totalDistance / 1000;
-                        tvDistance.setText(dist > 0 ? String.format(getString(R.string.text_gps_distance), dist)
-                                .replace(",", ".") : "----.-");
+                        updateDistanceText(tvDistance, dist);
                     }
                     showFormatedTrackTime(App.GS.gpsData.timeAtWayType);
 
@@ -897,8 +893,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     updateOBD_CoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
                     break;
                 case OBD_BROADCAST_ACTION_MAF_CHANGED:
-                    updateOBD_FuelConsump(App.obd.oneTrip.fuel_cons_lph);
-                    updateOBD_FuelTank(App.obd.totalTrip.fuel_remains);
+                    saveFuelConsumptionToStorage(App.obd.oneTrip.fuel_cons_lph);
+                    saveFuelTankToStorage(App.obd.totalTrip.fuel_remains);
                     break;
                 case OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED:
 
@@ -972,7 +968,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     break;
                 case ACTION_OBD_METER_21A3_CHANGED: {
                         CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A3);
-                        updateOBD_FuelTank(meterData.getFuelLevel());
+                        saveFuelTankToStorage(meterData.getFuelLevel());
                     }
                     break;
                 case ACTION_OBD_METER_21AD_CHANGED: {
@@ -984,12 +980,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AE);
                     // tripA tripB
                         if (App.obd.newDistanceCalc) {
-                            //tvDistance.setText(App.obd.oneTrip.distance > 0 ?
-                            tvDistance.setText(App.obd.todayTrip.distance > 0 ?
-                                    //String.format(getString(R.string.text_distance), App.obd.oneTrip.distance)
-                                    String.format(getString(R.string.text_distance), App.obd.todayTrip.distance)
-                                            .replace(",", ".")
-                                    : "----.-");
+                            updateDistanceText(tvDistance, App.obd.todayTrip.distance);
                         }
                     }
                     break;
@@ -1302,13 +1293,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         switch (mode) {
             case 0:
-                if ( App.obd.MMC_CAN && App.obd.can.can_mmc_cvt_temp_show && temperature > -255) {
+                if ( App.obd.MMC_CAN && App.obd.can.can_mmc_cvt_temp_show) {
                     updateCvtTemperatureText(tvOBD_CVT_Data, temperature);
                     updateCvtTemperatureIcon(ivOBD_CVT_Data, temperature);
                 }
                 break;
             case 1:
-                if ( App.obd.MMC_CAN && App.obd.can.can_mmc_cvt_degr_show && degr > -255) {
+                if ( App.obd.MMC_CAN && App.obd.can.can_mmc_cvt_degr_show) {
                     updateCvtTemperatureText(tvOBD_CVT_Data, degr);
                     updateCvtOilDegradationIcon(ivOBD_CVT_Data, degr);
                 }
@@ -1320,27 +1311,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
         }
     }
 
-    public void updateOBD_FuelTank(float remain){
-//        if ( remain < 20 ) {
-//            ivOBD_FuelTank.setImageResource( R.drawable.fuel_tank_min);
-//        } else {
-//            ivOBD_FuelTank.setImageResource( R.drawable.fuel_tank_full);
-//        }
-        //tvOBD_FuelTank.setText( String.format("%1$.1f", tank));
-        //tvOBD_FuelTank.setText( String.format("%1$.1f", remain));
+    public void saveFuelTankToStorage(float remain){
         show_fuel_tank_data(modeFuelTank);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
         prefs.edit().putInt("kaierutils_modeFuelTank", modeFuelTank).apply();
-
     }
 
-    public void updateOBD_FuelConsump(float consump){
-//        if ( consump < 9 ) {
-//            ivOBD_FuelConsump.setImageResource( R.drawable.fuel_consump_min);
-//        } else {
-//            ivOBD_FuelConsump.setImageResource( R.drawable.fuel_consump_max);
-//        }
-        //tvOBD_FuelConsump.setText( String.format("%1$.1f", consump));
+    public void saveFuelConsumptionToStorage(float consump){
         show_fuel_consumption(modeFuelConsump);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
         prefs.edit().putInt("kaierutils_modeFuelConsump", modeFuelConsump).apply();
@@ -1413,7 +1390,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     public void onClick(DialogInterface dialog, int which) {
                         App.obd.setCustomTank(Float.parseFloat(etFuelTankCapacity.getText().toString()),
                                 Float.parseFloat(etFuelTankRemain.getText().toString()));
-                        updateOBD_FuelTank(App.obd.totalTrip.fuel_remains);
+                        saveFuelTankToStorage(App.obd.totalTrip.fuel_remains);
                     }
                 });
 
@@ -1531,33 +1508,17 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private void show_fuel_consumption(int mode) {
         switch (mode) {
             case 0:
-                TextViewToSpans(tvOBD_FuelConsump,
-                        String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst)
-                                .replace(",", "."),
-                        TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+                updateFuelConsumptionText(tvOBD_FuelConsump, App.obd.oneTrip.fuel_cons_lp100km_inst);
                 break;
             case 1:
-                TextViewToSpans(tvOBD_FuelConsump,
-                        String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg)
-                                .replace(",", "."),
-                        TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+                updateFuelConsumptionText(tvOBD_FuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
                 break;
             case 2:
-                TextViewToSpans(tvOBD_FuelConsump,
-                        String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph)
-                                .replace(",", "."),
-                        TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+                updateFuelConsumptionText(tvOBD_FuelConsump, App.obd.oneTrip.fuel_cons_lph);
                 break;
             case 3:
-                TextViewToSpans(tvOBD_FuelConsump,
-                        String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg)
-                                .replace(",", "."),
-                        TEXT_SIZE_BEFORE_DOT_2, TEXT_SIZE_AFTER_DOT);
-
-                TextViewToSpans(tvOBD_FuelConsump2,
-                        String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst)
-                                .replace(",", "."),
-                        TEXT_SIZE_BEFORE_DOT_3, TEXT_SIZE_AFTER_DOT);
+                updateFuelConsumptionText2(tvOBD_FuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
+                updateFuelConsumptionText3(tvOBD_FuelConsump2, App.obd.oneTrip.fuel_cons_lp100km_inst);
                 break;
             default:
                 break;
