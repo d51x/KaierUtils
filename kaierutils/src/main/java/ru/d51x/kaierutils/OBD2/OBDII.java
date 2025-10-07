@@ -883,8 +883,8 @@ public class OBDII  {
              */
             SetHeaders(BLOCK_6A0, BLOCK_RX_514, true);
 
-            buffer = requestCanEcu(BLOCK_6A0_PID_21A1, BLOCK_6A0); // speed
-            processObdCommandResult(BLOCK_6A0_PID_21A1, BLOCK_6A0, buffer);
+//            buffer = requestCanEcu(BLOCK_6A0_PID_21A1, BLOCK_6A0); // speed - иногда отдает лажу
+//            processObdCommandResult(BLOCK_6A0_PID_21A1, BLOCK_6A0, buffer);
 
 //            buffer = requestCanEcu(BLOCK_6A0_PID_21A2, BLOCK_6A0); // rpm
 //            processObdCommandResult(BLOCK_6A0_PID_21A2, BLOCK_6A0, buffer);
