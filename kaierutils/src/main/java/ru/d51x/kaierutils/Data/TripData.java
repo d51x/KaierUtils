@@ -138,12 +138,12 @@ public class TripData {
         // использовано топлива
         fuel_usage += usedmaf; // с учетом порстоя
         fuel_usage_for_display +=usedmaf;
-        fuel_cons_lp100km_avg = fuel_usage * 100 / (distance/1000f);
+        fuel_cons_lp100km_avg = fuel_usage * 100 / (distance/1000f) / 1000f;
 
         if ( speed > 2 ) {
             fuel_cons_lp100km_inst = (100 * fuel_cons_lph) / speed;
             fuel_usage_wo_stops += usedmaf;
-            fuel_cons_lp100km_avg_wo_stops = fuel_usage_wo_stops * 100 / (distance/1000f);
+            fuel_cons_lp100km_avg_wo_stops = fuel_usage_wo_stops * 100 / (distance/1000f) / 1000f;
         }
 
         // остаток топлива в баке
