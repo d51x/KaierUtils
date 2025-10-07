@@ -56,29 +56,6 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_STATUS_C
 import static ru.d51x.kaierutils.utils.UiUtils.TEXT_SIZE_AFTER_DOT;
 import static ru.d51x.kaierutils.utils.UiUtils.TEXT_SIZE_BEFORE_DOT;
 import static ru.d51x.kaierutils.utils.UiUtils.TextViewToSpans;
-import static ru.d51x.kaierutils.utils.UiUtils.updateBatteryLevelIcon;
-import static ru.d51x.kaierutils.utils.UiUtils.updateBatteryLevelText;
-import static ru.d51x.kaierutils.utils.UiUtils.updateClimateAcState;
-import static ru.d51x.kaierutils.utils.UiUtils.updateClimateBlowDirection;
-import static ru.d51x.kaierutils.utils.UiUtils.updateClimateBlowMode;
-import static ru.d51x.kaierutils.utils.UiUtils.updateClimateDefogger;
-import static ru.d51x.kaierutils.utils.UiUtils.updateClimateFanMode;
-import static ru.d51x.kaierutils.utils.UiUtils.updateClimateFanSpeed;
-import static ru.d51x.kaierutils.utils.UiUtils.updateClimateRecirculation;
-import static ru.d51x.kaierutils.utils.UiUtils.updateClimateTemperatureIcon;
-import static ru.d51x.kaierutils.utils.UiUtils.updateClimateTemperatureText;
-import static ru.d51x.kaierutils.utils.UiUtils.updateCoolantTemperatureIcon;
-import static ru.d51x.kaierutils.utils.UiUtils.updateCoolantTemperatureText;
-import static ru.d51x.kaierutils.utils.UiUtils.updateCvtOilDegradationIcon;
-import static ru.d51x.kaierutils.utils.UiUtils.updateCvtTemperatureIcon;
-import static ru.d51x.kaierutils.utils.UiUtils.updateCvtTemperatureText;
-import static ru.d51x.kaierutils.utils.UiUtils.updateDistanceText;
-import static ru.d51x.kaierutils.utils.UiUtils.updateFuelConsumptionText;
-import static ru.d51x.kaierutils.utils.UiUtils.updateFuelConsumptionText2;
-import static ru.d51x.kaierutils.utils.UiUtils.updateFuelConsumptionText3;
-import static ru.d51x.kaierutils.utils.UiUtils.updateFuelLevelText;
-import static ru.d51x.kaierutils.utils.UiUtils.updateSpeedIcon;
-import static ru.d51x.kaierutils.utils.UiUtils.updateSpeedText;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -135,6 +112,7 @@ import ru.d51x.kaierutils.Data.EngineData;
 import ru.d51x.kaierutils.Radio.Radio;
 import ru.d51x.kaierutils.TWUtils.TWUtilConst;
 import ru.d51x.kaierutils.TWUtils.TWUtilEx;
+import ru.d51x.kaierutils.utils.UiUtils;
 
 public class MainActivity extends Activity implements View.OnClickListener,
 													  OnLongClickListener{
@@ -218,6 +196,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private FloatingWindow floatingWindow;
 
+    private UiUtils ui = new UiUtils();
 	@SuppressLint("SuspiciousIndentation")
     @Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -591,7 +570,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         switch (v.getId()) {
             case R.id.layout_gps_speed:
                 //color_speed(tvGPSSpeed, App.GS.gpsData.speed);
-                updateSpeedText(tvGPSSpeed, 0, App.GS.ui.isColorSpeed);
+                ui.updateSpeedText(tvGPSSpeed, 0, App.GS.ui.isColorSpeed);
                 App.GS.ui.isColorSpeed = ! App.GS.ui.isColorSpeed;
 	            PreferenceManager.getDefaultSharedPreferences (App.getInstance ()).edit().putBoolean ("kaierutils_show_color_speed", App.GS.ui.isColorSpeed).apply();
                 break;
@@ -829,18 +808,18 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 case GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED: {
                     // TODO: 06.10.2025 select speed type from preferences
                     int speed = intent.getIntExtra("Speed", 0);
-                    updateSpeedIcon(ivSpeed, (float) speed);
-                    updateSpeedText(tvGPSSpeed, speed, App.GS.ui.isColorSpeed);
+                    ui.updateSpeedIcon(ivSpeed, (float) speed);
+                    ui.updateSpeedText(tvGPSSpeed, speed, App.GS.ui.isColorSpeed);
 
 
                     tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.GS.gpsData.averageSpeed));
                     tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.GS.gpsData.maxSpeed));
 
                     if (App.obd.newDistanceCalc) {
-                        updateDistanceText(tvDistance, App.obd.todayTrip.distance);
+                        ui.updateDistanceText(tvDistance, App.obd.todayTrip.distance);
                     } else {
                         float dist = App.GS.gpsData.totalDistance / 1000;
-                        updateDistanceText(tvDistance, dist);
+                        ui.updateDistanceText(tvDistance, dist);
                     }
                     showFormatedTrackTime(App.GS.gpsData.timeAtWayType);
 
@@ -980,7 +959,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AE);
                     // tripA tripB
                         if (App.obd.newDistanceCalc) {
-                            updateDistanceText(tvDistance, App.obd.todayTrip.distance);
+                            ui.updateDistanceText(tvDistance, App.obd.todayTrip.distance);
                         }
                     }
                     break;
@@ -1009,20 +988,20 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 break;
                 case ACTION_OBD_CLIMATE_2160_CHANGED: {
                         ClimateData climateData = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2160);
-                        updateClimateFanMode(ivClimateFanMode, climateData.fan_mode);
-                        updateClimateBlowMode(ivClimateBlowMode, climateData.blow_mode);
+                        ui.updateClimateFanMode(ivClimateFanMode, climateData.fan_mode);
+                        ui.updateClimateBlowMode(ivClimateBlowMode, climateData.blow_mode);
 
-                        updateClimateTemperatureText(tvClimateTemperature, climateData.temperature);
-                        updateClimateTemperatureIcon(ivClimateTemperature, climateData.temperature);
+                        ui.updateClimateTemperatureText(tvClimateTemperature, climateData.temperature);
+                        ui.updateClimateTemperatureIcon(ivClimateTemperature, climateData.temperature);
                     }
                     break;
                 case ACTION_OBD_CLIMATE_2161_CHANGED: {
                         ClimateData climateData = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2161);
-                        updateClimateBlowDirection(ivClimateBlowDirection, climateData.blow_direction);
-                        updateClimateFanSpeed(ivClimateFanSpeed, climateData.fan_speed);
-                        updateClimateAcState(ivClimateAcState, climateData.ac_state);
-                        updateClimateRecirculation(ivClimateRrecirculation, climateData.recirculation_state);
-                        updateClimateDefogger(ivClimateDefogger, climateData.defogger_state);
+                        ui.updateClimateBlowDirection(ivClimateBlowDirection, climateData.blow_direction);
+                        ui.updateClimateFanSpeed(ivClimateFanSpeed, climateData.fan_speed);
+                        ui.updateClimateAcState(ivClimateAcState, climateData.ac_state);
+                        ui.updateClimateRecirculation(ivClimateRrecirculation, climateData.recirculation_state);
+                        ui.updateClimateDefogger(ivClimateDefogger, climateData.defogger_state);
                     }
                     break;
             }
@@ -1257,8 +1236,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
     public void updateOBD_CarBattery(float voltage) {
         if (App.obd.battery_show) {
             layout_battery.setVisibility(View.VISIBLE);
-            updateBatteryLevelIcon(ivOBD_CarBattery, voltage);
-            updateBatteryLevelText(tvOBD_CarBattery, voltage);
+            ui.updateBatteryLevelIcon(ivOBD_CarBattery, voltage);
+            ui.updateBatteryLevelText(tvOBD_CarBattery, voltage);
         } else {
             layout_battery.setVisibility(View.GONE);
         }
@@ -1274,8 +1253,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
             float temp = App.obd.can.engine.getCoolantTemperature();
             ivOBD_CoolantTempFan.setVisibility(((state == CanMmcData.State.on) &&
                             App.obd.MMC_CAN && App.obd.can.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
-            updateCoolantTemperatureIcon(ivOBD_CoolantTemp, temp);
-            updateCoolantTemperatureText(tvOBD_CoolantTemp, temp);
+            ui.updateCoolantTemperatureIcon(ivOBD_CoolantTemp, temp);
+            ui.updateCoolantTemperatureText(tvOBD_CoolantTemp, temp);
         } else {
             layout_temp_data.setVisibility( View.GONE );
         }
@@ -1294,14 +1273,14 @@ public class MainActivity extends Activity implements View.OnClickListener,
         switch (mode) {
             case 0:
                 if ( App.obd.MMC_CAN && App.obd.can.can_mmc_cvt_temp_show) {
-                    updateCvtTemperatureText(tvOBD_CVT_Data, temperature);
-                    updateCvtTemperatureIcon(ivOBD_CVT_Data, temperature);
+                    ui.updateCvtTemperatureText(tvOBD_CVT_Data, temperature);
+                    ui.updateCvtTemperatureIcon(ivOBD_CVT_Data, temperature);
                 }
                 break;
             case 1:
                 if ( App.obd.MMC_CAN && App.obd.can.can_mmc_cvt_degr_show) {
-                    updateCvtTemperatureText(tvOBD_CVT_Data, degr);
-                    updateCvtOilDegradationIcon(ivOBD_CVT_Data, degr);
+                    ui.updateCvtTemperatureText(tvOBD_CVT_Data, degr);
+                    ui.updateCvtOilDegradationIcon(ivOBD_CVT_Data, degr);
                 }
                 break;
             default:
@@ -1508,17 +1487,17 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private void show_fuel_consumption(int mode) {
         switch (mode) {
             case 0:
-                updateFuelConsumptionText(tvOBD_FuelConsump, App.obd.oneTrip.fuel_cons_lp100km_inst);
+                ui.updateFuelConsumptionText(tvOBD_FuelConsump, App.obd.oneTrip.fuel_cons_lp100km_inst);
                 break;
             case 1:
-                updateFuelConsumptionText(tvOBD_FuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
+                ui.updateFuelConsumptionText(tvOBD_FuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
                 break;
             case 2:
-                updateFuelConsumptionText(tvOBD_FuelConsump, App.obd.oneTrip.fuel_cons_lph);
+                ui.updateFuelConsumptionText(tvOBD_FuelConsump, App.obd.oneTrip.fuel_cons_lph);
                 break;
             case 3:
-                updateFuelConsumptionText2(tvOBD_FuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
-                updateFuelConsumptionText3(tvOBD_FuelConsump2, App.obd.oneTrip.fuel_cons_lp100km_inst);
+                ui.updateFuelConsumptionText2(tvOBD_FuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
+                ui.updateFuelConsumptionText3(tvOBD_FuelConsump2, App.obd.oneTrip.fuel_cons_lp100km_inst);
                 break;
             default:
                 break;
@@ -1536,7 +1515,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 case 0:
                     if (App.obd.MMC_CAN && App.obd.can.can_mmc_fuel_remain_show) {
                         // по кан
-                        updateFuelLevelText(tvOBD_FuelTank, App.obd.can.meter.getFuelLevel());
+                        ui.updateFuelLevelText(tvOBD_FuelTank, App.obd.can.meter.getFuelLevel());
                     } else {
                         // вычисляем
                         TextViewToSpans(tvOBD_FuelTank,
@@ -1587,17 +1566,15 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     @SuppressLint("DefaultLocale")
     private void updateClimateData(ClimateData climateData) {
-        updateClimateAcState(ivClimateAcState, climateData.ac_state);
-        updateClimateBlowMode(ivClimateBlowMode, climateData.blow_mode);
-        updateClimateRecirculation(ivClimateRrecirculation, climateData.recirculation_state);
-        updateClimateDefogger(ivClimateDefogger, climateData.defogger_state);
-        updateClimateBlowDirection(ivClimateBlowDirection, climateData.blow_direction);
-
-        updateClimateTemperatureText(tvClimateTemperature, climateData.temperature);
-        updateClimateTemperatureIcon(ivClimateTemperature, climateData.temperature);
-
-        updateClimateFanMode(ivClimateFanMode, climateData.fan_mode);
-        updateClimateFanSpeed(ivClimateFanSpeed, climateData.fan_speed);
+        ui.updateClimateAcState(ivClimateAcState, climateData.ac_state);
+        ui.updateClimateBlowMode(ivClimateBlowMode, climateData.blow_mode);
+        ui.updateClimateRecirculation(ivClimateRrecirculation, climateData.recirculation_state);
+        ui.updateClimateDefogger(ivClimateDefogger, climateData.defogger_state);
+        ui.updateClimateBlowDirection(ivClimateBlowDirection, climateData.blow_direction);
+        ui.updateClimateTemperatureText(tvClimateTemperature, climateData.temperature);
+        ui.updateClimateTemperatureIcon(ivClimateTemperature, climateData.temperature);
+        ui.updateClimateFanMode(ivClimateFanMode, climateData.fan_mode);
+        ui.updateClimateFanSpeed(ivClimateFanSpeed, climateData.fan_speed);
     }
 
     @Override

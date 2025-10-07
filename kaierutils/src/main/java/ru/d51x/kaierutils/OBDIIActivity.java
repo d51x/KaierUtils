@@ -67,6 +67,7 @@ import java.util.Set;
 
 import ru.d51x.kaierutils.Data.CombineMeterData;
 import ru.d51x.kaierutils.Data.CvtData;
+import ru.d51x.kaierutils.utils.UiUtils;
 
 
 public class OBDIIActivity extends Activity implements View.OnClickListener {
@@ -113,7 +114,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
     private TableRow trMMCHeader;
     private TableRow trMMCValues;
-
+    private UiUtils ui = new UiUtils();
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

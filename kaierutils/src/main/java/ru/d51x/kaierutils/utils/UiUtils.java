@@ -34,14 +34,14 @@ public class UiUtils {
 
     //---------------- CVT -------------------------------------------------------------
     @SuppressLint("SetTextI18n")
-    public static void updateCvtTemperatureText(TextView view, int temp) {
+    public void updateCvtTemperatureText(TextView view, int temp) {
         if (temp > -255) {
             view.setText(Integer.toString(temp));
         } else {
             view.setText("--");
         }
     }
-    public static void updateCvtTemperatureIcon(ImageView view, int temp) {
+    public void updateCvtTemperatureIcon(ImageView view, int temp) {
         int imageRes;
         if (temp < 71) {
             imageRes = R.drawable.cvt_temp_min;
@@ -54,20 +54,20 @@ public class UiUtils {
         }
         view.setImageResource(imageRes);
     }
-    public static void updateCvtOilDegradationIcon(ImageView view, int temp) {
+    public void updateCvtOilDegradationIcon(ImageView view, int temp) {
         int imageRes = R.drawable.cvt_degr_nom;
         view.setImageResource(imageRes);
     }
 
     //---------------- BATTERY ----------------------------------------------------------
-    public static void updateBatteryLevelText(TextView view, float voltage) {
+    public void updateBatteryLevelText(TextView view, float voltage) {
         if (voltage > 0) {
             TextViewToSpans(view, String.format("%1$.1f", voltage), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
         } else {
             view.setText("--");
         }
     }
-    public static void updateBatteryLevelIcon(ImageView view, float voltage) {
+    public void updateBatteryLevelIcon(ImageView view, float voltage) {
         if (voltage < 12) {
             view.setImageResource(R.drawable.car_battery_bad);
         } else {
@@ -77,14 +77,14 @@ public class UiUtils {
 
     //--------------- COOLANT ------------------------------------------------------------
     @SuppressLint("StringFormatMatches")
-    public static void updateCoolantTemperatureText(TextView view, float temp) {
+    public void updateCoolantTemperatureText(TextView view, float temp) {
         if (temp > -255) {
             view.setText(String.format(App.getInstance().getApplicationContext().getString(R.string.text_obd_coolant_temp_f), (int)temp));
         } else {
             view.setText("--");
         }
     }
-    public static void updateCoolantTemperatureIcon(ImageView view, float temp) {
+    public void updateCoolantTemperatureIcon(ImageView view, float temp) {
         int res;
         if (temp < 80) {
             res = R.drawable.coolant_temp_min;
@@ -97,7 +97,7 @@ public class UiUtils {
     }
 
     //--------------- FUEL ----------------------------------------------------------------
-    public static void updateFuelLevelText(TextView view, int level) {
+    public void updateFuelLevelText(TextView view, int level) {
         if ( level > 0 && level < 67) {
             view.setText(String.format("%1$s", level));
         } else {
@@ -105,19 +105,19 @@ public class UiUtils {
         }
     }
 
-    public static void updateFuelConsumptionText(TextView view, float consumption) {
+    public void updateFuelConsumptionText(TextView view, float consumption) {
         updateFuelConsumptionTextWithSize(view, consumption, TEXT_SIZE_BEFORE_DOT);
     }
 
-    public static void updateFuelConsumptionText2(TextView view, float consumption) {
+    public void updateFuelConsumptionText2(TextView view, float consumption) {
         updateFuelConsumptionTextWithSize(view, consumption, TEXT_SIZE_BEFORE_DOT_2);
     }
 
-    public static void updateFuelConsumptionText3(TextView view, float consumption) {
+    public void updateFuelConsumptionText3(TextView view, float consumption) {
         updateFuelConsumptionTextWithSize(view, consumption, TEXT_SIZE_BEFORE_DOT_3);
     }
 
-    private static void updateFuelConsumptionTextWithSize(TextView view, float consumption, int size1) {
+    private void updateFuelConsumptionTextWithSize(TextView view, float consumption, int size1) {
         if (consumption > 0) {
             TextViewToSpans(view, String.format("%1$.1f", consumption).replace(",", "."),
                     size1, TEXT_SIZE_AFTER_DOT);
@@ -130,7 +130,7 @@ public class UiUtils {
     }
 
     //---------------- DISTANCE -----------------------------------------------------------
-    public static void updateDistanceText(TextView view, float distance) {
+    public void updateDistanceText(TextView view, float distance) {
         if (distance > 0) {
             view.setText(String.format(App.getInstance().getApplicationContext()
                             .getString(R.string.text_distance),
@@ -141,7 +141,7 @@ public class UiUtils {
     }
 
     //---------------- SPEED ---------------------------------------------------------------
-    public static void updateSpeedText(TextView view, float speed, boolean withColor) {
+    public void updateSpeedText(TextView view, float speed, boolean withColor) {
         view.setText(speed > 0 ? String.format(App.getInstance().getApplicationContext()
                 .getString(R.string.text_gps_speed_value), (int) speed) : "---");
 
@@ -157,7 +157,7 @@ public class UiUtils {
         }
         view.setTextColor( color);
     }
-    public static void updateSpeedIcon(ImageView view, float speed) {
+    public void updateSpeedIcon(ImageView view, float speed) {
         if (speed > 80) {
             view.setImageResource(R.drawable.speedo_2);
         } else {
@@ -166,14 +166,14 @@ public class UiUtils {
     }
 
     //---------------- CLIMATE UTILS --------------------------------------------------------
-    public static void updateClimateTemperatureText(TextView view, float temp) {
+    public void updateClimateTemperatureText(TextView view, float temp) {
         if (temp < 15f || temp > 27f) {
             view.setText("--.-");
         } else {
             TextViewToSpans(view, Float.toString(temp), TEXT_SIZE_BEFORE_DOT_4, TEXT_SIZE_AFTER_DOT);
         }
     }
-    public static void updateClimateTemperatureIcon(ImageView view, float temp){
+    public void updateClimateTemperatureIcon(ImageView view, float temp){
         int res;
         if ( temp < 19f )
             res = R.drawable.ac_temp_blue;
@@ -185,7 +185,7 @@ public class UiUtils {
             res = R.drawable.ac_temp_red;
         view.setImageResource(res);
     }
-    public static void updateClimateBlowDirection(ImageView view, ClimateData.BlowDirection blowDirection) {
+    public void updateClimateBlowDirection(ImageView view, ClimateData.BlowDirection blowDirection) {
         int res;
         switch ( blowDirection ) {
             case face:
@@ -219,7 +219,7 @@ public class UiUtils {
         }
         view.setImageResource( res );
     }
-     public static void updateClimateFanSpeed(ImageView view, ClimateData.FanSpeed fanSpeed) {
+     public void updateClimateFanSpeed(ImageView view, ClimateData.FanSpeed fanSpeed) {
         int res;
         switch ( fanSpeed ) {
             case off:       res = R.drawable.air_wind_seat_my_fan_0; break;
@@ -235,22 +235,22 @@ public class UiUtils {
         }
         view.setImageResource( res );
     }
-    public static void updateClimateFanMode(ImageView view, ClimateData.FanMode fanMode) {
+    public void updateClimateFanMode(ImageView view, ClimateData.FanMode fanMode) {
         view.setVisibility((fanMode == ClimateData.FanMode.auto) ? View.VISIBLE : View.INVISIBLE);
     }
-    public static void updateClimateDefogger(ImageView view, ClimateData.State state){
+    public void updateClimateDefogger(ImageView view, ClimateData.State state){
         view.setVisibility( (state == ClimateData.State.on)  ? View.VISIBLE : View.INVISIBLE );
     }
-    public static void updateClimateRecirculation(ImageView view, ClimateData.State state){
+    public void updateClimateRecirculation(ImageView view, ClimateData.State state){
         view.setVisibility((state == ClimateData.State.on) ? View.VISIBLE : View.INVISIBLE);
     }
-    public static void updateClimateAcState(ImageView view, ClimateData.State state) {
+    public void updateClimateAcState(ImageView view, ClimateData.State state) {
         view.setImageResource((state == ClimateData.State.on) ? R.drawable.air_cond__state_on : R.drawable.air_cond__state_off);
     }
-    public static void updateClimateExteriorTemperature (ImageView view, float temp) {
+    public void updateClimateExteriorTemperature (ImageView view, float temp) {
         // TODO
     }
-    public static void updateClimateBlowMode(ImageView view, ClimateData.BlowMode blowMode){
+    public void updateClimateBlowMode(ImageView view, ClimateData.BlowMode blowMode){
         view.setVisibility((blowMode == ClimateData.BlowMode.auto) ? View.VISIBLE : View.INVISIBLE);
     }
 
