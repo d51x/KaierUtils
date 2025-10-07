@@ -982,6 +982,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         if (App.obd.newDistanceCalc) {
                             tvDistance.setText(App.obd.oneTrip.distance > 0 ?
                                     String.format(getString(R.string.text_distance), App.obd.oneTrip.distance)
+                                            .replace(",", ".")
                                     : "----.-");
                         }
                     }

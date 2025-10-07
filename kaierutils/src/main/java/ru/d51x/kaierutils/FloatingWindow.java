@@ -157,7 +157,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
             updateFuelLevelText(tvFuelLevel, App.obd.can.meter.getFuelLevel());
         }
         if (App.obd.oneTrip.distance > 0) {
-            tvTrip.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.distance));
+            tvTrip.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.distance).replace(",", "."));
         }
         if (App.obd.oneTrip.fuel_cons_lp100km_avg > 0) {
             TextViewToSpans(tvFuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
@@ -228,7 +228,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                     else if (action.equals(ACTION_OBD_METER_21AE_CHANGED)) {
                         CombineMeterData meter = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AE);
                         if (App.obd.oneTrip.distance > 0) {
-                            tvTrip.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.distance));
+                            tvTrip.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.distance).replace(",", "."));
                         } else {
                             tvTrip.setText("---.-");
                         }
