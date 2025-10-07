@@ -79,7 +79,7 @@ public class ObdClimateUtils {
         else blowMode = ClimateData.BlowMode.manual;
         return blowMode;
     }
-    public static double getAcSetTemperature(ArrayList<Integer> buffer) {
+    public static float getAcSetTemperature(ArrayList<Integer> buffer) {
         return buffer.get(2) / 2.0f - 50.0f;
     }
 

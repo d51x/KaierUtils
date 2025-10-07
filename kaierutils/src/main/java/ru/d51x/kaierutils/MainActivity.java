@@ -53,8 +53,22 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_FUEL_CON
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_MAF_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_SPEED_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_STATUS_CHANGED;
+import static ru.d51x.kaierutils.utils.UiUtils.TEXT_SIZE_AFTER_DOT;
+import static ru.d51x.kaierutils.utils.UiUtils.TEXT_SIZE_BEFORE_DOT;
+import static ru.d51x.kaierutils.utils.UiUtils.TEXT_SIZE_BEFORE_DOT_2;
+import static ru.d51x.kaierutils.utils.UiUtils.TEXT_SIZE_BEFORE_DOT_3;
+import static ru.d51x.kaierutils.utils.UiUtils.TextViewToSpans;
 import static ru.d51x.kaierutils.utils.UiUtils.updateBatteryLevelIcon;
 import static ru.d51x.kaierutils.utils.UiUtils.updateBatteryLevelText;
+import static ru.d51x.kaierutils.utils.UiUtils.updateClimateAcState;
+import static ru.d51x.kaierutils.utils.UiUtils.updateClimateBlowDirection;
+import static ru.d51x.kaierutils.utils.UiUtils.updateClimateBlowMode;
+import static ru.d51x.kaierutils.utils.UiUtils.updateClimateDefogger;
+import static ru.d51x.kaierutils.utils.UiUtils.updateClimateFanMode;
+import static ru.d51x.kaierutils.utils.UiUtils.updateClimateFanSpeed;
+import static ru.d51x.kaierutils.utils.UiUtils.updateClimateRecirculation;
+import static ru.d51x.kaierutils.utils.UiUtils.updateClimateTemperatureIcon;
+import static ru.d51x.kaierutils.utils.UiUtils.updateClimateTemperatureText;
 import static ru.d51x.kaierutils.utils.UiUtils.updateCoolantTemperatureIcon;
 import static ru.d51x.kaierutils.utils.UiUtils.updateCoolantTemperatureText;
 import static ru.d51x.kaierutils.utils.UiUtils.updateCvtOilDegradationIcon;
@@ -87,10 +101,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -125,12 +136,6 @@ import ru.d51x.kaierutils.TWUtils.TWUtilEx;
 
 public class MainActivity extends Activity implements View.OnClickListener,
 													  OnLongClickListener{
-
-    private static final int TEXT_SIZE_BEFORE_DOT = 40;
-    private static final int TEXT_SIZE_BEFORE_DOT_2 = 26;
-    private static final int TEXT_SIZE_BEFORE_DOT_3 = 2;
-    private static final int TEXT_SIZE_BEFORE_DOT_4 = 44;
-    private static final int TEXT_SIZE_AFTER_DOT = 16;
 
     private static final int REQUEST_CODE_DRAW_OVERLAY_PERMISSION = 5;
     private static final int REQUEST_CODE_PERMISSION = 6;
@@ -193,17 +198,17 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private TextView tvOBD_FuelConsump;
     private TextView tvOBD_FuelConsump2;
 
-    private ImageView iv_air_fan_speed;
-    private ImageView iv_air_direction;
-    private ImageView iv_air_ac_state;
-    private ImageView iv_air_recirculation;
-    private ImageView iv_air_defogger;
+    private ImageView ivClimateFanSpeed;
+    private ImageView ivClimateBlowDirection;
+    private ImageView ivClimateAcState;
+    private ImageView ivClimateRrecirculation;
+    private ImageView ivClimateDefogger;
 
-    private ImageView iv_ac_blow_auto;
-    private ImageView iv_ac_fan_mode;
-    private ImageView iv_air_temp;
+    private ImageView ivClimateBlowMode;
+    private ImageView ivClimateFanMode;
+    private ImageView ivClimateTemperature;
 
-    private TextView tv_air_cond_temp;
+    private TextView tvClimateTemperature;
 
     private RelativeLayout layout_MMC_climate;
     private ImageButton ibFloatingPanel;
@@ -211,7 +216,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private FloatingWindow floatingWindow;
 
-	@Override
+	@SuppressLint("SuspiciousIndentation")
+    @Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate (savedInstanceState);
         // Убираем заголовок
@@ -376,30 +382,30 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layout_obd_fuel.setOnLongClickListener (this);
         layout_obd_fuel.setOnClickListener (this);
 
-        iv_air_fan_speed = findViewById(R.id.iv_air_fan_speed);
-        iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0);
+        ivClimateFanSpeed = findViewById(R.id.iv_air_fan_speed);
+        ivClimateFanSpeed.setImageResource( R.drawable.air_wind_seat_my_fan_0);
 
-        iv_air_direction = findViewById(R.id.iv_air_direction);
-        iv_air_direction.setImageResource(R.drawable.air_wind_seat_my_to_face);
+        ivClimateBlowDirection = findViewById(R.id.iv_air_direction);
+        ivClimateBlowDirection.setImageResource(R.drawable.air_wind_seat_my_to_face);
 
-        iv_air_ac_state = findViewById(R.id.iv_air_ac_state);
+        ivClimateAcState = findViewById(R.id.iv_air_ac_state);
         //iv_air_ac_state.setVisibility( View.INVISIBLE );
 
-        iv_air_recirculation = findViewById(R.id.iv_air_recirculation);
-        iv_air_recirculation.setVisibility( View.INVISIBLE );
+        ivClimateRrecirculation = findViewById(R.id.iv_air_recirculation);
+        ivClimateRrecirculation.setVisibility( View.INVISIBLE );
 
-        iv_air_defogger = findViewById(R.id.iv_air_defogger);
-        iv_air_defogger.setVisibility( View.INVISIBLE );
+        ivClimateDefogger = findViewById(R.id.iv_air_defogger);
+        ivClimateDefogger.setVisibility( View.INVISIBLE );
 
-        iv_ac_blow_auto = findViewById(R.id.iv_ac_blow_auto);
-        iv_ac_blow_auto.setVisibility( View.INVISIBLE );
+        ivClimateBlowMode = findViewById(R.id.iv_ac_blow_auto);
+        ivClimateBlowMode.setVisibility( View.INVISIBLE );
 
-        iv_ac_fan_mode = findViewById(R.id.iv_ac_fan_mode);
-        iv_ac_fan_mode.setVisibility( View.INVISIBLE );
+        ivClimateFanMode = findViewById(R.id.iv_ac_fan_mode);
+        ivClimateFanMode.setVisibility( View.INVISIBLE );
 
-        iv_air_temp = findViewById(R.id.iv_air_temp);
+        ivClimateTemperature = findViewById(R.id.iv_air_temp);
 
-        tv_air_cond_temp = findViewById(R.id.tv_air_cond_temp);
+        tvClimateTemperature = findViewById(R.id.tv_air_cond_temp);
 
         layout_fuel_consump = findViewById(R.id.layout_fuel_consump);
         layout_fuel_consump.setOnClickListener (this);
@@ -525,7 +531,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         ibFloatingPanel.setVisibility(!App.GS.isShowingFloatingPanel ? View.VISIBLE : View.INVISIBLE);
 
         // обновить данные OBD
-        updateOBD_climate_data(App.obd.can.climate);
+        updateClimateData(App.obd.can.climate);
 	}
 
     @SuppressLint("NonConstantResourceId")
@@ -993,7 +999,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     break;
                 case ACTION_OBD_CLIMATE_2111_CHANGED: {
                     ClimateData climateData = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2111);
-                    updateOBD_air_cond_ext_temperature(climateData.externalTemperature);
+                    //updateClimateExteriorTemperature(climateData.externalTemperature);
                 }
                 break;
                 case ACTION_OBD_CLIMATE_2113_CHANGED: {
@@ -1005,18 +1011,20 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 break;
                 case ACTION_OBD_CLIMATE_2160_CHANGED: {
                         ClimateData climateData = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2160);
-                        updateOBD_air_cond_fan_mode(climateData.fan_mode);
-                        updateOBD_air_cond_blow_mode(climateData.blow_mode);
-                        updateOBD_air_cond_temperature(Double.toString(climateData.temperature));
+                        updateClimateFanMode(ivClimateFanMode, climateData.fan_mode);
+                        updateClimateBlowMode(ivClimateBlowMode, climateData.blow_mode);
+
+                        updateClimateTemperatureText(tvClimateTemperature, climateData.temperature);
+                        updateClimateTemperatureIcon(ivClimateTemperature, climateData.temperature);
                     }
                     break;
                 case ACTION_OBD_CLIMATE_2161_CHANGED: {
                         ClimateData climateData = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2161);
-                        updateOBD_air_cond_blow_direction(climateData.blow_direction);
-                        updateOBD_air_cond_fan_speed(climateData.fan_speed);
-                        updateOBD_air_cond_state(climateData.ac_state);
-                        updateOBD_air_cond_recirculation(climateData.recirculation_state);
-                        updateOBD_air_cond_defogger(climateData.defogger_state);
+                        updateClimateBlowDirection(ivClimateBlowDirection, climateData.blow_direction);
+                        updateClimateFanSpeed(ivClimateFanSpeed, climateData.fan_speed);
+                        updateClimateAcState(ivClimateAcState, climateData.ac_state);
+                        updateClimateRecirculation(ivClimateRrecirculation, climateData.recirculation_state);
+                        updateClimateDefogger(ivClimateDefogger, climateData.defogger_state);
                     }
                     break;
             }
@@ -1516,23 +1524,23 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private void show_fuel_consumption(int mode) {
         switch (mode) {
             case 0:
-                //tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst) );
-                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst),
+                        TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                 break;
             case 1:
-                //tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg) );
-                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg),
+                        TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                 break;
             case 2:
-                //tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph) );
-                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph),
+                        TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                 break;
             case 3:
-                //tvOBD_FuelConsump.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg) );
-                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg), TEXT_SIZE_BEFORE_DOT_2, TEXT_SIZE_AFTER_DOT);
+                TextViewToSpans(tvOBD_FuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_avg),
+                        TEXT_SIZE_BEFORE_DOT_2, TEXT_SIZE_AFTER_DOT);
 
-                //tvOBD_FuelConsump2.setText( String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst) );
-                TextViewToSpans(tvOBD_FuelConsump2, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst), TEXT_SIZE_BEFORE_DOT_3, TEXT_SIZE_AFTER_DOT);
+                TextViewToSpans(tvOBD_FuelConsump2, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lp100km_inst),
+                        TEXT_SIZE_BEFORE_DOT_3, TEXT_SIZE_AFTER_DOT);
                 break;
             default:
                 break;
@@ -1553,7 +1561,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         updateFuelLevelText(tvOBD_FuelTank, App.obd.can.meter.getFuelLevel());
                     } else {
                         // вычисляем
-                        TextViewToSpans(tvOBD_FuelTank, String.format("%1$.1f", App.obd.totalTrip.fuel_remains), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+                        TextViewToSpans(tvOBD_FuelTank,
+                                String.format("%1$.1f", App.obd.totalTrip.fuel_remains), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                     }
 
                     break;
@@ -1563,16 +1572,19 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         // по кан
                         if ( App.obd.can.meter.getFuelLevel() < 0)
                         tvOBD_FuelTank.setText(String.format("%1$s", "--"));
-                        else tvOBD_FuelTank.setText(String.format("%1$s", Math.round(App.obd.can.meter.getFuelLevel() / (App.obd.fuel.getTankCapacity() / 100)))  + "%");
+                        else tvOBD_FuelTank.setText(String.format("%1$s",
+                                Math.round(App.obd.can.meter.getFuelLevel() / (App.obd.fuel.getTankCapacity() / 100)))  + "%");
                     } else {
                         // вычисляем
-                        tvOBD_FuelTank.setText(String.format("%1$.0f", (App.obd.totalTrip.fuel_remains * 100) / App.obd.fuel.getTankCapacity()) + "%");
+                        tvOBD_FuelTank.setText(String.format("%1$.0f",
+                                (App.obd.totalTrip.fuel_remains * 100) / App.obd.fuel.getTankCapacity()) + "%");
                     }
 
 
                     break;
                 case 2:
-                    TextViewToSpans(tvOBD_FuelTank, String.format("%1$.2f", App.obd.oneTrip.fuel_usage), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+                    TextViewToSpans(tvOBD_FuelTank, String.format("%1$.2f", App.obd.oneTrip.fuel_usage),
+                            TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                     break;
                 default:
                     break;
@@ -1595,109 +1607,19 @@ public class MainActivity extends Activity implements View.OnClickListener,
         }
     }
 
-    private void updateOBD_air_cond_fan_speed(ClimateData.FanSpeed fanSpeed) {
-        iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0);
-
-        //switch ( App.obd.climateData.fan_speed ) {
-        switch ( fanSpeed ) {
-            case off:       iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_0); break;
-            case speed1:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_1); break;
-            case speed2:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_2); break;
-            case speed3:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_3); break;
-            case speed4:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_4); break;
-            case speed5:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_5); break;
-            case speed6:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_6); break;
-            case speed7:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_7); break;
-            case speed8:    iv_air_fan_speed.setImageResource( R.drawable.air_wind_seat_my_fan_8); break;
-            default:  break;
-        }
-
-    }
-
-    private void updateOBD_air_cond_fan_mode( ClimateData.FanMode fanMode) {
-        iv_ac_fan_mode.setVisibility((fanMode == ClimateData.FanMode.auto) ? View.VISIBLE : View.INVISIBLE);
-    }
-
-    private void updateOBD_air_cond_temperature(String temp){
-        TextViewToSpans(tv_air_cond_temp, temp, TEXT_SIZE_BEFORE_DOT_4, TEXT_SIZE_AFTER_DOT);
-
-        if ( App.obd.can.climate.temperature < 19f )
-            iv_air_temp.setImageResource(R.drawable.ac_temp_blue);
-        else if ( App.obd.can.climate.temperature < 21f )
-            iv_air_temp.setImageResource(R.drawable.ac_temp_green);
-        else if ( App.obd.can.climate.temperature < 23f )
-            iv_air_temp.setImageResource(R.drawable.ac_temp_orange);
-        else
-            iv_air_temp.setImageResource(R.drawable.ac_temp_red);
-
-    }
-
-    private void updateOBD_air_cond_blow_direction(ClimateData.BlowDirection blowDirection){
-
-        switch ( blowDirection ) {
-            case face:  iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_face); break;
-            case from_face_to_feet_and_face: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_feet_and_face_and_feet); break;
-            case feet_and_face: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_face_and_feet); break;
-            case from_feet_and_face_to_feet: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_face); break;
-            case feet: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_feet); break;
-            case from_feet_to_feet_and_window: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_window); break;
-            case feet_and_window: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_feet_and_window); break;
-            case from_feet_and_window_to_window: iv_air_direction.setImageResource(R.drawable.air_wind_seat_my_to_between_window_and_feet_and_window); break;
-            case window: iv_air_direction.setImageResource( R.drawable.air_wind_seat_my_to_window); break;
-            default:  break;
-        }
-
-    }
-
-    private void updateOBD_air_cond_defogger( ClimateData.State state){
-        //iv_air_defogger.setVisibility( (App.obd.climateData.defogger_state == ClimateData.State.on)  ? View.VISIBLE : View.INVISIBLE );
-        iv_air_defogger.setVisibility( (state == ClimateData.State.on)  ? View.VISIBLE : View.INVISIBLE );
-    }
-
-    private void updateOBD_air_cond_recirculation( ClimateData.State state){
-        //iv_air_recirculation.setVisibility( (App.obd.climateData.recirculation_state == ClimateData.State.on)  ? View.VISIBLE : View.INVISIBLE );
-        iv_air_recirculation.setVisibility((state == ClimateData.State.on) ? View.VISIBLE : View.INVISIBLE);
-    }
-
-    private void updateOBD_air_cond_state( ClimateData.State state) {
-
-        //iv_air_ac_state.setVisibility( (App.obd.climateData.ac_state == ClimateData.State.on) ? View.VISIBLE : View.INVISIBLE );
-        iv_air_ac_state.setImageResource((state == ClimateData.State.on) ? R.drawable.air_cond__state_on : R.drawable.air_cond__state_off);
-
-    }
-
-    private void updateOBD_air_cond_ext_temperature (float temp) {
-        // TODO
-    }
-
-    private void updateOBD_air_cond_blow_mode( ClimateData.BlowMode blowMode){
-        iv_ac_blow_auto.setVisibility((blowMode == ClimateData.BlowMode.auto) ? View.VISIBLE : View.INVISIBLE);
-    }
-
     @SuppressLint("DefaultLocale")
-    private void updateOBD_climate_data(ClimateData climateData) {
-        updateOBD_air_cond_state(climateData.ac_state);
-        updateOBD_air_cond_blow_mode(climateData.blow_mode);
-        updateOBD_air_cond_recirculation(climateData.recirculation_state);
-        updateOBD_air_cond_defogger(climateData.defogger_state);
-        updateOBD_air_cond_blow_direction(climateData.blow_direction);
-        if (( climateData.temperature < 15 ) || ( climateData.temperature > 27 ) )
-            updateOBD_air_cond_temperature( "--.-" ) ;
-        else updateOBD_air_cond_temperature(String.format("%1$.1f", climateData.temperature) ) ;
-        updateOBD_air_cond_fan_mode( climateData.fan_mode);
-        updateOBD_air_cond_fan_speed(climateData.fan_speed);
+    private void updateClimateData(ClimateData climateData) {
+        updateClimateAcState(ivClimateAcState, climateData.ac_state);
+        updateClimateBlowMode(ivClimateBlowMode, climateData.blow_mode);
+        updateClimateRecirculation(ivClimateRrecirculation, climateData.recirculation_state);
+        updateClimateDefogger(ivClimateDefogger, climateData.defogger_state);
+        updateClimateBlowDirection(ivClimateBlowDirection, climateData.blow_direction);
 
-    }
+        updateClimateTemperatureText(tvClimateTemperature, climateData.temperature);
+        updateClimateTemperatureIcon(ivClimateTemperature, climateData.temperature);
 
-    private void TextViewToSpans(TextView tv, String value, int size1, int size2) {
-        String s = value.replace(",", ".");
-        SpannableString ss =  new SpannableString(s);
-        int dot = s.indexOf(".");
-        if ( dot > -1 ) {
-            ss.setSpan(new AbsoluteSizeSpan(size1), 0, dot, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ss.setSpan(new AbsoluteSizeSpan(size2), dot, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        tv.setText(ss);
+        updateClimateFanMode(ivClimateFanMode, climateData.fan_mode);
+        updateClimateFanSpeed(ivClimateFanSpeed, climateData.fan_speed);
     }
 
     @Override
