@@ -11,7 +11,14 @@
     <SwitchPreference
         android:defaultValue="false"
         android:key="kaierutils_auto_start_floating"
-        android:title="@string/menu_general_auto_start_floating" />
+        android:title="@string/menu_general_auto_start_floating"
+        />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="menu_general_show_floating"
+        android:title="@string/menu_general_show_floating"
+        android:summary="@string/menu_general_show_floating_summary"
+        />
     <SwitchPreference
         android:defaultValue="true"
         android:key="kaierutils_floating_window_vertical"

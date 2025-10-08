@@ -17,7 +17,9 @@
 	<!-- general menu -->
 	<string name="menu_general_show_notification_icon_title">Иконка статуса</string>
 	<string name="menu_general_auto_start">Показывать главное окно при включении</string>
-	<string name="menu_general_auto_start_floating">Показывать плавающее окно при включении</string>
+	<string name="menu_general_auto_start_floating">Плавающее окно при запуске</string>
+	<string name="menu_general_show_floating">Показывать плавающее окно</string>
+	<string name="menu_general_show_floating_summary">Показывать плавающее окно при сворачивании приложения</string>
 	<string name="menu_general_floating_window_vertical">Горизонтальная плавающая панель</string>
 	<string name="menu_general_floating_window_vertical_summary">Если не включено, то будет вертикальная</string>
 	<string name="menu_general_hide_header">Скрывать заголовок окна</string>

@@ -4,6 +4,7 @@ import android.preference.PreferenceActivity;
 
 import java.util.List;
 
+import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.R;
 
 public class SettingsActivity extends PreferenceActivity {
@@ -15,5 +16,14 @@ public class SettingsActivity extends PreferenceActivity {
 	@Override
 	protected boolean isValidFragment(String fragmentName) {
 		return true;
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (App.GS.ui.showFloatingOnMinimize) {
+			// hide floating panel
+			App.floatingWindow.dismiss();
+		}
 	}
 }

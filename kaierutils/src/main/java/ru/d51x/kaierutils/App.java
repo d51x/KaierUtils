@@ -29,6 +29,7 @@ public class App extends Application {
 	public static Toast gToast;
 
 	private final static int REQUEST_ENABLE_BT = 1;
+	public static FloatingWindow floatingWindow;
 
 	private WindowManager.LayoutParams mWindowManagerLayoutParams = new WindowManager.LayoutParams();
 	public WindowManager.LayoutParams getWindowManagerLayoutParams() {
@@ -73,6 +74,7 @@ public class App extends Application {
 		mToast = new MusicToast( self );
         sensorsToast = new SensorsToast( self );
         gToast = new Toast( self );
+		floatingWindow = new FloatingWindow(getApplicationContext(), App.GS.ui.floatingWindowVertical);
 	}
 
 }

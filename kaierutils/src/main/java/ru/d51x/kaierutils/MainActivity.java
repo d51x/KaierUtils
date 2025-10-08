@@ -196,7 +196,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private ImageButton ibFloatingPanel;
     private ImageView ivHideFloatingPanel;
 
-    private FloatingWindow floatingWindow;
+
 
     private UiUtils ui = new UiUtils();
 	@SuppressLint("SuspiciousIndentation")
@@ -216,7 +216,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         }
 
         registerReceivers(receiver);
-        floatingWindow = new FloatingWindow(getApplicationContext(), App.GS.ui.floatingWindowVertical);
+        //floatingWindow = new FloatingWindow(getApplicationContext(), App.GS.ui.floatingWindowVertical);
 		initComponents();
 		setInitData();
 
@@ -408,7 +408,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         ibFloatingPanel = findViewById(R.id.ibFloatingPanel);
 
         ibFloatingPanel.setOnClickListener (this);
-        floatingWindow.ivHideFloatingPanel.setOnClickListener(this);
+        App.floatingWindow.ivHideFloatingPanel.setOnClickListener(this);
 	}
 
     @Override
@@ -417,7 +417,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         switch (requestCode) {
             case REQUEST_CODE_DRAW_OVERLAY_PERMISSION:
                 if (Settings.canDrawOverlays(getApplicationContext())) {
-                    floatingWindow.show();
+                    App.floatingWindow.show();
                 } else {
                     Log.e("Main", "Permission is not granted!");
                     Toast.makeText(getApplicationContext(), "Permission is not granted!", LENGTH_LONG).show();
@@ -489,11 +489,21 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 	public void onPause() {
 		super.onPause();
+        if (App.GS.ui.showFloatingOnMinimize) {
+            if (!App.floatingWindow.isShowing()) {
+                App.floatingWindow.show();
+            }
+        }
 	}
 
 	@SuppressLint("SetTextI18n")
     public void onResume() {
 		super.onResume();
+
+        if (App.GS.ui.showFloatingOnMinimize) {
+            // hide floating panel
+            App.floatingWindow.dismiss();
+        }
 
 		tvCurrentVolume.setText(Integer.toString(App.GS.getVolumeLevel()));
 
@@ -516,6 +526,16 @@ public class MainActivity extends Activity implements View.OnClickListener,
         // обновить данные OBD
         updateClimateData(App.obd.can.climate);
 	}
+
+    protected void onDestroy() {
+        if (App.GS.ui.showFloatingOnMinimize) {
+            if (!App.floatingWindow.isShowing()) {
+                App.floatingWindow.show();
+            }
+        }
+        unregisterReceiver(receiver);
+        super.onDestroy();
+    }
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -619,7 +639,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
             case R.id.ivHideFloatingPanel:
                 App.GS.isShowingFloatingPanel = false;
                 App.GS.showFloatingPanelButton = true;
-                floatingWindow.dismiss();
+                App.floatingWindow.dismiss();
                 ibFloatingPanel.setVisibility(View.VISIBLE);
                 ibFloatingPanel.invalidate();
                 break;
@@ -632,8 +652,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private void showFloatingPanel() {
         if (Settings.canDrawOverlays(getApplicationContext())) {
-            if (!floatingWindow.isShowing()) {
-                floatingWindow.show();
+            if (!App.floatingWindow.isShowing()) {
+                App.floatingWindow.show();
             }
         } else {
             startManageDrawOverlaysPermission();
@@ -1019,10 +1039,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
 
-    protected void onDestroy() {
-        unregisterReceiver(receiver);
-        super.onDestroy();
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)

@@ -25,12 +25,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -47,6 +53,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     private WindowManager windowManager;
     private final Context context;
     private final View floatingView;
+
     private final WindowManager.LayoutParams layoutParams;
 
     private boolean isShowing = false;
@@ -141,9 +148,13 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     }
 
     public void show() {
+
         if (Settings.canDrawOverlays(context)) {
             // dismiss();
             isShowing = true;
+            layoutParams.gravity = Gravity.TOP | Gravity.START;
+            layoutParams.x = App.GS.ui.floatingWindowLeft;
+            layoutParams.y = App.GS.ui.floatingWindowTop;
             getWindowManager().addView(floatingView, layoutParams);
 
             receiver = new BroadcastReceiver() {
@@ -268,6 +279,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                 firstY = lastY;
                 break;
             case MotionEvent.ACTION_UP:
+                rememberWindowLocation();
                 v.performClick();
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -292,5 +304,21 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                 break;
         }
         return touchConsumedByMove;
+    }
+
+    private void rememberWindowLocation() {
+        int[] location = new int[2];
+        floatingView.getLocationOnScreen(location);
+        Log.d("FW", "Left: " + location[0] + " Top: " + location[1]);
+        App.GS.ui.floatingWindowLeft = location[0];
+        App.GS.ui.floatingWindowTop = location[1];
+
+        SharedPreferences prefs =
+                PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit()
+                .putInt ("floating_window_left", App.GS.ui.floatingWindowLeft)
+                .putInt ("floating_window_top", App.GS.ui.floatingWindowTop)
+                .apply();
+
     }
 }

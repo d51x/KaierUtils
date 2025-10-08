@@ -12,11 +12,14 @@ public class UiOptions {
     public boolean isAutoStart;
     public boolean isAutoStartFloating;
     public boolean floatingWindowVertical;
+    public boolean showFloatingOnMinimize;
     public boolean isHideHeader;
     public boolean isShowStatistics;
 
     public boolean isColorSpeed = false;
 
+    public int floatingWindowLeft = 0;
+    public int floatingWindowTop = 0;
 
     public UiOptions() {
 
@@ -30,9 +33,11 @@ public class UiOptions {
         isAutoStart = prefs.getBoolean ("kaierutils_auto_start", false);
         isAutoStartFloating = prefs.getBoolean ("kaierutils_auto_start_floating", false);
         floatingWindowVertical = prefs.getBoolean ("kaierutils_floating_window_vertical", false);
+        showFloatingOnMinimize = prefs.getBoolean ("menu_general_show_floating", false);
         isHideHeader = prefs.getBoolean ("kaierutils_hide_header", false);
         isColorSpeed = prefs.getBoolean ("kaierutils_show_color_speed", false);
-        isShowStatistics = prefs.getBoolean ("kaierutils_show_statistics", true);
+        floatingWindowLeft = prefs.getInt ("floating_window_left", 0);
+        floatingWindowTop = prefs.getInt ("floating_window_top", 0);
     }
 
     public void save() {

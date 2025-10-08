@@ -43,6 +43,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 
         // устройство загрузилось, запустим фоновый сервис
 		if ( action.equals (Intent.ACTION_BOOT_COMPLETED ) ) {
+			Log.d("SRV", "Boot completed");
 			context.startService(new Intent(context, BackgroundService.class));
 			if (App.GS.ui.isAutoStart) {
 				Intent mIntent = new Intent(context, MainActivity.class);

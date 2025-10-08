@@ -46,8 +46,11 @@ public class SettingsGeneralFragment extends PreferenceFragment implements Share
 		else if ( key.equals ( "kaierutils_auto_start" ) ) {
 			App.GS.ui.isAutoStart = sharedPreferences.getBoolean ( key, false);
 		}
-		else if (key.equals("isAutoStartFloating")) {
+		else if (key.equals("kaierutils_auto_start_floating")) {
 			App.GS.ui.isAutoStartFloating = sharedPreferences.getBoolean(key, false);
+		}
+		else if (key.equals("menu_general_show_floating")) {
+			App.GS.ui.showFloatingOnMinimize = sharedPreferences.getBoolean(key, false);
 		}
 		else if (key.equals("kaierutils_floating_window_vertical")) {
 			App.GS.ui.floatingWindowVertical = sharedPreferences.getBoolean(key, false);
