@@ -75,6 +75,7 @@ public class OBDII  {
     public MassAirFlowObdCommand MAFObdCommand;
 
     public ObdData obdData;
+    public boolean isServiceCommand = false;
     public boolean activeMAF = false;    // процесс чтения MAF
     public boolean activeOther = true;   // процесс чтения других PID
     public boolean readExtendCvt = false;
@@ -323,6 +324,7 @@ public class OBDII  {
     }
 
      public void newProcessAllData() {
+        if (isServiceCommand) return;
         // новый тип мониторинга без таймеров, просто сплошняком
         // блок 1 - примерно 1000-1200 мсек  без расширенных данных
         processOBD_MAF();
@@ -338,6 +340,7 @@ public class OBDII  {
 
     public void processData() {
         if ( !isConnected ) return;
+        if (isServiceCommand) return;
         //Log.d("OBDII-->processData()", "_");
 
         if ( MMC_CAN )  {
@@ -362,6 +365,7 @@ public class OBDII  {
     }
 
     private void processOBD_EngineRPM() {
+        if (isServiceCommand) return;
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
         activeOther = true;
@@ -393,6 +397,7 @@ public class OBDII  {
     }
 
     private void processOBD_Speed() {
+        if (isServiceCommand) return;
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
         activeOther = true;
@@ -429,6 +434,7 @@ public class OBDII  {
     }
 
     private void processOBD_coolantTemp() {
+        if (isServiceCommand) return;
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
         if ( !engine_temp_show ) return;
@@ -479,6 +485,7 @@ public class OBDII  {
     }
 
     private void processOBD_CMVoltage() {
+        if (isServiceCommand) return;
         if ( activeMAF ) return;
         if ( ! battery_show ) return;
         if ( App.GS.isReverseMode ) return;
@@ -523,6 +530,7 @@ public class OBDII  {
     }
 
     public void processOBD_MAF() {
+        if (isServiceCommand) return;
         //if ( activeOther ) return;
         try {
 
@@ -624,6 +632,10 @@ public class OBDII  {
     }
 
     public boolean resetOilDegradation() {
+        boolean res = false;
+        isServiceCommand = true;
+        sleep(2000);
+
         if (startDiagnosticSession(BLOCK_7E1, BLOCK_RX_7E9)) {
             int seed = requestSeed();
             if (seed > 0) {
@@ -632,14 +644,32 @@ public class OBDII  {
                 buffer = runObdCommand("2702" + Integer.toHexString(skey).toUpperCase(), socket);
                 if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
                     buffer = runObdCommand("3103", socket);
-                    return buffer.get(0) == 0x71 && buffer.get(1) == 0x03;
+                    res = buffer.get(0) == 0x71 && buffer.get(1) == 0x03;
+                    runObdCommand("2110", socket);
                 }
             }
         }
-        return false;
+
+        isServiceCommand = false;
+        return res;
     }
 
+    private void sleep(long ms) {
+        long t = System.currentTimeMillis();
+        while (System.currentTimeMillis() - t < ms) {
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            t = System.currentTimeMillis();
+        }
+    }
     public boolean setServiceReminder(int distance, int period) {
+        boolean res = false;
+        isServiceCommand = true;
+        sleep(2000);
+
         if (startDiagnosticSession(BLOCK_6A0, BLOCK_RX_511)) {
             //int seed = requestSeed();
             //if (seed > 0) {
@@ -653,11 +683,13 @@ public class OBDII  {
                             String.format("%1$02X",period & 0xFF) +
                             "FF";
                     buffer = runObdCommand(cmd, socket);
-                    return buffer.get(0) == 0x71 && buffer.get(1) == 0x06;
+                    res = buffer.get(0) == 0x71 && buffer.get(1) == 0x06;
+                    runObdCommand("21BC", socket);
                 //}
             //}
         }
-        return false;
+        isServiceCommand = false;
+        return res;
     }
 
     private ArrayList<Integer> runObdCommand(String PID, BluetoothSocket sock) {
@@ -778,6 +810,7 @@ public class OBDII  {
     }
 
     private void requestMmcEngine(boolean setHeader, boolean extended){
+        if (isServiceCommand) return;
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
         // set ENGINE ECU addresses
@@ -810,6 +843,7 @@ public class OBDII  {
     }
 
     private void requestMmcCvt(boolean extended){
+        if (isServiceCommand) return;
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
             /* время на выполнение команд max = 1000 ms
@@ -859,6 +893,7 @@ public class OBDII  {
     }
 
     private void requestMmcCombineMeter(boolean extended){
+        if (isServiceCommand) return;
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
 
@@ -918,6 +953,7 @@ public class OBDII  {
     }
 
     private void requestMmcAirCond(boolean extended){
+        if (isServiceCommand) return;
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
 
@@ -966,7 +1002,7 @@ public class OBDII  {
     }
 
     private void requestMmcParkingSensors(){
-        if (activeOther || activeMAF || !App.GS.isReverseMode ) return;
+        if (activeOther || activeMAF || !App.GS.isReverseMode || isServiceCommand) return;
 
         if (App.obd.can.can_mmc_parking_data_show) {
             ArrayList<Integer> buffer;
@@ -977,6 +1013,7 @@ public class OBDII  {
     }
 
     private void requestMmcAwc(){
+        if (isServiceCommand) return;
         if ( activeMAF ) return;
         ArrayList<Integer> buffer = null;
         SetHeaders( "7B6", "7B7", true);
