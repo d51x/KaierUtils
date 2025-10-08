@@ -61,6 +61,7 @@ public class ObdConstants {
     public static final String ACTION_OBD_ENGINE_2101_CHANGED = ACTION_PREFIX + "OBD_ENGINE_2101";
     public static final String ACTION_OBD_ENGINE_2102_CHANGED = ACTION_PREFIX + "OBD_ENGINE_2102";
     public static final String ACTION_OBD_ENGINE_2103_CHANGED = ACTION_PREFIX + "OBD_ENGINE_2103";
+    public static final String ACTION_OBD_ENGINE_2110_CHANGED = ACTION_PREFIX + "OBD_ENGINE_2110";
     public static final String ACTION_OBD_ENGINE_211D_CHANGED = ACTION_PREFIX + "OBD_ENGINE_211D";
     public static final String ACTION_OBD_ENGINE_211E_CHANGED = ACTION_PREFIX + "OBD_ENGINE_211E";
 
@@ -97,7 +98,7 @@ public class ObdConstants {
     public static final int MESSAGE_OBD_ENGINE_2101 = 0x07E02101;
     public static final int MESSAGE_OBD_ENGINE_2102 = 0x07E02102;
     public static final int MESSAGE_OBD_ENGINE_2103 = 0x07E02103;
-    public static final int MESSAGE_OBD_CAN_ENGINE_2110 = 0x07E02110;
+    public static final int MESSAGE_OBD_ENGINE_2110 = 0x07E02110;
     public static final int MESSAGE_OBD_ENGINE_211E = 0x07E0211E;
     public static final int MESSAGE_OBD_ENGINE_211D = 0x07E00001;
 
@@ -141,6 +142,7 @@ public class ObdConstants {
     public static final String KEY_OBD_ENGINE_2101 = "obd_engine_2101";
     public static final String KEY_OBD_ENGINE_2102 = "obd_engine_2102";
     public static final String KEY_OBD_ENGINE_2103 = "obd_engine_2103";
+    public static final String KEY_OBD_ENGINE_2110 = "obd_engine_2110";
     public static final String KEY_OBD_ENGINE_211D = "obd_engine_211D";
     public static final String KEY_OBD_ENGINE_211E = "obd_engine_211E";
 
@@ -150,16 +152,21 @@ public class ObdConstants {
     public static final String KEY_OBD_METER_21A1 = "obd_meter_21A1";
     public static final String KEY_OBD_METER_21A2 = "obd_meter_21A2";
     public static final String KEY_OBD_METER_21A3 = "obd_meter_21A3";
+    public static final String KEY_OBD_METER_21A6 = "obd_meter_21A6";
+    public static final String KEY_OBD_METER_21A8 = "obd_meter_21A8";
     public static final String KEY_OBD_METER_21AD = "obd_meter_21AD";
     public static final String KEY_OBD_METER_21AE = "obd_meter_21AE";
+    public static final String KEY_OBD_METER_21AF = "obd_meter_21AF";
     public static final String KEY_OBD_METER_21BC = "obd_meter_21BC";
 
 
     public static final String KEY_OBD_CLIMATE_2110 = "obd_climate_2110";
     public static final String KEY_OBD_CLIMATE_2111 = "obd_climate_2111";
     public static final String KEY_OBD_CLIMATE_2113 = "obd_climate_2113";
+    public static final String KEY_OBD_CLIMATE_2132 = "obd_climate_2132";
     public static final String KEY_OBD_CLIMATE_2160 = "obd_climate_2160";
     public static final String KEY_OBD_CLIMATE_2161 = "obd_climate_2161";
+    public static final String KEY_OBD_CLIMATE_2180 = "obd_climate_2180";
 
     public static final String KEY_OBD_PARKING_2101 = "obd_parking_2101";
 

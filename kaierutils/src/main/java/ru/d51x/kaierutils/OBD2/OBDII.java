@@ -1,82 +1,6 @@
 package ru.d51x.kaierutils.OBD2;
 
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2110_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2111_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2113_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2132_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2160_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2161_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2180_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CVT_2103_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CVT_2110_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2101_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2102_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2103_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_211D_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A1_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A2_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A3_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A6_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A8_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AD_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AE_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AF_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21BC_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_PARKING_2101_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2110;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2160;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_688_PID_2161;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21A1;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21A3;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21AD;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21AE;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_6A0_PID_21BC;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_763;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_763_PID_2101;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7B6;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E0;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E0_PID_2101;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E0_PID_2102;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E0_PID_211D;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E1;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E1_PID_2103;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_7E1_PID_2110;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_RX_511;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_RX_514;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_RX_7E9;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_PARKING_2101;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2110;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2111;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2113;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2132;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2160;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2161;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CLIMATE_2180;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A1;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A2;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A3;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A6;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21A8;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21AD;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21AE;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21AF;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_COMBINE_METER_21BC;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CVT_2103;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CVT_2110;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_2101;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_2102;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_2103;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_211D;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_211E;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_PARKING_SENSORS;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_MAF_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_SPEED_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_STATUS_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.*;
 import static ru.d51x.kaierutils.utils.MessageUtils.SendBroadcastAction;
 
 import android.Manifest;
@@ -991,17 +915,22 @@ public class OBDII  {
                  App.obd.can.engine.setRpm(((EngineData) message.obj).getRpm());
                  App.obd.can.engine.setVoltage(((EngineData) message.obj).getVoltage());
 
-                 SendBroadcastAction(ACTION_OBD_ENGINE_2101_CHANGED, "obd_engine_2101", (EngineData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_ENGINE_2101_CHANGED, KEY_OBD_ENGINE_2101, (EngineData) message.obj);
                  break;
              case MESSAGE_OBD_ENGINE_2102:
                  App.obd.can.engine.setCoolantTemperature(((EngineData) message.obj).getCoolantTemperature());
 
-                 SendBroadcastAction(ACTION_OBD_ENGINE_2102_CHANGED, "obd_engine_2102", (EngineData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_ENGINE_2102_CHANGED, KEY_OBD_ENGINE_2102, (EngineData) message.obj);
                  break;
              case MESSAGE_OBD_ENGINE_2103:
                  App.obd.can.engine.setAirFlowSensor(((EngineData) message.obj).getAirFlowSensor());
 
-                 SendBroadcastAction(ACTION_OBD_ENGINE_2103_CHANGED, "obd_engine_2103", (EngineData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_ENGINE_2103_CHANGED, KEY_OBD_ENGINE_2103, (EngineData) message.obj);
+                 break;
+             case MESSAGE_OBD_ENGINE_2110:
+                 //App.obd.can.engine.setAcFanRelay(((EngineData) message.obj).isAcFanRelay());
+                 //SendBroadcastAction(ACTION_OBD_ENGINE_2110_CHANGED, KEY_OBD_ENGINE_2110,
+                 //        App.obd.can.engine.isAcFanRelay().ordinal());
                  break;
              case MESSAGE_OBD_ENGINE_211D:
                  App.obd.can.engine.setAcFanRelay(((EngineData) message.obj).isAcFanRelay());
@@ -1011,19 +940,19 @@ public class OBDII  {
              case MESSAGE_OBD_ENGINE_211E:
                  App.obd.can.engine.setFuelPumpRelay(((EngineData) message.obj).isFuelPumpRelay());
 
-                 SendBroadcastAction(ACTION_OBD_CVT_2103_CHANGED, "obd_engine_211E", (EngineData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CVT_2103_CHANGED, KEY_OBD_ENGINE_211E, (EngineData) message.obj);
                  break;
 
              // *********************** CVT ***********************************
              case MESSAGE_OBD_CVT_2103:
                  App.obd.can.cvt.setTemperature(((CvtData) message.obj).getTemperature());
-                 SendBroadcastAction(ACTION_OBD_CVT_2103_CHANGED, "obd_cvt_2103", (CvtData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CVT_2103_CHANGED, KEY_OBD_CVT_2103, (CvtData) message.obj);
                  break;
              case MESSAGE_OBD_CVT_2110:
                  App.obd.can.cvt.setOilDegradation(((CvtData) message.obj).getOilDegradation());
                  App.obd.can.cvt.setWorkHoursHot(((CvtData) message.obj).getWorkHoursHot());
                  App.obd.can.cvt.setWorkHoursTotal(((CvtData) message.obj).getWorkHoursTotal());
-                 SendBroadcastAction(ACTION_OBD_CVT_2110_CHANGED, "obd_cvt_2110", (CvtData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CVT_2110_CHANGED, KEY_OBD_CVT_2110, (CvtData) message.obj);
                  break;
 
 
@@ -1035,81 +964,81 @@ public class OBDII  {
                  App.obd.can.climate.coolantTemperature = ((ClimateData) message.obj).coolantTemperature;
                  App.obd.can.climate.airThermoSensor = ((ClimateData) message.obj).airThermoSensor;
 
-                 SendBroadcastAction(ACTION_OBD_CLIMATE_2110_CHANGED, "obd_climate_2110", (ClimateData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2110_CHANGED, KEY_OBD_CLIMATE_2110, (ClimateData) message.obj);
                  break;
              case MESSAGE_OBD_CLIMATE_2111:
                  App.obd.can.climate.ambientTemperature = ((ClimateData) message.obj).ambientTemperature;
 
-                 SendBroadcastAction(ACTION_OBD_CLIMATE_2111_CHANGED, "obd_climate_2111", (ClimateData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2111_CHANGED, KEY_OBD_CLIMATE_2111, (ClimateData) message.obj);
                  break;
              case MESSAGE_OBD_CLIMATE_2113:
                  App.obd.can.climate.externalTemperature = ((ClimateData) message.obj).externalTemperature;
                  App.obd.can.climate.engineRpm = ((ClimateData) message.obj).engineRpm;
                  App.obd.can.climate.vehicleSpeed = ((ClimateData) message.obj).vehicleSpeed;
 
-                 SendBroadcastAction(ACTION_OBD_CLIMATE_2113_CHANGED, "obd_climate_2113", (ClimateData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2113_CHANGED, KEY_OBD_CLIMATE_2113, (ClimateData) message.obj);
                  break;
              case MESSAGE_OBD_CLIMATE_2132:
                  App.obd.can.climate.leak = ((ClimateData) message.obj).leak;
                  App.obd.can.climate.leak20 = ((ClimateData) message.obj).leak20;
 
-                 SendBroadcastAction(ACTION_OBD_CLIMATE_2132_CHANGED, "obd_climate_2132", (ClimateData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2132_CHANGED, KEY_OBD_CLIMATE_2132, (ClimateData) message.obj);
                  break;
              case MESSAGE_OBD_CLIMATE_2160:
                  App.obd.can.climate.fan_mode = ((ClimateData) message.obj).fan_mode;
                  App.obd.can.climate.blow_mode = ((ClimateData) message.obj).blow_mode;
                  App.obd.can.climate.temperature = ((ClimateData) message.obj).temperature;
-                 SendBroadcastAction(ACTION_OBD_CLIMATE_2160_CHANGED, "obd_climate_2160", (ClimateData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2160_CHANGED, KEY_OBD_CLIMATE_2160, (ClimateData) message.obj);
                  break;
              case MESSAGE_OBD_CLIMATE_2161:
                  App.obd.can.climate.blow_direction = ((ClimateData) message.obj).blow_direction;
                  App.obd.can.climate.fan_speed = ((ClimateData) message.obj).fan_speed;
                  App.obd.can.climate.ac_state = ((ClimateData) message.obj).ac_state;
                  App.obd.can.climate.defogger_state = ((ClimateData) message.obj).defogger_state;
-                  SendBroadcastAction(ACTION_OBD_CLIMATE_2161_CHANGED, "obd_climate_2161", (ClimateData) message.obj);
+                  SendBroadcastAction(ACTION_OBD_CLIMATE_2161_CHANGED, KEY_OBD_CLIMATE_2161, (ClimateData) message.obj);
                  break;
              case MESSAGE_OBD_CLIMATE_2180:
                  App.obd.can.climate.condSysWorkTime = ((ClimateData) message.obj).condSysWorkTime;
-                 SendBroadcastAction(ACTION_OBD_CLIMATE_2180_CHANGED, "obd_climatee_2180", (ClimateData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_CLIMATE_2180_CHANGED, KEY_OBD_CLIMATE_2180, (ClimateData) message.obj);
                  break;
 
              // ******************* COMBINE METER ***********************************************
              case MESSAGE_OBD_COMBINE_METER_21A1:
                  App.obd.can.meter.setVehicleSpeed(((CombineMeterData) message.obj).getVehicleSpeed());
-                 SendBroadcastAction(ACTION_OBD_METER_21A1_CHANGED, "obd_meter_21A1", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21A1_CHANGED, KEY_OBD_METER_21A1, (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21A2:
                  App.obd.can.meter.setEngineRpm(((CombineMeterData) message.obj).getEngineRpm());
-                 SendBroadcastAction(ACTION_OBD_METER_21A2_CHANGED, "obd_meter_21A2", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21A2_CHANGED, KEY_OBD_METER_21A2, (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21A3:
                  App.obd.can.meter.setFuelLevel(((CombineMeterData) message.obj).getFuelLevel());
-                 SendBroadcastAction(ACTION_OBD_METER_21A3_CHANGED, "obd_meter_21A3", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21A3_CHANGED, KEY_OBD_METER_21A3, (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21A6:
-                 SendBroadcastAction(ACTION_OBD_METER_21A6_CHANGED, "obd_meter_21A6", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21A6_CHANGED, KEY_OBD_METER_21A6, (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21A8:
-                 SendBroadcastAction(ACTION_OBD_METER_21A8_CHANGED, "obd_meter_21A8", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21A8_CHANGED, KEY_OBD_METER_21A8, (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21AD:
                  App.obd.can.meter.setMileage(((CombineMeterData) message.obj).getMileage());
-                 SendBroadcastAction(ACTION_OBD_METER_21AD_CHANGED, "obd_meter_21AD", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21AD_CHANGED, KEY_OBD_METER_21AD, (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21AE:
                  App.obd.can.meter.setTripA(((CombineMeterData) message.obj).getTripA());
                  App.obd.can.meter.setTripB(((CombineMeterData) message.obj).getTripB());
                  distanceCalculation(((CombineMeterData) message.obj).getTripA());
-                 SendBroadcastAction(ACTION_OBD_METER_21AE_CHANGED, "obd_meter_21AE", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21AE_CHANGED, KEY_OBD_METER_21AE, (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21AF:
                  App.obd.can.meter.setVoltage(((CombineMeterData) message.obj).getVoltage());
-                 SendBroadcastAction(ACTION_OBD_METER_21AF_CHANGED, "obd_meter_21AF", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21AF_CHANGED, KEY_OBD_METER_21AF, (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_COMBINE_METER_21BC:
                  App.obd.can.meter.setServiceReminderDistance(((CombineMeterData) message.obj).getServiceReminderDistance());
                  App.obd.can.meter.setServiceReminderPeriod(((CombineMeterData) message.obj).getServiceReminderPeriod());
-                 SendBroadcastAction(ACTION_OBD_METER_21BC_CHANGED, "obd_meter_21BC", (CombineMeterData) message.obj);
+                 SendBroadcastAction(ACTION_OBD_METER_21BC_CHANGED, KEY_OBD_METER_21BC, (CombineMeterData) message.obj);
                  break;
              case MESSAGE_OBD_PARKING_SENSORS:
                  if (Objects.nonNull(message.obj)) {

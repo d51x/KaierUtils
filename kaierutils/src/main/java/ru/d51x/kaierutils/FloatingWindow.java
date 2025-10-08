@@ -6,12 +6,14 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2113_CHANG
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CVT_2103_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2101_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2102_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2110_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A1_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A3_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21AE_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CLIMATE_2113;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CVT_2103;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_2102;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_2110;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A1;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A3;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AE;
@@ -174,6 +176,11 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                         ui.updateCoolantTemperatureIcon(ivCoolantTemp, (float)engine.getCoolantTemperature());
                         //updateOBD_CoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
                     }
+                    else if (action.equals(ACTION_OBD_ENGINE_2110_CHANGED)) {
+                        // TODO: 06.10.2025 select coolant type from preferences
+                        EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_2110);
+                        ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
+                    }
                     else if (action.equals(ACTION_OBD_CVT_2103_CHANGED)) {
                         CvtData cvtData = (CvtData) intent.getSerializableExtra(KEY_OBD_CVT_2103);
                         ui.updateCvtTemperatureText(tvCvtTemperature, cvtData.getTemperature());
@@ -205,6 +212,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
             context.registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_MAF_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2101_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2102_CHANGED));
+            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2110_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_CVT_2103_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21A1_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21A3_CHANGED));

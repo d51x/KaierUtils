@@ -16,6 +16,7 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CVT_2110_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2101_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2102_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2103_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2110_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_211D_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_211E_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_METER_21A1_CHANGED;
@@ -38,6 +39,7 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CVT_2110;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_2101;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_2102;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_2103;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_2110;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_211D;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_211E;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A1;
@@ -906,6 +908,12 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_2103);
                         }
                     break;
+                case ACTION_OBD_ENGINE_2110_CHANGED: {
+                        EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_2110);
+                        saveFuelConsumptionToStorage(App.obd.oneTrip.fuel_cons_lph);
+                        saveFuelTankToStorage(App.obd.totalTrip.fuel_remains);
+                    }
+                    break;
                 case ACTION_OBD_ENGINE_211D_CHANGED: {
                         EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_211D);
                         updateOBD_CoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
@@ -1165,6 +1173,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2101_CHANGED));
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2102_CHANGED));
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2103_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2110_CHANGED));
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_211E_CHANGED));
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_211D_CHANGED));
 
