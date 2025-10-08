@@ -38,6 +38,7 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_SPEED_CH
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_STATUS_CHANGED;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -59,6 +60,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -104,8 +106,15 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TextView tv_can_2110_cvt_oil_degr;
     private TextView tv_can_2103_cvt_temp_count;
 
+    private TextView tvMileage;
+    private TextView tvWorkHoursTotal;
+    private TextView tvServiceReminderDistance;
+    private TextView tvServiceReminderPeriod;
 
-
+    private EditText etServiceReminderDistance;
+    private EditText etServiceReminderPeriod;
+    private Button btnResetDegradation;
+    private Button btnSetServiceReminder;
 
     private TextView tvFuelLevel;
 
@@ -117,6 +126,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TableRow trMMCValues;
     private UiUtils ui = new UiUtils();
     private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @SuppressLint("DefaultLocale")
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -195,6 +205,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 int i = cvtData.getOilDegradation();
                 String s = (i >= 0) ? Integer.toString(i) : "---";
                 tv_can_2110_cvt_oil_degr.setText(String.format(getString(R.string.text_can_2110_cvt_oil_degr), s));
+                tvWorkHoursTotal.setText(String.format("%1$.1f", cvtData.getWorkHoursTotal()));
             }
 
             //Combination meter: fuel level
@@ -203,6 +214,16 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 int i = meterData.getFuelLevel();
                 String s = (i > -1) ? Integer.toString(i) : "---";
                 tvFuelLevel.setText(String.format(getString(R.string.text_obd_can_fuel_level), s));
+            }
+            else if (action.equals(ACTION_OBD_METER_21AD_CHANGED)) {
+                CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A3 );
+                tvMileage.setText(String.format("%1$d", meterData.getMileage()));
+            }
+            else if (action.equals(ACTION_OBD_METER_21BC_CHANGED)) {
+                CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A3 );
+                int i = meterData.getFuelLevel();
+                tvServiceReminderDistance.setText(String.format("%1$d", meterData.getServiceReminderDistance()));
+                tvServiceReminderPeriod.setText(String.format("%1$d", meterData.getServiceReminderPeriod()));
             }
         }
     };
@@ -269,30 +290,30 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_obdii);
 
-        btnSelectDevice = (Button) findViewById(R.id.btnSelectDevice);
+        btnSelectDevice = findViewById(R.id.btnSelectDevice);
         btnSelectDevice.setOnClickListener(this);
-        btnConnect = (Button) findViewById(R.id.btnOBDConnect);
+        btnConnect = findViewById(R.id.btnOBDConnect);
         btnConnect.setOnClickListener(this);
-        btnDisconnect = (Button) findViewById(R.id.btnOBDDisconnect);
+        btnDisconnect = findViewById(R.id.btnOBDDisconnect);
         btnDisconnect.setOnClickListener(this);
-        tvDeviceName = (TextView) findViewById(R.id.tvDeviceName);
-        tvDeviceStatus = (TextView) findViewById(R.id.tvDeviceStatus);
-        tvOBDEngineRPM = (TextView) findViewById(R.id.tvOBDEngineRPM);
-        tvOBDSpeed = (TextView) findViewById(R.id.tvOBD_Speed);
-        tvOBD_CoolantTemp = (TextView) findViewById(R.id.tvOBD_CoolantTemp);
-        tvOBD_FuelUsage = (TextView) findViewById(R.id.tvOBD_FuelUsage);
-        tvOBD_CMUVoltage = (TextView) findViewById(R.id.tvOBD_CMUVoltage);
-        tvGPS_Distanse = (TextView) findViewById(R.id.tvGPS_Distanse);
-        tvOBD_FuelConsumption_lph = (TextView) findViewById(R.id.tvOBD_FuelConsumption_lph);
-        tvOBD_FuelConsumption_mpg = (TextView) findViewById(R.id.tvOBD_FuelConsumption_mpg);
-        tvOBD_FuelConsumption_avg = (TextView) findViewById(R.id.tvOBD_FuelConsumption_avg);
-        tvOBD_FuelConsumption_total = (TextView) findViewById(R.id.tvOBD_FuelConsumption_total);
-        tvOBD_FuelUsageTotal = (TextView) findViewById(R.id.tvOBD_FuelUsageTotal);
+        tvDeviceName = findViewById(R.id.tvDeviceName);
+        tvDeviceStatus = findViewById(R.id.tvDeviceStatus);
+        tvOBDEngineRPM = findViewById(R.id.tvOBDEngineRPM);
+        tvOBDSpeed = findViewById(R.id.tvOBD_Speed);
+        tvOBD_CoolantTemp = findViewById(R.id.tvOBD_CoolantTemp);
+        tvOBD_FuelUsage = findViewById(R.id.tvOBD_FuelUsage);
+        tvOBD_CMUVoltage = findViewById(R.id.tvOBD_CMUVoltage);
+        tvGPS_Distanse = findViewById(R.id.tvGPS_Distanse);
+        tvOBD_FuelConsumption_lph = findViewById(R.id.tvOBD_FuelConsumption_lph);
+        tvOBD_FuelConsumption_mpg = findViewById(R.id.tvOBD_FuelConsumption_mpg);
+        tvOBD_FuelConsumption_avg = findViewById(R.id.tvOBD_FuelConsumption_avg);
+        tvOBD_FuelConsumption_total = findViewById(R.id.tvOBD_FuelConsumption_total);
+        tvOBD_FuelUsageTotal = findViewById(R.id.tvOBD_FuelUsageTotal);
 
 
-        tvOBD_FuelConsumption_today = (TextView) findViewById(R.id.tvOBD_FuelConsumption_today);
-        tvOBD_FuelUsageToday = (TextView) findViewById(R.id.tvOBD_FuelUsageToday);
-        tvGPS_Distanse_Today = (TextView) findViewById(R.id.tvGPS_Distanse_Today);
+        tvOBD_FuelConsumption_today =findViewById(R.id.tvOBD_FuelConsumption_today);
+        tvOBD_FuelUsageToday = findViewById(R.id.tvOBD_FuelUsageToday);
+        tvGPS_Distanse_Today = findViewById(R.id.tvGPS_Distanse_Today);
         tvGPS_Distanse_Total = findViewById(R.id.tvGPS_Distanse_Total);
 
 
@@ -304,6 +325,17 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
         tvFuelLevel = findViewById(R.id.tvFuelLevel);
 
+        tvMileage = findViewById(R.id.tv_can_mileage);
+        tvWorkHoursTotal = findViewById(R.id.tv_can_work_hours_total);
+        tvServiceReminderDistance = findViewById(R.id.tvServiceReminderDistance);
+        tvServiceReminderPeriod = findViewById(R.id.tvServiceReminderPeriod);
+
+        etServiceReminderDistance = findViewById(R.id.etServiceReminderDistance);
+        etServiceReminderPeriod = findViewById(R.id.etServiceReminderPeriod);
+        btnResetDegradation = findViewById(R.id.btnResetDegr);
+        btnResetDegradation.setOnClickListener(this);
+        btnSetServiceReminder = findViewById(R.id.btnServiceReminderSet);
+        btnSetServiceReminder.setOnClickListener(this);
 
         swUseOBD = findViewById(R.id.swUseOBD);
 	    swUseOBD.setOnClickListener(this);
@@ -461,6 +493,14 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
 
                 prefs.edit().putBoolean("ODBII_USE_MMC_CAN", App.obd.MMC_CAN).apply();
+                break;
+            case R.id.btnResetDegr:
+                App.obd.resetOilDegradation();
+                break;
+            case R.id.btnServiceReminderSet:
+                int distance = Integer.parseInt(etServiceReminderDistance.getText().toString());
+                int period = Integer.parseInt(etServiceReminderPeriod.getText().toString());
+                App.obd.setServiceReminder(distance, period);
                 break;
             default:
                 break;

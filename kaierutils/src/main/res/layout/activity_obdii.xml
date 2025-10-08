@@ -567,7 +567,7 @@
                         android:layout_weight="0.25"
                         android:gravity="center"
                         android:text="@string/text_can_2103_cvt_temp_count"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tv_can_work_hours_total"
@@ -696,6 +696,7 @@
                         />
 
                     <Button
+                        android:id="@+id/btnServiceReminderSet"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
@@ -581,6 +582,82 @@ public class OBDII  {
         }
 
 
+    }
+
+
+    private int requestSeed() {
+        ArrayList<Integer> buffer = null;
+        int seed = 0;
+        buffer = runObdCommand("2701", socket);
+        // 2701 ==> 6701 XX XX XX XX (seed)
+        if (buffer.get(0) == 0x67 && buffer.get(1) == 0x01) {
+            seed = buffer.get(2) << 24 | buffer.get(3) << 16 | buffer.get(4) << 8 | buffer.get(5) & 0xFF;
+        }
+        return seed;
+    }
+    private int calculateSKey(int seed)
+    {
+        int b0 = (seed >> 24) & 0xFF;
+        int b1 = (seed >> 16) & 0xFF;
+        int b2 = (seed >> 8) & 0xFF;
+        int b3 = (seed & 0xFF);
+
+        int a =  (((b0 << 8) | b1) << 3) & 0xFFFF;
+        int b = (b2 << 8) | b3;
+
+        int c = (b << 3) & 0xFFFF;
+        int d = (a << 4) & 0xFFFF;
+        int e = (c << 4) & 0xFFFF;
+
+        a = (a + 0x1209 + d) & 0xFFFF;
+        c = (c + 0x1209 + e) & 0xFFFF;
+
+        return a * 0x10000 + c;
+    }
+
+    private boolean startDiagnosticSession(String blokcId, String rxAddr) {
+        ArrayList<Integer> buffer = null;
+        SetHeaders(blokcId, rxAddr, false);
+        buffer = runObdCommand("1092", socket);
+        // 1092 ==> 5092
+        return buffer.get(0) == 0x50 && buffer.get(1) == 0x92;
+    }
+
+    public boolean resetOilDegradation() {
+        if (startDiagnosticSession(BLOCK_7E1, BLOCK_RX_7E9)) {
+            int seed = requestSeed();
+            if (seed > 0) {
+                int skey = calculateSKey(seed);
+                ArrayList<Integer> buffer = null;
+                buffer = runObdCommand("2702" + Integer.toHexString(skey).toUpperCase(), socket);
+                if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
+                    buffer = runObdCommand("3103", socket);
+                    return buffer.get(0) == 0x71 && buffer.get(1) == 0x03;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean setServiceReminder(int distance, int period) {
+        if (startDiagnosticSession(BLOCK_6A0, BLOCK_RX_511)) {
+            //int seed = requestSeed();
+            //if (seed > 0) {
+                //int skey = calculateSKey(seed);
+                ArrayList<Integer> buffer = null;
+                //buffer = runObdCommand("2702" + Integer.toHexString(skey).toUpperCase(), socket);
+                //if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
+                    String cmd = "3106" + String.format("%1$02X",distance & 0xFF) +
+                            String.format("%1$02X",(distance >> 8) & 0xFF) +
+                            "FFFF" +
+                            String.format("%1$02X",period & 0xFF) +
+                            "FF";
+                    buffer = runObdCommand(cmd, socket);
+                    return buffer.get(0) == 0x71 && buffer.get(1) == 0x06;
+                //}
+            //}
+        }
+        return false;
     }
 
     private ArrayList<Integer> runObdCommand(String PID, BluetoothSocket sock) {
