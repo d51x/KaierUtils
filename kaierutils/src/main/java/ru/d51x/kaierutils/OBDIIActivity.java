@@ -495,12 +495,17 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 prefs.edit().putBoolean("ODBII_USE_MMC_CAN", App.obd.MMC_CAN).apply();
                 break;
             case R.id.btnResetDegr:
+                btnResetDegradation.setEnabled(false);
                 App.obd.resetOilDegradation();
+                btnResetDegradation.setEnabled(true);
                 break;
             case R.id.btnServiceReminderSet:
                 int distance = Integer.parseInt(etServiceReminderDistance.getText().toString());
                 int period = Integer.parseInt(etServiceReminderPeriod.getText().toString());
+                btnSetServiceReminder.setEnabled(false);
                 App.obd.setServiceReminder(distance, period);
+                btnSetServiceReminder.setEnabled(true);
+
                 break;
             default:
                 break;
