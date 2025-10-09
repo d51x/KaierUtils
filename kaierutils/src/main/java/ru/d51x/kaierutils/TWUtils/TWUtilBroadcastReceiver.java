@@ -50,10 +50,11 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 				mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(mIntent);
 			} else if (App.GS.ui.isAutoStartFloating) {
-				Intent mIntent = new Intent(context, MainActivity.class);
-				mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				mIntent.putExtra("show_floating", true);
-				context.startActivity(mIntent);
+//				Intent mIntent = new Intent(context, MainActivity.class);
+//				mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//				mIntent.putExtra("show_floating", true);
+//				context.startActivity(mIntent);
+				App.floatingWindow.show();
 			}
 		}
         // устройство выключается
