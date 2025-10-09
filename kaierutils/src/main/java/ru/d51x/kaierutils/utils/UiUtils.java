@@ -121,9 +121,9 @@ public class UiUtils {
         if (consumption > 0) {
             TextViewToSpans(view, String.format("%1$.1f", consumption).replace(",", "."),
                     size1, TEXT_SIZE_AFTER_DOT);
-            view.setText(String.format(App.getInstance().getApplicationContext()
-                            .getString(R.string.text_distance), consumption)
-                    .replace(",", "."));
+//            view.setText(String.format(App.getInstance().getApplicationContext()
+//                            .getString(R.string.text_distance), consumption)
+//                    .replace(",", "."));
         } else {
             view.setText("--.-");
         }
