@@ -29,6 +29,8 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_PARKING_2101_CHANG
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CVT_2103;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CVT_2110;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A3;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AD;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21BC;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED;
@@ -216,11 +218,11 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 tvFuelLevel.setText(String.format(getString(R.string.text_obd_can_fuel_level), s));
             }
             else if (action.equals(ACTION_OBD_METER_21AD_CHANGED)) {
-                CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A3 );
+                CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AD );
                 tvMileage.setText(String.format("%1$d", meterData.getMileage()));
             }
             else if (action.equals(ACTION_OBD_METER_21BC_CHANGED)) {
-                CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A3 );
+                CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21BC );
                 int i = meterData.getFuelLevel();
                 tvServiceReminderDistance.setText(String.format("%1$d", meterData.getServiceReminderDistance()));
                 tvServiceReminderPeriod.setText(String.format("%1$d", meterData.getServiceReminderPeriod()));
