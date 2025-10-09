@@ -132,9 +132,13 @@ public class UiUtils {
     //---------------- DISTANCE -----------------------------------------------------------
     public void updateDistanceText(TextView view, float distance) {
         if (distance > 0) {
-            view.setText(String.format(App.getInstance().getApplicationContext()
-                            .getString(R.string.text_distance),
-                    distance).replace(",", "."));
+            TextViewToSpans(view, String.format(App.getInstance().getApplicationContext()
+                                    .getString(R.string.text_distance), distance)
+                            .replace(",", "."),
+                    TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+//            view.setText(String.format(App.getInstance().getApplicationContext()
+//                            .getString(R.string.text_distance),
+//                    distance).replace(",", "."));
         } else {
             view.setText("---.-");
         }
