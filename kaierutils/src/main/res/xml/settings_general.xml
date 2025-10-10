@@ -20,8 +20,8 @@
         android:summary="@string/menu_general_show_floating_summary"
         />
     <SwitchPreference
-        android:defaultValue="true"
-        android:key="kaierutils_floating_window_vertical"
+        android:defaultValue="false"
+        android:key="floating_window_vertical"
         android:title="@string/menu_general_floating_window_vertical"
         android:summary="@string/menu_general_floating_window_vertical_summary"
         />

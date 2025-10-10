@@ -20,8 +20,8 @@
 	<string name="menu_general_auto_start_floating">Плавающее окно при запуске</string>
 	<string name="menu_general_show_floating">Показывать плавающее окно</string>
 	<string name="menu_general_show_floating_summary">Показывать плавающее окно при сворачивании приложения</string>
-	<string name="menu_general_floating_window_vertical">Горизонтальная плавающая панель</string>
-	<string name="menu_general_floating_window_vertical_summary">Если не включено, то будет вертикальная</string>
+	<string name="menu_general_floating_window_vertical">Вертикальная плавающая панель</string>
+	<string name="menu_general_floating_window_vertical_summary">Если не включено, то будет горизонтальная</string>
 	<string name="menu_floating_window_show_units">Отображать единицы измерения</string>
 	<string name="menu_floating_window_show_units_summary">Отображать единицы измерения на вертикальной плавающей панели</string>
 	<string name="menu_general_hide_header">Скрывать заголовок окна</string>

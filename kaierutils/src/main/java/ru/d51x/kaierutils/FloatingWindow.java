@@ -52,9 +52,9 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
 
     private WindowManager windowManager;
     private final Context context;
-    private final View floatingView;
+    private View floatingView;
 
-    private final WindowManager.LayoutParams layoutParams;
+    private WindowManager.LayoutParams layoutParams;
 
     private boolean isShowing = false;
     private boolean touchConsumedByMove = false;
@@ -68,20 +68,20 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
 
     private TextView tvSpeed;
 
-    private final ImageView ivBatteryLevel;
-    private final TextView tvBatteryLevel;
+    private ImageView ivBatteryLevel;
+    private TextView tvBatteryLevel;
 
     private ImageView ivCoolantTemp;
     private ImageView ivCoolantTempFan;
-    private final TextView tvCoolantTemp;
+    private TextView tvCoolantTemp;
 
-    private final ImageView ivCvtTemperature;
-    private final TextView tvCvtTemperature;
-    private final ImageView ivTrip;
-    private final TextView tvTrip;
-    private final TextView tvFuelConsump;
+    private ImageView ivCvtTemperature;
+    private TextView tvCvtTemperature;
+    private ImageView ivTrip;
+    private TextView tvTrip;
+    private TextView tvFuelConsump;
 
-    private final TextView tvFuelLevel;
+    private TextView tvFuelLevel;
     private TextView tvSpeedUnit;
     private TextView tvCarBatteryUnit;
     private TextView tvCoolantTempUnit;
@@ -97,16 +97,16 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     @SuppressLint("InflateParams")
     public FloatingWindow(Context context, boolean vertical) {
         this.context = context;
-        if (vertical) {
+        init();
+    }
+
+    private void init() {
+        if (App.GS.ui.floatingWindowVertical) {
             floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel_vertical, null);
         } else {
             floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel, null);
         }
-        //floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel, null);
-        floatingView.setOnTouchListener(this);
-
         ivHideFloatingPanel = floatingView.findViewById(R.id.ivHideFloatingPanel);
-        //ibHideFloatingPanel.setOnClickListener (this);
 
         ivCoolantTemp = floatingView.findViewById(R.id.ivOBD_CoolantTemp);
         ivCoolantTempFan = floatingView.findViewById(R.id.ivOBD_CoolantTempFan);
@@ -126,21 +126,15 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         tvFuelLevel = floatingView.findViewById(R.id.tvOBD_FuelTank);
         tvFuelConsump = floatingView.findViewById(R.id.tvFuelConsump);
 
-        if (vertical) {
-            tvSpeedUnit = floatingView.findViewById(R.id.tvSpeedUnit);
-            tvCarBatteryUnit = floatingView.findViewById(R.id.tvCarBatteryUnit);
-            tvCoolantTempUnit = floatingView.findViewById(R.id.tvCoolantTempUnit);
-            tvCvtTempUnit = floatingView.findViewById(R.id.tvCvtTempUnit);
-            tvFuelTankUnit = floatingView.findViewById(R.id.tvFuelTankUnit);
-            tvFuelConsumptionUnit = floatingView.findViewById(R.id.tvFuelConsumptionUnit);
-            tvTripUnit = floatingView.findViewById(R.id.tvTripUnit);
-        }
-
         layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
+
+
+        //floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel, null);
+        floatingView.setOnTouchListener(this);
 
         ui.updateSpeedText(tvSpeed, App.obd.can.engine.getSpeed(), App.GS.ui.isColorSpeed);
         ui.updateSpeedIcon(ivSpeed, App.obd.can.engine.getSpeed());
@@ -158,16 +152,14 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         ui.updateDistanceText(tvTrip, App.obd.todayTrip.distance);
         ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
 
-//        if (App.obd.oneTrip.fuel_cons_lph > 0) {
-//            TextViewToSpans(tvFuelConsump, String.format("%1$.1f", App.obd.oneTrip.fuel_cons_lph), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
-//            tvFuelConsump.setText(String.format(context.getString(R.string.text_distance), App.obd.oneTrip.fuel_cons_lph));
-//        }
-
     }
 
     public void show() {
 
         if (Settings.canDrawOverlays(context)) {
+
+
+
             // dismiss();
             isShowing = true;
             layoutParams.gravity = Gravity.TOP | Gravity.START;
@@ -345,6 +337,15 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     private void showUnits(boolean show) {
         if (!App.GS.ui.floatingWindowVertical) return;
         int visibility = show ? View.VISIBLE : View.INVISIBLE;
+
+        tvSpeedUnit = floatingView.findViewById(R.id.tvSpeedUnit);
+        tvCarBatteryUnit = floatingView.findViewById(R.id.tvCarBatteryUnit);
+        tvCoolantTempUnit = floatingView.findViewById(R.id.tvCoolantTempUnit);
+        tvCvtTempUnit = floatingView.findViewById(R.id.tvCvtTempUnit);
+        tvFuelTankUnit = floatingView.findViewById(R.id.tvFuelTankUnit);
+        tvFuelConsumptionUnit = floatingView.findViewById(R.id.tvFuelConsumptionUnit);
+        tvTripUnit = floatingView.findViewById(R.id.tvTripUnit);
+
         tvSpeedUnit.setVisibility(visibility);
         tvCarBatteryUnit.setVisibility(visibility);
         tvCoolantTempUnit.setVisibility(visibility);

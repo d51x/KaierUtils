@@ -33,7 +33,7 @@ public class UiOptions {
         isNotificationIconShow = prefs.getBoolean ("kaierutils_show_notification_icon", true);
         isAutoStart = prefs.getBoolean ("kaierutils_auto_start", false);
         isAutoStartFloating = prefs.getBoolean ("kaierutils_auto_start_floating", false);
-        floatingWindowVertical = prefs.getBoolean ("kaierutils_floating_window_vertical", false);
+        floatingWindowVertical = prefs.getBoolean ("floating_window_vertical", false);
         showFloatingOnMinimize = prefs.getBoolean ("floating_window_show_on_minimize", false);
         floatingWindowShowUnits = prefs.getBoolean ("floating_window_show_units", true);
         isHideHeader = prefs.getBoolean ("kaierutils_hide_header", false);
