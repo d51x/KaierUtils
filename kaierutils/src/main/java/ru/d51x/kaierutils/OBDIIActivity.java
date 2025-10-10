@@ -466,10 +466,10 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         s = ( i > -255 ) ? Integer.toString(i) : "---";
         tv_can_2110_cvt_oil_degr.setText(String.format(getString(R.string.text_can_2110_cvt_oil_degr), s));
 
-        if (App.GS.ui.showFloatingOnMinimize) {
-            // hide floating panel
-            App.floatingWindow.dismiss();
-        }
+//        if (App.GS.ui.showFloatingOnMinimize) {
+//            // hide floating panel
+//            App.floatingWindow.dismiss();
+//        }
     }
 
     @Override

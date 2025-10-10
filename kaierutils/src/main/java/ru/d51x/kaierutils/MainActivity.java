@@ -489,21 +489,21 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 	public void onPause() {
 		super.onPause();
-        if (App.GS.ui.showFloatingOnMinimize) {
-            if (!App.floatingWindow.isShowing()) {
-                App.floatingWindow.show();
-            }
-        }
+//        if (App.GS.ui.showFloatingOnMinimize) {
+//            if (!App.floatingWindow.isShowing()) {
+//                App.floatingWindow.show();
+//            }
+//        }
 	}
 
 	@SuppressLint("SetTextI18n")
     public void onResume() {
 		super.onResume();
 
-        if (App.GS.ui.showFloatingOnMinimize) {
-            // hide floating panel
-            App.floatingWindow.dismiss();
-        }
+//        if (App.GS.ui.showFloatingOnMinimize) {
+//            // hide floating panel
+//            App.floatingWindow.dismiss();
+//        }
 
 		tvCurrentVolume.setText(Integer.toString(App.GS.getVolumeLevel()));
 
@@ -528,11 +528,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	}
 
     protected void onDestroy() {
-        if (App.GS.ui.showFloatingOnMinimize) {
-            if (!App.floatingWindow.isShowing()) {
-                App.floatingWindow.show();
-            }
-        }
+//        if (App.GS.ui.showFloatingOnMinimize) {
+//            if (!App.floatingWindow.isShowing()) {
+//                App.floatingWindow.show();
+//            }
+//        }
         unregisterReceiver(receiver);
         super.onDestroy();
     }
