@@ -24,12 +24,12 @@
             android:src="@drawable/close_small_24px" />
 
         <LinearLayout
+            android:id="@+id/layoutSpeed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:baselineAligned="false"
             android:gravity="center_vertical"
-
             android:orientation="horizontal">
 
             <ImageView
@@ -73,6 +73,7 @@
         <!--        />-->
 
         <LinearLayout
+            android:id="@+id/layoutBatteryLevel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -115,6 +116,7 @@
 
 
             <LinearLayout
+                android:id="@+id/layoutCoolantTemperature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -176,6 +178,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layoutCvtTemperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -216,6 +219,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layoutFuelLevel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -257,6 +261,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layoutFuelConsumption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -315,6 +320,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layoutDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

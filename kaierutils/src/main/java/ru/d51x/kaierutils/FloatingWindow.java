@@ -34,11 +34,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import ru.d51x.kaierutils.Data.ClimateData;
@@ -52,9 +50,9 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
 
     private WindowManager windowManager;
     private final Context context;
-    private View floatingView;
+    private final View floatingView;
 
-    private WindowManager.LayoutParams layoutParams;
+    private final WindowManager.LayoutParams layoutParams;
 
     private boolean isShowing = false;
     private boolean touchConsumedByMove = false;
@@ -82,6 +80,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     private TextView tvFuelConsump;
 
     private TextView tvFuelLevel;
+
     private TextView tvSpeedUnit;
     private TextView tvCarBatteryUnit;
     private TextView tvCoolantTempUnit;
@@ -94,18 +93,58 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     private BroadcastReceiver receiver;
     private UiUtils ui = new UiUtils();
 
+    public boolean showSpeed = true;
+    public boolean showBatteryLevel = true;
+    public boolean showCoolantTemperature = true;
+    public boolean showCvtTemperature = true;
+    public boolean showFuelLevel = true;
+    public boolean showFuelConsumption = true;
+    public boolean showDistance = true;
+
+    private LinearLayout layoutSpeed;
+    private LinearLayout layoutBatteryLevel;
+    private LinearLayout layoutCoolantTemperature;
+    private LinearLayout layoutCvtTemperature;
+    private LinearLayout layoutFuelLevel;
+    private LinearLayout layoutFuelConsumption;
+    private LinearLayout layoutDistance;
     @SuppressLint("InflateParams")
     public FloatingWindow(Context context, boolean vertical) {
         this.context = context;
-        init();
-    }
+        load();
 
-    private void init() {
-        if (App.GS.ui.floatingWindowVertical) {
+        if (vertical) {
             floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel_vertical, null);
         } else {
             floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel, null);
         }
+
+        layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+
+
+        //floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel, null);
+        floatingView.setOnTouchListener(this);
+
+        init();
+    }
+
+    private void load() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        showSpeed = sharedPreferences.getBoolean ( "floating_panel_show_speed", true);
+        showBatteryLevel = sharedPreferences.getBoolean ( "floating_panel_show_battery_level", true);
+        showCoolantTemperature = sharedPreferences.getBoolean ( "floating_panel_show_coolant_temperature", true);
+        showCvtTemperature = sharedPreferences.getBoolean ( "floating_panel_show_cvt_temperature", true);
+        showFuelLevel = sharedPreferences.getBoolean ( "floating_panel_show_fuel_level", true);
+        showFuelConsumption = sharedPreferences.getBoolean ( "floating_panel_show_fuel_consumption", true);
+        showDistance = sharedPreferences.getBoolean ( "floating_panel_show_distance", true);
+    }
+
+    private void init() {
+
         ivHideFloatingPanel = floatingView.findViewById(R.id.ivHideFloatingPanel);
 
         ivCoolantTemp = floatingView.findViewById(R.id.ivOBD_CoolantTemp);
@@ -126,15 +165,15 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         tvFuelLevel = floatingView.findViewById(R.id.tvOBD_FuelTank);
         tvFuelConsump = floatingView.findViewById(R.id.tvFuelConsump);
 
-        layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
+        layoutSpeed = floatingView.findViewById(R.id.layoutSpeed);
+        layoutBatteryLevel = floatingView.findViewById(R.id.layoutBatteryLevel);
+        layoutCoolantTemperature = floatingView.findViewById(R.id.layoutCoolantTemperature);
+        layoutCvtTemperature = floatingView.findViewById(R.id.layoutCvtTemperature);
+        layoutFuelLevel = floatingView.findViewById(R.id.layoutFuelLevel);
+        layoutFuelConsumption = floatingView.findViewById(R.id.layoutFuelConsumption);
+        layoutDistance = floatingView.findViewById(R.id.layoutDistance);
 
 
-        //floatingView = LayoutInflater.from(this.context).inflate(R.layout.floating_panel, null);
-        floatingView.setOnTouchListener(this);
 
         ui.updateSpeedText(tvSpeed, App.obd.can.engine.getSpeed(), App.GS.ui.isColorSpeed);
         ui.updateSpeedIcon(ivSpeed, App.obd.can.engine.getSpeed());
@@ -158,14 +197,22 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
 
         if (Settings.canDrawOverlays(context)) {
 
+            dismiss();
 
-
-            // dismiss();
             isShowing = true;
             layoutParams.gravity = Gravity.TOP | Gravity.START;
             layoutParams.x = App.GS.ui.floatingWindowLeft;
             layoutParams.y = App.GS.ui.floatingWindowTop;
+
             getWindowManager().addView(floatingView, layoutParams);
+
+            showSpeedLayout(showSpeed);
+            showBatteryLevelLayout(showBatteryLevel);
+            showCoolantTempLayout(showCoolantTemperature);
+            showCvtTempLayout(showCvtTemperature);
+            showFuelLevelLayout(showFuelLevel);
+            showFuelConsumptionLayout(showFuelConsumption);
+            showDistanceLayout(showDistance);
 
             showUnits(App.GS.ui.floatingWindowShowUnits);
 
@@ -334,9 +381,36 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
 
     }
 
+    private void showSpeedLayout(boolean show) {
+        layoutSpeed.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    private void showBatteryLevelLayout(boolean show) {
+        layoutBatteryLevel.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    private void showCoolantTempLayout(boolean show) {
+        layoutCoolantTemperature.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    private void showCvtTempLayout(boolean show) {
+        layoutCvtTemperature.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    private void showFuelLevelLayout(boolean show) {
+        layoutFuelLevel.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    private void showFuelConsumptionLayout(boolean show) {
+        layoutFuelConsumption.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+    private void showDistanceLayout(boolean show) {
+        layoutDistance.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
     private void showUnits(boolean show) {
         if (!App.GS.ui.floatingWindowVertical) return;
-        int visibility = show ? View.VISIBLE : View.INVISIBLE;
+        int visibility = show ? View.VISIBLE : View.GONE;
 
         tvSpeedUnit = floatingView.findViewById(R.id.tvSpeedUnit);
         tvCarBatteryUnit = floatingView.findViewById(R.id.tvCarBatteryUnit);

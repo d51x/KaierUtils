@@ -9,10 +9,11 @@
 	<string name="header_reverse_title">Задний ход</string>
 	<string name="header_sleep_wakeup_title">Sleep mode/WakeUp</string>
 	<string name="header_poweramp_title">PowerAmp</string>
-	<string name="header_radio_title">Радио</string>
-	<string name="header_dynamic_volume_title">Динамическая громкость</string>
 	<string name="header_obd_settings_title">Настройки OBD</string>
+	<string name="header_floating_window_title">Плавающая панель</string>
+	<string name="header_radio_title">Радио</string>
 	<string name="header_popup_title">Всплывающее окно</string>
+	<string name="header_popup_summary">Отображение тоаста при переключении радио</string>
 
 	<!-- general menu -->
 	<string name="menu_general_show_notification_icon_title">Иконка статуса</string>
@@ -35,6 +36,16 @@
 	<string name="menu_general_clock_size_title">Размер часов</string>
 	<string name="menu_general_clock_size_summary">Текущее значение %1$d</string>
 	<string name="menu_general_show_eq_summary">Под громкостью отображаются уровни низких, средних, высоких частот</string>
+
+	<!-- Floating Panel -->
+	<string name="menu_category_floating_panel_icons">Отображать показания</string>
+	<string name="menu_floating_panel_icon_speed_title">Скорость</string>
+	<string name="menu_floating_panel_icon_battery_level_title">Заряд аккумулятора</string>
+	<string name="menu_floating_panel_icon_coolant_temp_title">Температура ОЖ</string>
+	<string name="menu_floating_panel_icon_cvt_temp_title">Температура CVT</string>
+	<string name="menu_floating_panel_icon_fuel_level_title">Остаток топлива в баке</string>
+	<string name="menu_floating_panel_icon_fuel_consumption_title">Расход топлива</string>
+	<string name="menu_floating_panel_icon_distance_title">Пройденый путь</string>
 
 	<!-- reverse menu -->
 	<string name="menu_category_reverse_fixed_volume">Фиксированный уровень громкости</string>

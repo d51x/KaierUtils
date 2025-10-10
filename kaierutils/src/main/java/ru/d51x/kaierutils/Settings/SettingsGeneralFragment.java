@@ -53,7 +53,7 @@ public class SettingsGeneralFragment extends PreferenceFragment implements Share
 			App.GS.ui.showFloatingOnMinimize = sharedPreferences.getBoolean(key, false);
 		}
 		else if (key.equals("kaierutils_floating_window_vertical")) {
-			App.GS.ui.floatingWindowVertical = sharedPreferences.getBoolean(key, false);
+			App.GS.ui.floatingWindowVertical = sharedPreferences.getBoolean(key, true);
 		}
 		else if (key.equals("floating_window_show_units")) {
 			App.GS.ui.floatingWindowShowUnits = sharedPreferences.getBoolean(key, true);
