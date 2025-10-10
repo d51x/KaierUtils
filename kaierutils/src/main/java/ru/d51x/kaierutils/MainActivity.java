@@ -283,6 +283,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 		// color speed
         LinearLayout layout_gps_speed = findViewById(R.id.layout_gps_speed);
+		layout_gps_speed.setOnLongClickListener(this);
 		layout_gps_speed.setOnClickListener(this);
 
 		// track time
@@ -542,6 +543,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
     @Override
         public boolean onLongClick(View v) {
             switch (v.getId()) {
+                case R.id.layout_gps_speed:
+                    this.openOptionsMenu();
+                    return true;
                 case R.id.layout_waypoints:
                     App.GS.gpsData.totalDistance = 0;
                     tvDistance.setText( "----.-" );
