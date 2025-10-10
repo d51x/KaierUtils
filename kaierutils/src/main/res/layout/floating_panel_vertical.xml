@@ -53,7 +53,7 @@
                 android:textSize="40sp"
                 android:textStyle="bold" />
             <TextView
-                android:id="@+id/tvSpeedDesc"
+                android:id="@+id/tvSpeedUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -101,7 +101,7 @@
                 android:textSize="40sp"
                 android:textStyle="bold" />
             <TextView
-                android:id="@+id/tvCarBatteryDesc"
+                android:id="@+id/tvCarBatteryUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -244,7 +244,7 @@
                 android:textSize="40sp" />
 
             <TextView
-                android:id="@+id/tvOBD_FuelTank_desc"
+                android:id="@+id/tvFuelTankUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -302,7 +302,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tvFuelConsumpDesc"
+                android:id="@+id/tvFuelConsumptionUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -342,7 +342,7 @@
                 android:textColor="#EEF2F4"
                 android:textSize="40sp" />
             <TextView
-                android:id="@+id/tvTripDesc"
+                android:id="@+id/tvTripUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"

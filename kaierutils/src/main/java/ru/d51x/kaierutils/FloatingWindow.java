@@ -82,6 +82,14 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     private final TextView tvFuelConsump;
 
     private final TextView tvFuelLevel;
+    private final TextView tvSpeedUnit;
+    private final TextView tvCarBatteryUnit;
+    private final TextView tvCoolantTempUnit;
+    private final TextView tvCvtTempUnit;
+    private final TextView tvFuelTankUnit;
+    private final TextView tvFuelConsumptionUnit;
+    private final TextView tvTripUnit;
+
 
     private BroadcastReceiver receiver;
     private UiUtils ui = new UiUtils();
@@ -117,6 +125,16 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         tvCvtTemperature = floatingView.findViewById(R.id.tvOBD_CVT_Data);
         tvFuelLevel = floatingView.findViewById(R.id.tvOBD_FuelTank);
         tvFuelConsump = floatingView.findViewById(R.id.tvFuelConsump);
+
+        if (vertical) {
+            tvSpeedUnit = floatingView.findViewById(R.id.tvSpeedUnit);
+            tvCarBatteryUnit = floatingView.findViewById(R.id.tvCarBatteryUnit);
+            tvCoolantTempUnit = floatingView.findViewById(R.id.tvCoolantTempUnit);
+            tvCvtTempUnit = floatingView.findViewById(R.id.tvCvtTempUnit);
+            tvFuelTankUnit = floatingView.findViewById(R.id.tvFuelTankUnit);
+            tvFuelConsumptionUnit = floatingView.findViewById(R.id.tvFuelConsumptionUnit);
+            tvTripUnit = floatingView.findViewById(R.id.tvTripUnit);
+        }
 
         layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -156,6 +174,8 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
             layoutParams.x = App.GS.ui.floatingWindowLeft;
             layoutParams.y = App.GS.ui.floatingWindowTop;
             getWindowManager().addView(floatingView, layoutParams);
+
+            showUnits(App.GS.ui.floatingWindowShowUnits);
 
             receiver = new BroadcastReceiver() {
                 @Override
@@ -320,5 +340,17 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                 .putInt ("floating_window_top", App.GS.ui.floatingWindowTop)
                 .apply();
 
+    }
+
+    private void showUnits(boolean show) {
+        if (!App.GS.ui.floatingWindowVertical) return;
+        int visibility = show ? View.VISIBLE : View.INVISIBLE;
+        tvSpeedUnit.setVisibility(visibility);
+        tvCarBatteryUnit.setVisibility(visibility);
+        tvCoolantTempUnit.setVisibility(visibility);
+        tvCvtTempUnit.setVisibility(visibility);
+        tvFuelTankUnit.setVisibility(visibility);
+        tvFuelConsumptionUnit.setVisibility(visibility);
+        tvTripUnit.setVisibility(visibility);
     }
 }

@@ -15,7 +15,7 @@
         />
     <SwitchPreference
         android:defaultValue="false"
-        android:key="menu_general_show_floating"
+        android:key="floating_window_show_on_minimize"
         android:title="@string/menu_general_show_floating"
         android:summary="@string/menu_general_show_floating_summary"
         />
@@ -24,6 +24,12 @@
         android:key="kaierutils_floating_window_vertical"
         android:title="@string/menu_general_floating_window_vertical"
         android:summary="@string/menu_general_floating_window_vertical_summary"
+        />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="floating_window_show_units"
+        android:title="@string/menu_floating_window_show_units"
+        android:summary="@string/menu_floating_window_show_units_summary"
         />
     <SwitchPreference
         android:defaultValue="false"
