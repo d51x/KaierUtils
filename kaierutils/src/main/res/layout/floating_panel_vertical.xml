@@ -59,6 +59,7 @@
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="10dp"
                 android:gravity="bottom"
+                android:textColor="#EEF2F4"
                 android:text="км/ч"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="16sp" />
@@ -106,6 +107,7 @@
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="10dp"
                 android:gravity="bottom"
+                android:textColor="#EEF2F4"
                 android:text="V"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="16sp" />
@@ -156,10 +158,21 @@
                 android:gravity="center_vertical"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:text="90°"
+                android:text="90"
                 android:textColor="#EEF2F4"
                 android:textStyle="bold"
                 android:textSize="40sp" />
+                <TextView
+                    android:id="@+id/tvCoolantTempUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="bottom"
+                    android:textColor="#EEF2F4"
+                    android:text="°"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textSize="40sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -175,7 +188,6 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
-
                 android:src="@drawable/cvt_temp_min" />
 
             <TextView
@@ -188,6 +200,18 @@
                 android:text="90°"
                 android:textColor="#EEF2F4"
                 android:textStyle="bold"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/tvCvtTempUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
+                android:gravity="bottom"
+                android:textColor="#EEF2F4"
+                android:text="°"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="40sp" />
         </LinearLayout>
 
@@ -284,6 +308,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="bottom"
                 android:text="л/\n100км"
+                android:textColor="#EEF2F4"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="16sp" />
 
@@ -324,6 +349,7 @@
                 android:layout_marginBottom="10dp"
                 android:gravity="bottom"
                 android:text="км"
+                android:textColor="#EEF2F4"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="16sp" />
         </LinearLayout>
