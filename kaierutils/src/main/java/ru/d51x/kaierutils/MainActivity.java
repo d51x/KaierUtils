@@ -903,7 +903,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 //************ ACTIONS: MMC CAN BLOCK 7E0 - ENGINE ********************************
                 case ACTION_OBD_ENGINE_2101_CHANGED: {
                         EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_2101);
-                        //updateOBD_CarBattery();
                         // speed
                         // TODO: 06.10.2025 select speed type from preferences
                         //updateSpeedText(tvGPSSpeed, engine.getSpeed(), App.GS.ui.isColorSpeed);
@@ -987,7 +986,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AE);
                     // tripA tripB
                         if (App.obd.newDistanceCalc) {
-                            ui.updateDistanceText(tvDistance, App.obd.todayTrip.distance);
+                            ui.updateDistanceTextWithSize(tvDistance, App.obd.todayTrip.distance,
+                                    TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_BEFORE_DOT);
                         }
                     }
                     break;
