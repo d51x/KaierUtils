@@ -82,13 +82,13 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     private final TextView tvFuelConsump;
 
     private final TextView tvFuelLevel;
-    private final TextView tvSpeedUnit;
-    private final TextView tvCarBatteryUnit;
-    private final TextView tvCoolantTempUnit;
-    private final TextView tvCvtTempUnit;
-    private final TextView tvFuelTankUnit;
-    private final TextView tvFuelConsumptionUnit;
-    private final TextView tvTripUnit;
+    private TextView tvSpeedUnit;
+    private TextView tvCarBatteryUnit;
+    private TextView tvCoolantTempUnit;
+    private TextView tvCvtTempUnit;
+    private TextView tvFuelTankUnit;
+    private TextView tvFuelConsumptionUnit;
+    private TextView tvTripUnit;
 
 
     private BroadcastReceiver receiver;
