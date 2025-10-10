@@ -2,45 +2,61 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.SHUTDOWN"
-        tools:ignore="ProtectedPermissions" />
-<!--    <uses-permission android:name="android.permission.GET_TASKS" />-->
+    <uses-permission
+        android:name="android.permission.SHUTDOWN"
+        tools:ignore="ProtectedPermissions" /> <!-- <uses-permission android:name="android.permission.GET_TASKS" /> -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"
+    <uses-permission
+        android:name="android.permission.CHANGE_CONFIGURATION"
         tools:ignore="ProtectedPermissions" />
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"
+    <uses-permission
+        android:name="android.permission.ACCESS_BACKGROUND_LOCATION"
         tools:ignore="BackgroundLocationPolicy" />
-
-    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation"
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation"
         tools:targetApi="31" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30"  />
-	<uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-    <uses-feature android:name="android.hardware.bluetooth" android:required="true"/>
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
 
     <application
         android:name=".App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,13 +67,26 @@
         <service
             android:name=".BackgroundService"
             android:enabled="true"
-            android:exported="false" >
-        </service>
-
+            android:exported="false"/>
+        <activity
+            android:name=".Settings.SettingsActivity"
+            android:exported="true"
+            android:label="@string/header_general_title"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.GeneralSettings" />
+                <category android:name="android.intent.category.PREFERENCE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".OBDIIActivity"
+            android:label="@string/title_activity_obdii"
+            android:launchMode="singleTop" />
         <receiver
             android:name=".TWUtils.TWUtilBroadcastReceiver"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
@@ -67,27 +96,16 @@
                 <action android:name="ru.d51x.kaierutils.action.REVERSE_ACTIVITY_START" />
                 <action android:name="ru.d51x.kaierutils.action.REVERSE_ACTIVITY_FINISH" />
                 <action android:name="ru.d51x.kaierutils.action.RADIO_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".OBD2.ObdBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
                 <action android:name="ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_CHANGED" />
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name=".Settings.SettingsActivity"
-            android:exported="true"
-            android:label="@string/header_general_title"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.GeneralSettings" />
-
-                <category android:name="android.intent.category.PREFERENCE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".OBDIIActivity"
-            android:label="@string/title_activity_obdii"
-            android:launchMode="singleTop" >
-        </activity>
     </application>
 
 </manifest>

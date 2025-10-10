@@ -36,24 +36,20 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 
 		// TODO: надо ли так делать или достаточно при загрузке?
 		// context.startService(new Intent(context, TWUtilService.class));
-		Log.d ("TWUtilBroadcastReceiver", "onReceive ");
+		Log.d (TAG, "onReceive ");
 
 		String action = intent.getAction();
 		DebugLogger.ToLog(TAG, String.format("onReceive(), action %s", action));
 
         // устройство загрузилось, запустим фоновый сервис
 		if ( action.equals (Intent.ACTION_BOOT_COMPLETED ) ) {
-			Log.d("SRV", "Boot completed");
+			Log.d(TAG, "Boot completed");
 			context.startService(new Intent(context, BackgroundService.class));
 			if (App.GS.ui.isAutoStart) {
 				Intent mIntent = new Intent(context, MainActivity.class);
 				mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(mIntent);
 			} else if (App.GS.ui.isAutoStartFloating) {
-//				Intent mIntent = new Intent(context, MainActivity.class);
-//				mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//				mIntent.putExtra("show_floating", true);
-//				context.startActivity(mIntent);
 				App.floatingWindow.show();
 			}
 		}
@@ -137,23 +133,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 				App.rToast.SetRadioText(title, freq);
 				App.rToast.showToast();
 			}
-
-
 		}
-        else if ( action.equals( ACTION_OBD_PARKING_2101_CHANGED )) {
-//            int rear_inner_left = intent.getIntExtra("parking_sensors_rear_left_inner", -1);
-//            int rear_outer_left = intent.getIntExtra("parking_sensors_rear_left_outer", -1);
-//            int rear_inner_right = intent.getIntExtra("parking_sensors_rear_right_inner", -1);
-//            int rear_outer_right = intent.getIntExtra("parking_sensors_rear_right_outer", -1);
-           ArrayList<Integer> buffer = intent.getIntegerArrayListExtra(KEY_OBD_PARKING_2101);
-
-            if ( App.GS.isReverseMode ) {
-                App.sensorsToast.cancel();
-                App.sensorsToast.SetSensors( buffer );
-                App.sensorsToast.showToast();
-            }
-
-        }
 	}
 
 	private void changeVolumeAtReverse() {
