@@ -25,7 +25,6 @@ public class AboutFragment extends Fragment {
     private TextView tvWorkingStart;
     private TextView tvDeviceName;
     private TextView tvProgramVersion;
-    private TextView tvFlavor;
 
     public AboutFragment() {
         // Required empty public constructor
@@ -44,7 +43,6 @@ public class AboutFragment extends Fragment {
         tvWorkingStart = mV.findViewById(R.id.tv_working_start);
         tvDeviceName = mV.findViewById(R.id.txtDeviceName);
         tvProgramVersion = mV.findViewById(R.id.tvProgramVersion);
-        tvFlavor = mV.findViewById(R.id.tv_flavour);
 
         showStatistics();
 
@@ -74,7 +72,6 @@ public class AboutFragment extends Fragment {
             tvWorkingStart.setText( String.format(getResources().getString(R.string.text_working_start), ft.format(date)) );
 
             tvProgramVersion.setText( "KaierUtils ver. " +  BuildConfig.VERSION_NAME);
-            tvFlavor.setText(String.format(getResources().getString(R.string.text_flavour),
-                    BuildConfig.USE_TWUTIL, BuildConfig.SIMULATE_OBD));
+
     }
 }

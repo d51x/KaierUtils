@@ -1,5 +1,7 @@
 package ru.d51x.kaierutils.TWUtils;
 
+import static android.os.Looper.getMainLooper;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -12,8 +14,6 @@ import android.util.Log;
 
 import com.maxmpz.poweramp.player.PowerampAPI;
 
-import java.lang.reflect.Type;
-
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.BuildConfig;
 
@@ -22,20 +22,16 @@ import ru.d51x.kaierutils.BuildConfig;
  * Created by Dmitriy on 18.02.2015.
  */
 public class TWUtilEx {
-	private final static boolean useTW = BuildConfig.USE_TWUTIL;
 	private Context context;
 	private Handler mHandler;
 
 	public static boolean isTWUtilAvailable() {
-		if (!useTW) return false;
 		try {
-			Type type = TWUtil.class;
-			String name = type.getClass().getName();
-			Log.d("TWUtilEx", "PASS: TWUtil is available!");
+			new TWUtil();
 			return true;
 		}
-		catch (Throwable ex){
-			Log.d("TWUtilEx", "ERROR: TWUtil is not available");
+		catch (UnsatisfiedLinkError e) {
+			Log.e("TW", e.getMessage());
 			return false;
 		}
 	}
@@ -73,7 +69,7 @@ public class TWUtilEx {
 		this.mTWUtilHandler = null;
 		isTWUtilOpened = false;
 		curVolume = -1;
-		mTWUtilHandler = new Handler(){
+		mTWUtilHandler = new Handler(getMainLooper()){
 			@SuppressLint({"HandlerLeak", "DefaultLocale"})
             @Override
 			public void handleMessage(Message message) {
@@ -212,28 +208,31 @@ public class TWUtilEx {
 
 	public void Init() {
 		Log.d ("TWUtilEx", "Init ");
-		mTWUtil = new TWUtil();
-		mTWUtilRadio = new TWUtil(1);
-		int result = mTWUtil.open(twutil_contexts);
-		if ( result == 0) {
-			isTWUtilOpened = true;
-			mTWUtil.start ();
-			mTWUtil.addHandler (TWUTIL_HANDLER, mTWUtilHandler);
-			mTWUtil.write (TWUtilConst.TW_CONTEXT_VOLUME_CONTROL, 255);
-			//mTWUtil.write (TWUtilConst.TW_CONTEXT_BRIGHTNESS, 255);
-            Log.d ("TWUtilEx", "Init --> requestEQData (257, 255)");
-            mTWUtil.write ( TWUtilConst.TW_CONTEXT_EQ, 255);
-            Log.d ("TWUtilEx", "Init --> requestAudioFocus (769, 255)");
-			mTWUtil.write ( TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG, 255);
+		try {
+			mTWUtil = new TWUtil();
+			mTWUtilRadio = new TWUtil(1);
+			int result = mTWUtil.open(twutil_contexts);
+			if (result == 0) {
+				isTWUtilOpened = true;
+				mTWUtil.start();
+				mTWUtil.addHandler(TWUTIL_HANDLER, mTWUtilHandler);
+				mTWUtil.write(TWUtilConst.TW_CONTEXT_VOLUME_CONTROL, 255);
+				//mTWUtil.write (TWUtilConst.TW_CONTEXT_BRIGHTNESS, 255);
+				Log.d("TWUtilEx", "Init --> requestEQData (257, 255)");
+				mTWUtil.write(TWUtilConst.TW_CONTEXT_EQ, 255);
+				Log.d("TWUtilEx", "Init --> requestAudioFocus (769, 255)");
+				mTWUtil.write(TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG, 255);
+			}
+			result = mTWUtilRadio.open(new short[]{(short) TWUtilConst.TW_CONTEXT_RADIO_DATA});
+			if (result == 0) {
+				mTWUtilRadio.start();
+				mTWUtilRadio.addHandler(TWUTIL_HANDLER, mTWUtilHandler);
+				Log.d("TWUtilRadio", "Init --> requestRadioData (1025, 255)");
+				mTWUtilRadio.write(TWUtilConst.TW_CONTEXT_RADIO_DATA, 255);
+			}
+		} catch (UnsatisfiedLinkError e) {
+			Log.e("TW", e.getMessage());
 		}
-		result = mTWUtilRadio.open(new short[]{(short) TWUtilConst.TW_CONTEXT_RADIO_DATA});
-		if ( result == 0) {
-			mTWUtilRadio.start ();
-			mTWUtilRadio.addHandler (TWUTIL_HANDLER, mTWUtilHandler);
-            Log.d ("TWUtilRadio", "Init --> requestRadioData (1025, 255)");
-            mTWUtilRadio.write (TWUtilConst.TW_CONTEXT_RADIO_DATA, 255);
-		}
-
 	}
 
 	public void Destroy() {
@@ -300,96 +299,72 @@ public class TWUtilEx {
 	public static boolean setVolumeLevel(int value) {
 		Log.d ("TWUtilEx", "setVolumeLevel ");
 		if ( ! isTWUtilAvailable() ) return false;
-		TWUtil mTW = new TWUtil ();
-		if (mTW.open (new short[]{(short) TWUtilConst.TW_CONTEXT_VOLUME_CONTROL}) == 0) {
-			try {
-				mTW.start ();
-				mTW.write ( TWUtilConst.TW_CONTEXT_VOLUME_CONTROL, 1, value);
-				//mTW.write ( TWUtilConst.TW_CONTEXT_VOLUME_CONTROL, 255);
-				mTW.stop ();
-				mTW.close ();
-				return true;
-			} catch (Exception e) {
-				return false;
+		try {
+			TWUtil mTW = new TWUtil();
+			if (mTW.open(new short[]{(short) TWUtilConst.TW_CONTEXT_VOLUME_CONTROL}) == 0) {
+				try {
+					mTW.start();
+					mTW.write(TWUtilConst.TW_CONTEXT_VOLUME_CONTROL, 1, value);
+					//mTW.write ( TWUtilConst.TW_CONTEXT_VOLUME_CONTROL, 255);
+					mTW.stop();
+					mTW.close();
+					return true;
+				} catch (Exception e) {
+					return false;
+				}
 			}
-		} else { return false; }
-
+		} catch (UnsatisfiedLinkError e) {
+			Log.e("TW", e.getMessage());
+		}
+		return  false;
 	}
-
-//	public static boolean setBrightnessLevel (int value) {
-//		if ( GlobalSettings.IN_EMULATOR ) return true;
-//		TWUtil mTW = new TWUtil ();
-//		if (mTW.open (new short[]{(short) TWUtilConst.TW_CONTEXT_BRIGHTNESS}) == 0) {
-//			try {
-//				mTW.start ();
-//				mTW.write (TWUtilConst.TW_CONTEXT_BRIGHTNESS, 0, value);
-//				mTW.stop ();
-//				mTW.close ();
-//				return true;
-//			}  catch ( Exception e ) {
-//				return false;
-//			}
-//		} else { return false; }
-//	}
-
-
-//	public static boolean setBrightnessMode (int mode) {
-//		if ( GlobalSettings.IN_EMULATOR ) return true;
-//		TWUtil mTW = new TWUtil ();
-//		if (mTW.open (new short[]{(short) TWUtilConst.TW_CONTEXT_BRIGHTNESS}) == 0) {
-//			try {
-//				mTW.start ();
-//				mTW.write (TWUtilConst.TW_CONTEXT_BRIGHTNESS, 1, mode);
-//				mTW.stop ();
-//				mTW.close ();
-//				return true;
-//			} catch ( Exception e ) {
-//				return false;
-//			}
-//		} else { return false; }
-//	}
 
 	public static String GetDeviceID () {
 		Log.d ("TWUtilEx", "GetDeviceID ");
-        if ( ! TWUtilEx.isTWUtilAvailable() ) return "<Unknown>";
-		TWUtil mTW = new TWUtil ();
-		if (mTW.open (new short[]{(short) 65521}) == 0) {
-			try {
-				mTW.start ();
-				int res = mTW.write (65521);
-				mTW.stop ();
-				mTW.close ();
-                String rstr = "";
-                switch (res) {
-                    case 17:
-                    case 14:
-                        rstr = String.format("Kaier (ID: %d)", res);
-                        break;
-                    case 1:
-                        rstr = String.format("Create (ID: %d)", res);
-                        break;
-                    case 3:
-                        rstr = String.format("Anstar (ID: %d)", res);
-                        break;
-                    case 7:
-                    case 48:
-                        rstr = String.format("Waybo (ID: %d)", res);
-                        break;
-                    case 6:
-                        rstr = String.format("Waybo (ID: %d)", res);
-                        break;
-                    case 22:
-                        rstr = String.format("Infidini (ID: %d)", res);
-                        break;
-                    default:
-                        rstr = String.format("<Unknown> (ID: %d)", res);
-                        break;
-                }
-				return rstr;
-			} catch ( Exception e ) {
-				return "<Unknown>";
+		String rstr = "<Unknown>";
+        if ( ! TWUtilEx.isTWUtilAvailable() ) return rstr;
+		try {
+			TWUtil mTW = new TWUtil();
+			if (mTW.open(new short[]{(short) 65521}) == 0) {
+				try {
+					mTW.start();
+					int res = mTW.write(65521);
+					mTW.stop();
+					mTW.close();
+
+					switch (res) {
+						case 17:
+						case 14:
+							rstr = String.format("Kaier (ID: %d)", res);
+							break;
+						case 1:
+							rstr = String.format("Create (ID: %d)", res);
+							break;
+						case 3:
+							rstr = String.format("Anstar (ID: %d)", res);
+							break;
+						case 7:
+						case 48:
+							rstr = String.format("Waybo (ID: %d)", res);
+							break;
+						case 6:
+							rstr = String.format("Waybo (ID: %d)", res);
+							break;
+						case 22:
+							rstr = String.format("Infidini (ID: %d)", res);
+							break;
+						default:
+							rstr = String.format("<Unknown> (ID: %d)", res);
+							break;
+					}
+				} catch (Exception e) {
+					Log.e("TW", e.getMessage());
+				}
 			}
-		} else { return "<Unknown>"; }
+		} catch (UnsatisfiedLinkError e) {
+			Log.e("TW", e.getMessage());
+		}
+		return rstr;
 	}
 
 	private void setPowerAmpPaused() {
@@ -421,56 +396,67 @@ public class TWUtilEx {
 				} catch (Exception e) {
 				}
 			}
-		}
-		finally {
-
+		} catch (UnsatisfiedLinkError e) {
+			Log.e("TW", e.getMessage());
 		}
 	}
 
     public static void setAudioFocus(int id) {
         Log.d ("TWUtilEx", "setAudioFocus (40465, 192, " + String.valueOf(id) + ")");
         if ( ! isTWUtilAvailable() ) return;
-        TWUtil mTW = new TWUtil ();
-        if (mTW.open (new short[]{(short) TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG}) == 0) {
-            try {
-                mTW.start ();
-                mTW.write ( TWUtilConst.TW_COMMAND_AUDIO_FOCUS, 192, id);
-                mTW.stop ();
-                mTW.close ();
-            } catch (Exception e) {
-            }
-        }
+		try {
+			TWUtil mTW = new TWUtil();
+			if (mTW.open(new short[]{(short) TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG}) == 0) {
+				try {
+					mTW.start();
+					mTW.write(TWUtilConst.TW_COMMAND_AUDIO_FOCUS, 192, id);
+					mTW.stop();
+					mTW.close();
+				} catch (Exception e) {
+				}
+			}
+		} catch (UnsatisfiedLinkError e) {
+			Log.e("TW", e.getMessage());
+		}
     }
 
     public static void requestRadioInfo() {
         Log.d ("TWUtilEx", "requestRadioInfo (1025, 255)");
         if ( ! isTWUtilAvailable() ) return;
-        TWUtil mTW = new TWUtil ();
-        if (mTW.open (new short[]{(short) TWUtilConst.TW_CONTEXT_RADIO_DATA}) == 0) {
-            try {
-                mTW.start ();
-                //mTW.write ( TWUtilConst.TW_CONTEXT_RADIO_DATA, 4, 255);
-                //mTW.write ( 1030, 0);  // ????
-                mTW.write ( TWUtilConst.TW_CONTEXT_RADIO_DATA, 255);
+		try {
+			TWUtil mTW = new TWUtil();
+			if (mTW.open(new short[]{(short) TWUtilConst.TW_CONTEXT_RADIO_DATA}) == 0) {
+				try {
+					mTW.start();
+					//mTW.write ( TWUtilConst.TW_CONTEXT_RADIO_DATA, 4, 255);
+					//mTW.write ( 1030, 0);  // ????
+					mTW.write(TWUtilConst.TW_CONTEXT_RADIO_DATA, 255);
 
-                mTW.stop ();
-                mTW.close ();
-            } catch (Exception e) {
-            }
-        }
+					mTW.stop();
+					mTW.close();
+				} catch (Exception e) {
+				}
+			}
+		} catch (UnsatisfiedLinkError e) {
+			Log.e("TW", e.getMessage());
+		}
     }
     public static void requestAudioFocusState() {
         Log.d ("TWUtilEx", "requestAudioFocusState (769, 255)");
         if ( ! isTWUtilAvailable() ) return;
-        TWUtil mTW = new TWUtil ();
-        if (mTW.open (new short[]{(short) TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG}) == 0) {
-            try {
-                mTW.start ();
-                mTW.write ( TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG, 255);
-                mTW.stop ();
-                mTW.close ();
-            } catch (Exception e) {
-            }
-        }
+		try {
+			TWUtil mTW = new TWUtil();
+			if (mTW.open(new short[]{(short) TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG}) == 0) {
+				try {
+					mTW.start();
+					mTW.write(TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG, 255);
+					mTW.stop();
+					mTW.close();
+				} catch (Exception e) {
+				}
+			}
+		} catch (UnsatisfiedLinkError e) {
+			Log.e("TW", e.getMessage());
+		}
     }
 }
