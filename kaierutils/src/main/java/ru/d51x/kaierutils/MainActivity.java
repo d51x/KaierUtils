@@ -310,6 +310,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvMaxSpeed = findViewById(R.id.tvMaxSpeed);
 
 		ivVolumeLevel = findViewById(R.id.ivVolumeLevel);
+        ivVolumeLevel.setOnClickListener(this);
 		ivSpeed = findViewById(R.id.ivSpeed);
 
         ivOBD2Status = findViewById(R.id.ivOBD2Status);
@@ -642,6 +643,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 App.floatingWindow.dismiss();
                 ibFloatingPanel.setVisibility(View.VISIBLE);
                 ibFloatingPanel.invalidate();
+                break;
+            case R.id.ivVolumeLevel:
+                this.openOptionsMenu();
                 break;
             default:
                 break;
