@@ -36,7 +36,7 @@ public class UiUtils {
     @SuppressLint("SetTextI18n")
     public void updateCvtTemperatureText(TextView view, int temp) {
         if (temp > -255) {
-            view.setText(Integer.toString(temp) + "°");
+            view.setText(Integer.toString(temp));
         } else {
             view.setText("--");
         }
@@ -79,7 +79,7 @@ public class UiUtils {
     @SuppressLint("StringFormatMatches")
     public void updateCoolantTemperatureText(TextView view, float temp) {
         if (temp > -255) {
-            view.setText(String.format(App.getInstance().getApplicationContext().getString(R.string.text_obd_coolant_temp_f), (int)temp) + "°");
+            view.setText(String.format(App.getInstance().getApplicationContext().getString(R.string.text_obd_coolant_temp_f), (int)temp));
         } else {
             view.setText("--");
         }
