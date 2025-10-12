@@ -636,7 +636,7 @@
                         android:layout_weight="0.25"
                         android:gravity="center"
                         android:inputType="number|numberDecimal"
-                        android:text=""
+                        android:text="5000"
                         android:textSize="16sp" />
                 </TableRow>
                 <TableRow
@@ -671,7 +671,7 @@
                         android:layout_weight="0.25"
                         android:gravity="center"
                         android:inputType="number|numberDecimal"
-                        android:text=""
+                        android:text="6"
                         android:textSize="16sp" />
                 </TableRow>
                 <TableRow
