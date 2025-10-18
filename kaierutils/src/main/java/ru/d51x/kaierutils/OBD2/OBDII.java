@@ -59,7 +59,7 @@ public class OBDII  {
 
     public static final String TAG = "OBD2";
 
-
+    private static long tSleep = 0;
     public boolean isConnected;
     public boolean useOBD;
        public boolean battery_show = false;
@@ -598,7 +598,7 @@ public class OBDII  {
         int seed = 0;
         buffer = runObdCommand("2701", socket);
         // 2701 ==> 6701 XX XX XX XX (seed)
-        if (buffer.get(0) == 0x67 && buffer.get(1) == 0x01) {
+        if (buffer.get(0) == 0x67 && buffer.get(1) == 0x01) { // 7F 27 80
             seed = buffer.get(2) << 24 | buffer.get(3) << 16 | buffer.get(4) << 8 | buffer.get(5) & 0xFF;
         }
         return seed;
@@ -625,6 +625,7 @@ public class OBDII  {
 
     private boolean startDiagnosticSession(String blokcId, String rxAddr) {
         ArrayList<Integer> buffer = null;
+        activeMAF = false;
         SetHeaders(blokcId, rxAddr, false);
         buffer = runObdCommand("1092", socket);
         // 1092 ==> 5092
@@ -655,38 +656,46 @@ public class OBDII  {
     }
 
     private void sleep(long ms) {
-        long t = System.currentTimeMillis();
-        while (System.currentTimeMillis() - t < ms) {
+       //tSleep = System.currentTimeMillis();
+        while (System.currentTimeMillis() - tSleep < ms) {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            t = System.currentTimeMillis();
+            tSleep = System.currentTimeMillis();
         }
     }
     public boolean setServiceReminder(int distance, int period) {
         boolean res = false;
         isServiceCommand = true;
-        sleep(2000);
-
-        if (startDiagnosticSession(BLOCK_6A0, BLOCK_RX_511)) {
-            //int seed = requestSeed();
-            //if (seed > 0) {
-                //int skey = calculateSKey(seed);
+        //sleep(2000);
+        try {
+            Thread.sleep(2000);
+//            if (startDiagnosticSession(BLOCK_6A0, BLOCK_RX_511)) {
+//                Log.d(TAG, "Diagnostic session OK");
+//                //int seed = requestSeed();
+//                //if (seed > 0) {
+//                //int skey = calculateSKey(seed);
                 ArrayList<Integer> buffer = null;
                 //buffer = runObdCommand("2702" + Integer.toHexString(skey).toUpperCase(), socket);
                 //if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
-                    String cmd = "3106" + String.format("%1$02X",distance & 0xFF) +
-                            String.format("%1$02X",(distance >> 8) & 0xFF) +
-                            "FFFF" +
-                            String.format("%1$02X",period & 0xFF) +
-                            "FF";
-                    buffer = runObdCommand(cmd, socket);
-                    res = buffer.get(0) == 0x71 && buffer.get(1) == 0x06;
-                    runObdCommand("21BC", socket);
-                //}
-            //}
+            // тут мультифрейм сообщение, т.к. полезные данные не умещаются полностью
+            //
+                String cmd = "3BDE" + String.format("%1$02X", (distance / 100) & 0xFF) +
+                        //String.format("%1$02X", ((distance / 100) >> 8) & 0xFF) +
+                        "00FFFF" +
+                        String.format("%1$02X", period & 0xFF) +
+                        "FF";
+                buffer = runObdCommand(cmd, socket);
+                res = buffer.get(0) == 0x71 && buffer.get(1) == 0x06;
+                runObdCommand("21BC", socket);
+//                //}
+//                //}
+//            }
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
         isServiceCommand = false;
         return res;
