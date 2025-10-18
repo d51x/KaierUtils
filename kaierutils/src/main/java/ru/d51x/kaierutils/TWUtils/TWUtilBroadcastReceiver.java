@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.BackgroundService;
 import ru.d51x.kaierutils.DebugLogger;
 import ru.d51x.kaierutils.MainActivity;
+import ru.d51x.kaierutils.R;
 import ru.d51x.kaierutils.Radio.Radio;
 
 public class TWUtilBroadcastReceiver extends BroadcastReceiver {
@@ -42,9 +44,15 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 		DebugLogger.ToLog(TAG, String.format("onReceive(), action %s", action));
 
         // устройство загрузилось, запустим фоновый сервис
-		if ( action.equals (Intent.ACTION_BOOT_COMPLETED ) ) {
+		if ( Intent.ACTION_BOOT_COMPLETED.equals(action) ) {
 			Log.d(TAG, "Boot completed");
+
 			context.startService(new Intent(context, BackgroundService.class));
+
+			Toast toast = Toast.makeText(context.getApplicationContext(),
+					"Boot completed", Toast.LENGTH_LONG);
+			toast.show();
+
 			if (App.GS.ui.isAutoStart) {
 				Intent mIntent = new Intent(context, MainActivity.class);
 				mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -54,8 +62,8 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 			}
 		}
         // устройство выключается
-		else if ( action.equals ( Intent.ACTION_SHUTDOWN ) ||
-				  action.equals ( TWUtilConst.TW_BROADCAST_ACTION_SHUTDOWN))
+		else if ( Intent.ACTION_SHUTDOWN.equals(action) ||
+				TWUtilConst.TW_BROADCAST_ACTION_SHUTDOWN.equals(action))
 		{	// изменение уровня громкости при выключении
 			SetVolumeAtStartUp();
             App.obd.fuel.save();
@@ -68,7 +76,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 
 		}
         // устройство засыпает
-		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_SLEEP))
+		else if ( TWUtilConst.TW_BROADCAST_ACTION_SLEEP.equals(action))
 		{	// изменение уровня громкости при sleep
 			SetVolumeAtWakeUp();
             // запомним время ухода в SleepMode
@@ -84,7 +92,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 
 		}
         // устройство проснулось (вышло из SleepMode)
-		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP))
+		else if ( TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP.equals(action))
 		{
 	        App.GS.SleepModeCount++; // увеличим счетчик просыпаний
             App.GS.isStopedAfterWakeUp = true;
@@ -98,40 +106,43 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 
 		}
         // включился задний ход
-		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_START))
+		else if ( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_START.equals(action))
 		{
 			prevVolume = App.GS.getVolumeLevel (); // запомнили текущую громкость
             App.GS.ReverseActivityCount++;         // увеличим счетчик включений заднего хода
 			changeVolumeAtReverse();
 		}
         // задний ход выключился
-		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH))
+		else if ( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH.equals(action))
 		{
 			TWUtilEx.setVolumeLevel(prevVolume);  // вернем громкость обратно, которая была до включения заднего хода
 			App.GS.getVolumeLevel ();
 		}
-		else if ( action.equals ( TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED))
+		else if ( TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED.equals(action))
 		{
 			if ( App.GS.curAudioFocusID != TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID ) return;
             ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 			List<RunningTaskInfo> taskInfo = activityManager.getRunningTasks(1);
-			String activeWnd = ((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName();
-            String activeActivity = ((ActivityManager.RunningTaskInfo) taskInfo.get(0)).topActivity.getClassName();
-			if ( taskInfo.size() <= 0 ||
-				 !(activeWnd.equalsIgnoreCase ( Radio.PACKAGE_NAME )) //||
-                 //!((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils")
-				)
-			{
-                if ( App.GS.radio.dontShowToastOnMainActivity  &&
-                        activeWnd.equalsIgnoreCase("ru.d51x.kaierutils") &&
-                        activeActivity.equalsIgnoreCase("ru.d51x.kaierutils.MainActivity")) return;
-                //App.rToast.isShowToastWhenActive = !((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils");
-                String title = intent.getStringExtra("Title");
-                title = (title != null) ? title : "";
-				String freq = intent.getStringExtra ("Frequency");
-				App.rToast.cancel();
-				App.rToast.SetRadioText(title, freq);
-				App.rToast.showToast();
+			if (!taskInfo.isEmpty() && taskInfo.get(0).topActivity != null) {
+                String activeWnd = taskInfo.get(0).topActivity.getPackageName();
+				String activeActivity = taskInfo.get(0).topActivity.getClassName();
+
+				if (taskInfo.size() <= 0 ||
+						!(Radio.PACKAGE_NAME.equalsIgnoreCase(activeWnd)) //||
+					//!((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils")
+				) {
+					if (App.GS.radio.dontShowToastOnMainActivity &&
+							activeWnd.equalsIgnoreCase("ru.d51x.kaierutils") &&
+							activeActivity.equalsIgnoreCase("ru.d51x.kaierutils.MainActivity"))
+						return;
+					//App.rToast.isShowToastWhenActive = !((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils");
+					String title = intent.getStringExtra("Title");
+					title = (title != null) ? title : "";
+					String freq = intent.getStringExtra("Frequency");
+					App.rToast.cancel();
+					App.rToast.SetRadioText(title, freq);
+					App.rToast.showToast();
+				}
 			}
 		}
 	}
@@ -149,7 +160,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 			}
 		} else if (  App.GS.volumeOptions.isPercentVolumeAtReverse ) {
             // уменьшаем громкость до заданного процента от текущей
-			int newLevel = Math.round(prevVolume * App.GS.volumeOptions.percentVolumeLevelAtReverse / 100);
+			int newLevel = Math.round((float) (prevVolume * App.GS.volumeOptions.percentVolumeLevelAtReverse) / 100);
 			TWUtilEx.setVolumeLevel( newLevel );
 		}
 	}

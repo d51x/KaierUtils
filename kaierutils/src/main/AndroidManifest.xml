@@ -89,6 +89,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
                 <action android:name="ru.d51x.kaierutils.action.REQUEST_SHUTDOWN" />
                 <action android:name="ru.d51x.kaierutils.action.SLEEP" />
