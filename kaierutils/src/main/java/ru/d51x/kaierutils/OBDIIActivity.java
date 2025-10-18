@@ -132,26 +132,26 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(OBD_BROADCAST_ACTION_STATUS_CHANGED)) {
+            if (OBD_BROADCAST_ACTION_STATUS_CHANGED.equals(action)) {
                 boolean res = intent.getBooleanExtra("Status", false);
                 tvDeviceStatus.setText(String.format(getString(R.string.odbii_device_status), res ? "Подключен" : "Не подключен"));
             }
-            else if (action.equals(OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED)) {
+            else if (OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED.equals(action)) {
                 tvOBDEngineRPM.setText(String.format(getString(R.string.text_obd_engine_rpm_f), intent.getStringExtra("engineRPM")));
             }
-            else if (action.equals(OBD_BROADCAST_ACTION_SPEED_CHANGED)) {
+            else if (OBD_BROADCAST_ACTION_SPEED_CHANGED.equals(action)) {
                 tvOBDSpeed.setText(String.format(getString(R.string.text_obd_speed_f), intent.getStringExtra("speed")));
             }
-            else if (action.equals(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED)) {
+            else if (OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED.equals(action)) {
                 tvOBD_CoolantTemp.setText(String.format(getString(R.string.text_obd_coolant_temp_f), intent.getStringExtra("coolantTemp")));
             }
-            else if (action.equals(OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED)) {
+            else if (OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED.equals(action)) {
                 tvOBD_CMUVoltage.setText(String.format(getString(R.string.text_obd_cmu_voltage_f), intent.getStringExtra("cmuVoltage")));
             }
-            else if (action.equals(OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED)) {
+            else if (OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED.equals(action)) {
 
             }
-            else if (action.equals(OBD_BROADCAST_ACTION_MAF_CHANGED)) {
+            else if (OBD_BROADCAST_ACTION_MAF_CHANGED.equals(action)) {
                 tvOBD_MAF.setText(String.format(getString(R.string.text_obd_fuel_consumption_maf_f)
                         .replace("g/s", ""), intent.getStringExtra("sMAF")));
                 tvOBD_FuelConsumption_lph.setText(String.format(getString(R.string.text_obd_fuel_consumption_lph_f), App.obd.oneTrip.fuel_cons_lph)
@@ -171,7 +171,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 tvGPS_Distanse_Today.setText(String.format(getString(R.string.text_obd_distanse_f), App.obd.todayTrip.distance / 1000f).replace(",", "."));
                 tvGPS_Distanse_Total.setText(String.format(getString(R.string.text_obd_distanse_f), App.obd.totalTrip.distance / 1000f).replace(",", "."));
             }
-            else if (action.equals(ACTION_OBD_ENGINE_2110_CHANGED)) {
+            else if (ACTION_OBD_ENGINE_2110_CHANGED.equals(action)) {
                 tvOBD_MAF.setText(String.format(getString(R.string.text_obd_fuel_consumption_maf_f)
                         .replace("g/s", ""), intent.getStringExtra("sMAF")));
                 tvOBD_FuelConsumption_lph.setText(String.format(getString(R.string.text_obd_fuel_consumption_lph_f), App.obd.oneTrip.fuel_cons_lph)
@@ -194,38 +194,48 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
             // ----------------------------------------------------------------------------
 
-            else if (action.equals(ACTION_OBD_CVT_2103_CHANGED)) {
+            else if (ACTION_OBD_CVT_2103_CHANGED.equals(action)) {
                 // CVT: Oil Temperature
                 CvtData cvtData = (CvtData) intent.getSerializableExtra(KEY_OBD_CVT_2103);
-                int i = cvtData.getTemperature();
-                String s = (i > -255) ? Integer.toString(i) : "---";
-                tv_can_2103_cvt_temp_count.setText(String.format(getString(R.string.text_can_2103_cvt_temp_count), s));
+                if (cvtData != null) {
+                    int i = cvtData.getTemperature();
+                    String s = (i > -255) ? Integer.toString(i) : "---";
+                    tv_can_2103_cvt_temp_count.setText(String.format(getString(R.string.text_can_2103_cvt_temp_count), s));
+                }
             }
-            else if (action.equals(ACTION_OBD_CVT_2110_CHANGED)) {
+            else if (ACTION_OBD_CVT_2110_CHANGED.equals(action)) {
                 // CVT: Oil Degradation Level
                 CvtData cvtData = (CvtData) intent.getSerializableExtra(KEY_OBD_CVT_2110);
-                int i = cvtData.getOilDegradation();
-                String s = (i >= 0) ? Integer.toString(i) : "---";
-                tv_can_2110_cvt_oil_degr.setText(String.format(getString(R.string.text_can_2110_cvt_oil_degr), s));
-                tvWorkHoursTotal.setText(String.format("%1$.1f", cvtData.getWorkHoursTotal()));
+                if (cvtData != null) {
+                    int i = cvtData.getOilDegradation();
+                    String s = (i >= 0) ? Integer.toString(i) : "---";
+                    tv_can_2110_cvt_oil_degr.setText(String.format(getString(R.string.text_can_2110_cvt_oil_degr), s));
+                    tvWorkHoursTotal.setText(String.format("%1$.1f", cvtData.getWorkHoursTotal()));
+                }
             }
 
             //Combination meter: fuel level
-            else if (action.equals(ACTION_OBD_METER_21A3_CHANGED)) {
+            else if (ACTION_OBD_METER_21A3_CHANGED.equals(action)) {
                 CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A3 );
-                int i = meterData.getFuelLevel();
-                String s = (i > -1) ? Integer.toString(i) : "---";
-                tvFuelLevel.setText(String.format(getString(R.string.text_obd_can_fuel_level), s));
+                if (meterData != null) {
+                    int i = meterData.getFuelLevel();
+                    String s = (i > -1) ? Integer.toString(i) : "---";
+                    tvFuelLevel.setText(String.format(getString(R.string.text_obd_can_fuel_level), s));
+                }
             }
-            else if (action.equals(ACTION_OBD_METER_21AD_CHANGED)) {
+            else if (ACTION_OBD_METER_21AD_CHANGED.equals(action)) {
                 CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AD );
-                tvMileage.setText(String.format("%1$d", meterData.getMileage()));
+                if (meterData != null) {
+                    tvMileage.setText(String.format("%1$d", meterData.getMileage()));
+                }
             }
-            else if (action.equals(ACTION_OBD_METER_21BC_CHANGED)) {
+            else if (ACTION_OBD_METER_21BC_CHANGED.equals(action)) {
                 CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21BC );
-                int i = meterData.getFuelLevel();
-                tvServiceReminderDistance.setText(String.format("%1$d", meterData.getServiceReminderDistance()));
-                tvServiceReminderPeriod.setText(String.format("%1$d", meterData.getServiceReminderPeriod()));
+                if (meterData != null) {
+                    int i = meterData.getFuelLevel();
+                    tvServiceReminderDistance.setText(String.format("%1$d", meterData.getServiceReminderDistance()));
+                    tvServiceReminderPeriod.setText(String.format("%1$d", meterData.getServiceReminderPeriod()));
+                }
             }
         }
     };
@@ -256,7 +266,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
         //BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
-        if (pairedDevices.size() > 0) {
+        if (!pairedDevices.isEmpty()) {
             for (BluetoothDevice device : pairedDevices) {
                 deviceStrs.add(device.getName() + "\n" + device.getAddress());
                 devices.add(device.getAddress());
@@ -267,7 +277,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.select_dialog_singlechoice,
-                deviceStrs.toArray(new String[deviceStrs.size()]));
+                deviceStrs.toArray(new String[0]));
 
         alertDialog.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
             @Override
@@ -277,8 +287,10 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 App.obd.setDeviceAddress(devices.get(position));
                 App.obd.setDeviceName(devicesName.get(position));
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
-                prefs.edit().putString("ODBII_DEVICE_ADDRESS", App.obd.getDeviceAddress()).commit();
-                prefs.edit().putString("ODBII_DEVICE_NAME", App.obd.getDeviceName()).commit();
+                prefs.edit()
+                        .putString("ODBII_DEVICE_ADDRESS", App.obd.getDeviceAddress())
+                        .putString("ODBII_DEVICE_NAME", App.obd.getDeviceName())
+                        .apply();
             }
         });
 
@@ -302,7 +314,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvDeviceStatus = findViewById(R.id.tvDeviceStatus);
         tvOBDEngineRPM = findViewById(R.id.tvOBDEngineRPM);
         tvOBDSpeed = findViewById(R.id.tvOBD_Speed);
-        tvOBD_CoolantTemp = findViewById(R.id.tvOBD_CoolantTemp);
+        tvOBD_CoolantTemp = findViewById(R.id.tvCoolantTemp);
         tvOBD_FuelUsage = findViewById(R.id.tvOBD_FuelUsage);
         tvOBD_CMUVoltage = findViewById(R.id.tvOBD_CMUVoltage);
         tvGPS_Distanse = findViewById(R.id.tvGPS_Distanse);
@@ -466,12 +478,9 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         s = ( i > -255 ) ? Integer.toString(i) : "---";
         tv_can_2110_cvt_oil_degr.setText(String.format(getString(R.string.text_can_2110_cvt_oil_degr), s));
 
-//        if (App.GS.ui.showFloatingOnMinimize) {
-//            // hide floating panel
-//            App.floatingWindow.dismiss();
-//        }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
@@ -530,12 +539,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     }
 
     protected void onDestroy() {
-//        if (App.GS.ui.isAutoStartFloating) {
-//            if (!App.floatingWindow.isShowing()) {
-//                App.floatingWindow.show();
-//            }
-//        }
-
         unregisterReceiver(receiver);
         App.obd.readExtendMeter = false;
         App.obd.readExtendCvt = false;

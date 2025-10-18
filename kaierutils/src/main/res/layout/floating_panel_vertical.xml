@@ -78,7 +78,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/ivOBD_CarBattery"
+                android:id="@+id/ivCarBattery"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
@@ -86,7 +86,7 @@
                 android:src="@drawable/car_battery_bad" />
 
             <TextView
-                android:id="@+id/tvOBD_CarBattery"
+                android:id="@+id/tvCarBattery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -129,7 +129,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/ivOBD_CoolantTemp"
+                        android:id="@+id/ivCoolantTemp"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="center_vertical"
@@ -137,7 +137,7 @@
                         android:src="@drawable/coolant_temp_min" />
 
                     <ImageView
-                        android:id="@+id/ivOBD_CoolantTempFan"
+                        android:id="@+id/ivCoolantTempFan"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginStart="-60dp"
@@ -150,7 +150,7 @@
 
 
             <TextView
-                android:id="@+id/tvOBD_CoolantTemp"
+                android:id="@+id/tvCoolantTemp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -183,14 +183,14 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/ivOBD_CVT_Data"
+                android:id="@+id/ivCvtData"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/cvt_temp_min" />
 
             <TextView
-                android:id="@+id/tvOBD_CVT_Data"
+                android:id="@+id/tvCvtData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -224,7 +224,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/ivOBD_FuelTank"
+                android:id="@+id/ivFuelTank"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"
@@ -232,7 +232,7 @@
                 android:src="@drawable/fuel_tank_min" />
 
             <TextView
-                android:id="@+id/tvOBD_FuelTank"
+                android:id="@+id/tvFuelTank"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -266,7 +266,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/ivOBD_FuelConsump"
+                android:id="@+id/ivFuelConsump"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical"

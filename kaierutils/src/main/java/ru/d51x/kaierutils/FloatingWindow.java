@@ -162,25 +162,25 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
 
         ivHideFloatingPanel = floatingView.findViewById(R.id.ivHideFloatingPanel);
 
-        ivCoolantTemp = floatingView.findViewById(R.id.ivOBD_CoolantTemp);
-        ivCoolantTempFan = floatingView.findViewById(R.id.ivOBD_CoolantTempFan);
-        tvCoolantTemp = floatingView.findViewById(R.id.tvOBD_CoolantTemp);
+        ivCoolantTemp = floatingView.findViewById(R.id.ivCoolantTemp);
+        ivCoolantTempFan = floatingView.findViewById(R.id.ivCoolantTempFan);
+        tvCoolantTemp = floatingView.findViewById(R.id.tvCoolantTemp);
 
         ivSpeed = floatingView.findViewById(R.id.ivSpeed);
         tvSpeed = floatingView.findViewById(R.id.tvSpeed);
 
-        ivBatteryLevel = floatingView.findViewById(R.id.ivOBD_CarBattery);
-        tvBatteryLevel = floatingView.findViewById(R.id.tvOBD_CarBattery);
+        ivBatteryLevel = floatingView.findViewById(R.id.ivCarBattery);
+        tvBatteryLevel = floatingView.findViewById(R.id.tvCarBattery);
 
         ivTrip = floatingView.findViewById(R.id.ivTrip);
         tvTrip = floatingView.findViewById(R.id.tvTrip);
 
-        ivCvtTemperature = floatingView.findViewById(R.id.ivOBD_CVT_Data);
-        tvCvtTemperature = floatingView.findViewById(R.id.tvOBD_CVT_Data);
+        ivCvtTemperature = floatingView.findViewById(R.id.ivCvtData);
+        tvCvtTemperature = floatingView.findViewById(R.id.tvCvtData);
 
-        ivFuelLevel = floatingView.findViewById(R.id.ivOBD_FuelTank);
-        tvFuelLevel = floatingView.findViewById(R.id.tvOBD_FuelTank);
-        ivFuelConsump = floatingView.findViewById(R.id.ivOBD_FuelConsump);
+        ivFuelLevel = floatingView.findViewById(R.id.ivFuelTank);
+        tvFuelLevel = floatingView.findViewById(R.id.tvFuelTank);
+        ivFuelConsump = floatingView.findViewById(R.id.ivFuelConsump);
         tvFuelConsump = floatingView.findViewById(R.id.tvFuelConsump);
 
         tvSpeedUnit = floatingView.findViewById(R.id.tvSpeedUnit);
@@ -272,61 +272,77 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     String action = intent.getAction();
-                    if (action.equals(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED)) {
+                    if (OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED.equals(action)) {
                         ui.updateCoolantTemperatureText(tvCoolantTemp, intent.getFloatExtra("coolantTempD", -255));
                     }
-                    else if (action.equals(OBD_BROADCAST_ACTION_MAF_CHANGED)) {
+                    else if (OBD_BROADCAST_ACTION_MAF_CHANGED.equals(action)) {
                         ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
                     }
-                    else if (action.equals(ACTION_OBD_ENGINE_2101_CHANGED)) {
+                    else if (ACTION_OBD_ENGINE_2101_CHANGED.equals(action)) {
                         EngineData engine = (EngineData) intent.getSerializableExtra("obd_engine_2101");
                         // speed
                         // TODO: 06.10.2025 select speed type from preferences
-                        ui.updateSpeedText(tvSpeed, engine.getSpeed(), App.GS.ui.isColorSpeed);
-                        ui.updateSpeedIcon(ivSpeed, engine.getSpeed());
+                        if (engine != null) {
+                            ui.updateSpeedText(tvSpeed, engine.getSpeed(), App.GS.ui.isColorSpeed);
+                            ui.updateSpeedIcon(ivSpeed, engine.getSpeed());
 
-                        // TODO: 06.10.2025 select voltage type from preferences
-                        //voltage
-                        float voltage = engine.getVoltage();
-                        ui.updateBatteryLevelText(tvBatteryLevel, voltage);
-                        ui.updateBatteryLevelIcon(ivBatteryLevel, voltage);
+                            // TODO: 06.10.2025 select voltage type from preferences
+                            //voltage
+                            float voltage = engine.getVoltage();
+                            ui.updateBatteryLevelText(tvBatteryLevel, voltage);
+                            ui.updateBatteryLevelIcon(ivBatteryLevel, voltage);
+                        }
                     }
-                    else if (action.equals(ACTION_OBD_ENGINE_2102_CHANGED)) {
+                    else if (ACTION_OBD_ENGINE_2102_CHANGED.equals(action)) {
                         // TODO: 06.10.2025 select coolant type from preferences
                         EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_2102);
-                        ui.updateCoolantTemperatureText(tvCoolantTemp, (float)engine.getCoolantTemperature());
-                        ui.updateCoolantTemperatureIcon(ivCoolantTemp, (float)engine.getCoolantTemperature());
-                        //updateOBD_CoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
+                        if (engine != null) {
+                            ui.updateCoolantTemperatureText(tvCoolantTemp, (float) engine.getCoolantTemperature());
+                            ui.updateCoolantTemperatureIcon(ivCoolantTemp, (float) engine.getCoolantTemperature());
+                            //updateOBD_CoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
+                        }
                     }
-                    else if (action.equals(ACTION_OBD_ENGINE_2110_CHANGED)) {
+                    else if (ACTION_OBD_ENGINE_2110_CHANGED.equals(action)) {
                         // TODO: 06.10.2025 select coolant type from preferences
                         EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_2110);
-                        ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
+                        if (engine != null) {
+                            ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
+                        }
                     }
-                    else if (action.equals(ACTION_OBD_CVT_2103_CHANGED)) {
+                    else if (ACTION_OBD_CVT_2103_CHANGED.equals(action)) {
                         CvtData cvtData = (CvtData) intent.getSerializableExtra(KEY_OBD_CVT_2103);
-                        ui.updateCvtTemperatureText(tvCvtTemperature, cvtData.getTemperature());
-                        ui.updateCvtTemperatureIcon(ivCvtTemperature, cvtData.getTemperature());
+                        if (cvtData != null ) {
+                            ui.updateCvtTemperatureText(tvCvtTemperature, cvtData.getTemperature());
+                            ui.updateCvtTemperatureIcon(ivCvtTemperature, cvtData.getTemperature());
+                        }
                     }
-                    else if (action.equals(ACTION_OBD_METER_21A3_CHANGED)) {
+                    else if (ACTION_OBD_METER_21A3_CHANGED.equals(action)) {
                         CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A3);
-                        ui.updateFuelLevelText(tvFuelLevel, meterData.getFuelLevel());
+                        if (meterData != null) {
+                            ui.updateFuelLevelText(tvFuelLevel, meterData.getFuelLevel());
+                        }
                     }
-                    else if (action.equals(ACTION_OBD_METER_21A1_CHANGED)) {
+                    else if (ACTION_OBD_METER_21A1_CHANGED.equals(action)) {
                         CombineMeterData meter = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A1);
-                        ui.updateSpeedText(tvSpeed, meter.getVehicleSpeed(), App.GS.ui.isColorSpeed);
-                        ui.updateSpeedIcon(ivSpeed, meter.getVehicleSpeed());
+                        if (meter != null) {
+                            ui.updateSpeedText(tvSpeed, meter.getVehicleSpeed(), App.GS.ui.isColorSpeed);
+                            ui.updateSpeedIcon(ivSpeed, meter.getVehicleSpeed());
+                        }
                     }
-                    else if (action.equals(ACTION_OBD_METER_21AE_CHANGED)) {
+                    else if (ACTION_OBD_METER_21AE_CHANGED.equals(action)) {
                         CombineMeterData meter = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AE);
-                        // App.obd.oneTrip.distance - текущая поездка
-                        // App.obd.todayTrip.distance - общая поездка за день
-                        ui.updateDistanceText(tvTrip, App.obd.todayTrip.distance);
+                        if (meter != null) {
+                            // App.obd.oneTrip.distance - текущая поездка
+                            // App.obd.todayTrip.distance - общая поездка за день
+                            ui.updateDistanceText(tvTrip, App.obd.todayTrip.distance);
+                        }
                     }
-                    else if (action.equals(ACTION_OBD_CLIMATE_2113_CHANGED)) {
+                    else if (ACTION_OBD_CLIMATE_2113_CHANGED.equals(action)) {
                         ClimateData climate = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2113);
+                        if (climate != null) {
 //                        updateSpeedText(tvSpeed, climate.vehicleSpeed, App.GS.ui.isColorSpeed);
 //                        updateSpeedIcon(ivSpeed, climate.vehicleSpeed);
+                            }
                     }
                 }
             };
