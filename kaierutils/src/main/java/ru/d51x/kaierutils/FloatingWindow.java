@@ -47,7 +47,10 @@ import ru.d51x.kaierutils.utils.UiUtils;
 
 public class FloatingWindow implements View.OnClickListener, View.OnTouchListener {
 
-
+    public static int DEFAULT_ICON_SIZE = 48;
+    public static int DEFAULT_MAIN_TEXT_SIZE = 40;
+    public static int DEFAULT_SECOND_TEXT_SIZE = 28;
+    public static int DEFAULT_UNITS_TEXT_SIZE = 16;
     private WindowManager windowManager;
     private final Context context;
     private final View floatingView;
@@ -77,8 +80,10 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     private TextView tvCvtTemperature;
     private ImageView ivTrip;
     private TextView tvTrip;
+    private ImageView ivFuelConsump;
     private TextView tvFuelConsump;
 
+    private ImageView ivFuelLevel;
     private TextView tvFuelLevel;
 
     private TextView tvSpeedUnit;
@@ -101,6 +106,10 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     public boolean showFuelConsumption = true;
     public boolean showDistance = true;
 
+    public int iconSize = DEFAULT_ICON_SIZE;
+    public int mainTextSize = DEFAULT_MAIN_TEXT_SIZE;
+    public int secondTextSize = DEFAULT_SECOND_TEXT_SIZE;
+    public int unitsTextSize = DEFAULT_UNITS_TEXT_SIZE;
     private LinearLayout layoutSpeed;
     private LinearLayout layoutBatteryLevel;
     private LinearLayout layoutCoolantTemperature;
@@ -141,6 +150,12 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         showFuelLevel = sharedPreferences.getBoolean ( "floating_panel_show_fuel_level", true);
         showFuelConsumption = sharedPreferences.getBoolean ( "floating_panel_show_fuel_consumption", true);
         showDistance = sharedPreferences.getBoolean ( "floating_panel_show_distance", true);
+
+
+        iconSize = Integer.parseInt(sharedPreferences.getString("FLOATING_PANEL_ICON_SIZE", Integer.toString(DEFAULT_ICON_SIZE)));
+        mainTextSize = Integer.parseInt(sharedPreferences.getString("FLOATING_PANEL_MAIN_TEXT_SIZE", Integer.toString(DEFAULT_MAIN_TEXT_SIZE)));
+        secondTextSize = Integer.parseInt(sharedPreferences.getString("FLOATING_PANEL_SECOND_TEXT_SIZE", Integer.toString(DEFAULT_SECOND_TEXT_SIZE)));
+        unitsTextSize = Integer.parseInt(sharedPreferences.getString("FLOATING_PANEL_UNITS_SIZE", Integer.toString(DEFAULT_UNITS_TEXT_SIZE)));
     }
 
     private void init() {
@@ -162,8 +177,19 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
 
         ivCvtTemperature = floatingView.findViewById(R.id.ivOBD_CVT_Data);
         tvCvtTemperature = floatingView.findViewById(R.id.tvOBD_CVT_Data);
+
+        ivFuelLevel = floatingView.findViewById(R.id.ivOBD_FuelTank);
         tvFuelLevel = floatingView.findViewById(R.id.tvOBD_FuelTank);
+        ivFuelConsump = floatingView.findViewById(R.id.ivOBD_FuelConsump);
         tvFuelConsump = floatingView.findViewById(R.id.tvFuelConsump);
+
+        tvSpeedUnit = floatingView.findViewById(R.id.tvSpeedUnit);
+        tvCarBatteryUnit = floatingView.findViewById(R.id.tvCarBatteryUnit);
+        tvCoolantTempUnit = floatingView.findViewById(R.id.tvCoolantTempUnit);
+        tvCvtTempUnit = floatingView.findViewById(R.id.tvCvtTempUnit);
+        tvFuelTankUnit = floatingView.findViewById(R.id.tvFuelTankUnit);
+        tvFuelConsumptionUnit = floatingView.findViewById(R.id.tvFuelConsumptionUnit);
+        tvTripUnit = floatingView.findViewById(R.id.tvTripUnit);
 
         layoutSpeed = floatingView.findViewById(R.id.layoutSpeed);
         layoutBatteryLevel = floatingView.findViewById(R.id.layoutBatteryLevel);
@@ -174,23 +200,47 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         layoutDistance = floatingView.findViewById(R.id.layoutDistance);
 
 
-
-        ui.updateSpeedText(tvSpeed, App.obd.can.engine.getSpeed(), App.GS.ui.isColorSpeed);
+        ui.updateSpeedText(tvSpeed, App.obd.can.engine.getSpeed(), App.GS.ui.isColorSpeed, mainTextSize);
         ui.updateSpeedIcon(ivSpeed, App.obd.can.engine.getSpeed());
 
-        ui.updateBatteryLevelText(tvBatteryLevel, App.obd.can.engine.getVoltage());
+        ui.updateBatteryLevelText(tvBatteryLevel, App.obd.can.engine.getVoltage(), mainTextSize, secondTextSize);
         ui.updateBatteryLevelIcon(ivBatteryLevel, App.obd.can.engine.getVoltage());
 
-        ui.updateCvtTemperatureText(tvCvtTemperature, App.obd.can.cvt.getTemperature());
+        ui.updateCvtTemperatureText(tvCvtTemperature, App.obd.can.cvt.getTemperature(), mainTextSize);
         ui.updateCvtTemperatureIcon(ivCvtTemperature, App.obd.can.cvt.getTemperature());
 
-        ui.updateCoolantTemperatureText(tvCoolantTemp, (float)App.obd.can.engine.getCoolantTemperature());
+        ui.updateCoolantTemperatureText(tvCoolantTemp, (float)App.obd.can.engine.getCoolantTemperature(), mainTextSize);
         ui.updateCoolantTemperatureIcon(ivCoolantTemp, (float)App.obd.can.engine.getCoolantTemperature());
 
-        ui.updateFuelLevelText(tvFuelLevel, App.obd.can.meter.getFuelLevel());
-        ui.updateDistanceText(tvTrip, App.obd.todayTrip.distance);
-        ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
+        ui.updateFuelLevelText(tvFuelLevel, App.obd.can.meter.getFuelLevel(), mainTextSize);
+        ui.updateDistanceText(tvTrip, App.obd.todayTrip.distance, mainTextSize, secondTextSize);
+        ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg, mainTextSize, secondTextSize);
 
+    }
+
+    private void setImageSize(ImageView iv, int size) {
+        iv.getLayoutParams().width = size;
+        iv.getLayoutParams().height = size;
+    }
+
+    private void setIconsSize(int size) {
+        setImageSize(ivSpeed, iconSize);
+        setImageSize(ivBatteryLevel, iconSize);
+        setImageSize(ivCoolantTemp, iconSize);
+        setImageSize(ivCvtTemperature, iconSize);
+        setImageSize(ivFuelLevel, iconSize);
+        setImageSize(ivFuelConsump, iconSize);
+        setImageSize(ivTrip, iconSize);
+    }
+
+    private void setTextUnitsSize(int size) {
+        tvSpeedUnit.setTextSize(size);
+        tvCarBatteryUnit.setTextSize(size);
+        tvCoolantTempUnit.setTextSize(size);
+        tvCvtTempUnit.setTextSize(size);
+        tvFuelTankUnit.setTextSize(size);
+        tvFuelConsumptionUnit.setTextSize(size);
+        tvTripUnit.setTextSize(size);
     }
 
     public void show() {
@@ -203,8 +253,10 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
             layoutParams.gravity = Gravity.TOP | Gravity.START;
             layoutParams.x = App.GS.ui.floatingWindowLeft;
             layoutParams.y = App.GS.ui.floatingWindowTop;
-
             getWindowManager().addView(floatingView, layoutParams);
+
+            setIconsSize(iconSize);
+            setTextUnitsSize(unitsTextSize);
 
             showSpeedLayout(showSpeed);
             showBatteryLevelLayout(showBatteryLevel);

@@ -1,6 +1,11 @@
 package ru.d51x.kaierutils.Settings;
 
 
+import static ru.d51x.kaierutils.FloatingWindow.DEFAULT_ICON_SIZE;
+import static ru.d51x.kaierutils.FloatingWindow.DEFAULT_MAIN_TEXT_SIZE;
+import static ru.d51x.kaierutils.FloatingWindow.DEFAULT_SECOND_TEXT_SIZE;
+import static ru.d51x.kaierutils.FloatingWindow.DEFAULT_UNITS_TEXT_SIZE;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -34,27 +39,40 @@ public class SettingsFloatingWindowFragment extends PreferenceFragment implement
 		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 	}
 
+
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if ( key.equals ( "floating_panel_show_speed" )) {
+		if ( "floating_panel_show_speed".equals(key)) {
 			App.floatingWindow.showSpeed = sharedPreferences.getBoolean ( key, true);
 		}
-		else if ( key.equals ( "floating_panel_show_battery_level" )) {
+		else if ("floating_panel_show_battery_level".equals(key)) {
 			App.floatingWindow.showBatteryLevel = sharedPreferences.getBoolean ( key, true);
 		}
-		else if ( key.equals ( "floating_panel_show_coolant_temperature" )) {
+		else if ("floating_panel_show_coolant_temperature".equals(key)) {
 			App.floatingWindow.showCoolantTemperature = sharedPreferences.getBoolean ( key, true);
 		}
-		else if ( key.equals ( "floating_panel_show_cvt_temperature" )) {
+		else if ("floating_panel_show_cvt_temperature".equals(key)) {
 			App.floatingWindow.showCvtTemperature = sharedPreferences.getBoolean ( key, true);
 		}
-		else if ( key.equals ( "floating_panel_show_fuel_level" )) {
+		else if ("floating_panel_show_fuel_level".equals(key)) {
 			App.floatingWindow.showFuelLevel = sharedPreferences.getBoolean ( key, true);
 		}
-		else if ( key.equals ( "floating_panel_show_fuel_consumption" )) {
+		else if ("floating_panel_show_fuel_consumption".equals(key)) {
 			App.floatingWindow.showFuelConsumption = sharedPreferences.getBoolean ( key, true);
 		}
-		else if ( key.equals ( "floating_panel_show_distance" )) {
+		else if ("floating_panel_show_distance".equals(key)) {
 			App.floatingWindow.showDistance = sharedPreferences.getBoolean ( key, true);
+		}
+		else if ("FLOATING_PANEL_ICON_SIZE".equals(key)) {
+			App.floatingWindow.iconSize = Integer.parseInt(sharedPreferences.getString(key, Integer.toString(DEFAULT_ICON_SIZE)));
+		}
+		else if ("FLOATING_PANEL_MAIN_TEXT_SIZE".equals(key)) {
+			App.floatingWindow.mainTextSize = Integer.parseInt(sharedPreferences.getString(key, Integer.toString(DEFAULT_MAIN_TEXT_SIZE)));
+		}
+		else if ("FLOATING_PANEL_SECOND_TEXT_SIZE".equals(key)) {
+			App.floatingWindow.secondTextSize = Integer.parseInt(sharedPreferences.getString(key, Integer.toString(DEFAULT_SECOND_TEXT_SIZE)));
+		}
+		else if ("FLOATING_PANEL_UNITS_SIZE".equals(key)) {
+			App.floatingWindow.unitsTextSize = Integer.parseInt(sharedPreferences.getString(key, Integer.toString(DEFAULT_UNITS_TEXT_SIZE)));
 		}
 	}
 }

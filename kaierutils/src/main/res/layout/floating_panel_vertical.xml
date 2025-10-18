@@ -68,10 +68,6 @@
 
         </LinearLayout>
 
-        <!--    <include layout="@layout/dash_panel"-->
-
-        <!--        />-->
-
         <LinearLayout
             android:id="@+id/layoutBatteryLevel"
             android:layout_width="wrap_content"

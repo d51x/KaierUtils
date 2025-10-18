@@ -41,6 +41,12 @@ public class UiUtils {
             view.setText("--");
         }
     }
+
+    public void updateCvtTemperatureText(TextView view, int temp, int size) {
+        view.setTextSize(size);
+        updateCvtTemperatureText(view, temp);
+    }
+
     public void updateCvtTemperatureIcon(ImageView view, int temp) {
         int imageRes;
         if (temp < 71) {
@@ -60,12 +66,15 @@ public class UiUtils {
     }
 
     //---------------- BATTERY ----------------------------------------------------------
-    public void updateBatteryLevelText(TextView view, float voltage) {
+    public void updateBatteryLevelText(TextView view, float voltage, int size1, int size2) {
         if (voltage > 0) {
-            TextViewToSpans(view, String.format("%1$.1f", voltage), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+            TextViewToSpans(view, String.format("%1$.1f", voltage), size1, size2);
         } else {
             view.setText("--");
         }
+    }
+    public void updateBatteryLevelText(TextView view, float voltage) {
+        updateBatteryLevelText(view, voltage, TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
     }
     public void updateBatteryLevelIcon(ImageView view, float voltage) {
         if (voltage < 12) {
@@ -74,7 +83,6 @@ public class UiUtils {
             view.setImageResource(R.drawable.car_battery_good);
         }
     }
-
     //--------------- COOLANT ------------------------------------------------------------
     @SuppressLint("StringFormatMatches")
     public void updateCoolantTemperatureText(TextView view, float temp) {
@@ -83,6 +91,10 @@ public class UiUtils {
         } else {
             view.setText("--");
         }
+    }
+    public void updateCoolantTemperatureText(TextView view, float temp, int size) {
+        view.setTextSize(size);
+        updateCoolantTemperatureText(view, temp);
     }
     public void updateCoolantTemperatureIcon(ImageView view, float temp) {
         int res;
@@ -104,26 +116,31 @@ public class UiUtils {
             view.setText(String.format("%1$s", "--"));
         }
     }
+    public void updateFuelLevelText(TextView view, int level, int size) {
+        view.setTextSize(size);
+        updateFuelLevelText(view, level);
+    }
 
     public void updateFuelConsumptionText(TextView view, float consumption) {
-        updateFuelConsumptionTextWithSize(view, consumption, TEXT_SIZE_BEFORE_DOT);
+        updateFuelConsumptionText(view, consumption, TEXT_SIZE_BEFORE_DOT);
     }
 
     public void updateFuelConsumptionText2(TextView view, float consumption) {
-        updateFuelConsumptionTextWithSize(view, consumption, TEXT_SIZE_BEFORE_DOT_2);
+        updateFuelConsumptionText(view, consumption, TEXT_SIZE_BEFORE_DOT_2);
     }
 
     public void updateFuelConsumptionText3(TextView view, float consumption) {
-        updateFuelConsumptionTextWithSize(view, consumption, TEXT_SIZE_BEFORE_DOT_3);
+        updateFuelConsumptionText(view, consumption, TEXT_SIZE_BEFORE_DOT_3);
     }
 
-    private void updateFuelConsumptionTextWithSize(TextView view, float consumption, int size1) {
+    public void updateFuelConsumptionText(TextView view, float consumption, int size1) {
+        updateFuelConsumptionText(view, consumption, size1, TEXT_SIZE_AFTER_DOT);
+    }
+
+    public void updateFuelConsumptionText(TextView view, float consumption, int size1, int size2) {
         if (consumption > 0) {
             TextViewToSpans(view, String.format("%1$.1f", consumption).replace(",", "."),
-                    size1, TEXT_SIZE_AFTER_DOT);
-//            view.setText(String.format(App.getInstance().getApplicationContext()
-//                            .getString(R.string.text_distance), consumption)
-//                    .replace(",", "."));
+                    size1, size2);
         } else {
             view.setText("--.-");
         }
@@ -131,10 +148,10 @@ public class UiUtils {
 
     //---------------- DISTANCE -----------------------------------------------------------
     public void updateDistanceText(TextView view, float distance) {
-        updateDistanceTextWithSize(view, distance, TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+        updateDistanceText(view, distance, TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
     }
 
-    public void updateDistanceTextWithSize(TextView view, float distance, int size1, int size2) {
+    public void updateDistanceText(TextView view, float distance, int size1, int size2) {
         if (distance > 0) {
             TextViewToSpans(view, String.format(App.getInstance().getApplicationContext()
                                     .getString(R.string.text_distance), distance)
@@ -145,6 +162,10 @@ public class UiUtils {
         }
     }
     //---------------- SPEED ---------------------------------------------------------------
+    public void updateSpeedText(TextView view, float speed, boolean withColor, int textSize) {
+        view.setTextSize(textSize);
+        updateSpeedText(view, speed, withColor);
+    }
     public void updateSpeedText(TextView view, float speed, boolean withColor) {
         view.setText(speed > 0 ? String.format(App.getInstance().getApplicationContext()
                 .getString(R.string.text_gps_speed_value), (int) speed) : "---");
@@ -161,6 +182,7 @@ public class UiUtils {
         }
         view.setTextColor( color);
     }
+
     public void updateSpeedIcon(ImageView view, float speed) {
         if (speed > 80) {
             view.setImageResource(R.drawable.speedo_2);

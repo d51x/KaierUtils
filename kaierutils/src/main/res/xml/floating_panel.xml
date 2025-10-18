@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	>
 	<PreferenceCategory
 		android:title="@string/menu_category_floating_panel_icons">
 		<CheckBoxPreference
@@ -44,12 +45,38 @@
 			android:icon="@drawable/conversion_path_40px"
 			/>
 	</PreferenceCategory>
-<!--	<PreferenceCategory android:title="@string/menu_category_toasts_music_title">-->
-<!--		<EditTextPreference-->
-<!--			android:key="CAR_SETTINGS__MUSIC_TOAST_TEXT1_SIZE"-->
-<!--			android:title="@string/menu_music_toast_text1_size_title"-->
-<!--			android:defaultValue="32"-->
-<!--			android:numeric="decimal"-->
-<!--			/>-->
-<!--	</PreferenceCategory>-->
+	<PreferenceCategory android:title="@string/menu_category_floating_panel_sizes">
+		<ru.d51x.kaierutils.Settings.NumberTextPreference
+			android:key="FLOATING_PANEL_ICON_SIZE"
+			android:title="@string/menu_floating_panel_icon_size_title"
+			android:summary="@string/menu_floating_panel_icon_size_summary"
+			android:defaultValue="48"
+			android:inputType="numberDecimal"
+			android:digits="0123456789"
+			/>
+		<ru.d51x.kaierutils.Settings.NumberTextPreference
+			android:key="FLOATING_PANEL_MAIN_TEXT_SIZE"
+			android:title="@string/menu_floating_panel_main_text_size_title"
+			android:summary="@string/menu_floating_panel_main_text_size_summary"
+			android:defaultValue="40"
+			android:inputType="numberDecimal"
+			android:digits="0123456789"
+			/>
+		<ru.d51x.kaierutils.Settings.NumberTextPreference
+			android:key="FLOATING_PANEL_SECOND_TEXT_SIZE"
+			android:title="@string/menu_floating_panel_second_text_size_title"
+			android:summary="@string/menu_floating_panel_second_text_size_summary"
+			android:defaultValue="28"
+			android:inputType="numberDecimal"
+			android:digits="0123456789"
+			/>
+		<ru.d51x.kaierutils.Settings.NumberTextPreference
+			android:key="FLOATING_PANEL_UNITS_SIZE"
+			android:title="@string/menu_floating_panel_units_text_size_title"
+			android:summary="@string/menu_floating_panel_units_text_size_summary"
+			android:defaultValue="16"
+			android:inputType="numberDecimal"
+			android:digits="0123456789"
+			/>
+	</PreferenceCategory>
 </PreferenceScreen>

@@ -994,7 +994,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AE);
                     // tripA tripB
                         if (App.obd.newDistanceCalc) {
-                            ui.updateDistanceTextWithSize(tvDistance, App.obd.todayTrip.distance,
+                            ui.updateDistanceText(tvDistance, App.obd.todayTrip.distance,
                                     TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_BEFORE_DOT);
                         }
                     }

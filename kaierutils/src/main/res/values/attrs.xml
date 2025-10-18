@@ -5,5 +5,8 @@
 		<attr name="minValue" format="integer" />
 		<attr name="maxValue" format="integer" />
 	</declare-styleable>
-	
+
+	<declare-styleable name="ru.d51x.kaierutils.NumberTextPreference">
+	</declare-styleable>
+
 </resources>

@@ -47,6 +47,16 @@
 	<string name="menu_floating_panel_icon_fuel_consumption_title">Расход топлива</string>
 	<string name="menu_floating_panel_icon_distance_title">Пройденый путь</string>
 
+	<string name="menu_category_floating_panel_sizes">Размеры значков и текста</string>
+	<string name="menu_floating_panel_icon_size_title">Размер значка</string>
+	<string name="menu_floating_panel_icon_size_summary">Текущий размер %1$s</string>
+	<string name="menu_floating_panel_main_text_size_title">Размер основного текста</string>
+	<string name="menu_floating_panel_main_text_size_summary">Текущий размер %1$s</string>
+	<string name="menu_floating_panel_second_text_size_title">Размер текста после точки</string>
+	<string name="menu_floating_panel_second_text_size_summary">Текущий размер %1$s</string>
+	<string name="menu_floating_panel_units_text_size_title">Размер единиц измерения</string>
+	<string name="menu_floating_panel_units_text_size_summary">Текущий размер %1$s</string>
+
 	<!-- reverse menu -->
 	<string name="menu_category_reverse_fixed_volume">Фиксированный уровень громкости</string>
 	<string name="menu_category_reverse_percent_volume">Относительный уровень громкости</string>
