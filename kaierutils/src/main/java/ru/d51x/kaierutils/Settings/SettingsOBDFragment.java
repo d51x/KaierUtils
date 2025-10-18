@@ -82,7 +82,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
 
         cbCanMMC = mV.findViewById(R.id.cbCanMMC);
         cbCanMMC.setOnClickListener(this);
-        cbCanMMC.setChecked(App.obd.MMC_CAN);
+        cbCanMMC.setChecked(App.obd.mmcCan);
 
         cbCanMMC_show_fuel = mV.findViewById(R.id.cbCanMMC_show_fuel);
         cbCanMMC_show_fuel.setOnClickListener(this);
@@ -110,19 +110,19 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
 
         cbOBD_show_battery = mV.findViewById(R.id.cbOBD_show_battery);
         cbOBD_show_battery.setOnClickListener(this);
-        cbOBD_show_battery.setChecked(App.obd.battery_show);
+        cbOBD_show_battery.setChecked(App.obd.batteryShow);
 
         cbOBD_show_engine_temp = mV.findViewById(R.id.cbOBD_show_engine_temp);
         cbOBD_show_engine_temp.setOnClickListener(this);
-        cbOBD_show_engine_temp.setChecked(App.obd.engine_temp_show);
+        cbOBD_show_engine_temp.setChecked(App.obd.engineTempShow);
 
         cbOBD_show_fuel_detail = mV.findViewById(R.id.cbOBD_show_fuel_detail);
         cbOBD_show_fuel_detail.setOnClickListener(this);
-        cbOBD_show_fuel_detail.setChecked(App.obd.fuel_data_show);
+        cbOBD_show_fuel_detail.setChecked(App.obd.fuelDataShow);
 
         cbOBD_show_fuel_consump_detail = mV.findViewById(R.id.cbOBD_show_fuel_consump_detail);
         cbOBD_show_fuel_consump_detail.setOnClickListener(this);
-        cbOBD_show_fuel_consump_detail.setChecked(App.obd.fuel_consump_show);
+        cbOBD_show_fuel_consump_detail.setChecked(App.obd.fuelConsumpShow);
 
         edtCanMMC_fueltank_update_time = mV.findViewById(R.id.edtCanMMC_fueltank_update_time);
         edtCanMMC_fueltank_update_time.setText(Integer.toString(App.obd.can.can_mmc_fuel_remain_update_time));
@@ -138,11 +138,11 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
 
 
         edtOBD_voltage_update_time =mV.findViewById(R.id.edtOBD_voltage_update_time);
-        edtOBD_voltage_update_time.setText(Integer.toString(App.obd.voltage_update_time));
+        edtOBD_voltage_update_time.setText(Integer.toString(App.obd.voltageUpdateTime));
         edtOBD_voltage_update_time.setOnFocusChangeListener( this );
 
         edtOBD_engine_temp_update_time = mV.findViewById(R.id.edtOBD_engine_temp_update_time);
-        edtOBD_engine_temp_update_time.setText(Integer.toString(App.obd.engine_temp_update_time));
+        edtOBD_engine_temp_update_time.setText(Integer.toString(App.obd.engineTempUpdateTime));
         edtOBD_engine_temp_update_time.setOnFocusChangeListener( this );
 
         btnOBDSelectDevice2 = mV.findViewById(R.id.btnSelectDevice2);
@@ -197,8 +197,8 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
                 prefs.edit().putBoolean("ODBII_NEW_PROCESS", App.obd.newObdProcess).apply();
                 break;
             case R.id.cbCanMMC:
-                App.obd.MMC_CAN = cbCanMMC.isChecked();
-                prefs.edit().putBoolean("ODBII_USE_MMC_CAN", App.obd.MMC_CAN).apply();
+                App.obd.mmcCan = cbCanMMC.isChecked();
+                prefs.edit().putBoolean("ODBII_USE_MMC_CAN", App.obd.mmcCan).apply();
                 break;
             case R.id.cbCanMMC_show_fuel:
                 App.obd.can.can_mmc_fuel_remain_show = cbCanMMC_show_fuel.isChecked();
@@ -231,20 +231,20 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
                 BackgroundService.stopOBDThread();
                 break;
             case R.id.cbOBD_show_battery:
-                App.obd.battery_show = cbOBD_show_battery.isChecked();
-                prefs.edit().putBoolean("ODBII_BATTERY_SHOW", App.obd.battery_show).apply();
+                App.obd.batteryShow = cbOBD_show_battery.isChecked();
+                prefs.edit().putBoolean("ODBII_BATTERY_SHOW", App.obd.batteryShow).apply();
                 break;
             case R.id.cbOBD_show_engine_temp:
-                App.obd.engine_temp_show = cbOBD_show_engine_temp.isChecked();
-                prefs.edit().putBoolean("ODBII_ENGINE_TEMP_SHOW", App.obd.engine_temp_show).apply();
+                App.obd.engineTempShow = cbOBD_show_engine_temp.isChecked();
+                prefs.edit().putBoolean("ODBII_ENGINE_TEMP_SHOW", App.obd.engineTempShow).apply();
                 break;
             case R.id.cbOBD_show_fuel_detail:
-                App.obd.fuel_data_show = cbOBD_show_fuel_detail.isChecked();
-                prefs.edit().putBoolean("ODBII_FUEL_DATA_SHOW", App.obd.fuel_data_show).apply();
+                App.obd.fuelDataShow = cbOBD_show_fuel_detail.isChecked();
+                prefs.edit().putBoolean("ODBII_FUEL_DATA_SHOW", App.obd.fuelDataShow).apply();
                 break;
             case R.id.cbOBD_show_fuel_consump_detail:
-                App.obd.fuel_consump_show = cbOBD_show_fuel_consump_detail.isChecked();
-                prefs.edit().putBoolean("ODBII_FUEL_CONSUMP_SHOW", App.obd.fuel_consump_show).apply();
+                App.obd.fuelConsumpShow = cbOBD_show_fuel_consump_detail.isChecked();
+                prefs.edit().putBoolean("ODBII_FUEL_CONSUMP_SHOW", App.obd.fuelConsumpShow).apply();
                 break;
             default:
                 break;
@@ -278,14 +278,14 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
                 break;
             case R.id.edtOBD_engine_temp_update_time:
                 if ( ! hasFocus ) {
-                    App.obd.engine_temp_update_time = Integer.parseInt( edtOBD_engine_temp_update_time.getText().toString() );
-                    prefs.edit().putInt("ODBII_ENGINE_TEMP_UPDATE_TIME", App.obd.engine_temp_update_time).apply();
+                    App.obd.engineTempUpdateTime = Integer.parseInt( edtOBD_engine_temp_update_time.getText().toString() );
+                    prefs.edit().putInt("ODBII_ENGINE_TEMP_UPDATE_TIME", App.obd.engineTempUpdateTime).apply();
                 }
                 break;
             case R.id.edtOBD_voltage_update_time:
                 if ( ! hasFocus ) {
-                    App.obd.voltage_update_time = Integer.parseInt( edtOBD_voltage_update_time.getText().toString() );
-                    prefs.edit().putInt("ODBII_VOLTAGE_UPDATE_TIME", App.obd.voltage_update_time).apply();
+                    App.obd.voltageUpdateTime = Integer.parseInt( edtOBD_voltage_update_time.getText().toString() );
+                    prefs.edit().putInt("ODBII_VOLTAGE_UPDATE_TIME", App.obd.voltageUpdateTime).apply();
                 }
                 break;
             default:

@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import ru.d51x.kaierutils.R;
 
 
-public class OBDIIFragment extends Fragment {
+public class Obd2Fragment extends Fragment {
 
 
-    public OBDIIFragment() {
+    public Obd2Fragment() {
         // Required empty public constructor
     }
 

@@ -23,12 +23,12 @@ public class OBDThread extends Thread {
     }
     public volatile boolean isActive = false;
 
-    class ObdTimerTask extends TimerTask {
+    static class ObdTimerTask extends TimerTask {
         @Override
         public void run() {
                 if ( ! App.GS.isReverseMode ) {
                     if (!App.obd.newObdProcess) {
-                        App.obd.processOBD_MAF();
+                        App.obd.processObdMaf();
                         App.obd.processData();
                     }
                 }

@@ -198,7 +198,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
 
-    private UiUtils ui = new UiUtils();
+    private final UiUtils ui = new UiUtils();
 	@SuppressLint("SuspiciousIndentation")
     @Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -493,13 +493,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
         updateOBDStatus(App.obd.isConnected);
 
         layoutObd2.setVisibility( App.obd.useOBD ? View.VISIBLE : View.INVISIBLE );
-        layoutBattery.setVisibility( (App.obd.battery_show) ? View.VISIBLE : View.GONE);
-        layoutObdFuel.setVisibility( (App.obd.fuel_data_show) ? View.VISIBLE : View.GONE);
-        layoutFuelConsump.setVisibility( (App.obd.fuel_consump_show) ? View.VISIBLE : View.GONE);
+        layoutBattery.setVisibility( (App.obd.batteryShow) ? View.VISIBLE : View.GONE);
+        layoutObdFuel.setVisibility( (App.obd.fuelDataShow) ? View.VISIBLE : View.GONE);
+        layoutFuelConsump.setVisibility( (App.obd.fuelConsumpShow) ? View.VISIBLE : View.GONE);
 
-        layoutCvtData.setVisibility( (App.obd.MMC_CAN && (App.obd.can.can_mmc_cvt_degr_show || App.obd.can.can_mmc_cvt_temp_show)) ? View.VISIBLE : View.GONE);
-        layoutMmcClimate.setVisibility( (App.obd.MMC_CAN && App.obd.can.can_mmc_ac_data_show) ? View.VISIBLE : View.GONE);
-        layoutTempData.setVisibility( App.obd.engine_temp_show ? View.VISIBLE : View.GONE);
+        layoutCvtData.setVisibility( (App.obd.mmcCan && (App.obd.can.can_mmc_cvt_degr_show || App.obd.can.can_mmc_cvt_temp_show)) ? View.VISIBLE : View.GONE);
+        layoutMmcClimate.setVisibility( (App.obd.mmcCan && App.obd.can.can_mmc_ac_data_show) ? View.VISIBLE : View.GONE);
+        layoutTempData.setVisibility( App.obd.engineTempShow ? View.VISIBLE : View.GONE);
         ibFloatingPanel.setVisibility(!App.GS.isShowingFloatingPanel ? View.VISIBLE : View.INVISIBLE);
 
         // обновить данные OBD
@@ -1250,7 +1250,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     @SuppressLint("DefaultLocale")
     public void updateCarBattery(float voltage) {
-        if (App.obd.battery_show) {
+        if (App.obd.batteryShow) {
             layoutBattery.setVisibility(View.VISIBLE);
             ui.updateBatteryLevelIcon(ivCarBattery, voltage);
             ui.updateBatteryLevelText(tvCarBattery, voltage);
@@ -1261,14 +1261,14 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     @SuppressLint("DefaultLocale")
     public void updateCoolantTemp(int mode, CanMmcData.State state){
-        if ( App.obd.engine_temp_show ) {
+        if ( App.obd.engineTempShow) {
             layoutTempData.setVisibility( View.VISIBLE );
 
             // TODO: 06.10.2025 select coolant type from preferences
             //float temp = App.obd.obdData.coolant;
             float temp = App.obd.can.engine.getCoolantTemperature();
             ivCoolantTempFan.setVisibility(((state == CanMmcData.State.on) &&
-                            App.obd.MMC_CAN && App.obd.can.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
+                            App.obd.mmcCan && App.obd.can.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
             ui.updateCoolantTemperatureIcon(ivCoolantTemp, temp);
             ui.updateCoolantTemperatureText(tvCoolantTemp, temp);
         } else {
@@ -1278,7 +1278,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     @SuppressLint("SetTextI18n")
     public void updateCvtData(int mode, int temperature, int degr) {
-        if ( App.obd.MMC_CAN && (App.obd.can.can_mmc_cvt_degr_show
+        if ( App.obd.mmcCan && (App.obd.can.can_mmc_cvt_degr_show
                 || App.obd.can.can_mmc_cvt_temp_show)) {
             layoutCvtData.setVisibility( View.VISIBLE);
         } else {
@@ -1288,13 +1288,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         switch (mode) {
             case 0:
-                if ( App.obd.MMC_CAN && App.obd.can.can_mmc_cvt_temp_show) {
+                if ( App.obd.mmcCan && App.obd.can.can_mmc_cvt_temp_show) {
                     ui.updateCvtTemperatureText(tvCvtData, temperature);
                     ui.updateCvtTemperatureIcon(ivCvtData, temperature);
                 }
                 break;
             case 1:
-                if ( App.obd.MMC_CAN && App.obd.can.can_mmc_cvt_degr_show) {
+                if ( App.obd.mmcCan && App.obd.can.can_mmc_cvt_degr_show) {
                     ui.updateCvtTemperatureText(tvCvtData, degr);
                     ui.updateCvtOilDegradationIcon(ivCvtData, degr);
                 }
@@ -1492,7 +1492,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 show_hide_fuel_consump_line_2(modeFuelConsump == 3);
                 break;
             default:
-                show_hide_fuel_consump_line_2(modeFuelConsump == 3);
+                show_hide_fuel_consump_line_2(false);
                 ivFuelConsump.setImageResource(R.drawable.fuel_consump);
                 break;
         }
@@ -1523,13 +1523,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
     // TODO: отобразить данные  о количестве топлива в баке (учесть показания с приборки)
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     private void show_fuel_tank_data(int mode) {
-        if ( ! App.obd.fuel_data_show ) {
+        if ( ! App.obd.fuelDataShow) {
             layoutObdFuel.setVisibility( View.GONE );
         } else {
             layoutObdFuel.setVisibility( View.VISIBLE );
             switch (mode) {
                 case 0:
-                    if (App.obd.MMC_CAN && App.obd.can.can_mmc_fuel_remain_show) {
+                    if (App.obd.mmcCan && App.obd.can.can_mmc_fuel_remain_show) {
                         // по кан
                         ui.updateFuelLevelText(tvFuelTank, App.obd.can.meter.getFuelLevel());
                     } else {
@@ -1541,7 +1541,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     break;
                 case 1:
 
-                    if (App.obd.MMC_CAN && App.obd.can.can_mmc_fuel_remain_show) {
+                    if (App.obd.mmcCan && App.obd.can.can_mmc_fuel_remain_show) {
                         // по кан
                         if ( App.obd.can.meter.getFuelLevel() < 0)
                         tvFuelTank.setText(String.format("%1$s", "--"));
@@ -1568,7 +1568,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     // отобразить/спрятать второй показатель расхода при включении/выключении комбинированного режима
     private void show_hide_fuel_consump_line_2 (boolean line2) {
-        if ( ! App.obd.fuel_consump_show ) {
+        if ( ! App.obd.fuelConsumpShow) {
             layoutFuelConsump.setVisibility( View.GONE );
         } else {
             layoutFuelConsump.setVisibility( View.VISIBLE );

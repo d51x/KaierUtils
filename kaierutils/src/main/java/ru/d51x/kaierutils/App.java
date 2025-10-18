@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import ru.d51x.kaierutils.OBD2.OBDII;
+import ru.d51x.kaierutils.OBD2.Obd2;
 import ru.d51x.kaierutils.Toasts.MusicToast;
 import ru.d51x.kaierutils.Toasts.RadioToast;
 import ru.d51x.kaierutils.Toasts.SensorsToast;
@@ -25,7 +25,7 @@ import ru.d51x.kaierutils.Toasts.SensorsToast;
 public class App extends Application implements Application.ActivityLifecycleCallbacks {
 	static App self;
 	public static GlSets GS;
-    public static OBDII obd;
+    public static Obd2 obd;
 	public static RadioToast rToast;
 	public static MusicToast mToast;
 	public static SensorsToast sensorsToast;
@@ -70,7 +70,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
             }
         }
 
-        obd = new OBDII( self );
+        obd = new Obd2( self );
 		//this.startService (new Intent (this, BackgroundService.class));
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			this.startForegroundService(new Intent(this, BackgroundService.class));

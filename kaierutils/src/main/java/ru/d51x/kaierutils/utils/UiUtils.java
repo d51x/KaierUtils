@@ -66,6 +66,7 @@ public class UiUtils {
     }
 
     //---------------- BATTERY ----------------------------------------------------------
+    @SuppressLint("DefaultLocale")
     public void updateBatteryLevelText(TextView view, float voltage, int size1, int size2) {
         if (voltage > 0) {
             TextViewToSpans(view, String.format("%1$.1f", voltage), size1, size2);
@@ -137,6 +138,7 @@ public class UiUtils {
         updateFuelConsumptionText(view, consumption, size1, TEXT_SIZE_AFTER_DOT);
     }
 
+    @SuppressLint("DefaultLocale")
     public void updateFuelConsumptionText(TextView view, float consumption, int size1, int size2) {
         if (consumption > 0) {
             TextViewToSpans(view, String.format("%1$.1f", consumption).replace(",", "."),
@@ -170,7 +172,7 @@ public class UiUtils {
         view.setText(speed > 0 ? String.format(App.getInstance().getApplicationContext()
                 .getString(R.string.text_gps_speed_value), (int) speed) : "---");
 
-        int color = Color.LTGRAY;
+        int color = 0;
         if ( withColor ) {
             if ( speed < 10 ) color = Color.LTGRAY;
             else if ( speed < 40 ) color = Color.rgb(0,255,255);

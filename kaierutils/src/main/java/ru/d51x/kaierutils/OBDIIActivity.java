@@ -127,7 +127,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TableRow trMMCHeader;
     private TableRow trMMCValues;
     private UiUtils ui = new UiUtils();
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @SuppressLint("DefaultLocale")
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -148,9 +148,9 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
             else if (OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED.equals(action)) {
                 tvOBD_CMUVoltage.setText(String.format(getString(R.string.text_obd_cmu_voltage_f), intent.getStringExtra("cmuVoltage")));
             }
-            else if (OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED.equals(action)) {
-
-            }
+//            else if (OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED.equals(action)) {
+//
+//            }
             else if (OBD_BROADCAST_ACTION_MAF_CHANGED.equals(action)) {
                 tvOBD_MAF.setText(String.format(getString(R.string.text_obd_fuel_consumption_maf_f)
                         .replace("g/s", ""), intent.getStringExtra("sMAF")));
@@ -299,6 +299,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -357,14 +358,14 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
         cbCanMMC = findViewById(R.id.cbCanMMC);
         cbCanMMC.setOnClickListener(this);
-        cbCanMMC.setChecked(App.obd.MMC_CAN);
+        cbCanMMC.setChecked(App.obd.mmcCan);
 
 
         trMMCHeader = findViewById(R.id.trMMCHeader);
-        trMMCHeader.setVisibility(App.obd.MMC_CAN ? View.VISIBLE : View.GONE);
+        trMMCHeader.setVisibility(App.obd.mmcCan ? View.VISIBLE : View.GONE);
 
         trMMCValues = findViewById(R.id.trMMCValues);
-        trMMCValues.setVisibility(App.obd.MMC_CAN ? View.VISIBLE : View.GONE);
+        trMMCValues.setVisibility(App.obd.mmcCan ? View.VISIBLE : View.GONE);
 
 
         tvOBDEngineRPM.setText(String.format(getString(R.string.text_obd_engine_rpm_f), "---"));
@@ -501,13 +502,13 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 setOnOffOBD( App.obd.useOBD );
                 break;
             case R.id.cbCanMMC:
-                App.obd.MMC_CAN = cbCanMMC.isChecked();
+                App.obd.mmcCan = cbCanMMC.isChecked();
 
-                trMMCHeader.setVisibility(App.obd.MMC_CAN ? View.VISIBLE : View.GONE);
-                trMMCValues.setVisibility(App.obd.MMC_CAN ? View.VISIBLE : View.GONE);
+                trMMCHeader.setVisibility(App.obd.mmcCan ? View.VISIBLE : View.GONE);
+                trMMCValues.setVisibility(App.obd.mmcCan ? View.VISIBLE : View.GONE);
 
 
-                prefs.edit().putBoolean("ODBII_USE_MMC_CAN", App.obd.MMC_CAN).apply();
+                prefs.edit().putBoolean("ODBII_USE_MMC_CAN", App.obd.mmcCan).apply();
                 break;
             case R.id.btnResetDegr:
                 btnResetDegradation.setEnabled(false);
@@ -548,4 +549,11 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     }
 
 
+    public UiUtils getUi() {
+        return ui;
+    }
+
+    public void setUi(UiUtils ui) {
+        this.ui = ui;
+    }
 }

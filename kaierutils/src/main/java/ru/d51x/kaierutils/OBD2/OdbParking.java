@@ -9,10 +9,10 @@ import android.os.Message;
 import java.util.ArrayList;
 
 public class OdbParking {
-    public static final String TAG = "OBD2Parking";
-    private static void processPid2101(int msg_id, Handler mHandler, ArrayList<Integer> buffer) {
+    public static final String TAG = "OdbParking";
+    private static void processPid2101(int msgId, Handler mHandler, ArrayList<Integer> buffer) {
         Message message = new Message();
-        message.what = msg_id;
+        message.what = msgId;
         message.obj = buffer;
         mHandler.sendMessage(message);
     }

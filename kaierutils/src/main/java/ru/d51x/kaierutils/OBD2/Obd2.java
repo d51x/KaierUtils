@@ -4,6 +4,7 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.*;
 import static ru.d51x.kaierutils.utils.MessageUtils.SendBroadcastAction;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -13,13 +14,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
@@ -54,7 +55,7 @@ import ru.d51x.kaierutils.Data.TripData;
 
 /**
  */
-public class OBDII  {
+public class Obd2 {
     public static final boolean localDebug = BuildConfig.SIMULATE_OBD;
 
     public static final String TAG = "OBD2";
@@ -62,17 +63,17 @@ public class OBDII  {
     private static long tSleep = 0;
     public boolean isConnected;
     public boolean useOBD;
-       public boolean battery_show = false;
-    public boolean engine_temp_show = false;
-    public boolean fuel_data_show = false;
-    public boolean fuel_consump_show = false;
-    public int voltage_update_time = 5; // сек
-    public int engine_temp_update_time = 5; // сек
+       public boolean batteryShow = false;
+    public boolean engineTempShow = false;
+    public boolean fuelDataShow = false;
+    public boolean fuelConsumpShow = false;
+    public int voltageUpdateTime = 5; // сек
+    public int engineTempUpdateTime = 5; // сек
     public EngineRPMObdCommand engineRpmCommand;
     public SpeedObdCommand speedCommand;
     public EngineCoolantTemperatureObdCommand coolantTempCommand;
     public ControlModuleVoltageObdCommand cmuVoltageCommand;
-    public MassAirFlowObdCommand MAFObdCommand;
+    public MassAirFlowObdCommand mafObdCommand;
 
     public ObdData obdData;
     public boolean isServiceCommand = false;
@@ -82,7 +83,7 @@ public class OBDII  {
     public boolean readExtendMeter = false;
     public boolean readExtendClimate = false;
     public boolean newObdProcess = true;
-    public boolean MMC_CAN;
+    public boolean mmcCan;
     public boolean newDistanceCalc = true;
     public TripData totalTrip;
     public TripData oneTrip;
@@ -94,12 +95,13 @@ public class OBDII  {
     private String deviceAddress;
     private Handler mHandler = new Handler();
     private BluetoothSocket socket;
-    private long MAF_TimeStamp1, MAF_TimeStamp2;
-    private long Voltage_TimeStamp1, Voltage_TimeStamp2;
-    private long Coolant_TimeStamp1, Coolant_TimeStamp2;
+    private long mafTimeStamp1, mafTimeStamp2;
+    private long voltageTimeStamp1, voltageTimeStamp2;
+    private long coolantTimeStamp1, coolantTimeStamp2;
     public Fuel fuel = new Fuel();
 
-    public OBDII(Context context) {
+    @SuppressLint("HandlerLeak")
+    public Obd2(Context context) {
         mContext = context;
         deviceName = null;
         deviceAddress = null;
@@ -110,15 +112,15 @@ public class OBDII  {
         socket = null;
         mHandler = new Handler();
         useOBD = prefs.getBoolean("ODBII_USE_BLUETOOTH", false);
-        MMC_CAN = prefs.getBoolean("ODBII_USE_MMC_CAN", false);
+        mmcCan = prefs.getBoolean("ODBII_USE_MMC_CAN", false);
 
-        battery_show = prefs.getBoolean("ODBII_BATTERY_SHOW", false);
-        engine_temp_show = prefs.getBoolean("ODBII_ENGINE_TEMP_SHOW", false);
-        fuel_data_show = prefs.getBoolean("ODBII_FUEL_DATA_SHOW", false);
-        fuel_consump_show = prefs.getBoolean("ODBII_FUEL_CONSUMP_SHOW", false);
+        batteryShow = prefs.getBoolean("ODBII_BATTERY_SHOW", false);
+        engineTempShow = prefs.getBoolean("ODBII_ENGINE_TEMP_SHOW", false);
+        fuelDataShow = prefs.getBoolean("ODBII_FUEL_DATA_SHOW", false);
+        fuelConsumpShow = prefs.getBoolean("ODBII_FUEL_CONSUMP_SHOW", false);
 
-        voltage_update_time = prefs.getInt("ODBII_VOLTAGE_UPDATE_TIME", 5); // сек
-        engine_temp_update_time = prefs.getInt("ODBII_ENGINE_TEMP_UPDATE_TIME", 5); // сек
+        voltageUpdateTime = prefs.getInt("ODBII_VOLTAGE_UPDATE_TIME", 5); // сек
+        engineTempUpdateTime = prefs.getInt("ODBII_ENGINE_TEMP_UPDATE_TIME", 5); // сек
 
 
         obdData = new ObdData();
@@ -132,23 +134,21 @@ public class OBDII  {
         // если подключены, то выполняем команды
         // если не подключены, то пытаемся подключиться
 
-        MAF_TimeStamp1 = System.currentTimeMillis();
-        MAF_TimeStamp2 = System.currentTimeMillis();
+        mafTimeStamp1 = System.currentTimeMillis();
+        mafTimeStamp2 = System.currentTimeMillis();
 
-        Voltage_TimeStamp1 = System.currentTimeMillis();
-        Voltage_TimeStamp2 = System.currentTimeMillis();
-        Coolant_TimeStamp1 = System.currentTimeMillis();
-        Coolant_TimeStamp2 = System.currentTimeMillis();
+        voltageTimeStamp1 = System.currentTimeMillis();
+        voltageTimeStamp2 = System.currentTimeMillis();
+        coolantTimeStamp1 = System.currentTimeMillis();
+        coolantTimeStamp2 = System.currentTimeMillis();
 
-        mHandler = new Handler() {
+        mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message message) {
                 processHandler(message);
             }
         };
     }
-
-    ;
 
     public String getDeviceName() {
         return deviceName;
@@ -319,7 +319,7 @@ public class OBDII  {
         speedCommand = new SpeedObdCommand();
         coolantTempCommand = new EngineCoolantTemperatureObdCommand();
         cmuVoltageCommand = new ControlModuleVoltageObdCommand();
-        MAFObdCommand = new MassAirFlowObdCommand();
+        mafObdCommand = new MassAirFlowObdCommand();
 
     }
 
@@ -327,14 +327,14 @@ public class OBDII  {
         if (isServiceCommand) return;
         // новый тип мониторинга без таймеров, просто сплошняком
         // блок 1 - примерно 1000-1200 мсек  без расширенных данных
-        processOBD_MAF();
+        processObdMaf();
         requestMmcEngine(false, false);
         requestMmcAirCond(App.obd.readExtendClimate);
         // блок 2 - примерно 800-900 мсек без расширенных данных
-        processOBD_MAF();
+        processObdMaf();
         requestMmcCvt(App.obd.readExtendCvt);
         // блок 3 - примерно 800 - 900 мсек без расширенных данных
-        processOBD_MAF();
+        processObdMaf();
         requestMmcCombineMeter(App.obd.readExtendMeter);
      }
 
@@ -343,7 +343,7 @@ public class OBDII  {
         if (isServiceCommand) return;
         //Log.d("OBDII-->processData()", "_");
 
-        if ( MMC_CAN )  {
+        if (mmcCan)  {
             // переходим на режим работы MMC CAN и пиды 21хх
             requestMmcEngine(false, false);
             requestMmcCvt(App.obd.readExtendCvt);
@@ -353,18 +353,18 @@ public class OBDII  {
 
         } else {
             // переходим на дефолтный режим работы по стандартным пидам 01 хх
-            SetHeaders("7E0", "7E8", false); // TODO: сделать это 1 раз после включения галки
+            setHeaders("7E0", "7E8", false); // TODO: сделать это 1 раз после включения галки
 
-            processOBD_EngineRPM();         // RPM:             01 0C
-            processOBD_Speed();             // Speed:           01 0D
-            processOBD_coolantTemp();       // Coolant:         01 05
-            processOBD_CMVoltage();         // Voltage:         01 42
+            processObdEngineRpm();         // RPM:             01 0C
+            processObdSpeed();             // Speed:           01 0D
+            processObdCoolantTemp();       // Coolant:         01 05
+            processObdVoltage();         // Voltage:         01 42
             // к этому моменту уже должна пройти 1 сек = 5 функций с задержкой 200 мсек
             //processOBD_MAF();               // MAF:             01 10
         }
     }
 
-    private void processOBD_EngineRPM() {
+    private void processObdEngineRpm() {
         if (isServiceCommand) return;
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
@@ -396,7 +396,7 @@ public class OBDII  {
         activeOther = false;
     }
 
-    private void processOBD_Speed() {
+    private void processObdSpeed() {
         if (isServiceCommand) return;
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
@@ -433,15 +433,15 @@ public class OBDII  {
         activeOther = false;
     }
 
-    private void processOBD_coolantTemp() {
+    private void processObdCoolantTemp() {
         if (isServiceCommand) return;
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
-        if ( !engine_temp_show ) return;
+        if ( !engineTempShow) return;
 
-        Coolant_TimeStamp2 = System.currentTimeMillis();
-        long t = Coolant_TimeStamp2 - Coolant_TimeStamp1;
-        if ( t < ( engine_temp_update_time * 1000L)) {return;}
+        coolantTimeStamp2 = System.currentTimeMillis();
+        long t = coolantTimeStamp2 - coolantTimeStamp1;
+        if ( t < ( engineTempUpdateTime * 1000L)) {return;}
 
 
         activeOther = true;
@@ -451,7 +451,7 @@ public class OBDII  {
             obdData.coolant = coolantTempCommand.getTemperature();
             Log.d(TAG, String.format("Command Coolant :: %d ms", System.currentTimeMillis() - tt));
 
-            Coolant_TimeStamp1 = Coolant_TimeStamp2;
+            coolantTimeStamp1 = coolantTimeStamp2;
 
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
@@ -484,15 +484,15 @@ public class OBDII  {
         }
     }
 
-    private void processOBD_CMVoltage() {
+    private void processObdVoltage() {
         if (isServiceCommand) return;
         if ( activeMAF ) return;
-        if ( ! battery_show ) return;
+        if ( !batteryShow) return;
         if ( App.GS.isReverseMode ) return;
 
-        Voltage_TimeStamp2 = System.currentTimeMillis();
-        long t = Voltage_TimeStamp2 - Voltage_TimeStamp1;
-        if ( t < ( voltage_update_time * 1000L)) {return;}
+        voltageTimeStamp2 = System.currentTimeMillis();
+        long t = voltageTimeStamp2 - voltageTimeStamp1;
+        if ( t < ( voltageUpdateTime * 1000L)) {return;}
 
         activeOther = true;
         try {
@@ -501,7 +501,7 @@ public class OBDII  {
             obdData.voltage = cmuVoltageCommand.getVoltage();
             Log.d(TAG, String.format("Command Voltage :: %d ms", System.currentTimeMillis() - tt));
 
-            Voltage_TimeStamp1 = Voltage_TimeStamp2;
+            voltageTimeStamp1 = voltageTimeStamp2;
 
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
@@ -529,23 +529,23 @@ public class OBDII  {
         activeOther = false;
     }
 
-    public void processOBD_MAF() {
+    public void processObdMaf() {
         if (isServiceCommand) return;
         //if ( activeOther ) return;
         try {
 
             // TODO: убрать костыль, когда найду нужный пид
-            SetHeaders("7E0", "7E8", false);
+            setHeaders("7E0", "7E8", false);
             activeMAF = true;
 
             long tt = System.currentTimeMillis();
-            MAFObdCommand.run(socket.getInputStream(), socket.getOutputStream());
-            obdData.maf = MAFObdCommand.getMAF();
+            mafObdCommand.run(socket.getInputStream(), socket.getOutputStream());
+            obdData.maf = mafObdCommand.getMAF();
             Log.d(TAG, String.format("Command MAF :: %d ms", System.currentTimeMillis() - tt));
 
-            MAF_TimeStamp2 = System.currentTimeMillis();
-            long t = MAF_TimeStamp2 - MAF_TimeStamp1;
-            MAF_TimeStamp1 = MAF_TimeStamp2;
+            mafTimeStamp2 = System.currentTimeMillis();
+            long t = mafTimeStamp2 - mafTimeStamp1;
+            mafTimeStamp1 = mafTimeStamp2;
 
             //Log.d("OBDII-->processOBD_MAF()", "MAF time: " + Float.toString( t / 1000f ) + " сек");
 
@@ -558,7 +558,7 @@ public class OBDII  {
 
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            intent.putExtra("sMAF", MAFObdCommand.getFormattedResult());
+            intent.putExtra("sMAF", mafObdCommand.getFormattedResult());
             intent.putExtra("dMAF", obdData.maf);
             intent.setAction(OBD_BROADCAST_ACTION_MAF_CHANGED);
             App.getInstance ().sendBroadcast(intent);
@@ -626,7 +626,7 @@ public class OBDII  {
     private boolean startDiagnosticSession(String blokcId, String rxAddr) {
         ArrayList<Integer> buffer = null;
         activeMAF = false;
-        SetHeaders(blokcId, rxAddr, false);
+        setHeaders(blokcId, rxAddr, false);
         buffer = runObdCommand("1092", socket);
         // 1092 ==> 5092
         return buffer.get(0) == 0x50 && buffer.get(1) == 0x92;
@@ -775,7 +775,7 @@ public class OBDII  {
         fuel.save();
     }
 
-    private void SetHeaders(String canAddr, String txAddr, boolean flowControl) {
+    private void setHeaders(String canAddr, String txAddr, boolean flowControl) {
         if (localDebug) return;
         if ( activeMAF ) return;
         activeOther = true;
@@ -826,7 +826,7 @@ public class OBDII  {
         // если предыдущий запрос был по MAF, то здесь хедер можно не устанвливать,
         // т.к. он такой же, это экономит 100-200 ms, т.е. +1 лишний реквест в 7E0
         if (setHeader) {
-            SetHeaders(BLOCK_7E0, "7E8", false);
+            setHeaders(BLOCK_7E0, "7E8", false);
         }
 
         ArrayList<Integer> buffer;
@@ -876,7 +876,7 @@ public class OBDII  {
             }
 
             activeOther = true;
-            SetHeaders(BLOCK_7E1, BLOCK_RX_7E9, true);
+            setHeaders(BLOCK_7E1, BLOCK_RX_7E9, true);
 
             if ( can.can_mmc_cvt_temp_show ) {
                 if ( t_temp < (can.can_mmc_cvt_temp_update_time * 1000L) ) return; //время не вышло
@@ -906,7 +906,7 @@ public class OBDII  {
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
 
-        if ( App.obd.MMC_CAN && App.obd.can.can_mmc_fuel_remain_show ) {
+        if ( App.obd.mmcCan && App.obd.can.can_mmc_fuel_remain_show ) {
             App.obd.can.FuelLevel_TimeStamp2 = System.currentTimeMillis();
             long t = App.obd.can.FuelLevel_TimeStamp2- App.obd.can.FuelLevel_TimeStamp1;
 
@@ -926,7 +926,7 @@ public class OBDII  {
                 21 AF  - 100        voltage
                 21 BC  - 150 (FC)   service reminder
              */
-            SetHeaders(BLOCK_6A0, BLOCK_RX_514, true);
+            setHeaders(BLOCK_6A0, BLOCK_RX_514, true);
 
 //            buffer = requestCanEcu(BLOCK_6A0_PID_21A1, BLOCK_6A0); // speed - иногда отдает лажу
 //            processObdCommandResult(BLOCK_6A0_PID_21A1, BLOCK_6A0, buffer);
@@ -969,7 +969,7 @@ public class OBDII  {
         ArrayList<Integer> buffer;
         if (App.obd.can.can_mmc_ac_data_show) {
             activeOther = true;
-            SetHeaders(BLOCK_688, BLOCK_RX_511, false);
+            setHeaders(BLOCK_688, BLOCK_RX_511, false);
             /* время на выполнение команд max = 1000 ms
                header - 220 ms
                 21 10 - 130         coolant t, air t, interior t
@@ -1015,7 +1015,7 @@ public class OBDII  {
 
         if (App.obd.can.can_mmc_parking_data_show) {
             ArrayList<Integer> buffer;
-            SetHeaders(BLOCK_763, "764", false);
+            setHeaders(BLOCK_763, "764", false);
             buffer = requestCanEcu(BLOCK_763_PID_2101, BLOCK_763);
             processObdCommandResult(BLOCK_763_PID_2101, BLOCK_763, buffer);
         }
@@ -1025,7 +1025,7 @@ public class OBDII  {
         if (isServiceCommand) return;
         if ( activeMAF ) return;
         ArrayList<Integer> buffer = null;
-        SetHeaders( "7B6", "7B7", true);
+        setHeaders( "7B6", "7B7", true);
         buffer = requestCanEcu("2130", "7B6");
         processObdCommandResult("2130", "7B6", buffer);
     }
