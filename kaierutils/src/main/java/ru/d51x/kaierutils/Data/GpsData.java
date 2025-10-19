@@ -1,7 +1,8 @@
 package ru.d51x.kaierutils.Data;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import ru.d51x.kaierutils.App;
 
@@ -31,7 +32,7 @@ public class GpsData {
     }
 
     public void load() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
         timeAtWayType = prefs.getInt("CAR_SETTINGS__GPS_TIME_AT_WAY_TYPE", 0);
     }
 

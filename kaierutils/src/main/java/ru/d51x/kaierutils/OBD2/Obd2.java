@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils.OBD2;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.*;
 import static ru.d51x.kaierutils.utils.MessageUtils.SendBroadcastAction;
 
@@ -16,9 +17,9 @@ import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -106,7 +107,7 @@ public class Obd2 {
         deviceName = null;
         deviceAddress = null;
         isConnected = false;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences prefs = getDefaultSharedPreferences(mContext);
         deviceAddress = prefs.getString("ODBII_DEVICE_ADDRESS", null);
         deviceName = prefs.getString("ODBII_DEVICE_NAME", null);
         socket = null;

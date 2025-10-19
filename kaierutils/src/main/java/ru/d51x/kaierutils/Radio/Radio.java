@@ -1,9 +1,10 @@
 package ru.d51x.kaierutils.Radio;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class Radio {
     }
 
     public void load() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
         showToast = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_TOAST", false);
         skipSeekingMode = prefs.getBoolean("CAR_SETTINGS__RADIO_SKIP_SEEKING_MODE", true);
         showInfo = prefs.getBoolean("CAR_SETTINGS__RADIO_SHOW_INFO", false);

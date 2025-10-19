@@ -1,5 +1,7 @@
 package ru.d51x.kaierutils;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -7,10 +9,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 
 import ru.d51x.kaierutils.GPS.GpsProcessingThread;
 import ru.d51x.kaierutils.OBD2.OBDThread;
@@ -51,7 +53,7 @@ public class BackgroundService extends Service {
 
 		startCount = startId;
 
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+		SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
 		App.GS.ui.isNotificationIconShow = prefs.getBoolean ("kaierutils_show_notification_icon", true);
         App.GS.curAudioFocusID = prefs.getInt("last_audio_focus_id", -1);
 

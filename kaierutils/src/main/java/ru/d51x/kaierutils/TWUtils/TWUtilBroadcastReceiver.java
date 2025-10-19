@@ -1,7 +1,6 @@
 package ru.d51x.kaierutils.TWUtils;
 
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_PARKING_2101_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_PARKING_2101;
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
@@ -9,18 +8,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.BackgroundService;
 import ru.d51x.kaierutils.DebugLogger;
 import ru.d51x.kaierutils.MainActivity;
-import ru.d51x.kaierutils.R;
 import ru.d51x.kaierutils.Radio.Radio;
 
 public class TWUtilBroadcastReceiver extends BroadcastReceiver {
@@ -70,7 +66,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             App.obd.todayTrip.saveData();
             App.obd.totalTrip.saveData();
 
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+			SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
 			prefs.edit().putInt("last_audio_focus_id", App.GS.curAudioFocusID).apply();
 
 		}
@@ -85,7 +81,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             App.obd.todayTrip.saveData();
             App.obd.totalTrip.saveData();
 
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+			SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
 			prefs.edit().putInt("last_audio_focus_id", App.GS.curAudioFocusID).apply();
 
 		}
@@ -98,7 +94,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             App.obd.oneTrip.loadData();
             App.obd.todayTrip.loadData();
             App.obd.totalTrip.loadData();
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+			SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
 			App.GS.curAudioFocusID = prefs.getInt("last_audio_focus_id", -1);
 
 		}

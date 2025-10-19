@@ -4,8 +4,6 @@ import android.util.Pair;
 
 import java.util.ArrayList;
 
-import ru.d51x.kaierutils.App;
-
 public class ObdCombineMeterUtils {
 
     public static int getMeterEngineRpm(ArrayList<Integer> buffer) {

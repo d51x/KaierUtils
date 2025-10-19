@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import pt.lighthouselabs.obd.commands.ObdCommand;
-import pt.lighthouselabs.obd.enums.AvailableCommandNames;
 import pt.lighthouselabs.obd.exceptions.BusInitException;
 import pt.lighthouselabs.obd.exceptions.MisunderstoodCommandException;
 import pt.lighthouselabs.obd.exceptions.NoDataException;

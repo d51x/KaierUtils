@@ -2,7 +2,7 @@ package ru.d51x.kaierutils;
 
 import static android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE;
 import static android.widget.Toast.LENGTH_LONG;
-
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_AWC_2130_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2110_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2111_CHANGED;
@@ -77,11 +77,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -96,6 +92,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -457,7 +457,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         tvMusicInfo2.setText("");
         ivAlbumArt.setImageResource(R.drawable.toast_music);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
         modeFuelTank = prefs.getInt("kaierutils_modeFuelTank", 0);
         modeFuelConsump = prefs.getInt("kaierutils_modeFuelConsump", 0);
 
@@ -563,7 +563,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 //color_speed(tvGPSSpeed, App.GS.gpsData.speed);
                 ui.updateSpeedText(tvGPSSpeed, 0, App.GS.ui.isColorSpeed);
                 App.GS.ui.isColorSpeed = ! App.GS.ui.isColorSpeed;
-	            PreferenceManager.getDefaultSharedPreferences (App.getInstance())
+	            getDefaultSharedPreferences (App.getInstance())
                         .edit()
                         .putBoolean ("kaierutils_show_color_speed", App.GS.ui.isColorSpeed)
                         .apply();
@@ -576,7 +576,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 } else if (App.GS.gpsData.timeAtWayType == 1) {
                     Toast.makeText(this, "Пройденное время без учета простоя", Toast.LENGTH_SHORT).show();
                 }
-                PreferenceManager.getDefaultSharedPreferences(App.getInstance())
+                getDefaultSharedPreferences(App.getInstance())
                     .edit()
                         .putInt("CAR_SETTINGS__GPS_TIME_AT_WAY_TYPE", App.GS.gpsData.timeAtWayType)
                         .apply();
@@ -1302,13 +1302,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     public void saveFuelTankToStorage(float remain){
         show_fuel_tank_data(modeFuelTank);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
         prefs.edit().putInt("kaierutils_modeFuelTank", modeFuelTank).apply();
     }
 
     public void saveFuelConsumptionToStorage(float consump){
         show_fuel_consumption(modeFuelConsump);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
         prefs.edit().putInt("kaierutils_modeFuelConsump", modeFuelConsump).apply();
     }
 

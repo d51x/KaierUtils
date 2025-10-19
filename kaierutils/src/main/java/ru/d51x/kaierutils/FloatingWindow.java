@@ -1,7 +1,7 @@
 package ru.d51x.kaierutils;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 import static java.lang.Math.abs;
-
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2113_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CVT_2103_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_2101_CHANGED;
@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
@@ -142,7 +141,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     }
 
     private void load() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        SharedPreferences sharedPreferences = getDefaultSharedPreferences (App.getInstance ());
         showSpeed = sharedPreferences.getBoolean ( "floating_panel_show_speed", true);
         showBatteryLevel = sharedPreferences.getBoolean ( "floating_panel_show_battery_level", true);
         showCoolantTemperature = sharedPreferences.getBoolean ( "floating_panel_show_coolant_temperature", true);
@@ -440,8 +439,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         App.GS.ui.floatingWindowLeft = location[0];
         App.GS.ui.floatingWindowTop = location[1];
 
-        SharedPreferences prefs =
-                PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = getDefaultSharedPreferences(context);
         prefs.edit()
                 .putInt ("floating_window_left", App.GS.ui.floatingWindowLeft)
                 .putInt ("floating_window_top", App.GS.ui.floatingWindowTop)

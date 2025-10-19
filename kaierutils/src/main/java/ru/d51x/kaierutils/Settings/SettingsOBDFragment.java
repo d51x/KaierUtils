@@ -1,6 +1,8 @@
 package ru.d51x.kaierutils.Settings;
 
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -12,8 +14,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +23,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.core.app.ActivityCompat;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -190,7 +192,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
         switch (v.getId()) {
             case R.id.swUseOBD2:
                 App.obd.useOBD = swUseOBD2.isChecked();
@@ -260,7 +262,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
         switch (v.getId()) {
             case R.id.edtCanMMC_fueltank_update_time:
                     // show dialog slider
@@ -358,7 +360,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
                 int position = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
                 App.obd.setDeviceAddress(devices.get(position));
                 App.obd.setDeviceName( devicesName.get(position));
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+                SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
                 prefs.edit().putString("ODBII_DEVICE_ADDRESS", App.obd.getDeviceAddress()).apply();
                 prefs.edit().putString("ODBII_DEVICE_NAME", App.obd.getDeviceName()).apply();
             }

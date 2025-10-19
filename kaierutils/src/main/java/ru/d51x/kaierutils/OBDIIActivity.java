@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_AWC_2130_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2110_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2111_CHANGED;
@@ -55,8 +56,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -66,6 +65,8 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import androidx.core.app.ActivityCompat;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -286,7 +287,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 int position = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
                 App.obd.setDeviceAddress(devices.get(position));
                 App.obd.setDeviceName(devicesName.get(position));
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+                SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
                 prefs.edit()
                         .putString("ODBII_DEVICE_ADDRESS", App.obd.getDeviceAddress())
                         .putString("ODBII_DEVICE_NAME", App.obd.getDeviceName())
@@ -484,7 +485,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
         switch (v.getId()) {
             case R.id.btnSelectDevice:
                 show_odb_device_select_dialog( this );

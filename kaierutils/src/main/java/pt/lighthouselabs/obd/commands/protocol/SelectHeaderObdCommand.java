@@ -12,8 +12,6 @@
  */
 package pt.lighthouselabs.obd.commands.protocol;
 
-import pt.lighthouselabs.obd.enums.ObdProtocols;
-
 /**
  * Select the protocol to use.
  */

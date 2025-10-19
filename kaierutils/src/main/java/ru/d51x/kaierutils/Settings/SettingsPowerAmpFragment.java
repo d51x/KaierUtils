@@ -1,12 +1,13 @@
 package ru.d51x.kaierutils.Settings;
 
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.R;
@@ -19,8 +20,7 @@ public class SettingsPowerAmpFragment extends PreferenceFragment implements OnSh
 		addPreferencesFromResource (R.xml.poweramp);
 
 		Context context = App.getInstance();
-		SharedPreferences prefs =
-				PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences prefs = getDefaultSharedPreferences(context);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 	}
 

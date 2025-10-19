@@ -1,5 +1,7 @@
 package ru.d51x.kaierutils.PowerAmp;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,7 +11,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.maxmpz.poweramp.player.PowerampAPI;
@@ -33,7 +34,7 @@ public class PowerAmpProcessing {
         this.context = context;
         mHandler = new Handler();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
         int status = prefs.getInt("kaierutils_power_amp_status", -1);
         if ( ( App.GS.curAudioFocusID != TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID ) &&
                 ( status == PowerampAPI.Status.TRACK_PLAYING) &&
@@ -74,14 +75,14 @@ public class PowerAmpProcessing {
             }
             else if (action.equals(TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP)) {
 
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+                SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
                 int status = prefs.getInt("kaierutils_power_amp_status", -1);
                 if ( ( App.GS.curAudioFocusID != TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID ) && ( status == PowerampAPI.Status.TRACK_PLAYING))
                     setPowerAmpResumed();
             }
             else if (action.equals (Intent.ACTION_BOOT_COMPLETED )) {
 
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+                SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
                 int status = prefs.getInt("kaierutils_power_amp_status", -1);
                 if ( ( App.GS.curAudioFocusID != TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID ) && ( status == PowerampAPI.Status.TRACK_PLAYING))
                     setPowerAmpStarted();
@@ -108,7 +109,7 @@ public class PowerAmpProcessing {
                 boolean paused = intent.getBooleanExtra(PowerampAPI.PAUSED, false);
                 App.GS.powerAmpOpt.isPowerAmpPlaying = ((status == PowerampAPI.Status.TRACK_PLAYING) && (!paused));
 
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+                SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
                 prefs.edit().putInt("kaierutils_power_amp_status", status).apply();
 
             }

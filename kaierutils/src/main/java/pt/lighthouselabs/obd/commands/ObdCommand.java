@@ -17,7 +17,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import pt.lighthouselabs.obd.exceptions.*;
+import pt.lighthouselabs.obd.exceptions.BusInitException;
+import pt.lighthouselabs.obd.exceptions.MisunderstoodCommandException;
+import pt.lighthouselabs.obd.exceptions.NoDataException;
+import pt.lighthouselabs.obd.exceptions.NonNumericResponseException;
+import pt.lighthouselabs.obd.exceptions.ObdResponseException;
+import pt.lighthouselabs.obd.exceptions.StoppedException;
+import pt.lighthouselabs.obd.exceptions.UnableToConnectException;
+import pt.lighthouselabs.obd.exceptions.UnknownObdErrorException;
 
 /**
  * Base OBD command.

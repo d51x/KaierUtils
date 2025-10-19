@@ -1,8 +1,9 @@
 package ru.d51x.kaierutils.Data;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.preference.PreferenceManager;
 
 import ru.d51x.kaierutils.App;
 
@@ -42,11 +43,11 @@ public class PowerAmpOptions {
     }
 
     public void save() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
     }
 
     public void load() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
         interactWithPowerAmp = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_AVAILABLE", false);
         isShowTrackInfoToast = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_SHOW_TOAST", false);
         needWatchSleepPowerAmp = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_WATCH_SLEEP", false);

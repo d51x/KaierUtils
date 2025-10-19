@@ -1,9 +1,10 @@
 package ru.d51x.kaierutils.Data;
 
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 public class CanMmcData {
     private Context mContext;
@@ -59,7 +60,7 @@ public class CanMmcData {
       can_mmc_ac_data_show = false;
       can_mmc_parking_data_show = false;
 
-      SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+      SharedPreferences prefs = getDefaultSharedPreferences(mContext);
       can_mmc_fuel_remain_update_time = prefs.getInt("ODBII_CAN_MMC_FUEL_REMAIN_UPDATE_TIME", 5);
       can_mmc_fuel_remain_show = prefs.getBoolean("ODBII_CAN_MMC_FUEL_REMAIN_SHOW", false);
 

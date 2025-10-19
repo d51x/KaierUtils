@@ -1,6 +1,7 @@
 package ru.d51x.kaierutils.Settings;
 
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 import static ru.d51x.kaierutils.FloatingWindow.DEFAULT_ICON_SIZE;
 import static ru.d51x.kaierutils.FloatingWindow.DEFAULT_MAIN_TEXT_SIZE;
 import static ru.d51x.kaierutils.FloatingWindow.DEFAULT_SECOND_TEXT_SIZE;
@@ -11,7 +12,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.R;
@@ -24,8 +24,7 @@ public class SettingsFloatingWindowFragment extends PreferenceFragment implement
 		addPreferencesFromResource (R.xml.floating_panel);
 
 		Context context = App.getInstance();
-		SharedPreferences prefs =
-				PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences prefs = getDefaultSharedPreferences(context);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 	}
 

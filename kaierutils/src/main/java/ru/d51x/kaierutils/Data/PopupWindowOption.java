@@ -1,7 +1,8 @@
 package ru.d51x.kaierutils.Data;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import ru.d51x.kaierutils.App;
 
@@ -19,7 +20,7 @@ public class PopupWindowOption {
     }
 
     public void load() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
         radioToastLine1TextSize  = Integer.parseInt (prefs.getString("CAR_SETTINGS__RADIO_TOAST_TEXT1_SIZE", "48"));
         radioToastLine2TextSize  = Integer.parseInt (prefs.getString("CAR_SETTINGS__RADIO_TOAST_TEXT2_SIZE", "25"));
 
@@ -32,6 +33,6 @@ public class PopupWindowOption {
     }
 
     public void save() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
     }
 }

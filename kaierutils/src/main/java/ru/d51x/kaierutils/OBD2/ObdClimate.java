@@ -41,7 +41,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.Data.ClimateData;
 
 public class ObdClimate {

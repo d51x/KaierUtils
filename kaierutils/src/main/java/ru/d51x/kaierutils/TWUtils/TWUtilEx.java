@@ -1,6 +1,7 @@
 package ru.d51x.kaierutils.TWUtils;
 
 import static android.os.Looper.getMainLooper;
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,14 +9,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.tw.john.TWUtil;
 import android.util.Log;
 
 import com.maxmpz.poweramp.player.PowerampAPI;
 
 import ru.d51x.kaierutils.App;
-import ru.d51x.kaierutils.BuildConfig;
 
 
 /**
@@ -195,7 +194,7 @@ public class TWUtilEx {
                         Log.d("TWUtil.handleMessage:", "received message 769 (audiofocus) agr1 = " + String.valueOf(App.GS.curAudioFocusID));
                         SendBroadcastAction(TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED, "audio_focus_id", message.arg1);
 
-						SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+						SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
 						prefs.edit().putInt("last_audio_focus_id", App.GS.curAudioFocusID).apply();
 
                         break;

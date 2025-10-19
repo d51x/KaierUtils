@@ -1,7 +1,8 @@
 package ru.d51x.kaierutils.Data;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import ru.d51x.kaierutils.App;
 
@@ -27,7 +28,7 @@ public class UiOptions {
     }
 
     public void load() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
         isShowMusicInfo = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_SHOW_MUSIC_INFO", false);
         dontShowMusicInfoWhenMainActive = prefs.getBoolean ( "CAR_SETTINGS__CONTROL_POWERAMP_SHOW_TOAST2", true);
         isNotificationIconShow = prefs.getBoolean ("kaierutils_show_notification_icon", true);
@@ -43,6 +44,6 @@ public class UiOptions {
     }
 
     public void save() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
     }
 }

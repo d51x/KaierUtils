@@ -4,7 +4,6 @@ import android.preference.PreferenceActivity;
 
 import java.util.List;
 
-import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.R;
 
 public class SettingsActivity extends PreferenceActivity {
