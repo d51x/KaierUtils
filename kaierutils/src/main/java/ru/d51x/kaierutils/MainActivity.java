@@ -132,7 +132,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	private TextView tvDistance;
     private ImageView ivTrackTime;
 
-    private TextView tvGPSSpeed;
+    private TextView tvSpeed;
     private TextView tvTrackTime;
     private TextView tvTrackTime2;
     private TextView tvTrackTimeMinOrSec;
@@ -294,7 +294,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layoutRadioMusicInfo.setOnLongClickListener(this);
 
 		// gps info
-		tvGPSSpeed = findViewById(R.id.text_gps_speed_value);
+		tvSpeed = findViewById(R.id.text_gps_speed_value);
 
 		// track distance
 		tvTrackTime = findViewById(R.id.tvTrackTime);
@@ -440,7 +440,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     public void setInitData() {
 		// gps info
-		tvGPSSpeed.setText( "---" );
+		tvSpeed.setText( "---" );
 
 		//track distance
 		tvTrackTime.setText( getString(R.string.text_gps_track_time_null));
@@ -561,7 +561,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         switch (v.getId()) {
             case R.id.layout_gps_speed:
                 //color_speed(tvGPSSpeed, App.GS.gpsData.speed);
-                ui.updateSpeedText(tvGPSSpeed, 0, App.GS.ui.isColorSpeed);
+                ui.updateSpeedText(tvSpeed, 0, App.GS.ui.isColorSpeed);
                 App.GS.ui.isColorSpeed = ! App.GS.ui.isColorSpeed;
 	            PreferenceManager.getDefaultSharedPreferences (App.getInstance())
                         .edit()
@@ -808,7 +808,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     if (App.GS.isGpsSpeed) {
                         int speed = intent.getIntExtra("Speed", 0);
                         ui.updateSpeedIcon(ivSpeed, (float) speed);
-                        ui.updateSpeedText(tvGPSSpeed, speed, App.GS.ui.isColorSpeed);
+                        ui.updateSpeedText(tvSpeed, speed, App.GS.ui.isColorSpeed);
 
 
                         tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.GS.gpsData.averageSpeed));
@@ -851,7 +851,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     break;
                 //*********** ACTIONS: COMMON OBD COMMANDS ***********************************
                 case OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED:
-                    // TODO: 06.10.2025 select speed type from preferences
+                    // TODO: 06.10.2025 select voltage type from preferences
                     updateCarBattery(App.obd.obdData.voltage);
                     break;
                 case OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED:
@@ -871,7 +871,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         if (engine != null) {
                             // speed
                             if (!App.GS.isGpsSpeed) {
-                                ui.updateSpeedText(tvGPSSpeed, engine.getSpeed(), App.GS.ui.isColorSpeed);
+                                ui.updateSpeedText(tvSpeed, engine.getSpeed(), App.GS.ui.isColorSpeed);
                                 ui.updateSpeedIcon(ivSpeed, engine.getSpeed());
 
                                 tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.obd.oneTrip.getAverageSpeed()));
