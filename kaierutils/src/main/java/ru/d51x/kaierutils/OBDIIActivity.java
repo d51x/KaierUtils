@@ -122,6 +122,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TextView tvFuelLevel;
 
     private TextView tvOBD_MAF;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch swUseOBD;
     private CheckBox cbCanMMC;
 
@@ -300,7 +301,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
     }
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    @SuppressLint({"UnspecifiedRegisterReceiverFlag", "SuspiciousIndentation"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

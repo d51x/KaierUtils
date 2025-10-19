@@ -23,17 +23,17 @@ import ru.d51x.kaierutils.TWUtils.TWUtilConst;
 
 public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 
-    public static final int signal_quality = 5;
-    private static final int min_good_sats = 3;
-    private static final int delayTimer = 40;
+    public static final int SIGNAL_QUALITY = 5;
+    private static final int MIN_GOOD_SATS = 3;
+    private static final int DELAY_TIMER = 40;
     private static final int MIN_SPEED = 3;
 
     private static final int MINUTES_TWO = 1000 * 120;
-    private BroadcastReceiver gpsReceiver;
-    private Context context;
+    private final BroadcastReceiver gpsReceiver;
+    private final Context context;
     private Handler mHandler;
 
-    private LocationManager mLocationManager;
+    private final LocationManager mLocationManager;
     private Location gpsLocation = null;
 
     private Location prevLocation = null;
@@ -118,20 +118,20 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
 	                    cntInUse++;
 
 	                    // если станет хуже, то надо вынести блок ниже из условия наверх
-	                    if (it.getSnr() >= ((float) signal_quality)) {
+	                    if (it.getSnr() >= ((float) SIGNAL_QUALITY)) {
 		                    goodSatellitesCount++;
 	                    }
                     }
                 }
 
-                if ( (cntSats > 0) && (goodSatellitesCount >= min_good_sats) &&
+                if ( (cntSats > 0) && (goodSatellitesCount >= MIN_GOOD_SATS) &&
                         /*App.GS.isFirstRunGPS &&*/ App.GS.gpsData.isFirstFixGPS &&
                         !App.GS.gpsData.isGpsHangs)
                 {
                     gpstime = timer;
                 }
 
-               if ( (cntSats > 0) && (goodSatellitesCount < min_good_sats) && ((timer - gpstime) > delayTimer) &&
+               if ( (cntSats > 0) && (goodSatellitesCount < MIN_GOOD_SATS) && ((timer - gpstime) > DELAY_TIMER) &&
                       /* App.GS.isFirstRunGPS &&*/ App.GS.gpsData.isFirstFixGPS &&
                        !App.GS.gpsData.isGpsHangs)
                 {

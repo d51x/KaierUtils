@@ -20,7 +20,7 @@ import ru.d51x.kaierutils.PowerAmp.PowerAmpProcessingThread;
 import ru.d51x.kaierutils.TWUtils.TWUtilProcessingThread;
 
 public class BackgroundService extends Service {
-	private static Integer NOTIFICATION_SERVICE_ID = 1;
+	private static int NOTIFICATION_SERVICE_ID = 1;
 	private static String NOTIFICATION_CHANNEL_ID = "KaierUtils";
 	private TWUtilProcessingThread twUtilProcessingThread;
     private PowerAmpProcessingThread powerAmpProcessingThread;
@@ -165,7 +165,7 @@ public class BackgroundService extends Service {
 		Toast.makeText(getApplicationContext(), "KaierUtils is stopped", Toast.LENGTH_LONG).show();
 		Log.d ("BackgroundService", "onDestroy");
 		stopForeground(true);
-        stopGpsProcessingThread();
+		stopGpsProcessingThread();
 		stopRadioProcessingThread();
 		stopPowerAmpProcessingThread();
 		stopTWUtilProcessingThread();

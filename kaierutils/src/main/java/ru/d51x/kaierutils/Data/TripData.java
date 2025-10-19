@@ -22,8 +22,8 @@ public class TripData {
     public float distance;                      // дистанция за поездку
     public float tripTime;                     // время за поездку
     public float tripTimeWoStops;            // время за поездку без остановок
-    private String mPrefix;
-    private boolean isStoreData;
+    private final String mPrefix;
+    private final boolean isStoreData;
     private long timeStamp;
     private float prevOffset = 0; // для хранения предыдущего tripA
 

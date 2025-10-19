@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import java.util.Objects;
+
 import ru.d51x.kaierutils.App;
 
 /**
@@ -28,7 +30,7 @@ public class PowerAmpProcessingThread extends Thread {
 			Looper.prepare();
 			handler = new Handler();
             if (powerAmpProcessing!=null) return;
-            powerAmpProcessing = new PowerAmpProcessing(App.getInstance(), startId);
+			powerAmpProcessing = new PowerAmpProcessing(App.getInstance(), startId);
 			Looper.loop();
 		} catch (Exception e) {
 			Log.d ("PowerAmpProcessingThread", "ERROR: run() failed");
@@ -44,7 +46,7 @@ public class PowerAmpProcessingThread extends Thread {
                     powerAmpProcessing.Destroy();
                     powerAmpProcessing = null;
                 }
-			Looper.myLooper().quit();
+			Objects.requireNonNull(Looper.myLooper()).quit();
 			}
 		});
 	}

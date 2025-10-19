@@ -464,8 +464,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
         ivFuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst);
         ivFuelTank.setImageResource(R.drawable.fuel_tank_in_tank_full);
 
-        switch_fuel_consump_mode(false);
-        switch_fuel_tank_mode(false);
+        switchFuelConsumpMode(false);
+        switchFuelTankMode(false);
 
     }
 
@@ -592,16 +592,16 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 this.openOptionsMenu();
                 break;
             case R.id.layout_fuel_data:
-                switch_fuel_tank_mode(true);
+                switchFuelTankMode(true);
                 break;
             case R.id.layout_fuel_consump:
-                switch_fuel_consump_mode(true);
+                switchFuelConsumpMode(true);
                 break;
             case R.id.layout_temp_data:
-                switch_temp_mode();
+                switchTempMode();
                 break;
             case R.id.layout_cvt_data:
-                switch_cvt_mode();
+                switchCvtMode();
                 break;
             case R.id.ibFloatingPanel:
                 App.GS.showFloatingPanelButton = false;
@@ -1057,7 +1057,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         switch (item.getItemId())
         {
 	        case R.id.menu_general_settings:
-		        show_general_settings();
+		        showGeneralSettings();
 		        return true;
 	        case R.id.menu_odb2_settings:
 		        showObd2Activity(MainActivity.this);
@@ -1072,7 +1072,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         }
     }
 
-	private void show_general_settings() {
+	private void showGeneralSettings() {
 		try {
 			Intent it = new Intent();
 			it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.Settings.SettingsActivity");
@@ -1301,20 +1301,20 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
     public void saveFuelTankToStorage(float remain){
-        show_fuel_tank_data(modeFuelTank);
+        showFuelTankData(modeFuelTank);
         SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
         prefs.edit().putInt("kaierutils_modeFuelTank", modeFuelTank).apply();
     }
 
     public void saveFuelConsumptionToStorage(float consump){
-        show_fuel_consumption(modeFuelConsump);
+        showFuelConsumption(modeFuelConsump);
         SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
         prefs.edit().putInt("kaierutils_modeFuelConsump", modeFuelConsump).apply();
     }
 
 
     // TODO: переключение режима показаний топлива в баке (учесть показания с приборки)
-    private void switch_fuel_tank_mode(boolean increase) {
+    private void switchFuelTankMode(boolean increase) {
         // режим отображения уровня топлива
         // 0 - осталось в литрах
         // 1 - осталось в процентах
@@ -1325,7 +1325,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
            if (modeFuelTank > 2) modeFuelTank = 0;
        }
 
-        show_fuel_tank_data(modeFuelTank);
+        showFuelTankData(modeFuelTank);
 
         switch ( modeFuelTank ) {
             case 0:
@@ -1350,7 +1350,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
     // TODO: переключение режима показаний температуры (учесть включение вентилятора)
-    private void switch_temp_mode() {
+    private void switchTempMode() {
         // режим отображения уровня топлива
         // 0 - движок
         // 1 - коробка
@@ -1363,7 +1363,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
     // переключение режима показаний данных cvt
-    private void switch_cvt_mode() {
+    private void switchCvtMode() {
         // режим отображения уровня топлива
         // 0 - коробка
         // 1 - деградация
@@ -1376,7 +1376,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
     // переключение режима показаний расхода
-    private void switch_fuel_consump_mode(boolean increase) {
+    private void switchFuelConsumpMode(boolean increase) {
         // режим отображения расхода
         // 0 - мгновенный
         // 1 - средний за поездку с учетом sleep
@@ -1387,28 +1387,28 @@ public class MainActivity extends Activity implements View.OnClickListener,
             if (modeFuelConsump > 3) modeFuelConsump = 0;
         }
 
-        show_fuel_consumption(modeFuelConsump);
+        showFuelConsumption(modeFuelConsump);
 
         // инфу о переключении надо отображать здесь
         switch ( modeFuelConsump ) {
             case 0:
                 ivFuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst);
-                show_hide_fuel_consump_line_2(modeFuelConsump == 3);
+                showHideFuelConsumptionLine2(modeFuelConsump == 3);
                 break;
             case 1:
                 ivFuelConsump.setImageResource(R.drawable.fuel_consump_lpk_avg);
-                show_hide_fuel_consump_line_2(modeFuelConsump == 3);
+                showHideFuelConsumptionLine2(modeFuelConsump == 3);
                 break;
             case 2:
                 ivFuelConsump.setImageResource(R.drawable.fuel_consump_lph);
-                show_hide_fuel_consump_line_2(modeFuelConsump == 3);
+                showHideFuelConsumptionLine2(modeFuelConsump == 3);
                 break;
             case 3:
                 ivFuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst_avg);
-                show_hide_fuel_consump_line_2(modeFuelConsump == 3);
+                showHideFuelConsumptionLine2(modeFuelConsump == 3);
                 break;
             default:
-                show_hide_fuel_consump_line_2(false);
+                showHideFuelConsumptionLine2(false);
                 ivFuelConsump.setImageResource(R.drawable.fuel_consump);
                 break;
         }
@@ -1416,7 +1416,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     // отобразить данные о текущем расходе топлива
     @SuppressLint("DefaultLocale")
-    private void show_fuel_consumption(int mode) {
+    private void showFuelConsumption(int mode) {
         switch (mode) {
             case 0:
                 ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmInst);
@@ -1438,7 +1438,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     // TODO: отобразить данные  о количестве топлива в баке (учесть показания с приборки)
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
-    private void show_fuel_tank_data(int mode) {
+    private void showFuelTankData(int mode) {
         if ( ! App.obd.fuelDataShow) {
             layoutObdFuel.setVisibility( View.GONE );
         } else {
@@ -1462,7 +1462,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         if ( App.obd.can.meter.getFuelLevel() < 0)
                         tvFuelTank.setText(String.format("%1$s", "--"));
                         else tvFuelTank.setText(String.format("%1$s",
-                                Math.round(App.obd.can.meter.getFuelLevel() / (App.obd.fuelTankCapacity / 100)))  + "%");
+                                Math.round((float) App.obd.can.meter.getFuelLevel() / ((float) App.obd.fuelTankCapacity / 100)))  + "%");
                     } else {
                         // вычисляем
                         tvFuelTank.setText(String.format("%1$.0f",
@@ -1483,7 +1483,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 
     // отобразить/спрятать второй показатель расхода при включении/выключении комбинированного режима
-    private void show_hide_fuel_consump_line_2 (boolean line2) {
+    private void showHideFuelConsumptionLine2(boolean line2) {
         if ( ! App.obd.fuelConsumpShow) {
             layoutFuelConsump.setVisibility( View.GONE );
         } else {

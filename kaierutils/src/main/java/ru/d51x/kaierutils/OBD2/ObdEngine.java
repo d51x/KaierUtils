@@ -10,7 +10,7 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_2102;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_2103;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_211D;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ENGINE_211E;
-import static ru.d51x.kaierutils.OBD2.ObdEngineUtils.getAirFlowSensore;
+import static ru.d51x.kaierutils.OBD2.ObdEngineUtils.getAirFlowSensor;
 import static ru.d51x.kaierutils.OBD2.ObdEngineUtils.getEngineAcFanState;
 import static ru.d51x.kaierutils.OBD2.ObdEngineUtils.getEngineCoolantTemperature;
 import static ru.d51x.kaierutils.OBD2.ObdEngineUtils.getEngineFuelRelay;
@@ -60,7 +60,7 @@ public class ObdEngine {
 
     private static void processPid2103(int msgId, Handler handler, ArrayList<Integer> buffer) {
         if ( buffer.isEmpty() || (buffer.size() < 5) ) return;
-        float airFlow = getAirFlowSensore(buffer);
+        float airFlow = getAirFlowSensor(buffer);
         EngineData engineData = new EngineData();
         engineData.setAirFlowSensor(airFlow);
         sendMessage(handler, msgId, engineData);

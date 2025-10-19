@@ -21,7 +21,7 @@ public class GlSets {
     public Boolean btState = false;
 
     public Radio radio;
-	private int Volume;
+	private int volume;
 
     public VolumeOptions volumeOptions = new VolumeOptions();
 
@@ -58,7 +58,7 @@ public class GlSets {
 
 
 	public GlSets() {
-		Volume = 3;
+		volume = 3;
 		//Brightness = 7;
 		//BrightnessMode = 0;
 
@@ -71,14 +71,14 @@ public class GlSets {
         radio = new Radio(App.getInstance());
 
 		try {
-			Volume = getVolumeLevel ();
+			volume = getVolumeLevel ();
             ui.load();
             volumeOptions.load();
             powerAmpOpt.load();
             popupWindowOption.load();
             radio.load();
             gpsData.load();
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 
 		}
 	}
@@ -88,18 +88,17 @@ public class GlSets {
 	}
 
 	public int getVolumeLevel () {
-		return Volume;
+		return volume;
 	}
 
-	public boolean setVolumeLevel (int level, boolean change) {
+	public void setVolumeLevel (int level, boolean change) {
 		if ( !change ) {
-			Volume = level;
-			return true;
+			volume = level;
+			return;
 		}
 		if ( TWUtilEx.setVolumeLevel(level)) {
-			Volume = level;
-			return true;
-		} else { return false;}
+			volume = level;
+        }
 	}
 
 

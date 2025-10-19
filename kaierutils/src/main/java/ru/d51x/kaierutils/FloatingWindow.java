@@ -38,6 +38,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import ru.d51x.kaierutils.Data.ClimateData;
 import ru.d51x.kaierutils.Data.CombineMeterData;
 import ru.d51x.kaierutils.Data.CvtData;
@@ -79,8 +81,8 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     private TextView tvCvtTemperature;
     private ImageView ivTrip;
     private TextView tvTrip;
-    private ImageView ivFuelConsump;
-    private TextView tvFuelConsump;
+    private ImageView ivFuelConsumption;
+    private TextView tvFuelConsumption;
 
     private ImageView ivFuelLevel;
     private TextView tvFuelLevel;
@@ -179,8 +181,8 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
 
         ivFuelLevel = floatingView.findViewById(R.id.ivFuelTank);
         tvFuelLevel = floatingView.findViewById(R.id.tvFuelTank);
-        ivFuelConsump = floatingView.findViewById(R.id.ivFuelConsump);
-        tvFuelConsump = floatingView.findViewById(R.id.tvFuelConsump);
+        ivFuelConsumption = floatingView.findViewById(R.id.ivFuelConsump);
+        tvFuelConsumption = floatingView.findViewById(R.id.tvFuelConsump);
 
         tvSpeedUnit = floatingView.findViewById(R.id.tvSpeedUnit);
         tvCarBatteryUnit = floatingView.findViewById(R.id.tvCarBatteryUnit);
@@ -213,7 +215,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
 
         ui.updateFuelLevelText(tvFuelLevel, App.obd.can.meter.getFuelLevel(), mainTextSize);
         ui.updateDistanceText(tvTrip, App.obd.todayTrip.distance, mainTextSize, secondTextSize);
-        ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmAvg, mainTextSize, secondTextSize);
+        ui.updateFuelConsumptionText(tvFuelConsumption, App.obd.oneTrip.fuelConsLp100KmAvg, mainTextSize, secondTextSize);
 
     }
 
@@ -228,7 +230,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         setImageSize(ivCoolantTemp, iconSize);
         setImageSize(ivCvtTemperature, iconSize);
         setImageSize(ivFuelLevel, iconSize);
-        setImageSize(ivFuelConsump, iconSize);
+        setImageSize(ivFuelConsumption, iconSize);
         setImageSize(ivTrip, iconSize);
     }
 
@@ -275,7 +277,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                         ui.updateCoolantTemperatureText(tvCoolantTemp, intent.getFloatExtra("coolantTempD", -255));
                     }
                     else if (OBD_BROADCAST_ACTION_MAF_CHANGED.equals(action)) {
-                        ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmAvg);
+                        ui.updateFuelConsumptionText(tvFuelConsumption, App.obd.oneTrip.fuelConsLp100KmAvg);
                     }
                     else if (ACTION_OBD_ENGINE_2101_CHANGED.equals(action)) {
                         EngineData engine = (EngineData) intent.getSerializableExtra("obd_engine_2101");
@@ -305,7 +307,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                         // TODO: 06.10.2025 select coolant type from preferences
                         EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_2110);
                         if (engine != null) {
-                            ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmAvg);
+                            ui.updateFuelConsumptionText(tvFuelConsumption, App.obd.oneTrip.fuelConsLp100KmAvg);
                         }
                     }
                     else if (ACTION_OBD_CVT_2103_CHANGED.equals(action)) {
@@ -345,16 +347,16 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                     }
                 }
             };
-            context.registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_MAF_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2101_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2102_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2110_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_CVT_2103_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21A1_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21A3_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_CLIMATE_2113_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21AE_CHANGED));
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(OBD_BROADCAST_ACTION_MAF_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_ENGINE_2101_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_ENGINE_2102_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_ENGINE_2110_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_CVT_2103_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_METER_21A1_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_METER_21A3_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_CLIMATE_2113_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_METER_21AE_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
         }
     }
 

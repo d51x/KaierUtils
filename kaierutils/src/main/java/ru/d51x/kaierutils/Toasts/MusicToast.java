@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils.Toasts;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -16,21 +17,22 @@ import ru.d51x.kaierutils.R;
  * Created by Dmitriy on 07.03.2015.
  */
 public class MusicToast {
-	private Context context;
+	private final Context context;
 	private Toast mToast;
-	private RelativeLayout mLayout;
-	private TextView tvTrackTitle;
-	private TextView tvArtistAlbum;
-	private ImageView ivAlbumArt;
+	private final RelativeLayout mLayout;
+	private final TextView tvTrackTitle;
+	private final TextView tvArtistAlbum;
+	private final ImageView ivAlbumArt;
 	private String TrackTitle;
 	private String AlbumArtist;
 
-	public MusicToast (Context context) {
+	@SuppressLint("InflateParams")
+    public MusicToast (Context context) {
 		this.context = context;
-		mLayout = (RelativeLayout) ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(R.layout.music_toast, null);
-		tvTrackTitle = (TextView) this.mLayout.findViewById (R.id.tvTrackTitle);
-		tvArtistAlbum = (TextView) this.mLayout.findViewById(R.id.tvArtistAlbum);
-		ivAlbumArt = (ImageView) this.mLayout.findViewById (R.id.ivAlbumArt);
+		mLayout = (RelativeLayout) ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.music_toast, null);
+		tvTrackTitle = this.mLayout.findViewById (R.id.tvTrackTitle);
+		tvArtistAlbum = this.mLayout.findViewById(R.id.tvArtistAlbum);
+		ivAlbumArt = this.mLayout.findViewById (R.id.ivAlbumArt);
 
 	}
 

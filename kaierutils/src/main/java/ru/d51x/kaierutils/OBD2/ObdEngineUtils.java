@@ -21,7 +21,7 @@ public class ObdEngineUtils {
         return buffer.get(3) - 40;
     }
 
-    public static float getAirFlowSensore(ArrayList<Integer> buffer) {
+    public static float getAirFlowSensor(ArrayList<Integer> buffer) {
         return buffer.get(4) * 5.0f / 255.0f;
     }
 

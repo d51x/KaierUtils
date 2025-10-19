@@ -12,7 +12,11 @@ import android.os.Message;
 import android.tw.john.TWUtil;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.maxmpz.poweramp.player.PowerampAPI;
+
+import java.util.Objects;
 
 import ru.d51x.kaierutils.App;
 
@@ -21,8 +25,8 @@ import ru.d51x.kaierutils.App;
  * Created by Dmitriy on 18.02.2015.
  */
 public class TWUtilEx {
-	private Context context;
-	private Handler mHandler;
+	private final Context context;
+	private final Handler mHandler;
 
 	public static boolean isTWUtilAvailable() {
 		try {
@@ -30,7 +34,7 @@ public class TWUtilEx {
 			return true;
 		}
 		catch (UnsatisfiedLinkError e) {
-			Log.e("TW", e.getMessage());
+			Log.e("TW", Objects.requireNonNull(e.getMessage()));
 			return false;
 		}
 	}
@@ -42,7 +46,7 @@ public class TWUtilEx {
 
 
 
-	private static final short[] twutil_contexts = new short[]{
+	private static final short[] twUtilContexts = new short[]{
 			TWUtilConst.TW_CONTEXT_SLEEP,                   // 514
 			TWUtilConst.TW_CONTEXT_REQUEST_SHUTDOWN,        // Shutdown 40720
 			TWUtilConst.TW_CONTEXT_REVERSE_ACTIVITY,        // reverse activity 40732
@@ -71,7 +75,7 @@ public class TWUtilEx {
 		mTWUtilHandler = new Handler(getMainLooper()){
 			@SuppressLint({"HandlerLeak", "DefaultLocale"})
             @Override
-			public void handleMessage(Message message) {
+			public void handleMessage(@NonNull Message message) {
 				switch (message.what) {
 					case TWUtilConst.TW_COMMAND_SLEEP:
 						if ( (message.arg1 == 3) && (message.arg2 == 0) ) {
@@ -210,7 +214,7 @@ public class TWUtilEx {
 		try {
 			mTWUtil = new TWUtil();
 			mTWUtilRadio = new TWUtil(1);
-			int result = mTWUtil.open(twutil_contexts);
+			int result = mTWUtil.open(twUtilContexts);
 			if (result == 0) {
 				isTWUtilOpened = true;
 				mTWUtil.start();
@@ -230,7 +234,7 @@ public class TWUtilEx {
 				mTWUtilRadio.write(TWUtilConst.TW_CONTEXT_RADIO_DATA, 255);
 			}
 		} catch (UnsatisfiedLinkError e) {
-			Log.e("TW", e.getMessage());
+			Log.e("TW", Objects.requireNonNull(e.getMessage()));
 		}
 	}
 
@@ -313,12 +317,13 @@ public class TWUtilEx {
 				}
 			}
 		} catch (UnsatisfiedLinkError e) {
-			Log.e("TW", e.getMessage());
+			Log.e("TW", Objects.requireNonNull(e.getMessage()));
 		}
 		return  false;
 	}
 
-	public static String GetDeviceID () {
+	@SuppressLint("DefaultLocale")
+    public static String GetDeviceID () {
 		Log.d ("TWUtilEx", "GetDeviceID ");
 		String rstr = "<Unknown>";
         if ( ! TWUtilEx.isTWUtilAvailable() ) return rstr;
@@ -331,37 +336,20 @@ public class TWUtilEx {
 					mTW.stop();
 					mTW.close();
 
-					switch (res) {
-						case 17:
-						case 14:
-							rstr = String.format("Kaier (ID: %d)", res);
-							break;
-						case 1:
-							rstr = String.format("Create (ID: %d)", res);
-							break;
-						case 3:
-							rstr = String.format("Anstar (ID: %d)", res);
-							break;
-						case 7:
-						case 48:
-							rstr = String.format("Waybo (ID: %d)", res);
-							break;
-						case 6:
-							rstr = String.format("Waybo (ID: %d)", res);
-							break;
-						case 22:
-							rstr = String.format("Infidini (ID: %d)", res);
-							break;
-						default:
-							rstr = String.format("<Unknown> (ID: %d)", res);
-							break;
-					}
+                    rstr = switch (res) {
+                        case 17, 14 -> String.format("Kaier (ID: %d)", res);
+                        case 1 -> String.format("Create (ID: %d)", res);
+                        case 3 -> String.format("Anstar (ID: %d)", res);
+                        case 7, 48, 6 -> String.format("Waybo (ID: %d)", res);
+                        case 22 -> String.format("Infidini (ID: %d)", res);
+                        default -> String.format("<Unknown> (ID: %d)", res);
+                    };
 				} catch (Exception e) {
-					Log.e("TW", e.getMessage());
+					Log.e("TW", Objects.requireNonNull(e.getMessage()));
 				}
 			}
 		} catch (UnsatisfiedLinkError e) {
-			Log.e("TW", e.getMessage());
+			Log.e("TW", Objects.requireNonNull(e.getMessage()));
 		}
 		return rstr;
 	}
@@ -392,11 +380,11 @@ public class TWUtilEx {
 					mTW.write(TWUtilConst.TW_CONTEXT_EQ, 255);
 					mTW.stop();
 					mTW.close();
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
 			}
 		} catch (UnsatisfiedLinkError e) {
-			Log.e("TW", e.getMessage());
+			Log.e("TW", Objects.requireNonNull(e.getMessage()));
 		}
 	}
 
@@ -411,11 +399,11 @@ public class TWUtilEx {
 					mTW.write(TWUtilConst.TW_COMMAND_AUDIO_FOCUS, 192, id);
 					mTW.stop();
 					mTW.close();
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
 			}
 		} catch (UnsatisfiedLinkError e) {
-			Log.e("TW", e.getMessage());
+			Log.e("TW", Objects.requireNonNull(e.getMessage()));
 		}
     }
 
@@ -433,11 +421,11 @@ public class TWUtilEx {
 
 					mTW.stop();
 					mTW.close();
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
 			}
 		} catch (UnsatisfiedLinkError e) {
-			Log.e("TW", e.getMessage());
+			Log.e("TW", Objects.requireNonNull(e.getMessage()));
 		}
     }
     public static void requestAudioFocusState() {
@@ -451,11 +439,11 @@ public class TWUtilEx {
 					mTW.write(TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG, 255);
 					mTW.stop();
 					mTW.close();
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
 			}
 		} catch (UnsatisfiedLinkError e) {
-			Log.e("TW", e.getMessage());
+			Log.e("TW", Objects.requireNonNull(e.getMessage()));
 		}
     }
 }

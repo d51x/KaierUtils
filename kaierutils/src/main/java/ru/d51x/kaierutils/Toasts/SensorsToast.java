@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils.Toasts;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -14,30 +15,31 @@ import ru.d51x.kaierutils.R;
  * Created by Dmitriy on 07.03.2015.
  */
 public class SensorsToast {
-	private Context context;
+	private final Context context;
 	private Toast mToast;
-	private RelativeLayout mLayout;
+	private final RelativeLayout mLayout;
 
-    private ImageView iv_sensor_rear_left_outer;
-    private ImageView iv_sensor_rear_left_inner;
-    private ImageView iv_sensor_rear_right_outer;
-    private ImageView iv_sensor_rear_right_inner;
+    private final ImageView ivSensorRearLeftOuter;
+    private final ImageView ivSensorRearLeftInner;
+    private final ImageView ivSensorRearRightOuter;
+    private final ImageView ivSensorRearRightInner;
 	//private TextView tvRadioText1;
 	//private TextView tvRadioText2;
 	//private String Text1;
 	//private String Text2;
 
-	public SensorsToast(Context context) {
+	@SuppressLint("InflateParams")
+    public SensorsToast(Context context) {
 		this.context = context;
-		mLayout = (RelativeLayout) ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(R.layout.sensors_toast, null);
+		mLayout = (RelativeLayout) ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.sensors_toast, null);
 		//tvRadioText1 = (TextView) mLayout.findViewById(R.id.tvRadioText1);
 		//tvRadioText2 = (TextView) mLayout.findViewById(R.id.tvRadioText2);
 
 
-        iv_sensor_rear_left_outer = (ImageView) mLayout.findViewById(R.id.iv_sensor_rear_left_outer);
-        iv_sensor_rear_left_inner = (ImageView) mLayout.findViewById(R.id.iv_sensor_rear_left_inner);
-        iv_sensor_rear_right_outer = (ImageView) mLayout.findViewById(R.id.iv_sensor_rear_right_outer);
-        iv_sensor_rear_right_inner = (ImageView) mLayout.findViewById(R.id.iv_sensor_rear_right_inner);
+        ivSensorRearLeftOuter = (ImageView) mLayout.findViewById(R.id.iv_sensor_rear_left_outer);
+        ivSensorRearLeftInner = (ImageView) mLayout.findViewById(R.id.iv_sensor_rear_left_inner);
+        ivSensorRearRightOuter = (ImageView) mLayout.findViewById(R.id.iv_sensor_rear_right_outer);
+        ivSensorRearRightInner = (ImageView) mLayout.findViewById(R.id.iv_sensor_rear_right_inner);
 
 	}
 
@@ -55,10 +57,10 @@ public class SensorsToast {
         int rear_inner_left = buffer.get(6) >> 4;
         int rear_inner_right = buffer.get(6) & 0xF;
 
-        set_sensor(iv_sensor_rear_left_inner, rear_inner_left );
-        set_sensor(iv_sensor_rear_left_outer, rear_outer_left );
-        set_sensor(iv_sensor_rear_right_outer, rear_outer_right );
-        set_sensor(iv_sensor_rear_right_inner, rear_inner_right );
+        set_sensor(ivSensorRearLeftInner, rear_inner_left );
+        set_sensor(ivSensorRearLeftOuter, rear_outer_left );
+        set_sensor(ivSensorRearRightOuter, rear_outer_right );
+        set_sensor(ivSensorRearRightInner, rear_inner_right );
 
 //        Log.d("SENSORS: ", String.format("LO: %1$d     LI: %2$d     RI: %3$d     RO: %4$d",
 //                rear_outer_left, rear_inner_left, rear_inner_right, rear_outer_right));

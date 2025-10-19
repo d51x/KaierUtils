@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
 import com.maxmpz.poweramp.player.PowerampAPI;
 import com.maxmpz.poweramp.player.PowerampAPI.Track;
 
@@ -23,9 +25,9 @@ import ru.d51x.kaierutils.GlSets;
 import ru.d51x.kaierutils.TWUtils.TWUtilConst;
 
 public class PowerAmpProcessing {
-    private BroadcastReceiver powerAmpReceiver;
-    private Context context;
-    private Handler mHandler;
+    private final BroadcastReceiver powerAmpReceiver;
+    private final Context context;
+    private final Handler mHandler;
 
     public PowerAmpProcessing(Context context, int startId) {
         Log.d("PowerAmpProcessing", "PowerAmpProcessing");
@@ -59,38 +61,39 @@ public class PowerAmpProcessing {
         intentFilter.addAction(TWUtilConst.TW_BROADCAST_ACTION_SLEEP);
         intentFilter.addAction(TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP);
         intentFilter.addAction(TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED);
-        context.registerReceiver(powerAmpReceiver, intentFilter);
+        ContextCompat.registerReceiver(context, powerAmpReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
     private void processIntent(Intent intent) {
         if (intent != null) {
             String action = intent.getAction();
+            assert action != null;
             Log.d("PowerAmpProcessing -> OnReceive: ", action);
 
-            if ( action.equals(TWUtilConst.TW_BROADCAST_ACTION_SLEEP) ) {
+            if ( TWUtilConst.TW_BROADCAST_ACTION_SLEEP.equals(action) ) {
                 setPowerAmpPaused();
             }
-            else if ( action.equals(TWUtilConst.TW_BROADCAST_ACTION_SHUTDOWN) ) {
+            else if ( TWUtilConst.TW_BROADCAST_ACTION_SHUTDOWN.equals(action) ) {
                 setPowerAmpPaused();
             }
-            else if (action.equals(TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP)) {
+            else if (TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP.equals(action)) {
 
                 SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
                 int status = prefs.getInt("kaierutils_power_amp_status", -1);
                 if ( ( App.GS.curAudioFocusID != TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID ) && ( status == PowerampAPI.Status.TRACK_PLAYING))
                     setPowerAmpResumed();
             }
-            else if (action.equals (Intent.ACTION_BOOT_COMPLETED )) {
+            else if (Intent.ACTION_BOOT_COMPLETED.equals (action )) {
 
                 SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
                 int status = prefs.getInt("kaierutils_power_amp_status", -1);
                 if ( ( App.GS.curAudioFocusID != TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID ) && ( status == PowerampAPI.Status.TRACK_PLAYING))
                     setPowerAmpStarted();
             }
-            else if (action.equals(TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED)) {
+            else if (TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED.equals(action)) {
                 int key = intent.getIntExtra (TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED, -1);
                 sendPowerAmpKeyPressed(key);
-            } else if (action.equals(TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED)) {
+            } else if (TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED.equals(action)) {
                 int af_id = intent.getIntExtra("audio_focus_id", -1);
                 switch (af_id) {
                     case TWUtilConst.TW_AUDIO_FOCUS_BT_ID:
@@ -104,7 +107,7 @@ public class PowerAmpProcessing {
                         break;
                 }
             }
-            else if (action.equals(PowerampAPI.ACTION_STATUS_CHANGED)) {
+            else if (PowerampAPI.ACTION_STATUS_CHANGED.equals(action)) {
                 int status = intent.getIntExtra(PowerampAPI.STATUS, -1);
                 boolean paused = intent.getBooleanExtra(PowerampAPI.PAUSED, false);
                 App.GS.powerAmpOpt.isPowerAmpPlaying = ((status == PowerampAPI.Status.TRACK_PLAYING) && (!paused));
@@ -113,7 +116,7 @@ public class PowerAmpProcessing {
                 prefs.edit().putInt("kaierutils_power_amp_status", status).apply();
 
             }
-            else if (action.equals(PowerampAPI.ACTION_TRACK_CHANGED)) {
+            else if (PowerampAPI.ACTION_TRACK_CHANGED.equals(action)) {
 
 	            Bundle bundle = intent.getBundleExtra(PowerampAPI.TRACK);
 	            String artist = bundle.getString(Track.ARTIST);
@@ -139,7 +142,7 @@ public class PowerAmpProcessing {
 	            if ( App.GS.powerAmpOpt.interactWithPowerAmp && App.GS.powerAmpOpt.isShowTrackInfoToast && App.GS.powerAmpOpt.isPowerAmpPlaying )
 	            {
                     if ( !(App.GS.curAudioFocusID == TWUtilConst.TW_AUDIO_FOCUS_MUSIC_ID || App.GS.curAudioFocusID == 0 )) return;
-                    ActivityManager activityManager = (ActivityManager) context.getSystemService("activity");
+                    ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 		            List<ActivityManager.RunningTaskInfo> taskInfo = activityManager.getRunningTasks (1);
 		            String activeWnd = ((ActivityManager.RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName();
 		            String activeActivity = ((ActivityManager.RunningTaskInfo) taskInfo.get(0)).topActivity.getClassName();

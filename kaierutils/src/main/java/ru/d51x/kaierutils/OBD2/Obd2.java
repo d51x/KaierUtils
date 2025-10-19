@@ -90,7 +90,7 @@ public class Obd2 {
     public TripData todayTrip;
 
     public CanMmcData can;
-    private Context mContext;
+    private final Context mContext;
     private String deviceName;
     private String deviceAddress;
     private Handler mHandler = new Handler();
@@ -1148,12 +1148,13 @@ public class Obd2 {
              case MESSAGE_OBD_PARKING_SENSORS:
                  if (Objects.nonNull(message.obj)) {
                      ArrayList<Integer> buffer = (ArrayList<Integer>) message.obj;
-
-                     Intent intent = new Intent();
-                     intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                     intent.setAction(ACTION_OBD_PARKING_2101_CHANGED);
-                     intent.putExtra(KEY_OBD_PARKING_2101, buffer);
-                     App.getInstance().sendBroadcast(intent);
+                     if (buffer != null) {
+                         Intent intent = new Intent();
+                         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                         intent.setAction(ACTION_OBD_PARKING_2101_CHANGED);
+                         intent.putExtra(KEY_OBD_PARKING_2101, buffer);
+                         App.getInstance().sendBroadcast(intent);
+                     }
                  }
                  break;
 

@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils.Toasts;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,25 +16,26 @@ import ru.d51x.kaierutils.Radio.Radio;
  * Created by Dmitriy on 07.03.2015.
  */
 public class RadioToast {
-	private Context context;
+	private final Context context;
 	private Toast mToast;
-	private RelativeLayout mLayout;
-	private TextView tvRadioText1;
-	private TextView tvRadioText2;
+	private final RelativeLayout mLayout;
+	private final TextView tvRadioText1;
+	private final TextView tvRadioText2;
 	private String Text1;
 	private String Text2;
     private boolean isShowSecondLine = true;
     //public boolean isShowToastWhenActive = true;
 
-	public RadioToast(Context context) {
+	@SuppressLint("InflateParams")
+    public RadioToast(Context context) {
 		this.context = context;
-		mLayout = (RelativeLayout) ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(R.layout.radio_toast, null);
+		mLayout = (RelativeLayout) ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.radio_toast, null);
 		tvRadioText1 = (TextView) mLayout.findViewById(R.id.tvRadioText1);
 		tvRadioText2 = (TextView) mLayout.findViewById(R.id.tvRadioText2);
 	}
 
 	public void SetRadioText(String text1, String text2) {
-		if (text1.contentEquals ( Radio.BLANK_STATION_NAME ) || text1 == null) { // нет названия
+		if (text1.contentEquals ( Radio.BLANK_STATION_NAME )) { // нет названия
             isShowSecondLine = false;
             Text1 = String.format("%1$s MHz", text2);
             Text2 = "";

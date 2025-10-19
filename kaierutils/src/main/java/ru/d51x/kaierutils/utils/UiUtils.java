@@ -214,54 +214,38 @@ public class UiUtils {
         view.setImageResource(res);
     }
     public void updateClimateBlowDirection(ImageView view, ClimateData.BlowDirection blowDirection) {
-        int res;
-        switch ( blowDirection ) {
-            case face:
-                res = R.drawable.air_wind_seat_my_to_face;
-                break;
-            case from_face_to_feet_and_face:
-                res = R.drawable.air_wind_seat_my_to_beetwen_feet_and_face_and_feet;
-                break;
-            case feet_and_face:
-                res = R.drawable.air_wind_seat_my_to_face_and_feet;
-                break;
-            case from_feet_and_face_to_feet:
-                res = R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_face;
-                break;
-            case feet:
-                res = R.drawable.air_wind_seat_my_to_feet;
-                break;
-            case from_feet_to_feet_and_window:
-                res = R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_window;
-                break;
-            case feet_and_window:
-                res = R.drawable.air_wind_seat_my_to_feet_and_window;
-                break;
-            case from_feet_and_window_to_window:
-                res = R.drawable.air_wind_seat_my_to_between_window_and_feet_and_window;
-                break;
-            case window:
-                res = R.drawable.air_wind_seat_my_to_window;
-                break;
-            default:  res = R.drawable.air_wind_seat_my_to_face; break;
-        }
+        int res = switch (blowDirection) {
+            case face -> R.drawable.air_wind_seat_my_to_face;
+            case from_face_to_feet_and_face ->
+                    R.drawable.air_wind_seat_my_to_beetwen_feet_and_face_and_feet;
+            case feet_and_face -> R.drawable.air_wind_seat_my_to_face_and_feet;
+            case from_feet_and_face_to_feet ->
+                    R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_face;
+            case feet -> R.drawable.air_wind_seat_my_to_feet;
+            case from_feet_to_feet_and_window ->
+                    R.drawable.air_wind_seat_my_to_beetwen_feet_and_feet_and_window;
+            case feet_and_window -> R.drawable.air_wind_seat_my_to_feet_and_window;
+            case from_feet_and_window_to_window ->
+                    R.drawable.air_wind_seat_my_to_between_window_and_feet_and_window;
+            case window -> R.drawable.air_wind_seat_my_to_window;
+            default -> 0;
+        };
         view.setImageResource( res );
     }
      public void updateClimateFanSpeed(ImageView view, ClimateData.FanSpeed fanSpeed) {
-        int res;
-        switch ( fanSpeed ) {
-            case off:       res = R.drawable.air_wind_seat_my_fan_0; break;
-            case speed1:    res = R.drawable.air_wind_seat_my_fan_1; break;
-            case speed2:    res = R.drawable.air_wind_seat_my_fan_2; break;
-            case speed3:    res = R.drawable.air_wind_seat_my_fan_3; break;
-            case speed4:    res = R.drawable.air_wind_seat_my_fan_4; break;
-            case speed5:    res = R.drawable.air_wind_seat_my_fan_5; break;
-            case speed6:    res = R.drawable.air_wind_seat_my_fan_6; break;
-            case speed7:    res = R.drawable.air_wind_seat_my_fan_7; break;
-            case speed8:    res = R.drawable.air_wind_seat_my_fan_8; break;
-            default: res = R.drawable.air_wind_seat_my_fan_0;
-        }
-        view.setImageResource( res );
+        int res = switch (fanSpeed) {
+            case off -> R.drawable.air_wind_seat_my_fan_0;
+            case speed1 -> R.drawable.air_wind_seat_my_fan_1;
+            case speed2 -> R.drawable.air_wind_seat_my_fan_2;
+            case speed3 -> R.drawable.air_wind_seat_my_fan_3;
+            case speed4 -> R.drawable.air_wind_seat_my_fan_4;
+            case speed5 -> R.drawable.air_wind_seat_my_fan_5;
+            case speed6 -> R.drawable.air_wind_seat_my_fan_6;
+            case speed7 -> R.drawable.air_wind_seat_my_fan_7;
+            case speed8 -> R.drawable.air_wind_seat_my_fan_8;
+            default -> 0;
+        };
+         view.setImageResource( res );
     }
     public void updateClimateFanMode(ImageView view, ClimateData.FanMode fanMode) {
         view.setVisibility((fanMode == ClimateData.FanMode.auto) ? View.VISIBLE : View.INVISIBLE);
