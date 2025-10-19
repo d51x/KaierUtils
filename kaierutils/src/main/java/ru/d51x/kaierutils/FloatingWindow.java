@@ -56,7 +56,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     private final View floatingView;
 
     private final WindowManager.LayoutParams layoutParams;
-
+    private boolean isVertical;
     private boolean isShowing = false;
     private boolean touchConsumedByMove = false;
     private int lastX = 0;
@@ -120,6 +120,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     @SuppressLint("InflateParams")
     public FloatingWindow(Context context, boolean vertical) {
         this.context = context;
+        this.isVertical = vertical;
         load();
 
         if (vertical) {
@@ -234,13 +235,15 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     }
 
     private void setTextUnitsSize(int size) {
-        tvSpeedUnit.setTextSize(size);
-        tvCarBatteryUnit.setTextSize(size);
-        tvCoolantTempUnit.setTextSize(size);
-        tvCvtTempUnit.setTextSize(size);
-        tvFuelTankUnit.setTextSize(size);
-        tvFuelConsumptionUnit.setTextSize(size);
-        tvTripUnit.setTextSize(size);
+        if (isVertical) {
+            tvSpeedUnit.setTextSize(size);
+            tvCarBatteryUnit.setTextSize(size);
+            tvCoolantTempUnit.setTextSize(size);
+            tvCvtTempUnit.setTextSize(size);
+            tvFuelTankUnit.setTextSize(size);
+            tvFuelConsumptionUnit.setTextSize(size);
+            tvTripUnit.setTextSize(size);
+        }
     }
 
     public void show() {

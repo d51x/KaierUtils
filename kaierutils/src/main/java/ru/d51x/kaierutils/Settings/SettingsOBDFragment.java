@@ -53,7 +53,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     private EditText edtCanMMC_oil_degr_update_time;
     private EditText edtOBD_voltage_update_time;
     private EditText edtOBD_engine_temp_update_time;
-    private EditText etFuelTankCapacity;
+    private EditText etSettingsFuelTankCapacity;
 
     private Button btnOBDSelectDevice2;
     private Button btnOBDConnect2;
@@ -155,9 +155,9 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         btnOBDDisconnect2 = mV.findViewById(R.id.btnOBDDisconnect2);
         btnOBDDisconnect2.setOnClickListener(this);
 
-        etFuelTankCapacity = mV.findViewById(R.id.etSettingsFuelTankCapacity);
-        etFuelTankCapacity.setText(Integer.toString(App.obd.fuelTankCapacity));
-        etFuelTankCapacity.setOnFocusChangeListener( this );
+        etSettingsFuelTankCapacity = mV.findViewById(R.id.etSettingsFuelTankCapacity);
+        etSettingsFuelTankCapacity.setText(Integer.toString(App.obd.fuelTankCapacity));
+        etSettingsFuelTankCapacity.setOnFocusChangeListener( this );
 
         return mV;
     }
@@ -295,9 +295,9 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
                     prefs.edit().putInt("ODBII_VOLTAGE_UPDATE_TIME", App.obd.voltageUpdateTime).apply();
                 }
                 break;
-            case R.id.etFuelTankCapacity:
+            case R.id.etSettingsFuelTankCapacity:
                 if ( ! hasFocus ) {
-                    App.obd.fuelTankCapacity = Integer.parseInt( etFuelTankCapacity.getText().toString() );
+                    App.obd.fuelTankCapacity = Integer.parseInt( etSettingsFuelTankCapacity.getText().toString() );
                     prefs.edit().putInt("ODBII_FUEL_TANK_CAPACITY", App.obd.fuelTankCapacity).apply();
                 }
                 break;
