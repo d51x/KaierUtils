@@ -5,6 +5,7 @@
 
 	<!-- menu headers -->
     <string name="header_about_title">О программе</string>
+    <string name="header_main_title">Dashboard</string>
     <string name="header_general_title">Общее</string>
 	<string name="header_reverse_title">Задний ход</string>
 	<string name="header_sleep_wakeup_title">Sleep mode/WakeUp</string>
