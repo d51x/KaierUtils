@@ -26,6 +26,9 @@ public class TripData {
     private long timeStamp;
     private float prevOffset = 0; // для хранения предыдущего tripA
 
+    private int averageSpeed = 0;
+    private int maxSpeed = 0;
+
     public TripData(String prefix, boolean isStoreData) {
         mPrefix = prefix;
         this.isStoreData = isStoreData;
@@ -161,6 +164,26 @@ public class TripData {
         if (prevOffset < offset) {
             distance += offset - prevOffset;
             prevOffset = offset;
+        }
+    }
+
+    public int getAverageSpeed() {
+        return averageSpeed;
+    }
+
+    public void setAverageSpeed(int speed) {
+        if (speed > 0) {
+            this.averageSpeed = (this.averageSpeed + speed) / 2;
+        }
+    }
+
+    public int getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public void setMaxSpeed(int speed) {
+        if (speed > maxSpeed) {
+            this.maxSpeed = speed;
         }
     }
 }

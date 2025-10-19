@@ -28,6 +28,8 @@
 	<string name="menu_floating_window_show_units_summary">Отображать единицы измерения на вертикальной плавающей панели</string>
 	<string name="menu_general_hide_header">Скрывать заголовок окна</string>
 	<string name="menu_general_color_speed_title">Цветная скорость</string>
+	<string name="menu_general_speed_type_title">Скорость по GPS</string>
+	<string name="menu_general_speed_type_summary">Если выключено, скорость будет по CAN на главном экране</string>
 	<string name="menu_general_show_statistics_title">Отображать статистику</string>
 	<string name="menu_general_show_eq_title">Отображать данные эквалайзера под громкостью</string>
 	<string name="menu_general_show_gps_satellities_title">Отображать данные о спутниках GPS</string>

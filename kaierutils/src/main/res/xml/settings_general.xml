@@ -40,6 +40,12 @@
         android:key="kaierutils_show_color_speed"
         android:title="@string/menu_general_color_speed_title" />
     <SwitchPreference
+        android:defaultValue="false"
+        android:key="isGpsSpeed"
+        android:title="@string/menu_general_speed_type_title"
+        android:summary="@string/menu_general_speed_type_summary"
+        />
+    <SwitchPreference
         android:defaultValue="true"
         android:key="kaierutils_show_statistics"
         android:title="@string/menu_general_show_statistics_title" />

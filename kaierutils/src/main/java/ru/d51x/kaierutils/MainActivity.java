@@ -805,19 +805,21 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
                 case GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED: {
                     // TODO: 06.10.2025 select speed type from preferences
-                    int speed = intent.getIntExtra("Speed", 0);
-                    ui.updateSpeedIcon(ivSpeed, (float) speed);
-                    ui.updateSpeedText(tvGPSSpeed, speed, App.GS.ui.isColorSpeed);
+                    if (App.GS.isGpsSpeed) {
+                        int speed = intent.getIntExtra("Speed", 0);
+                        ui.updateSpeedIcon(ivSpeed, (float) speed);
+                        ui.updateSpeedText(tvGPSSpeed, speed, App.GS.ui.isColorSpeed);
 
 
-                    tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.GS.gpsData.averageSpeed));
-                    tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.GS.gpsData.maxSpeed));
+                        tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.GS.gpsData.averageSpeed));
+                        tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.GS.gpsData.maxSpeed));
 
-                    if (App.obd.newDistanceCalc) {
-                        ui.updateDistanceText(tvDistance, App.obd.todayTrip.distance);
-                    } else {
-                        float dist = App.GS.gpsData.totalDistance / 1000;
-                        ui.updateDistanceText(tvDistance, dist);
+                        if (App.obd.newDistanceCalc) {
+                            ui.updateDistanceText(tvDistance, App.obd.todayTrip.distance);
+                        } else {
+                            float dist = App.GS.gpsData.totalDistance / 1000;
+                            ui.updateDistanceText(tvDistance, dist);
+                        }
                     }
                     showFormatedTrackTime(App.GS.gpsData.timeAtWayType);
                     break;
@@ -868,10 +870,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_2101);
                         if (engine != null) {
                             // speed
-                            // TODO: 06.10.2025 select speed type from preferences
-                            //updateSpeedText(tvGPSSpeed, engine.getSpeed(), App.GS.ui.isColorSpeed);
-                            //updateSpeedIcon(ivSpeed, engine.getSpeed());
+                            if (!App.GS.isGpsSpeed) {
+                                ui.updateSpeedText(tvGPSSpeed, engine.getSpeed(), App.GS.ui.isColorSpeed);
+                                ui.updateSpeedIcon(ivSpeed, engine.getSpeed());
 
+                                tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.obd.oneTrip.getAverageSpeed()));
+                                tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.obd.oneTrip.getMaxSpeed()));
+                            }
                             // TODO: 06.10.2025 select voltage type from preferences
                             //voltage
                             float voltage = engine.getVoltage();
@@ -940,6 +945,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 case ACTION_OBD_METER_21A1_CHANGED: {
                         CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A1);
                         //speed
+//                        tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.obd.oneTrip.getAverageSpeed()));
+//                        tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.obd.oneTrip.getMaxSpeed()));
                     }
                     break;
                 case ACTION_OBD_METER_21A2_CHANGED: {
@@ -991,6 +998,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         //external temp
                         //rpm
                         //speed
+//                        tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.obd.oneTrip.getAverageSpeed()));
+//                        tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.obd.oneTrip.getMaxSpeed()));
                     }
                     break;
                 case ACTION_OBD_CLIMATE_2160_CHANGED: {

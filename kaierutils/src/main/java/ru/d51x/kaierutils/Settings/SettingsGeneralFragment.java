@@ -36,36 +36,39 @@ public class SettingsGeneralFragment extends PreferenceFragment implements Share
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if ( key.equals ( "kaierutils_show_notification_icon" ) ) {
+		if ( "kaierutils_show_notification_icon".equals ( key ) ) {
 			App.GS.ui.isNotificationIconShow = sharedPreferences.getBoolean ( key, true);
 			NotifyData notifyData = new NotifyData( App.getInstance () );
 			notifyData.smallIcon = (App.GS.ui.isNotificationIconShow) ? R.drawable.notify_auto : 0;
 			notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 			notifyData.show();
 		}
-		else if ( key.equals ( "kaierutils_auto_start" ) ) {
+		else if ( "kaierutils_auto_start".equals ( key ) ) {
 			App.GS.ui.isAutoStart = sharedPreferences.getBoolean ( key, false);
 		}
-		else if (key.equals("kaierutils_auto_start_floating")) {
+		else if ("kaierutils_auto_start_floating".equals(key)) {
 			App.GS.ui.isAutoStartFloating = sharedPreferences.getBoolean(key, false);
 		}
-		else if (key.equals("floating_window_show_on_minimize")) {
+		else if ("floating_window_show_on_minimize".equals(key)) {
 			App.GS.ui.showFloatingOnMinimize = sharedPreferences.getBoolean(key, false);
 		}
-		else if (key.equals("kaierutils_floating_window_vertical")) {
+		else if ("kaierutils_floating_window_vertical".equals(key)) {
 			App.GS.ui.floatingWindowVertical = sharedPreferences.getBoolean(key, true);
 		}
-		else if (key.equals("floating_window_show_units")) {
+		else if ("floating_window_show_units".equals(key)) {
 			App.GS.ui.floatingWindowShowUnits = sharedPreferences.getBoolean(key, true);
 		}
-		else if ( key.equals ( "kaierutils_show_color_speed" ) ) {
+		else if ( "kaierutils_show_color_speed".equals ( key ) ) {
 			App.GS.ui.isColorSpeed = sharedPreferences.getBoolean ( key, false);
 		}
-		else if ( key.equals ( "kaierutils_show_statistics" ) ) {
+		else if ( "kaierutils_show_statistics".equals ( key ) ) {
 			App.GS.ui.isShowStatistics = sharedPreferences.getBoolean ( key, true);
 		}
-        else if ( key.equals ( "kaierutils_hide_header" )  ) {
+        else if ( "kaierutils_hide_header".equals ( key )  ) {
 			App.GS.ui.isHideHeader = sharedPreferences.getBoolean ( key, false);
+		}
+        else if ( "isGpsSpeed".equals ( key )  ) {
+			App.GS.isGpsSpeed = sharedPreferences.getBoolean ( key, false);
 		}
 	}
 }

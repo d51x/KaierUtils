@@ -23,6 +23,7 @@ public class GlSets {
     public Radio radio;
 	private int Volume;
 
+    public boolean isGpsSpeed = true;
     public VolumeOptions volumeOptions = new VolumeOptions();
 
     public int ReverseActivityCount;

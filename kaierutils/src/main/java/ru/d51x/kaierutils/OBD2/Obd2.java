@@ -1014,12 +1014,16 @@ public class Obd2 {
     public void processHandler(Message message) {
          switch ( message.what ) {
              // ************ ENGINE ********************************************
-             case MESSAGE_OBD_ENGINE_2101:
-                 App.obd.can.engine.setSpeed(((EngineData) message.obj).getSpeed());
-                 App.obd.can.engine.setRpm(((EngineData) message.obj).getRpm());
-                 App.obd.can.engine.setVoltage(((EngineData) message.obj).getVoltage());
+             case MESSAGE_OBD_ENGINE_2101: {
+                     int speed = ((EngineData) message.obj).getSpeed();
+                     App.obd.can.engine.setSpeed(speed);
+                     App.obd.oneTrip.setAverageSpeed(speed);
+                     App.obd.oneTrip.setMaxSpeed(speed);
 
-                 SendBroadcastAction(ACTION_OBD_ENGINE_2101_CHANGED, KEY_OBD_ENGINE_2101, (EngineData) message.obj);
+                     App.obd.can.engine.setRpm(((EngineData) message.obj).getRpm());
+                     App.obd.can.engine.setVoltage(((EngineData) message.obj).getVoltage());
+                     SendBroadcastAction(ACTION_OBD_ENGINE_2101_CHANGED, KEY_OBD_ENGINE_2101, (EngineData) message.obj);
+                 }
                  break;
              case MESSAGE_OBD_ENGINE_2102:
                  App.obd.can.engine.setCoolantTemperature(((EngineData) message.obj).getCoolantTemperature());
@@ -1080,6 +1084,9 @@ public class Obd2 {
                  App.obd.can.climate.engineRpm = ((ClimateData) message.obj).engineRpm;
                  App.obd.can.climate.vehicleSpeed = ((ClimateData) message.obj).vehicleSpeed;
 
+//                 App.obd.oneTrip.setAverageSpeed((int) App.obd.can.climate.vehicleSpeed);
+//                 App.obd.oneTrip.setMaxSpeed((int) App.obd.can.climate.vehicleSpeed);
+
                  SendBroadcastAction(ACTION_OBD_CLIMATE_2113_CHANGED, KEY_OBD_CLIMATE_2113, (ClimateData) message.obj);
                  break;
              case MESSAGE_OBD_CLIMATE_2132:
@@ -1107,9 +1114,13 @@ public class Obd2 {
                  break;
 
              // ******************* COMBINE METER ***********************************************
-             case MESSAGE_OBD_COMBINE_METER_21A1:
-                 App.obd.can.meter.setVehicleSpeed(((CombineMeterData) message.obj).getVehicleSpeed());
-                 SendBroadcastAction(ACTION_OBD_METER_21A1_CHANGED, KEY_OBD_METER_21A1, (CombineMeterData) message.obj);
+             case MESSAGE_OBD_COMBINE_METER_21A1: {
+                     float speed = ((CombineMeterData) message.obj).getVehicleSpeed();
+                     App.obd.can.meter.setVehicleSpeed(speed);
+//                     App.obd.oneTrip.setAverageSpeed((int) speed);
+//                     App.obd.oneTrip.setMaxSpeed((int) speed);
+                     SendBroadcastAction(ACTION_OBD_METER_21A1_CHANGED, KEY_OBD_METER_21A1, (CombineMeterData) message.obj);
+                 }
                  break;
              case MESSAGE_OBD_COMBINE_METER_21A2:
                  App.obd.can.meter.setEngineRpm(((CombineMeterData) message.obj).getEngineRpm());
