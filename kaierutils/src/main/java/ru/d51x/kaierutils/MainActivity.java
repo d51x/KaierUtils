@@ -544,10 +544,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     tvTrackTimeHourOrMin.setText( getString(R.string.text_gps_track_time_format_min));
 
                     return true;
-                case R.id.layout_fuel_data:
-                    // показать диалог с вводом топлива
-                    show_obd_fuel_dialog();
-                    return true;
                 case R.id.ivOBD2Status:
                     showObd2Activity(MainActivity.this);
                     return true;
@@ -1318,84 +1314,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         prefs.edit().putInt("kaierutils_modeFuelConsump", modeFuelConsump).apply();
     }
 
-    // диалог с впросом о заправке (полный бак или нет)
-    public void show_obd_fuel_dialog() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-
-        alertDialogBuilder.setTitle(getString(R.string.text_fuel_tank_title));
-        alertDialogBuilder.setMessage(getString(R.string.text_fuel_tank_full));
-        alertDialogBuilder.setIcon(R.drawable.fuel_tank_full);
-
-        alertDialogBuilder.setPositiveButton("Отмена", (dialog, which) -> {
-        });
-
-        // Обработчик на нажатие НЕТ
-        alertDialogBuilder.setNegativeButton("Да", (dialog, which) -> App.obd.setFullTank());
-
-        // Обработчик на нажатие ОТМЕНА
-        alertDialogBuilder.setNeutralButton("Нет", (dialog, which) -> {
-            // show dialog to enter fuel details
-            show_obd_fuel_detail();
-        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        // показываем Alert
-        alertDialog.show();
-    }
-
-    // диалог редактирования остатка кол-ва топлива в баке и  объема бака
-    @SuppressLint({"DefaultLocale", "SetTextI18n"})
-    public void show_obd_fuel_detail(){
-        AlertDialog.Builder fuelDialog = new AlertDialog.Builder(MainActivity.this);
-        fuelDialog.setTitle(getString(R.string.text_fuel_tank_detail));
-        View linearlayout = getLayoutInflater().inflate(R.layout.fuel_dialog, null);
-        fuelDialog.setView(linearlayout);
-
-        final EditText etFuelTankCapacity = linearlayout.findViewById(R.id.etFuelTankCapacity);
-        final EditText etFuelTankRemain = linearlayout.findViewById(R.id.etFuelTankRemain);
-        final SeekBar seekBarFuel = linearlayout.findViewById(R.id.seekBarFuel);
-        final TextView tvFuelPercent = linearlayout.findViewById(R.id.tvFuelPercent);
-
-        etFuelTankCapacity.setText( String.format("%1$.0f", App.obd.fuel.getTankCapacity()));
-        etFuelTankRemain.setText( String.format("%1$.0f", App.obd.totalTrip.fuel_remains));
-        seekBarFuel.setMax( 100 );
-        int percent = Math.round(App.obd.totalTrip.fuel_remains * 100 / App.obd.fuel.getTankCapacity());
-        seekBarFuel.setProgress(percent);
-        tvFuelPercent.setText(percent + " %");
-        seekBarFuel.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float fltank = Float.parseFloat(etFuelTankCapacity.getText().toString());
-                float flremain = fltank * progress / 100;
-
-                etFuelTankRemain.setText(String.format("%1$.0f", flremain));
-                tvFuelPercent.setText(progress + " %");
-            }
-        });
-        fuelDialog.setPositiveButton("Сохранить",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        App.obd.setCustomTank(Float.parseFloat(etFuelTankCapacity.getText().toString()),
-                                Float.parseFloat(etFuelTankRemain.getText().toString()));
-                        saveFuelTankToStorage(App.obd.totalTrip.fuel_remains);
-                    }
-                });
-
-        fuelDialog.setNegativeButton("Отмена",
-                (dialog, which) -> {
-
-                });
-        fuelDialog.create();
-        fuelDialog.show();
-    }
 
     // TODO: переключение режима показаний топлива в баке (учесть показания с приборки)
     private void switch_fuel_tank_mode(boolean increase) {
@@ -1546,11 +1464,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         if ( App.obd.can.meter.getFuelLevel() < 0)
                         tvFuelTank.setText(String.format("%1$s", "--"));
                         else tvFuelTank.setText(String.format("%1$s",
-                                Math.round(App.obd.can.meter.getFuelLevel() / (App.obd.fuel.getTankCapacity() / 100)))  + "%");
+                                Math.round(App.obd.can.meter.getFuelLevel() / (App.obd.fuelTankCapacity / 100)))  + "%");
                     } else {
                         // вычисляем
                         tvFuelTank.setText(String.format("%1$.0f",
-                                (App.obd.totalTrip.fuel_remains * 100) / App.obd.fuel.getTankCapacity()) + "%");
+                                (App.obd.totalTrip.fuel_remains * 100) / App.obd.fuelTankCapacity) + "%");
                     }
 
 

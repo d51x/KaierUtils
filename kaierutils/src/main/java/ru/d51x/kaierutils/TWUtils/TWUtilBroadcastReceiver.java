@@ -66,7 +66,6 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 				TWUtilConst.TW_BROADCAST_ACTION_SHUTDOWN.equals(action))
 		{	// изменение уровня громкости при выключении
 			SetVolumeAtStartUp();
-            App.obd.fuel.save();
             App.obd.oneTrip.saveData();
             App.obd.todayTrip.saveData();
             App.obd.totalTrip.saveData();
@@ -82,7 +81,6 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             // запомним время ухода в SleepMode
             App.GS.lastSleep = System.currentTimeMillis();
             App.GS.isStopedAfterWakeUp = false;
-            App.obd.fuel.save();
             App.obd.oneTrip.saveData();
             App.obd.todayTrip.saveData();
             App.obd.totalTrip.saveData();
@@ -97,7 +95,6 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 	        App.GS.SleepModeCount++; // увеличим счетчик просыпаний
             App.GS.isStopedAfterWakeUp = true;
             App.GS.wakeUpTime =  System.currentTimeMillis();
-            App.obd.fuel.load();
             App.obd.oneTrip.loadData();
             App.obd.todayTrip.loadData();
             App.obd.totalTrip.loadData();

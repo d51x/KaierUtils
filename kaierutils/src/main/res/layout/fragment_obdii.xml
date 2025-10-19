@@ -22,16 +22,16 @@
                 android:layout_height="wrap_content"
                 android:text="@string/text_obd_use"
                 android:id="@+id/swUseOBD2"
-                android:layout_gravity="left|top"/>
+                android:layout_gravity="start|top"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/odbii_select_device"
                 android:id="@+id/btnSelectDevice2"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_gravity="center_horizontal|top"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 android:visibility="invisible"/>
 
         </LinearLayout>
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/odbii_device_status"
                 android:id="@+id/tvDeviceState"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:textSize="16sp"
                 android:layout_weight="0.4"
                 />
@@ -65,15 +65,15 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="right">
+            android:gravity="end">
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/btnOBDConnect"
                 android:id="@+id/btnOBDConnect2"
-                android:textSize="12dp"
-                android:layout_gravity="right"
+                android:textSize="12sp"
+                android:layout_gravity="end"
                 android:visibility="invisible"/>
 
             <Button
@@ -81,8 +81,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/btnOBDDisconnect"
                 android:id="@+id/btnOBDDisconnect2"
-                android:textSize="12dp"
-                android:layout_gravity="right"
+                android:textSize="12sp"
+                android:layout_gravity="end"
                 android:visibility="invisible"/>
         </LinearLayout>
 
@@ -116,6 +116,29 @@
                     android:orientation="horizontal"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_fuel_tank_capacity"
+                        android:id="@+id/tvFuelTankCapacity"
+                        android:textSize="16sp"
+                        android:enabled="true"/>
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:ems="10"
+                        android:id="@+id/etSettingsFuelTankCapacity"
+                        android:width="60dp"
+                        android:textSize="16sp"
+                        android:text="60"
+                        android:enabled="true"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
 
                     <CheckBox
                         android:layout_width="wrap_content"
@@ -142,7 +165,7 @@
                         android:ems="10"
                         android:id="@+id/edtOBD_voltage_update_time"
                         android:width="60dp"
-                        android:textSize="16dp"
+                        android:textSize="16sp"
                         android:enabled="true"/>
                 </LinearLayout>
 
@@ -175,7 +198,7 @@
                         android:ems="10"
                         android:id="@+id/edtOBD_engine_temp_update_time"
                         android:width="60dp"
-                        android:textSize="16dp"
+                        android:textSize="16sp"
                         android:enabled="true"/>
                 </LinearLayout>
 
@@ -209,7 +232,7 @@
                     android:orientation="vertical"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="40dp">
+                    android:paddingStart="40dp">
 
                     <LinearLayout
                         android:orientation="horizontal"
@@ -238,7 +261,7 @@
                             android:ems="10"
                             android:id="@+id/edtCanMMC_fueltank_update_time"
                             android:width="60dp"
-                            android:textSize="16dp"/>
+                            android:textSize="16sp"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -268,7 +291,7 @@
                             android:ems="10"
                             android:id="@+id/edtCVT_temp_update_time"
                             android:width="60dp"
-                            android:textSize="16dp"/>
+                            android:textSize="16sp"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -298,7 +321,7 @@
                             android:ems="10"
                             android:id="@+id/edtCanMMC_oil_degr_update_time"
                             android:width="60dp"
-                            android:textSize="16dp"/>
+                            android:textSize="16sp"/>
                     </LinearLayout>
 
                     <LinearLayout

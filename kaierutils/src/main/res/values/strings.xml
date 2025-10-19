@@ -214,7 +214,7 @@
 	<string name="text_obd_fuel_consumption_avg">Средний расход (л/100км):</string>
 	<string name="text_obd_fuel_consumption_avg_f">%1$.1f</string>
     <string name="text_fuel_tank_full">Бак заправлен полностью?</string>
-    <string name="text_fuel_tank_capacity">Объем бака</string>
+    <string name="text_fuel_tank_capacity">Объем бака, л</string>
     <string name="text_fuel_tank_remain">Осталось топлива (л)</string>
     <string name="text_fuel_tank_title">Заправка</string>
     <string name="text_fuel_tank_detail">Параметры бака</string>

@@ -53,6 +53,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     private EditText edtCanMMC_oil_degr_update_time;
     private EditText edtOBD_voltage_update_time;
     private EditText edtOBD_engine_temp_update_time;
+    private EditText etFuelTankCapacity;
 
     private Button btnOBDSelectDevice2;
     private Button btnOBDConnect2;
@@ -63,6 +64,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
 
     }
 
+    @SuppressLint({"MissingInflatedId", "SetTextI18n"})
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -152,6 +154,10 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         btnOBDConnect2.setOnClickListener(this);
         btnOBDDisconnect2 = mV.findViewById(R.id.btnOBDDisconnect2);
         btnOBDDisconnect2.setOnClickListener(this);
+
+        etFuelTankCapacity = mV.findViewById(R.id.etSettingsFuelTankCapacity);
+        etFuelTankCapacity.setText(Integer.toString(App.obd.fuelTankCapacity));
+        etFuelTankCapacity.setOnFocusChangeListener( this );
 
         return mV;
     }
@@ -251,6 +257,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
@@ -286,6 +293,12 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
                 if ( ! hasFocus ) {
                     App.obd.voltageUpdateTime = Integer.parseInt( edtOBD_voltage_update_time.getText().toString() );
                     prefs.edit().putInt("ODBII_VOLTAGE_UPDATE_TIME", App.obd.voltageUpdateTime).apply();
+                }
+                break;
+            case R.id.etFuelTankCapacity:
+                if ( ! hasFocus ) {
+                    App.obd.fuelTankCapacity = Integer.parseInt( etFuelTankCapacity.getText().toString() );
+                    prefs.edit().putInt("ODBII_FUEL_TANK_CAPACITY", App.obd.fuelTankCapacity).apply();
                 }
                 break;
             default:

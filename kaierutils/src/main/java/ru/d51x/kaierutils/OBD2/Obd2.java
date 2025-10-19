@@ -49,7 +49,6 @@ import ru.d51x.kaierutils.Data.ClimateData;
 import ru.d51x.kaierutils.Data.CombineMeterData;
 import ru.d51x.kaierutils.Data.CvtData;
 import ru.d51x.kaierutils.Data.EngineData;
-import ru.d51x.kaierutils.Data.Fuel;
 import ru.d51x.kaierutils.Data.ObdData;
 import ru.d51x.kaierutils.Data.TripData;
 
@@ -98,7 +97,8 @@ public class Obd2 {
     private long mafTimeStamp1, mafTimeStamp2;
     private long voltageTimeStamp1, voltageTimeStamp2;
     private long coolantTimeStamp1, coolantTimeStamp2;
-    public Fuel fuel = new Fuel();
+
+    public int fuelTankCapacity;
 
     @SuppressLint("HandlerLeak")
     public Obd2(Context context) {
@@ -121,6 +121,7 @@ public class Obd2 {
 
         voltageUpdateTime = prefs.getInt("ODBII_VOLTAGE_UPDATE_TIME", 5); // сек
         engineTempUpdateTime = prefs.getInt("ODBII_ENGINE_TEMP_UPDATE_TIME", 5); // сек
+        fuelTankCapacity = prefs.getInt("ODBII_FUEL_TANK_CAPACITY", 60); // l
 
 
         obdData = new ObdData();
@@ -129,7 +130,6 @@ public class Obd2 {
         todayTrip = new TripData("today", true);
 
         can = new CanMmcData(mContext);
-        fuel.load();
         // запустить бесконечный цикл
         // если подключены, то выполняем команды
         // если не подключены, то пытаемся подключиться
@@ -754,25 +754,6 @@ public class Obd2 {
         //App.obd.isConnected = false;
         socket = null;
         SendBroadcastAction(OBD_BROADCAST_ACTION_STATUS_CHANGED, "Status", false);
-    }
-
-    // заправили полный бак
-    public void setFullTank() {
-
-        oneTrip.updateData( true, obdData.fuelTankCapacity, obdData.fuelTankCapacity);
-        todayTrip.updateData( true, obdData.fuelTankCapacity, obdData.fuelTankCapacity);
-        totalTrip.updateData( true, obdData.fuelTankCapacity, obdData.fuelTankCapacity);
-        fuel.save();
-    }
-
-    // заправили не полный бак / коррекция значений
-    public void setCustomTank(float tank_volume, float fuel_remain) {
-        obdData.fuelTankCapacity = tank_volume;
-
-        oneTrip.updateData( false, fuel_remain, tank_volume);
-        todayTrip.updateData( false, fuel_remain, tank_volume);
-        totalTrip.updateData( false, fuel_remain, tank_volume);
-        fuel.save();
     }
 
     private void setHeaders(String canAddr, String txAddr, boolean flowControl) {
