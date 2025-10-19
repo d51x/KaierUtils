@@ -10,17 +10,17 @@ import ru.d51x.kaierutils.App;
 
 public class TripData {
 
-    public float fuel_remains;                  // остаток топлива в баке
-    public float fuel_usage;                    // использование топлива за поездку
-    public float fuel_usage_for_display;        // использование топлива за поездку, обнуляетяся при заправке, используется при расчете остатка
-    public float fuel_usage_wo_stops;           // использование топлива за поездку без простоев
-    public float fuel_cons_lph;                 // мгновенный расход (л/час)
-    public float fuel_cons_lp100km_inst;        // мгновенный расход (л/100км)
-    public float fuel_cons_lp100km_avg;         // средний расход (л/100км) за поездку
-    public float fuel_cons_lp100km_avg_wo_stops;    // средний расход (л/100км) за поездку без остановок
+    public float fuelRemains;                  // остаток топлива в баке
+    public float fuelUsage;                    // использование топлива за поездку
+    public float fuelUsageForDisplay;        // использование топлива за поездку, обнуляетяся при заправке, используется при расчете остатка
+    public float fuelUsageWoStops;           // использование топлива за поездку без простоев
+    public float fuelConsumptionLph;                 // мгновенный расход (л/час)
+    public float fuelConsLp100KmInst;        // мгновенный расход (л/100км)
+    public float fuelConsLp100KmAvg;         // средний расход (л/100км) за поездку
+    public float fuelConsumptionLp100kmAvgWoStops;    // средний расход (л/100км) за поездку без остановок
     public float distance;                      // дистанция за поездку
-    public float trip_time;                     // время за поездку
-    public float trip_time_wo_stops;            // время за поездку без остановок
+    public float tripTime;                     // время за поездку
+    public float tripTimeWoStops;            // время за поездку без остановок
     private String mPrefix;
     private boolean isStoreData;
     private long timeStamp;
@@ -40,17 +40,17 @@ public class TripData {
     public void loadData() {
         if ( !isStoreData ) return;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance());
-        fuel_remains = prefs.getFloat("fuel_remains_" + mPrefix, 0f);
-        fuel_usage = prefs.getFloat("fuel_usage_" + mPrefix, 0f);
-        fuel_usage_for_display = fuel_usage;
-        fuel_usage_wo_stops = prefs.getFloat("fuel_usage_wo_stops_" + mPrefix, 0f);
-        fuel_cons_lph = prefs.getFloat("fuel_cons_lph_" + mPrefix, 0f);
-        fuel_cons_lp100km_inst = prefs.getFloat("fuel_cons_lp100km_inst_" + mPrefix, 0f);
-        fuel_cons_lp100km_avg = prefs.getFloat("fuel_cons_lp100km_avg_" + mPrefix, 0f);
-        fuel_cons_lp100km_avg_wo_stops = prefs.getFloat("fuel_cons_lp100km_avg_wo_stops_" + mPrefix, 0f);
+        fuelRemains = prefs.getFloat("fuel_remains_" + mPrefix, 0f);
+        fuelUsage = prefs.getFloat("fuel_usage_" + mPrefix, 0f);
+        fuelUsageForDisplay = fuelUsage;
+        fuelUsageWoStops = prefs.getFloat("fuel_usage_wo_stops_" + mPrefix, 0f);
+        fuelConsumptionLph = prefs.getFloat("fuel_cons_lph_" + mPrefix, 0f);
+        fuelConsLp100KmInst = prefs.getFloat("fuel_cons_lp100km_inst_" + mPrefix, 0f);
+        fuelConsLp100KmAvg = prefs.getFloat("fuel_cons_lp100km_avg_" + mPrefix, 0f);
+        fuelConsumptionLp100kmAvgWoStops = prefs.getFloat("fuel_cons_lp100km_avg_wo_stops_" + mPrefix, 0f);
         distance = prefs.getFloat("distance_" + mPrefix, 0f);
-        trip_time = prefs.getFloat("trip_time_" + mPrefix, 0f);
-        trip_time_wo_stops = prefs.getFloat("trip_time_wo_stops_" + mPrefix, 0f);
+        tripTime = prefs.getFloat("trip_time_" + mPrefix, 0f);
+        tripTimeWoStops = prefs.getFloat("trip_time_wo_stops_" + mPrefix, 0f);
         timeStamp = prefs.getLong("timestamp_" + mPrefix, 0);
 
         if ( mPrefix.equals( "today" )) {
@@ -71,43 +71,43 @@ public class TripData {
     public void saveData() {
         if ( !isStoreData ) return;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
-        prefs.edit().putFloat("fuel_remains_" + mPrefix, fuel_remains).apply();
-        prefs.edit().putFloat("fuel_usage_" + mPrefix, fuel_usage).apply();
-        prefs.edit().putFloat("fuel_usage_wo_stops_" + mPrefix, fuel_usage_wo_stops).apply();
-        prefs.edit().putFloat("fuel_cons_lph_" + mPrefix, fuel_cons_lph).apply();
-        prefs.edit().putFloat("fuel_cons_lp100km_inst_" + mPrefix, fuel_cons_lp100km_inst).apply();
-        prefs.edit().putFloat("fuel_cons_lp100km_avg_" + mPrefix, fuel_cons_lp100km_avg).apply();
-        prefs.edit().putFloat("fuel_cons_lp100km_avg_wo_stops_" + mPrefix, fuel_cons_lp100km_avg_wo_stops).apply();
+        prefs.edit().putFloat("fuel_remains_" + mPrefix, fuelRemains).apply();
+        prefs.edit().putFloat("fuel_usage_" + mPrefix, fuelUsage).apply();
+        prefs.edit().putFloat("fuel_usage_wo_stops_" + mPrefix, fuelUsageWoStops).apply();
+        prefs.edit().putFloat("fuel_cons_lph_" + mPrefix, fuelConsumptionLph).apply();
+        prefs.edit().putFloat("fuel_cons_lp100km_inst_" + mPrefix, fuelConsLp100KmInst).apply();
+        prefs.edit().putFloat("fuel_cons_lp100km_avg_" + mPrefix, fuelConsLp100KmAvg).apply();
+        prefs.edit().putFloat("fuel_cons_lp100km_avg_wo_stops_" + mPrefix, fuelConsumptionLp100kmAvgWoStops).apply();
         prefs.edit().putFloat("distance_" + mPrefix, distance).apply();
-        prefs.edit().putFloat("trip_time_" + mPrefix, trip_time).apply();
-        prefs.edit().putFloat("trip_time_wo_stops_" + mPrefix, trip_time_wo_stops).apply();
+        prefs.edit().putFloat("trip_time_" + mPrefix, tripTime).apply();
+        prefs.edit().putFloat("trip_time_wo_stops_" + mPrefix, tripTimeWoStops).apply();
         timeStamp = System.currentTimeMillis();
         prefs.edit().putLong("timestamp_" + mPrefix, timeStamp).apply();
     }
 
     public void resetData() {
-        fuel_cons_lph = 0;
-        fuel_remains = 0;
-        fuel_usage = 0;
-        fuel_usage_for_display = 0;
-        fuel_usage_wo_stops = 0;
-        fuel_cons_lph = 0;
-        fuel_cons_lp100km_inst = 0;
-        fuel_cons_lp100km_avg = 0;
-        fuel_cons_lp100km_avg_wo_stops = 0;
+        fuelConsumptionLph = 0;
+        fuelRemains = 0;
+        fuelUsage = 0;
+        fuelUsageForDisplay = 0;
+        fuelUsageWoStops = 0;
+        fuelConsumptionLph = 0;
+        fuelConsLp100KmInst = 0;
+        fuelConsLp100KmAvg = 0;
+        fuelConsumptionLp100kmAvgWoStops = 0;
         distance = 0;
-        trip_time = 0;
-        trip_time_wo_stops = 0;
+        tripTime = 0;
+        tripTimeWoStops = 0;
     }
 
     public void updateData(boolean isFullTank, float remain, float tank) {
-        fuel_remains = remain;
+        fuelRemains = remain;
         if ( isFullTank ) {
             // залит полный бак (авторежим по кнопке)
-            fuel_usage_for_display = 0;
+            fuelUsageForDisplay = 0;
         } else {
             // коррекция остатка топлива и объема бака
-            fuel_usage_for_display = tank - remain;
+            fuelUsageForDisplay = tank - remain;
         }
         saveData();
     }
@@ -129,26 +129,26 @@ public class TripData {
         float afr = 14.7f;
         float fuel_consump_lpsec = ( maf / afr) / 720;
         // литры в час
-        fuel_cons_lph = fuel_consump_lpsec * 3600;
+        fuelConsumptionLph = fuel_consump_lpsec * 3600;
         //float usedmaf = fuel_consump_lpsec;
 
         // учетом того, что получаем данные с MAF не раз в секунду, а реже
         float usedmaf = fuel_consump_lpsec * deltaTime / 1000f; //TODO: check this calculation
 
         // использовано топлива
-        fuel_usage += usedmaf; // с учетом порстоя
-        fuel_usage_for_display +=usedmaf;
-        fuel_cons_lp100km_avg = fuel_usage * 100 / (distance/1000f) / 1000f;
+        fuelUsage += usedmaf; // с учетом порстоя
+        fuelUsageForDisplay +=usedmaf;
+        fuelConsLp100KmAvg = fuelUsage * 100 / (distance/1000f) / 1000f;
 
         if ( speed > 2 ) {
-            fuel_cons_lp100km_inst = (100 * fuel_cons_lph) / speed;
-            fuel_usage_wo_stops += usedmaf;
-            fuel_cons_lp100km_avg_wo_stops = fuel_usage_wo_stops * 100 / (distance/1000f) / 1000f;
+            fuelConsLp100KmInst = (100 * fuelConsumptionLph) / speed;
+            fuelUsageWoStops += usedmaf;
+            fuelConsumptionLp100kmAvgWoStops = fuelUsageWoStops * 100 / (distance/1000f) / 1000f;
         }
 
         // остаток топлива в баке
-        fuel_remains = fuel_remains - usedmaf;
-        if ( fuel_remains < 0 )  fuel_remains = 0;
+        fuelRemains = fuelRemains - usedmaf;
+        if ( fuelRemains < 0 )  fuelRemains = 0;
     }
 
     public void updateDistance(float offset) {

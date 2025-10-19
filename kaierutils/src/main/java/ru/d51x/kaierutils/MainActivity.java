@@ -90,12 +90,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -472,7 +470,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     }
 
     public void updataData() {
-        saveFuelTankToStorage(App.obd.totalTrip.fuel_remains);
+        saveFuelTankToStorage(App.obd.totalTrip.fuelRemains);
 	}
 
 	public void onStart() {
@@ -859,8 +857,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     updateCoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
                     break;
                 case OBD_BROADCAST_ACTION_MAF_CHANGED:
-                    saveFuelConsumptionToStorage(App.obd.oneTrip.fuel_cons_lph);
-                    saveFuelTankToStorage(App.obd.totalTrip.fuel_remains);
+                    saveFuelConsumptionToStorage(App.obd.oneTrip.fuelConsumptionLph);
+                    saveFuelTankToStorage(App.obd.totalTrip.fuelRemains);
                     break;
                 case OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED:
 
@@ -899,8 +897,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 case ACTION_OBD_ENGINE_2110_CHANGED: {
                         EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_2110);
                         if (engine != null) {
-                            saveFuelConsumptionToStorage(App.obd.oneTrip.fuel_cons_lph);
-                            saveFuelTankToStorage(App.obd.totalTrip.fuel_remains);
+                            saveFuelConsumptionToStorage(App.obd.oneTrip.fuelConsumptionLph);
+                            saveFuelTankToStorage(App.obd.totalTrip.fuelRemains);
                         }
                     }
                     break;
@@ -1421,17 +1419,17 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private void show_fuel_consumption(int mode) {
         switch (mode) {
             case 0:
-                ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuel_cons_lp100km_inst);
+                ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmInst);
                 break;
             case 1:
-                ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
+                ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmAvg);
                 break;
             case 2:
-                ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuel_cons_lph);
+                ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsumptionLph);
                 break;
             case 3:
-                ui.updateFuelConsumptionText2(tvFuelConsump, App.obd.oneTrip.fuel_cons_lp100km_avg);
-                ui.updateFuelConsumptionText3(tvFuelConsump2, App.obd.oneTrip.fuel_cons_lp100km_inst);
+                ui.updateFuelConsumptionText2(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmAvg);
+                ui.updateFuelConsumptionText3(tvFuelConsump2, App.obd.oneTrip.fuelConsLp100KmInst);
                 break;
             default:
                 break;
@@ -1453,7 +1451,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     } else {
                         // вычисляем
                         TextViewToSpans(tvFuelTank,
-                                String.format("%1$.1f", App.obd.totalTrip.fuel_remains), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
+                                String.format("%1$.1f", App.obd.totalTrip.fuelRemains), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                     }
 
                     break;
@@ -1468,13 +1466,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     } else {
                         // вычисляем
                         tvFuelTank.setText(String.format("%1$.0f",
-                                (App.obd.totalTrip.fuel_remains * 100) / App.obd.fuelTankCapacity) + "%");
+                                (App.obd.totalTrip.fuelRemains * 100) / App.obd.fuelTankCapacity) + "%");
                     }
 
 
                     break;
                 case 2:
-                    TextViewToSpans(tvFuelTank, String.format("%1$.2f", App.obd.oneTrip.fuel_usage),
+                    TextViewToSpans(tvFuelTank, String.format("%1$.2f", App.obd.oneTrip.fuelUsage),
                             TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
                     break;
                 default:
