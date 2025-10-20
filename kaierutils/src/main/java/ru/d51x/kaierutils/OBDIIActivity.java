@@ -512,11 +512,11 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btnResetDegr: {
                     btnResetDegradation.setEnabled(false);
-                    Thread thread = new Thread(() -> {
+
+                    runOnUiThread(() -> {
                         App.obd.resetOilDegradation();
                         btnResetDegradation.setEnabled(true);
                     });
-                    thread.start();
                 }
                 break;
             case R.id.btnServiceReminderSet: {
@@ -524,11 +524,10 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                     int period = Integer.parseInt(etServiceReminderPeriod.getText().toString());
                     btnSetServiceReminder.setEnabled(false);
 
-                    Thread thread = new Thread(() -> {
+                    runOnUiThread(() -> {
                         App.obd.setServiceReminder(distance, period);
                         btnSetServiceReminder.setEnabled(true);
                     });
-                    thread.start();
                 }
                 break;
             default:
