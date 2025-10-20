@@ -510,22 +510,26 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
                 prefs.edit().putBoolean("ODBII_USE_MMC_CAN", App.obd.mmcCan).apply();
                 break;
-            case R.id.btnResetDegr:
-                btnResetDegradation.setEnabled(false);
-                App.obd.resetOilDegradation();
-                btnResetDegradation.setEnabled(true);
+            case R.id.btnResetDegr: {
+                    btnResetDegradation.setEnabled(false);
+                    Thread thread = new Thread(() -> {
+                        App.obd.resetOilDegradation();
+                        btnResetDegradation.setEnabled(true);
+                    });
+                    thread.start();
+                }
                 break;
-            case R.id.btnServiceReminderSet:
-                int distance = Integer.parseInt(etServiceReminderDistance.getText().toString());
-                int period = Integer.parseInt(etServiceReminderPeriod.getText().toString());
-                btnSetServiceReminder.setEnabled(false);
+            case R.id.btnServiceReminderSet: {
+                    int distance = Integer.parseInt(etServiceReminderDistance.getText().toString());
+                    int period = Integer.parseInt(etServiceReminderPeriod.getText().toString());
+                    btnSetServiceReminder.setEnabled(false);
 
-                Thread thread = new Thread(() -> {
-                    App.obd.setServiceReminder(distance, period);
-                    btnSetServiceReminder.setEnabled(true);
-                });
-                thread.start();
-
+                    Thread thread = new Thread(() -> {
+                        App.obd.setServiceReminder(distance, period);
+                        btnSetServiceReminder.setEnabled(true);
+                    });
+                    thread.start();
+                }
                 break;
             default:
                 break;

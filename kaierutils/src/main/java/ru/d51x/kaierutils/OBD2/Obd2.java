@@ -642,7 +642,7 @@ public class Obd2 {
             if (seed > 0) {
                 int skey = calculateSKey(seed);
                 ArrayList<Integer> buffer = null;
-                buffer = runObdCommand("2702" + Integer.toHexString(skey).toUpperCase(), socket);
+                buffer = runObdCommand("06" + "2702" + Integer.toHexString(skey).toUpperCase(), socket);
                 if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
                     buffer = runObdCommand("3103", socket);
                     res = buffer.get(0) == 0x71 && buffer.get(1) == 0x03;
