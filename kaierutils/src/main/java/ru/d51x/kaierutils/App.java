@@ -70,7 +70,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
             }
         }
 
-        obd = new Obd2( self );
+		obd = new Obd2( self );
 		//this.startService (new Intent (this, BackgroundService.class));
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			this.startForegroundService(new Intent(this, BackgroundService.class));
