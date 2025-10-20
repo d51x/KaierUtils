@@ -519,8 +519,12 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 int distance = Integer.parseInt(etServiceReminderDistance.getText().toString());
                 int period = Integer.parseInt(etServiceReminderPeriod.getText().toString());
                 btnSetServiceReminder.setEnabled(false);
-                App.obd.setServiceReminder(distance, period);
-                btnSetServiceReminder.setEnabled(true);
+
+                Thread thread = new Thread(() -> {
+                    App.obd.setServiceReminder(distance, period);
+                    btnSetServiceReminder.setEnabled(true);
+                });
+                thread.start();
 
                 break;
             default:

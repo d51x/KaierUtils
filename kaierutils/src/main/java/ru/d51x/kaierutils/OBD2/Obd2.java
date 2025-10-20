@@ -286,7 +286,7 @@ public class Obd2 {
 
             // AT SP
             Log.d(TAG, "Send AT SP 6");
-	        Log.d(TAG, "set protocol to ISO 15765-4 CAN");
+            Log.d(TAG, "set protocol to ISO 15765-4 CAN");
             SelectProtocolObdCommand cmd3 = new SelectProtocolObdCommand(ObdProtocols.ISO_15765_4_CAN);
             cmd3.run(socket.getInputStream(), socket.getOutputStream());
             result = cmd3.getFormattedResult();
@@ -669,31 +669,21 @@ public class Obd2 {
     public boolean setServiceReminder(int distance, int period) {
         boolean res = false;
         isServiceCommand = true;
-        //sleep(2000);
         try {
             Thread.sleep(2000);
-//            if (startDiagnosticSession(BLOCK_6A0, BLOCK_RX_511)) {
-//                Log.d(TAG, "Diagnostic session OK");
-//                //int seed = requestSeed();
-//                //if (seed > 0) {
-//                //int skey = calculateSKey(seed);
-                ArrayList<Integer> buffer = null;
-                //buffer = runObdCommand("2702" + Integer.toHexString(skey).toUpperCase(), socket);
-                //if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
-            // тут мультифрейм сообщение, т.к. полезные данные не умещаются полностью
-            //
-                String cmd = "3BDE" + String.format("%1$02X", (distance / 100) & 0xFF) +
-                        //String.format("%1$02X", ((distance / 100) >> 8) & 0xFF) +
-                        "00FFFF" +
-                        String.format("%1$02X", period & 0xFF) +
-                        "FF";
-                buffer = runObdCommand(cmd, socket);
-                res = buffer.get(0) == 0x71 && buffer.get(1) == 0x06;
-                runObdCommand("21BC", socket);
-//                //}
-//                //}
-//            }
-            Thread.sleep(5000);
+            ArrayList<Integer> buffer = null;
+            buffer = runObdCommand("3106", socket); //023106
+
+            String cmd = "1008" + "3BDE" + String.format("%1$02X", (distance / 100) & 0xFF) + "00FFFF";
+            buffer = runObdCommand(cmd, socket);
+            Thread.sleep(50);
+            cmd = "21"  + String.format("%1$02X", period & 0xFF) + "FF";
+            buffer = runObdCommand(cmd, socket);
+
+            res = buffer.get(0) == 0x71 && buffer.get(1) == 0x06;
+            runObdCommand("21BC", socket);
+
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
