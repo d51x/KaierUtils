@@ -1470,10 +1470,12 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
                     if (App.obd.mmcCan && App.obd.can.can_mmc_fuel_remain_show) {
                         // по кан
-                        if ( App.obd.can.meter.getFuelLevel() < 0)
-                        tvFuelTank.setText(String.format("%1$s", "--"));
-                        else tvFuelTank.setText(String.format("%1$s",
-                                Math.round(App.obd.can.meter.getFuelLevel() / (App.obd.fuelTankCapacity / 100)))  + "%");
+                        if ( App.obd.can.meter.getFuelLevel() < 0) {
+                            tvFuelTank.setText(String.format("%1$s", "--"));
+                        } else {
+                            tvFuelTank.setText(String.format("%1$s",
+                                    Math.round((float) App.obd.can.meter.getFuelLevel() / ((float) App.obd.fuelTankCapacity / 100))) + "%");
+                        }
                     } else {
                         // вычисляем
                         tvFuelTank.setText(String.format("%1$.0f",
