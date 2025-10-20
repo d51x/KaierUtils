@@ -815,10 +815,12 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.GS.gpsData.maxSpeed));
 
                         if (App.obd.newDistanceCalc) {
-                            ui.updateDistanceText(tvDistance, App.obd.todayTrip.distance);
+                            ui.updateDistanceText(tvDistance, App.obd.todayTrip.distance,
+                                    TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_BEFORE_DOT);
                         } else {
                             float dist = App.GS.gpsData.totalDistance / 1000;
-                            ui.updateDistanceText(tvDistance, dist);
+                            ui.updateDistanceText(tvDistance, dist,
+                                    TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_BEFORE_DOT);
                         }
                     }
                     showFormatedTrackTime(App.GS.gpsData.timeAtWayType);
