@@ -676,6 +676,7 @@ public class Obd2 {
 
             String cmd = "1008" + "3BDE" + String.format("%1$02X", (distance / 100) & 0xFF) + "00FFFF";
             buffer = runObdCommand(cmd, socket);
+            Log.d(TAG, buffer.toString());
             Thread.sleep(50);
             cmd = "21"  + String.format("%1$02X", period & 0xFF) + "FF";
             buffer = runObdCommand(cmd, socket);
