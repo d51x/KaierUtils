@@ -55,9 +55,6 @@ public class SettingsGeneralFragment extends PreferenceFragment implements Share
 		else if ("kaierutils_floating_window_vertical".equals(key)) {
 			App.GS.ui.floatingWindowVertical = sharedPreferences.getBoolean(key, true);
 		}
-		else if ("floating_window_show_units".equals(key)) {
-			App.GS.ui.floatingWindowShowUnits = sharedPreferences.getBoolean(key, true);
-		}
 		else if ( "kaierutils_show_color_speed".equals ( key ) ) {
 			App.GS.ui.isColorSpeed = sharedPreferences.getBoolean ( key, false);
 		}

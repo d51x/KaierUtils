@@ -1,7 +1,21 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 	>
-	<PreferenceCategory
-		android:title="@string/menu_category_floating_panel_icons">
+	<PreferenceCategory android:title="@string/menu_category_floating_panel_settings">
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="floating_window_show_units"
+			android:title="@string/menu_floating_window_show_units"
+			android:summary="@string/menu_floating_window_show_units_summary"
+			/>
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="floating_window_vertical"
+			android:title="@string/menu_general_floating_window_vertical"
+			android:summary="@string/menu_general_floating_window_vertical_summary"
+			/>
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="@string/menu_category_floating_panel_icons">
 		<CheckBoxPreference
 			android:key="floating_panel_show_speed"
 			android:title="@string/menu_floating_panel_icon_speed_title"

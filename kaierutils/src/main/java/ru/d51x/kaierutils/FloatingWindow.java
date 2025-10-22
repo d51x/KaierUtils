@@ -97,6 +97,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     private BroadcastReceiver receiver;
     private UiUtils ui = new UiUtils();
 
+    public boolean floatingWindowShowUnits;
     public boolean showSpeed = true;
     public boolean showBatteryLevel = true;
     public boolean showCoolantTemperature = true;
@@ -268,7 +269,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
             showFuelConsumptionLayout(showFuelConsumption);
             showDistanceLayout(showDistance);
 
-            showUnits(App.GS.ui.floatingWindowShowUnits);
+            showUnits(App.floatingWindow.floatingWindowShowUnits);
 
             receiver = new BroadcastReceiver() {
                 @Override

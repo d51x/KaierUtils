@@ -74,5 +74,11 @@ public class SettingsFloatingWindowFragment extends PreferenceFragment implement
 		else if ("FLOATING_PANEL_UNITS_SIZE".equals(key)) {
 			App.floatingWindow.unitsTextSize = Integer.parseInt(sharedPreferences.getString(key, Integer.toString(DEFAULT_UNITS_TEXT_SIZE)));
 		}
+		else if ("floating_window_show_units".equals(key)) {
+			App.floatingWindow.floatingWindowShowUnits = sharedPreferences.getBoolean(key, true);
+		}
+		else if ("kaierutils_floating_window_vertical".equals(key)) {
+			App.GS.ui.floatingWindowVertical = sharedPreferences.getBoolean(key, true);
+		}
 	}
 }

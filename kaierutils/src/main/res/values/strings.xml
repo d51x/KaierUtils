@@ -30,6 +30,7 @@
 	<string name="menu_general_show_gps_satellities_title">Отображать данные о спутниках GPS</string>
 
 	<!-- Floating Panel -->
+	<string name="menu_category_floating_panel_settings">Настройки</string>
 	<string name="menu_category_floating_panel_icons">Отображать показания</string>
 	<string name="menu_floating_panel_icon_speed_title">Скорость</string>
 	<string name="menu_floating_panel_icon_battery_level_title">Заряд аккумулятора</string>
