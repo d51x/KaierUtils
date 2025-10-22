@@ -48,10 +48,8 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A3;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AD;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AE;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21BC;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_MAF_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_SPEED_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_STATUS_CHANGED;
 import static ru.d51x.kaierutils.utils.UiUtils.TEXT_SIZE_AFTER_DOT;
 import static ru.d51x.kaierutils.utils.UiUtils.TEXT_SIZE_BEFORE_DOT;
@@ -833,9 +831,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     saveFuelConsumptionToStorage(App.obd.oneTrip.fuelConsumptionLph);
                     saveFuelTankToStorage(App.obd.totalTrip.fuelRemains);
                     break;
-                case OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED:
-
-                    break;
                 //************ ACTIONS: MMC CAN BLOCK 7E0 - ENGINE ********************************
                 case ACTION_OBD_ENGINE_2101_CHANGED: {
                         EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_2101);
@@ -1125,8 +1120,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         //********* OBD: COMMON COMMANDS **********************************************************
         // OBD GENERIC
-        registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_SPEED_CHANGED));
-        registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_MAF_CHANGED));
 
