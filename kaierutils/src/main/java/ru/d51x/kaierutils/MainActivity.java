@@ -35,7 +35,6 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CLIMATE_2113;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CLIMATE_2160;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CLIMATE_2161;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CVT_2103;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CVT_2110;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_2101;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_2102;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_2103;
@@ -69,7 +68,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -78,7 +76,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -105,7 +102,6 @@ import ru.d51x.kaierutils.Data.ClimateData;
 import ru.d51x.kaierutils.Data.CombineMeterData;
 import ru.d51x.kaierutils.Data.CvtData;
 import ru.d51x.kaierutils.Data.EngineData;
-import ru.d51x.kaierutils.Radio.Radio;
 import ru.d51x.kaierutils.TWUtils.TWUtilConst;
 import ru.d51x.kaierutils.TWUtils.TWUtilEx;
 import ru.d51x.kaierutils.utils.UiUtils;
@@ -139,14 +135,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private ImageView ivVolumeLevel;
     private ImageView ivSpeed;
-
-    private TextView tvRadioInfo1;
-    private TextView tvRadioInfo2;
-    private TextView tvMusicInfo1;
-    private TextView tvMusicInfo2;
-    private ImageView ivAlbumArt;
-    private LinearLayout layoutRadioInfo;
-    private LinearLayout layoutMusicInfo;
 
     private LinearLayout layoutObd2;
     private LinearLayout layoutObdFuel;
@@ -281,10 +269,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		layoutTrackTime.setOnLongClickListener(this);
 		layoutTrackTime.setOnClickListener(this);
 
-
-        LinearLayout layoutRadioMusicInfo = findViewById(R.id.layout_radio_music_info);
-        layoutRadioMusicInfo.setOnLongClickListener(this);
-
 		// gps info
 		tvSpeed = findViewById(R.id.text_gps_speed_value);
 
@@ -333,24 +317,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         tvFuelConsump2 = findViewById(R.id.tvOBD_FuelConsump2);
         tvFuelConsump2.setText("--");
         tvFuelConsump2.setVisibility(View.GONE);
-
-        tvRadioInfo1 = findViewById(R.id.tvRadioInfo1);
-        tvRadioInfo2 = findViewById(R.id.tvRadioInfo2);
-        tvMusicInfo1 = findViewById(R.id.tvMusicInfo1);
-        tvMusicInfo2 = findViewById(R.id.tvMusicInfo2);
-        tvMusicInfo1.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        tvMusicInfo1.setMarqueeRepeatLimit(-1);
-        tvMusicInfo1.setHorizontallyScrolling(true);
-        tvMusicInfo1.setSelected(true);
-
-        ivAlbumArt = findViewById(R.id.ivAlbumArt);
-
-
-
-        layoutRadioInfo = findViewById(R.id.layout_radio_info);
-        layoutMusicInfo = findViewById(R.id.layout_music_info);
-        layoutRadioInfo.setVisibility( View.GONE );
-        layoutMusicInfo.setVisibility( View.GONE );
 
         layoutObdFuel = findViewById(R.id.layout_fuel_data);
         layoutObd2 = findViewById(R.id.layoutCanMMC);
@@ -435,12 +401,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvMaxSpeed.setText( String.format(getString(R.string.text_max_speed), "---"));
 		tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), "---"));
 
-        tvRadioInfo1.setText("");
-        tvRadioInfo2.setText("");
-        tvMusicInfo1.setText("");
-        tvMusicInfo2.setText("");
-        ivAlbumArt.setImageResource(R.drawable.toast_music);
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
         modeFuelTank = prefs.getInt("kaierutils_modeFuelTank", 0);
         modeFuelConsump = prefs.getInt("kaierutils_modeFuelConsump", 0);
@@ -470,8 +430,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         setVolumeIcon(ivVolumeLevel, App.GS.getVolumeLevel());
         TWUtilEx.requestAudioFocusState();
-        // определим, запущено ли радио
-        Radio.checkRadioActivityStarted(false);
         updateOBDStatus(App.obd.isConnected);
 
         layoutObd2.setVisibility( App.obd.useOBD ? View.VISIBLE : View.INVISIBLE );
@@ -801,17 +759,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     showFormatedTrackTime(App.GS.gpsData.timeAtWayType);
                     break;
                 }
-                case TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED:
-                    String title = intent.getStringExtra("Title");
-                    if (title == null) break;
-                    String freq = intent.getStringExtra("Frequency");
-                    tvRadioInfo1.setText(title);
-                    tvRadioInfo1.setVisibility(title.contentEquals(Radio.BLANK_STATION_NAME) ? View.GONE : View.VISIBLE);
-                    tvRadioInfo2.setText(freq + " MHz");
-                    break;
                 case TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED:
                     // update screen
-                    updateAudioModeInfo(App.GS.curAudioFocusID);
 
                     break;
                 case OBD_BROADCAST_ACTION_STATUS_CHANGED:
@@ -1099,7 +1048,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_VOLUME_CHANGED));
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH));
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_WAKE_UP));
-		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED));
 		registerReceiver(receiver, new IntentFilter(TWUtilConst.TW_BROADCAST_ACTION_AUDIO_FOCUS_CHANGED));
 
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_LOCATION_CHANGED));
@@ -1156,25 +1104,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         // registerReceiver(receiver, new IntentFilter(OBDII.OBD_BROADCAST_ACTION_ECU_AWC_CHANGED));
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_AWC_2130_CHANGED));
 	}
-
-    public void updateAudioModeInfo(int id) {
-        layoutRadioInfo.setVisibility( View.GONE );
-        layoutMusicInfo.setVisibility( View.GONE );
-        switch (id) {
-            case TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID:
-                TWUtilEx.requestRadioInfo();
-                if (  App.GS.radio.showInfo) {
-                    layoutRadioInfo.setVisibility( View.VISIBLE );
-                }
-                break;
-            case 0:
-            case TWUtilConst.TW_AUDIO_FOCUS_MUSIC_ID:
-
-                break;
-              default:
-                break;
-        }
-    }
 
     public void updateOBDStatus(boolean status){
         //

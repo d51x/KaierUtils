@@ -83,7 +83,6 @@ public class BackgroundService extends Service {
 		}
 
 		startTWUtilProcessingThread();
-		startRadioProcessingThread();
         startGpsProcessingThread();
         startOBDThread();
 
@@ -102,12 +101,6 @@ public class BackgroundService extends Service {
 		if ( twUtilProcessingThread == null) return;
 		twUtilProcessingThread.finish();
 		twUtilProcessingThread = null;
-	}
-
-	private synchronized void startRadioProcessingThread(){
-	}
-
-	private synchronized void stopRadioProcessingThread(){
 	}
 
     private synchronized void startGpsProcessingThread(){
@@ -146,7 +139,6 @@ public class BackgroundService extends Service {
 		Log.d ("BackgroundService", "onDestroy");
 		stopForeground(true);
         stopGpsProcessingThread();
-		stopRadioProcessingThread();
 		stopTWUtilProcessingThread();
         stopOBDThread();
 		super.onDestroy();

@@ -134,13 +134,6 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
 
     }
 
-//	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-	//	if ( key.equals ( "CAR_SETTINGS__RADIO_SHOW_TOAST" )) {
-	//		App.GS.radio.showToast = sharedPreferences.getBoolean ( key, false);
-
-
-//	}
-
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {

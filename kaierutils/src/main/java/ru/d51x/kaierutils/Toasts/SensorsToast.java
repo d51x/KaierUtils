@@ -22,17 +22,10 @@ public class SensorsToast {
     private ImageView iv_sensor_rear_left_inner;
     private ImageView iv_sensor_rear_right_outer;
     private ImageView iv_sensor_rear_right_inner;
-	//private TextView tvRadioText1;
-	//private TextView tvRadioText2;
-	//private String Text1;
-	//private String Text2;
 
 	public SensorsToast(Context context) {
 		this.context = context;
 		mLayout = (RelativeLayout) ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(R.layout.sensors_toast, null);
-		//tvRadioText1 = (TextView) mLayout.findViewById(R.id.tvRadioText1);
-		//tvRadioText2 = (TextView) mLayout.findViewById(R.id.tvRadioText2);
-
 
         iv_sensor_rear_left_outer = (ImageView) mLayout.findViewById(R.id.iv_sensor_rear_left_outer);
         iv_sensor_rear_left_inner = (ImageView) mLayout.findViewById(R.id.iv_sensor_rear_left_inner);

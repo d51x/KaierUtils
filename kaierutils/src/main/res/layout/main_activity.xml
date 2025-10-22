@@ -12,64 +12,6 @@
 	tools:context=".Settings.SettingsActivity">
 
 	<LinearLayout
-		android:id="@+id/layout_radio_music_info"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentTop="true"
-		android:layout_centerHorizontal="true"
-		android:layout_marginTop="74dp"
-		android:orientation="vertical">
-
-		<LinearLayout
-			android:id="@+id/layout_radio_info"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
-			android:orientation="vertical"
-			android:visibility="gone">
-
-			<ImageView
-				android:id="@+id/ivRadioInfo"
-				android:layout_width="64dp"
-				android:layout_height="64dp"
-				android:layout_gravity="center_horizontal"
-				android:contentDescription="@string/radio_info"
-				android:src="@drawable/toast_radio" />
-
-			<LinearLayout
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center_horizontal"
-				android:gravity="center_horizontal"
-				android:orientation="vertical"
-				android:paddingTop="10dp"
-				android:visibility="visible">
-
-				<TextView
-					android:id="@+id/tvRadioInfo1"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_horizontal"
-					android:gravity="center_horizontal"
-					android:text="Medium Text"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:textSize="32sp" />
-
-				<TextView
-					android:id="@+id/tvRadioInfo2"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_horizontal"
-					android:gravity="center_horizontal"
-					android:text="Medium Text"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:textColor="@android:color/holo_blue_dark" />
-			</LinearLayout>
-		</LinearLayout>
-
-	</LinearLayout>
-
-	<LinearLayout
 		android:id="@+id/linearLayout"
 		android:layout_width="160dp"
 		android:layout_height="wrap_content"

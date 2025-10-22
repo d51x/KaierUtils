@@ -1,10 +1,8 @@
 package ru.d51x.kaierutils;
 
 import ru.d51x.kaierutils.Data.GpsData;
-import ru.d51x.kaierutils.Data.PopupWindowOption;
 import ru.d51x.kaierutils.Data.UiOptions;
 import ru.d51x.kaierutils.Data.VolumeOptions;
-import ru.d51x.kaierutils.Radio.Radio;
 import ru.d51x.kaierutils.TWUtils.TWUtilEx;
 
 /**
@@ -18,7 +16,6 @@ public class GlSets {
 
     public Boolean btState = false;
 
-    public Radio radio;
 	private int Volume;
 
     public boolean isGpsSpeed = false;
@@ -43,7 +40,6 @@ public class GlSets {
 
     String BT_deviceAddress = "unknown";
 
-    public PopupWindowOption popupWindowOption = new PopupWindowOption();
     public UiOptions ui = new UiOptions();
 
     public int curAudioFocusID = -1;
@@ -65,14 +61,10 @@ public class GlSets {
         lastSleep = 0;
         workTime = System.currentTimeMillis() - startDate;
 
-        radio = new Radio(App.getInstance());
-
 		try {
 			Volume = getVolumeLevel ();
             ui.load();
             volumeOptions.load();
-            popupWindowOption.load();
-            radio.load();
             gpsData.load();
 		} catch (Exception e) {
 

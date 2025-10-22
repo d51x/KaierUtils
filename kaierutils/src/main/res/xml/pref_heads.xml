@@ -31,14 +31,4 @@
 		android:icon="@drawable/menu_sleep"
 		android:title="@string/header_sleep_wakeup_title">
 	</header>
-	<header
-		android:fragment="ru.d51x.kaierutils.Settings.SettingsRadioFragment"
-		android:icon="@drawable/menu_radio"
-		android:title="@string/header_radio_title">
-	</header>
-	<header
-		android:fragment="ru.d51x.kaierutils.Settings.SettingsToastsFragment"
-		android:icon="@drawable/menu_popup"
-		android:title="@string/header_popup_title">
-	</header>
 </preference-headers>

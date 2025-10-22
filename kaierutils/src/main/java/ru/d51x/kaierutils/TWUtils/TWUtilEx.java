@@ -35,7 +35,6 @@ public class TWUtilEx {
 	}
 
 	private TWUtil mTWUtil;
-	private TWUtil mTWUtilRadio;
 	private static int curVolume;
 	protected static final String TWUTIL_HANDLER = "TWUtilHandler";
 
@@ -63,7 +62,6 @@ public class TWUtilEx {
 		mHandler = new Handler();
 
 		mTWUtil = null;
-		mTWUtilRadio = null;
 		this.mTWUtilHandler = null;
 		isTWUtilOpened = false;
 		curVolume = -1;
@@ -109,19 +107,6 @@ public class TWUtilEx {
 						break;
 
                     case TWUtilConst.TW_COMMAND_KEY_PRESS:
-//                        if ( message.arg2 == 19 ) {
-//                            //case TWUtilConst.TW_SVC_BUTTON_NEXT:
-//                            if ( message.arg1 == 2) {  // долгое нажатие
-//                            } else if ( message.arg1 == 1 && !App.GS.radio.activityRunning){ // короткое нажатие
-//                                mTWUtil.write( TWUtilConst.TW_CONTEXT_RADIO_DATA, 2, 0);
-//                            }
-//                        } else if ( message.arg2 == 21 ) {
-//                            //case TWUtilConst.TW_SVC_BUTTON_PREV:
-//                            if ( message.arg1 == 2) {  // долгое нажатие
-//                            } else if ( message.arg1 == 1 && !App.GS.radio.activityRunning) { //короткое нажатие
-//                                mTWUtil.write( TWUtilConst.TW_CONTEXT_RADIO_DATA, 2, 1);
-//                            }
-//                        }
                         switch ( message.arg2 ) {
                             case TWUtilConst.TW_CODE_MUSIC:             // = 41;
                                 break;
@@ -161,15 +146,15 @@ public class TWUtilEx {
 	                    break;
                     case TWUtilConst.TW_CONTEXT_RADIO_DATA:    // 1025
 	                    if ( message.arg1 == 2) {   // и переключение и поиск
-		                    String rdata = (String) message.obj;
-                            Log.d("TWUtil.handleMessage:", "received message 1025 (radio) arg1 = 2  obj = " + rdata);
-
-		                    Intent ri = new Intent();
-		                    ri.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-	                        ri.putExtra ("Frequency", String.format ("%1.2f", (float) message.arg2 / 100));
-	                        ri.putExtra("Title", rdata);
-		                    ri.setAction(TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED);
-		                    App.getInstance ().sendBroadcast(ri);
+//		                    String rdata = (String) message.obj;
+//                            Log.d("TWUtil.handleMessage:", "received message 1025 (radio) arg1 = 2  obj = " + rdata);
+//
+//		                    Intent ri = new Intent();
+//		                    ri.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+//	                        ri.putExtra ("Frequency", String.format ("%1.2f", (float) message.arg2 / 100));
+//	                        ri.putExtra("Title", rdata);
+//		                    ri.setAction(TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED);
+//		                    App.getInstance ().sendBroadcast(ri);
 	                    }
                         break;
                     case TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG:    // 769 - audio focus
@@ -192,7 +177,6 @@ public class TWUtilEx {
 		Log.d ("TWUtilEx", "Init ");
 		try {
 			mTWUtil = new TWUtil();
-			mTWUtilRadio = new TWUtil(1);
 			int result = mTWUtil.open(twutil_contexts);
 			if (result == 0) {
 				isTWUtilOpened = true;
@@ -205,13 +189,6 @@ public class TWUtilEx {
 				Log.d("TWUtilEx", "Init --> requestAudioFocus (769, 255)");
 				mTWUtil.write(TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG, 255);
 			}
-			result = mTWUtilRadio.open(new short[]{(short) TWUtilConst.TW_CONTEXT_RADIO_DATA});
-			if (result == 0) {
-				mTWUtilRadio.start();
-				mTWUtilRadio.addHandler(TWUTIL_HANDLER, mTWUtilHandler);
-				Log.d("TWUtilRadio", "Init --> requestRadioData (1025, 255)");
-				mTWUtilRadio.write(TWUtilConst.TW_CONTEXT_RADIO_DATA, 255);
-			}
 		} catch (UnsatisfiedLinkError e) {
 			Log.e("TW", e.getMessage());
 		}
@@ -221,13 +198,9 @@ public class TWUtilEx {
 		Log.d ("TWUtil", "Destroy()");
 		if ( isTWUtilOpened ) {
 			mTWUtil.removeHandler ( TWUTIL_HANDLER );
-			mTWUtilRadio.removeHandler ( TWUTIL_HANDLER );
 			mTWUtil.stop ();
-			mTWUtilRadio.stop ();
 			mTWUtil.close ();
-			mTWUtilRadio.close ();
 			mTWUtil = null;
-			mTWUtilRadio = null;
 			isTWUtilOpened = false;
 		}
 	}
@@ -350,27 +323,6 @@ public class TWUtilEx {
 	}
 
 
-    public static void requestRadioInfo() {
-        Log.d ("TWUtilEx", "requestRadioInfo (1025, 255)");
-        if ( ! isTWUtilAvailable() ) return;
-		try {
-			TWUtil mTW = new TWUtil();
-			if (mTW.open(new short[]{(short) TWUtilConst.TW_CONTEXT_RADIO_DATA}) == 0) {
-				try {
-					mTW.start();
-					//mTW.write ( TWUtilConst.TW_CONTEXT_RADIO_DATA, 4, 255);
-					//mTW.write ( 1030, 0);  // ????
-					mTW.write(TWUtilConst.TW_CONTEXT_RADIO_DATA, 255);
-
-					mTW.stop();
-					mTW.close();
-				} catch (Exception e) {
-				}
-			}
-		} catch (UnsatisfiedLinkError e) {
-			Log.e("TW", e.getMessage());
-		}
-    }
     public static void requestAudioFocusState() {
         Log.d ("TWUtilEx", "requestAudioFocusState (769, 255)");
         if ( ! isTWUtilAvailable() ) return;

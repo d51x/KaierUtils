@@ -11,9 +11,6 @@
 	<string name="header_sleep_wakeup_title">Sleep mode/WakeUp</string>
 	<string name="header_obd_settings_title">Настройки OBD</string>
 	<string name="header_floating_window_title">Плавающая панель</string>
-	<string name="header_radio_title">Радио</string>
-	<string name="header_popup_title">Всплывающее окно</string>
-	<string name="header_popup_summary">Отображение тоаста при переключении радио</string>
 
 	<!-- general menu -->
 	<string name="menu_general_show_notification_icon_title">Иконка статуса</string>
@@ -30,9 +27,7 @@
 	<string name="menu_general_speed_type_title">Скорость по GPS</string>
 	<string name="menu_general_speed_type_summary">Если выключено, скорость будет по CAN на главном экране</string>
 	<string name="menu_general_show_statistics_title">Отображать статистику</string>
-	<string name="menu_general_show_eq_title">Отображать данные эквалайзера под громкостью</string>
 	<string name="menu_general_show_gps_satellities_title">Отображать данные о спутниках GPS</string>
-	<string name="menu_general_show_buttons_title">Отображать кнопки Radio и Music</string>
 
 	<!-- Floating Panel -->
 	<string name="menu_category_floating_panel_icons">Отображать показания</string>
@@ -81,24 +76,7 @@
 	<string name="menu_wakeup_volume_level_summary">Текущее значение %1$d</string>
 	<string name="menu_wakeup_volume_level_dialog">Выберите уровень громкости (от 1 до 10) </string>
 
-	<!-- Radio -->
-	<string name="menu_radio_show_toast_title">Всплывающее окно при переключении радиостанций</string>
-	<string name="menu_radio_skip_seeking_mode_title">Не показывать при поиске радиостанций</string>
-	<string name="menu_radio_show_info_title">Отображать информацию о радио на главном экране</string>
-	<string name="menu_radio_show_toast_2_title">Не отображать всплывающее окно при активном главном экране</string>
-
-	<!-- Toasts -->
-	<string name="menu_category_toasts_radio_title">Radio toast</string>
-	<string name="menu_category_toasts_music_title">Music toast</string>
-	<string name="menu_radio_toast_text1_size_title">Размер текста в строке 1</string>
-	<string name="menu_radio_toast_text2_size_title">Размер текста в строке 2</string>
-	<string name="menu_music_toast_text1_size_title">Размер текста в строке 1</string>
-	<string name="menu_music_toast_text2_size_title">Размер текста в строке 2</string>
-	<string name="menu_music_toast_picture_width_title">Ширина картинки</string>
-	<string name="menu_music_toast_picture_height_title">Высота картинки</string>
-
-
-    <!-- OBD II Settings -->
+	    <!-- OBD II Settings -->
     <string name="menu_obd_use_obd">Подключаться к адаптеру OBD (ELM 327)</string>
 
 
@@ -226,7 +204,6 @@
 	<string name="ac_blow_auto">ac blow auto</string>
 	<string name="air_fan_speed">air fan speed</string>
 	<string name="ac_fan_mode">ac fan mode</string>
-	<string name="radio_info">radio info</string>
 	<string name="air_temp">air temp</string>
 	<string name="vol_mute">vol mute</string>
 	<string name="empty_temp">--.-</string>

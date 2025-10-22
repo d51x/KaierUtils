@@ -1,10 +1,5 @@
 package ru.d51x.kaierutils.TWUtils;
 
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_PARKING_2101_CHANGED;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_PARKING_2101;
-
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningTaskInfo;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,15 +8,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.BackgroundService;
 import ru.d51x.kaierutils.DebugLogger;
 import ru.d51x.kaierutils.MainActivity;
-import ru.d51x.kaierutils.R;
-import ru.d51x.kaierutils.Radio.Radio;
 
 public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 
@@ -114,33 +104,6 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 		{
 			TWUtilEx.setVolumeLevel(prevVolume);  // вернем громкость обратно, которая была до включения заднего хода
 			App.GS.getVolumeLevel ();
-		}
-		else if ( TWUtilConst.TW_BROADCAST_ACTION_RADIO_CHANGED.equals(action))
-		{
-			if ( App.GS.curAudioFocusID != TWUtilConst.TW_AUDIO_FOCUS_RADIO_ID ) return;
-            ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-			List<RunningTaskInfo> taskInfo = activityManager.getRunningTasks(1);
-			if (!taskInfo.isEmpty() && taskInfo.get(0).topActivity != null) {
-                String activeWnd = taskInfo.get(0).topActivity.getPackageName();
-				String activeActivity = taskInfo.get(0).topActivity.getClassName();
-
-				if (taskInfo.size() <= 0 ||
-						!(Radio.PACKAGE_NAME.equalsIgnoreCase(activeWnd)) //||
-					//!((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils")
-				) {
-					if (App.GS.radio.dontShowToastOnMainActivity &&
-							activeWnd.equalsIgnoreCase("ru.d51x.kaierutils") &&
-							activeActivity.equalsIgnoreCase("ru.d51x.kaierutils.MainActivity"))
-						return;
-					//App.rToast.isShowToastWhenActive = !((RunningTaskInfo) taskInfo.get(0)).topActivity.getPackageName().contentEquals("ru.d51x.kaierutils");
-					String title = intent.getStringExtra("Title");
-					title = (title != null) ? title : "";
-					String freq = intent.getStringExtra("Frequency");
-					App.rToast.cancel();
-					App.rToast.SetRadioText(title, freq);
-					App.rToast.showToast();
-				}
-			}
 		}
 	}
 
