@@ -12,8 +12,6 @@ import android.preference.PreferenceManager;
 import android.tw.john.TWUtil;
 import android.util.Log;
 
-import com.maxmpz.poweramp.player.PowerampAPI;
-
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.BuildConfig;
 
@@ -111,21 +109,6 @@ public class TWUtilEx {
 						break;
 
                     case TWUtilConst.TW_COMMAND_KEY_PRESS:
-                        if ( message.arg2 == App.GS.powerAmpOpt.codeNextFolder ) {
-                            //case TWUtilConst.TW_SVC_BUTTON_NEXT:
-                                if ( message.arg1 == 2) {  // долгое нажатие
-                                    SendBroadcastAction(TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED,
-                                            TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED,
-                                            TWUtilConst.TW_SVC_BUTTON_NEXT);
-                                }
-                        } else if ( message.arg2 == App.GS.powerAmpOpt.codePrevFolder ) {
-                            //case TWUtilConst.TW_SVC_BUTTON_PREV:
-                            if ( message.arg1 == 2) {  // долгое нажатие
-                                SendBroadcastAction(TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED,
-                                        TWUtilConst.TW_BROADCAST_ACTION_KEY_PRESSED,
-                                        TWUtilConst.TW_SVC_BUTTON_PREV);
-                            }
-                        }
 //                        if ( message.arg2 == 19 ) {
 //                            //case TWUtilConst.TW_SVC_BUTTON_NEXT:
 //                            if ( message.arg1 == 2) {  // долгое нажатие
@@ -141,7 +124,6 @@ public class TWUtilEx {
 //                        }
                         switch ( message.arg2 ) {
                             case TWUtilConst.TW_CODE_MUSIC:             // = 41;
-                                setPowerAmpPlayed();
                                 break;
                             case TWUtilConst.TW_CODE_RADIO:             // = 33;
                             case TWUtilConst.TW_CODE_IPOD:              // = 35;
@@ -150,7 +132,7 @@ public class TWUtilEx {
                             case TWUtilConst.TW_CODE_AUX:               // = 40;
                             case TWUtilConst.TW_CODE_VIDEO:             // = 44;
                             case TWUtilConst.TW_CODE_PHONE:             // = 47;
-                                setPowerAmpPaused();
+
                                 break;
                             default:
                                 break;
@@ -167,10 +149,10 @@ public class TWUtilEx {
 			                    case TWUtilConst.TW_CODE_AUX:               // = 40;
 			                    case TWUtilConst.TW_CODE_VIDEO:             // = 44;
 			                    case TWUtilConst.TW_CODE_PHONE:             // = 47;
-				                    setPowerAmpPaused();
+
 				                    break;
 			                    case TWUtilConst.TW_CODE_MUSIC:             // = 41;
-				                    setPowerAmpPlayed();
+
 				                    break;
 			                    default:
 				                    break;
@@ -367,58 +349,6 @@ public class TWUtilEx {
 		return rstr;
 	}
 
-	private void setPowerAmpPaused() {
-		context.startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
-	                                                                              PowerampAPI.Commands.PAUSE));
-	}
-	private void setPowerAmpPlayed() {
-		mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				context.startService(new Intent(PowerampAPI.ACTION_API_COMMAND).putExtra(PowerampAPI.COMMAND,
-						PowerampAPI.Commands.RESUME));
-			}
-		}, 500);
-       // Radio.checkRadioActivityStarted( true );
-	}
-
-	public static void initEqData() {
-        Log.d ("TWUtilEx", "initEqData ");
-		if ( ! isTWUtilAvailable() ) return;
-		try {
-			TWUtil mTW = new TWUtil();
-			if (mTW.open(new short[]{(short) TWUtilConst.TW_CONTEXT_EQ}) == 0) {
-				try {
-					mTW.start();
-					mTW.write(TWUtilConst.TW_CONTEXT_EQ, 255);
-					mTW.stop();
-					mTW.close();
-				} catch (Exception e) {
-				}
-			}
-		} catch (UnsatisfiedLinkError e) {
-			Log.e("TW", e.getMessage());
-		}
-	}
-
-    public static void setAudioFocus(int id) {
-        Log.d ("TWUtilEx", "setAudioFocus (40465, 192, " + String.valueOf(id) + ")");
-        if ( ! isTWUtilAvailable() ) return;
-		try {
-			TWUtil mTW = new TWUtil();
-			if (mTW.open(new short[]{(short) TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG}) == 0) {
-				try {
-					mTW.start();
-					mTW.write(TWUtilConst.TW_COMMAND_AUDIO_FOCUS, 192, id);
-					mTW.stop();
-					mTW.close();
-				} catch (Exception e) {
-				}
-			}
-		} catch (UnsatisfiedLinkError e) {
-			Log.e("TW", e.getMessage());
-		}
-    }
 
     public static void requestRadioInfo() {
         Log.d ("TWUtilEx", "requestRadioInfo (1025, 255)");

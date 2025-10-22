@@ -32,11 +32,6 @@
 		android:title="@string/header_sleep_wakeup_title">
 	</header>
 	<header
-		android:fragment="ru.d51x.kaierutils.Settings.SettingsPowerAmpFragment"
-		android:icon="@drawable/menu_poweramp"
-		android:title="@string/header_poweramp_title">
-	</header>
-	<header
 		android:fragment="ru.d51x.kaierutils.Settings.SettingsRadioFragment"
 		android:icon="@drawable/menu_radio"
 		android:title="@string/header_radio_title">

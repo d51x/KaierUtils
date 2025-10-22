@@ -14,14 +14,12 @@ import android.widget.Toast;
 
 import ru.d51x.kaierutils.GPS.GpsProcessingThread;
 import ru.d51x.kaierutils.OBD2.OBDThread;
-import ru.d51x.kaierutils.PowerAmp.PowerAmpProcessingThread;
 import ru.d51x.kaierutils.TWUtils.TWUtilProcessingThread;
 
 public class BackgroundService extends Service {
 	private static Integer NOTIFICATION_SERVICE_ID = 1;
 	private static String NOTIFICATION_CHANNEL_ID = "KaierUtils";
 	private TWUtilProcessingThread twUtilProcessingThread;
-    private PowerAmpProcessingThread powerAmpProcessingThread;
     private GpsProcessingThread gpsProcessingThread;
     public static OBDThread obdiiThread;
 
@@ -29,7 +27,6 @@ public class BackgroundService extends Service {
 
 	public BackgroundService () {
 		twUtilProcessingThread = null;
-        powerAmpProcessingThread = null;
         gpsProcessingThread = null;
         obdiiThread = null;
 	}
@@ -86,7 +83,6 @@ public class BackgroundService extends Service {
 		}
 
 		startTWUtilProcessingThread();
-		//startPowerAmpProcessingThread();
 		startRadioProcessingThread();
         startGpsProcessingThread();
         startOBDThread();
@@ -106,20 +102,6 @@ public class BackgroundService extends Service {
 		if ( twUtilProcessingThread == null) return;
 		twUtilProcessingThread.finish();
 		twUtilProcessingThread = null;
-	}
-
-	private synchronized void startPowerAmpProcessingThread(){
-        Log.d ("BackgroundService", "startPowerAmpProcessingThread");
-        if ( powerAmpProcessingThread != null ) return;
-        powerAmpProcessingThread = new PowerAmpProcessingThread ( startCount );
-        powerAmpProcessingThread.start();
-    }
-
-	private synchronized void stopPowerAmpProcessingThread(){
-        Log.d ("BackgroundService", "stopPowerAmpProcessingThread");
-        if ( powerAmpProcessingThread == null) return;
-        powerAmpProcessingThread.finish();
-        powerAmpProcessingThread = null;
 	}
 
 	private synchronized void startRadioProcessingThread(){
@@ -165,7 +147,6 @@ public class BackgroundService extends Service {
 		stopForeground(true);
         stopGpsProcessingThread();
 		stopRadioProcessingThread();
-		stopPowerAmpProcessingThread();
 		stopTWUtilProcessingThread();
         stopOBDThread();
 		super.onDestroy();

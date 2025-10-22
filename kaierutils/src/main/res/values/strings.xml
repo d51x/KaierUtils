@@ -9,7 +9,6 @@
     <string name="header_general_title">Общее</string>
 	<string name="header_reverse_title">Задний ход</string>
 	<string name="header_sleep_wakeup_title">Sleep mode/WakeUp</string>
-	<string name="header_poweramp_title">PowerAmp</string>
 	<string name="header_obd_settings_title">Настройки OBD</string>
 	<string name="header_floating_window_title">Плавающая панель</string>
 	<string name="header_radio_title">Радио</string>
@@ -34,11 +33,6 @@
 	<string name="menu_general_show_eq_title">Отображать данные эквалайзера под громкостью</string>
 	<string name="menu_general_show_gps_satellities_title">Отображать данные о спутниках GPS</string>
 	<string name="menu_general_show_buttons_title">Отображать кнопки Radio и Music</string>
-	<string name="menu_general_show_clock_title">Отображать часы</string>
-	<string name="menu_general_show_clock_summary">При включенной опции отображения информации PowerAmp или Radio, долгий тап по обложке альбома или по иконке радио переключает режим отображения часов и обратно </string>
-	<string name="menu_general_clock_size_title">Размер часов</string>
-	<string name="menu_general_clock_size_summary">Текущее значение %1$d</string>
-	<string name="menu_general_show_eq_summary">Под громкостью отображаются уровни низких, средних, высоких частот</string>
 
 	<!-- Floating Panel -->
 	<string name="menu_category_floating_panel_icons">Отображать показания</string>
@@ -86,30 +80,6 @@
 	<string name="menu_wakeup_volume_level_title">Уровень громкости</string>
 	<string name="menu_wakeup_volume_level_summary">Текущее значение %1$d</string>
 	<string name="menu_wakeup_volume_level_dialog">Выберите уровень громкости (от 1 до 10) </string>
-
-	<!-- PowerAmp -->
-	<string name="menu_poweramp_interaction_title">Взаимодействовать с PowerAmp</string>
-	<string name="menu_poweramp_show_toast_title">Показывать тоаст с информацией о треке</string>
-	<string name="menu_poweramp_show_toast2_title">Не показывать тоаст, когда KaierUtils активно</string>
-	<string name="menu_poweramp_show_music_info_title">Отображать информацию о треке в главном окне</string>
-	<string name="menu_poweramp_watch_sleep_title">Ставить на паузу при уходе в sleep</string>
-	<string name="menu_poweramp_watch_wakeup_title">Начинать воспроизведение при просыпании</string>
-	<string name="menu_poweramp_wakeup_start_delay_title">Задержка включения воспроизведения</string>
-	<string name="menu_poweramp_wakeup_start_delay_summary">PowerAmp будет запущен с задержкой после просыпания (через %1$d мсек)</string>
-	<string name="menu_poweramp_wakeup_start_delay_dialog">Укажите значение (мсек)</string>
-	<string name="menu_poweramp_watch_bootup_title">Начинать воспроизведение при включении</string>
-	<string name="menu_poweramp_watch_bootup_delay_title">Задержка включения воспроизведения</string>
-	<string name="menu_poweramp_watch_bootup_delay_summary">PowerAmp будет запущен с задержкой после включения (через %1$d мсек)</string>
-	<string name="menu_poweramp_watch_bootup_delay_dialog">Укажите значение (мсек)</string>
-	<string name="menu_poweramp_watch_longpress_category">Переключение каталогов кнопками руля</string>
-	<string name="menu_poweramp_watch_longpress_next_title">Переключать на следующий каталог</string>
-	<string name="menu_poweramp_watch_longpress_next_summary">Отслеживание долгого нажатия кнопки переключения "вперед" на руле</string>
-	<string name="menu_poweramp_watch_longpress_next_code_title">Код события</string>
-	<string name="menu_poweramp_watch_longpress_next_code_summary">Обычно 22, но если не работает, то попробуйте 19</string>
-	<string name="menu_poweramp_watch_longpress_prev_title">Переключать на предыдущий каталог</string>
-	<string name="menu_poweramp_watch_longpress_prev_summary">Отслеживание долгого нажатия кнопки переключения "назад" на руле</string>
-	<string name="menu_poweramp_watch_longpress_prev_code_title">Код события</string>
-	<string name="menu_poweramp_watch_longpress_prev_code_summary">Обычно 23, но если не работает, то попробуйте 18</string>
 
 	<!-- Radio -->
 	<string name="menu_radio_show_toast_title">Всплывающее окно при переключении радиостанций</string>

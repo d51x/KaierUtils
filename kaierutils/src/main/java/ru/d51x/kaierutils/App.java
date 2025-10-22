@@ -14,7 +14,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import ru.d51x.kaierutils.OBD2.Obd2;
-import ru.d51x.kaierutils.Toasts.MusicToast;
 import ru.d51x.kaierutils.Toasts.RadioToast;
 import ru.d51x.kaierutils.Toasts.SensorsToast;
 
@@ -27,7 +26,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
 	public static GlSets GS;
     public static Obd2 obd;
 	public static RadioToast rToast;
-	public static MusicToast mToast;
 	public static SensorsToast sensorsToast;
 	public static Toast gToast;
 
@@ -78,7 +76,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
 			this.startService(new Intent(this, BackgroundService.class));
 		}
 		rToast = new RadioToast( self );
-		mToast = new MusicToast( self );
         sensorsToast = new SensorsToast( self );
         gToast = new Toast( self );
 		floatingWindow = new FloatingWindow(getApplicationContext(), App.GS.ui.floatingWindowVertical);

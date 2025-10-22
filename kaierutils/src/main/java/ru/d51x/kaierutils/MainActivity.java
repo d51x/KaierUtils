@@ -814,14 +814,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     updateAudioModeInfo(App.GS.curAudioFocusID);
 
                     break;
-                case GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED:
-                    if (App.GS.powerAmpOpt.interactWithPowerAmp && App.GS.ui.isShowMusicInfo && App.GS.powerAmpOpt.isPowerAmpPlaying) {
-                        Bitmap AlbumArt = intent.getParcelableExtra("AlbumArt");
-                        tvMusicInfo1.setText(App.GS.powerAmpOpt.PowerAmp_TrackTitle);
-                        tvMusicInfo2.setText(App.GS.powerAmpOpt.PowerAmp_AlbumArtist);
-                          ivAlbumArt.setImageBitmap(AlbumArt);
-                    }
-                    break;
                 case OBD_BROADCAST_ACTION_STATUS_CHANGED:
                     boolean obd_status = intent.getBooleanExtra("Status", false);
                     updateOBDStatus(obd_status);
@@ -1114,7 +1106,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_FIRST_FIX));
 		registerReceiver(receiver, new IntentFilter(GlSets.GPS_BROADCAST_ACTION_AGPS_RESET));
-		registerReceiver(receiver, new IntentFilter(GlSets.PWRAMP_BROADCAST_ACTION_TRACK_CHANGED));
 
 		registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_STATUS_CHANGED));
 
@@ -1178,9 +1169,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 break;
             case 0:
             case TWUtilConst.TW_AUDIO_FOCUS_MUSIC_ID:
-                if ( App.GS.powerAmpOpt.interactWithPowerAmp && App.GS.ui.isShowMusicInfo ) {
-                    layoutMusicInfo.setVisibility(View.VISIBLE);
-                }
+
                 break;
               default:
                 break;

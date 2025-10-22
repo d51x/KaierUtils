@@ -2,7 +2,6 @@ package ru.d51x.kaierutils;
 
 import ru.d51x.kaierutils.Data.GpsData;
 import ru.d51x.kaierutils.Data.PopupWindowOption;
-import ru.d51x.kaierutils.Data.PowerAmpOptions;
 import ru.d51x.kaierutils.Data.UiOptions;
 import ru.d51x.kaierutils.Data.VolumeOptions;
 import ru.d51x.kaierutils.Radio.Radio;
@@ -16,7 +15,6 @@ public class GlSets {
     public static final String GPS_BROADCAST_ACTION_LOCATION_CHANGED = "ru.d51x.kaierutils.action.LOCATION_CHANGED";
     public static final String GPS_BROADCAST_ACTION_FIRST_FIX = "ru.d51x.kaierutils.action.GPS_EVENT_FIRST_FIX";
     public static final String GPS_BROADCAST_ACTION_AGPS_RESET = "ru.d51x.kaierutils.action.GPS_EVENT_AGPS_RESET";
-    public static final String PWRAMP_BROADCAST_ACTION_TRACK_CHANGED = "ru.d51x.kaierutils.action.TRACK_CHANGED";
 
     public Boolean btState = false;
 
@@ -40,8 +38,6 @@ public class GlSets {
     public long workTime;
     public long lastSleep;
     public long wakeUpTime;
-
-    public PowerAmpOptions powerAmpOpt = new PowerAmpOptions();
 
     public GpsData gpsData = new GpsData();
 
@@ -75,7 +71,6 @@ public class GlSets {
 			Volume = getVolumeLevel ();
             ui.load();
             volumeOptions.load();
-            powerAmpOpt.load();
             popupWindowOption.load();
             radio.load();
             gpsData.load();
