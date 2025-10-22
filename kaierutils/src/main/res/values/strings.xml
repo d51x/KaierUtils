@@ -142,10 +142,6 @@
     <string name="title_activity_dynamic_sound_settings">Динамическое изменение громкости</string>
 
 
-
-
-
-
     <string name="sound_settings_title">Дополнительные настройки звука</string>
     <string name="text_device_name">Устройство %1$s</string>
 
@@ -158,8 +154,6 @@
     <string name="text_working_start">Работает с %1$s</string>
     <string name="text_flavour">TWUtil %1$s, SimOBD %2$s</string>
 
-    <!-- <string name="text_gps_altitude">Высота: %1$s м</string> -->
-    <!-- <string name="text_gps_accuracy">Точность: %1$s м</string> -->
     <string name="text_gps_speed_value">%1$d</string>
     <string name="text_gps_track_time">%1$s</string>
 

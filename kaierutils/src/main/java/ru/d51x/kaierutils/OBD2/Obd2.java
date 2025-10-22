@@ -25,10 +25,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
-import pt.lighthouselabs.obd.commands.SpeedObdCommand;
 import pt.lighthouselabs.obd.commands.can.CanObdCommand;
-import pt.lighthouselabs.obd.commands.control.ControlModuleVoltageObdCommand;
-import pt.lighthouselabs.obd.commands.engine.EngineRPMObdCommand;
 import pt.lighthouselabs.obd.commands.engine.MassAirFlowObdCommand;
 import pt.lighthouselabs.obd.commands.protocol.EchoOffObdCommand;
 import pt.lighthouselabs.obd.commands.protocol.LineFeedOffObdCommand;
@@ -63,8 +60,6 @@ public class Obd2 {
     public boolean useOBD;
     public boolean fuelConsumpShow = false;
     public int engineTempUpdateTime = 5; // сек
-    public EngineRPMObdCommand engineRpmCommand;
-    public SpeedObdCommand speedCommand;
     public MassAirFlowObdCommand mafObdCommand;
 
     public ObdData obdData;
@@ -295,10 +290,7 @@ public class Obd2 {
 
     public void prepareData() {
         if ( !isConnected ) return;
-        engineRpmCommand = new EngineRPMObdCommand();
-        speedCommand = new SpeedObdCommand();
         mafObdCommand = new MassAirFlowObdCommand();
-
     }
 
      public void newProcessAllData() {
@@ -329,76 +321,7 @@ public class Obd2 {
         //request_MMC_ECU_AWC();
     }
 
-    private void processObdEngineRpm() {
-        if (isServiceCommand) return;
-        if ( activeMAF ) return;
-        if ( App.GS.isReverseMode ) return;
-        activeOther = true;
-        try {
-            long t = System.currentTimeMillis();
-            engineRpmCommand.run(socket.getInputStream(), socket.getOutputStream());
-            obdData.rpm = engineRpmCommand.getRPM();
-            Log.d(TAG, String.format("Command RPM :: %d ms", System.currentTimeMillis() - t));
-
-            SendBroadcastAction(OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED, "engineRPM", engineRpmCommand.getFormattedResult());
-           // Log.d("OBDII-->processOBD_EngineRPM()", "RPM: " + engineRpmCommand.getFormattedResult());
-        } catch ( NonNumericResponseException e5) {
-            activeOther = false;
-            disconnect();
-            Log.e("OBDII-->processOBD_EngineRPM()", e5.toString());
-            e5.printStackTrace();
-        }
-        catch (UnableToConnectException | IOException e3) {
-            activeOther = false;
-            Log.e("OBDII-->processOBD_EngineRPM()", e3.toString());
-            e3.printStackTrace();
-            disconnect();
-        } catch ( Exception e2) {
-            activeOther = false;
-            Log.e("OBDII-->processOBD_EngineRPM()", e2.toString());
-            e2.printStackTrace();
-        }
-        activeOther = false;
-    }
-
-    private void processObdSpeed() {
-        if (isServiceCommand) return;
-        if ( activeMAF ) return;
-        if ( App.GS.isReverseMode ) return;
-        activeOther = true;
-        try {
-            long t = System.currentTimeMillis();
-            speedCommand.run(socket.getInputStream(), socket.getOutputStream());
-            obdData.speed = speedCommand.getMetricSpeed();
-            Log.d(TAG, String.format("Command Speed :: %d ms", System.currentTimeMillis() - t));
-
-            SendBroadcastAction(OBD_BROADCAST_ACTION_SPEED_CHANGED, "speed", speedCommand.getFormattedResult());
-            //Log.d("OBDII-->processOBD_Speed()", "Speed: " + speedCommand.getFormattedResult());
-        }  catch ( NonNumericResponseException e5) {
-            activeOther = false;
-            disconnect();
-            Log.e("OBDII-->processOBD_Speed()", e5.toString());
-            e5.printStackTrace();
-        }
-        catch ( StoppedException e6) {
-            activeOther = false;
-            Log.e("OBDII-->processOBD_Speed()", e6.toString());
-            e6.printStackTrace();
-        }
-        catch (UnableToConnectException | IOException e3) {
-            activeOther = false;
-            Log.e("processOBD_Speed()", e3.toString());
-            e3.printStackTrace();
-            disconnect();
-        } catch ( Exception e2) {
-            activeOther = false;
-            Log.e("processOBD_Speed()", e2.toString());
-            e2.printStackTrace();
-        }
-        activeOther = false;
-    }
-
-        public void processObdMaf() {
+    public void processObdMaf() {
         if (isServiceCommand) return;
         //if ( activeOther ) return;
         try {
