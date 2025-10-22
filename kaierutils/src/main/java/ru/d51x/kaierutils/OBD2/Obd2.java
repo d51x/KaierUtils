@@ -752,27 +752,26 @@ public class Obd2 {
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
 
-        if ( App.obd.mmcCan && App.obd.can.can_mmc_fuel_remain_show ) {
-            App.obd.can.FuelLevel_TimeStamp2 = System.currentTimeMillis();
-            long t = App.obd.can.FuelLevel_TimeStamp2- App.obd.can.FuelLevel_TimeStamp1;
+        App.obd.can.FuelLevel_TimeStamp2 = System.currentTimeMillis();
+        long t = App.obd.can.FuelLevel_TimeStamp2- App.obd.can.FuelLevel_TimeStamp1;
 
-            if ( t < (can.can_mmc_fuel_remain_update_time * 1000L) ) { return; }
+        if ( t < (can.can_mmc_fuel_remain_update_time * 1000L) ) { return; }
 
-            activeOther = true;
-            ArrayList<Integer> buffer;
-            /* время на выполнение команд max = 1625 ms
-                header - 400 ms
-                21 A1  - 150        speed
-                21 A2  - 160        rpm
-                21 A3  - 125        fuel
-                21 A6  - 110        luminocity day/night + backlight on/off
-                21 A8  - 150        lights - high beam, low beam, fog lights, turn l/r, handbrake
-                21 AD  - 110        mileage
-                21 AE  - 170 (FC)   tripA, tripB
-                21 AF  - 100        voltage
-                21 BC  - 150 (FC)   service reminder
-             */
-            setHeaders(BLOCK_6A0, BLOCK_RX_514, true);
+        activeOther = true;
+        ArrayList<Integer> buffer;
+        /* время на выполнение команд max = 1625 ms
+            header - 400 ms
+            21 A1  - 150        speed
+            21 A2  - 160        rpm
+            21 A3  - 125        fuel
+            21 A6  - 110        luminocity day/night + backlight on/off
+            21 A8  - 150        lights - high beam, low beam, fog lights, turn l/r, handbrake
+            21 AD  - 110        mileage
+            21 AE  - 170 (FC)   tripA, tripB
+            21 AF  - 100        voltage
+            21 BC  - 150 (FC)   service reminder
+         */
+        setHeaders(BLOCK_6A0, BLOCK_RX_514, true);
 
 //            buffer = requestCanEcu(BLOCK_6A0_PID_21A1, BLOCK_6A0); // speed - иногда отдает лажу
 //            processObdCommandResult(BLOCK_6A0_PID_21A1, BLOCK_6A0, buffer);
@@ -780,8 +779,8 @@ public class Obd2 {
 //            buffer = requestCanEcu(BLOCK_6A0_PID_21A2, BLOCK_6A0); // rpm
 //            processObdCommandResult(BLOCK_6A0_PID_21A2, BLOCK_6A0, buffer);
 
-            buffer = requestCanEcu(BLOCK_6A0_PID_21A3, BLOCK_6A0); // fuel
-            processObdCommandResult(BLOCK_6A0_PID_21A3, BLOCK_6A0, buffer);
+        buffer = requestCanEcu(BLOCK_6A0_PID_21A3, BLOCK_6A0); // fuel
+        processObdCommandResult(BLOCK_6A0_PID_21A3, BLOCK_6A0, buffer);
 
 //            buffer = requestCanEcu(BLOCK_6A0_PID_21A6, BLOCK_6A0); // luminocity and day/night
 //            processObdCommandResult(BLOCK_6A0_PID_21A6, BLOCK_6A0, buffer);
@@ -789,22 +788,21 @@ public class Obd2 {
 //            buffer = requestCanEcu(BLOCK_6A0_PID_21A8, BLOCK_6A0); // lights - габариты, дальний, противотуманки перед/зад, поворотники, ручнник
 //            processObdCommandResult(BLOCK_6A0_PID_21A8, BLOCK_6A0, buffer);
 
-            buffer = requestCanEcu(BLOCK_6A0_PID_21AE, BLOCK_6A0); // trpA, tripB
-            processObdCommandResult(BLOCK_6A0_PID_21AE, BLOCK_6A0, buffer);
+        buffer = requestCanEcu(BLOCK_6A0_PID_21AE, BLOCK_6A0); // trpA, tripB
+        processObdCommandResult(BLOCK_6A0_PID_21AE, BLOCK_6A0, buffer);
 
 //            buffer = requestCanEcu(BLOCK_6A0_PID_21AF, BLOCK_6A0); // voltage
 //            processObdCommandResult(BLOCK_6A0_PID_21AF, BLOCK_6A0, buffer);
 
-            if (extended) {
-                buffer = requestCanEcu(BLOCK_6A0_PID_21AD, BLOCK_6A0); // mileage
-                processObdCommandResult(BLOCK_6A0_PID_21AD, BLOCK_6A0, buffer);
+        if (extended) {
+            buffer = requestCanEcu(BLOCK_6A0_PID_21AD, BLOCK_6A0); // mileage
+            processObdCommandResult(BLOCK_6A0_PID_21AD, BLOCK_6A0, buffer);
 
-                buffer = requestCanEcu(BLOCK_6A0_PID_21BC, BLOCK_6A0); // service reminder
-                processObdCommandResult(BLOCK_6A0_PID_21BC, BLOCK_6A0, buffer);
-            }
-            can.FuelLevel_TimeStamp1 = can.FuelLevel_TimeStamp2;
-            activeOther = false;
+            buffer = requestCanEcu(BLOCK_6A0_PID_21BC, BLOCK_6A0); // service reminder
+            processObdCommandResult(BLOCK_6A0_PID_21BC, BLOCK_6A0, buffer);
         }
+        can.FuelLevel_TimeStamp1 = can.FuelLevel_TimeStamp2;
+        activeOther = false;
     }
 
     private void requestMmcAirCond(boolean extended){

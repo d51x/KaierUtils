@@ -1414,33 +1414,15 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private void show_fuel_tank_data(int mode) {
         switch (mode) {
             case 0:
-                if (App.obd.mmcCan && App.obd.can.can_mmc_fuel_remain_show) {
-                    // по кан
-                    ui.updateFuelLevelText(tvFuelTank, App.obd.can.meter.getFuelLevel());
-                } else {
-                    // вычисляем
-                    TextViewToSpans(tvFuelTank,
-                            String.format("%1$.1f", App.obd.totalTrip.fuelRemains), TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
-                }
-
+                ui.updateFuelLevelText(tvFuelTank, App.obd.can.meter.getFuelLevel());
                 break;
             case 1:
-
-                if (App.obd.mmcCan && App.obd.can.can_mmc_fuel_remain_show) {
-                    // по кан
-                    if ( App.obd.can.meter.getFuelLevel() < 0) {
-                        tvFuelTank.setText(String.format("%1$s", "--"));
-                    } else {
-                        tvFuelTank.setText(String.format("%1$s",
-                                Math.round((float) App.obd.can.meter.getFuelLevel() / ((float) App.obd.fuelTankCapacity / 100))) + "%");
-                    }
+                if ( App.obd.can.meter.getFuelLevel() < 0) {
+                    tvFuelTank.setText(String.format("%1$s", "--"));
                 } else {
-                    // вычисляем
-                    tvFuelTank.setText(String.format("%1$.0f",
-                            (App.obd.totalTrip.fuelRemains * 100) / App.obd.fuelTankCapacity) + "%");
+                    tvFuelTank.setText(String.format("%1$s",
+                            Math.round((float) App.obd.can.meter.getFuelLevel() / ((float) App.obd.fuelTankCapacity / 100))) + "%");
                 }
-
-
                 break;
             case 2:
                 TextViewToSpans(tvFuelTank, String.format("%1$.2f", App.obd.oneTrip.fuelUsage),
