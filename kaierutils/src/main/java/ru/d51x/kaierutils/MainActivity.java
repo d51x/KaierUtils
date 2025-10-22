@@ -48,7 +48,6 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A3;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AD;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AE;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21BC;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_MAF_CHANGED;
@@ -490,7 +489,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         layoutCvtData.setVisibility( (App.obd.mmcCan && (App.obd.can.can_mmc_cvt_degr_show || App.obd.can.can_mmc_cvt_temp_show)) ? View.VISIBLE : View.GONE);
         layoutMmcClimate.setVisibility( (App.obd.mmcCan && App.obd.can.can_mmc_ac_data_show) ? View.VISIBLE : View.GONE);
-        layoutTempData.setVisibility( App.obd.engineTempShow ? View.VISIBLE : View.GONE);
         ibFloatingPanel.setVisibility(!App.GS.isShowingFloatingPanel ? View.VISIBLE : View.INVISIBLE);
 
         // обновить данные OBD
@@ -845,10 +843,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     updateOBDStatus(obd_status);
                     break;
                 //*********** ACTIONS: COMMON OBD COMMANDS ***********************************
-                case OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED:
-                    // TODO: 06.10.2025 select coolant type from preferences
-                    updateCoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
-                    break;
                 case OBD_BROADCAST_ACTION_MAF_CHANGED:
                     saveFuelConsumptionToStorage(App.obd.oneTrip.fuelConsumptionLph);
                     saveFuelTankToStorage(App.obd.totalTrip.fuelRemains);
@@ -1162,7 +1156,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         // OBD GENERIC
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_SPEED_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED));
-        registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_MAF_CHANGED));
 
@@ -1247,19 +1240,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     @SuppressLint("DefaultLocale")
     public void updateCoolantTemp(int mode, CanMmcData.State state){
-        if ( App.obd.engineTempShow) {
-            layoutTempData.setVisibility( View.VISIBLE );
-
-            // TODO: 06.10.2025 select coolant type from preferences
-            //float temp = App.obd.obdData.coolant;
-            float temp = App.obd.can.engine.getCoolantTemperature();
-            ivCoolantTempFan.setVisibility(((state == CanMmcData.State.on) &&
-                            App.obd.mmcCan && App.obd.can.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
-            ui.updateCoolantTemperatureIcon(ivCoolantTemp, temp);
-            ui.updateCoolantTemperatureText(tvCoolantTemp, temp);
-        } else {
-            layoutTempData.setVisibility( View.GONE );
-        }
+        float temp = App.obd.can.engine.getCoolantTemperature();
+        ivCoolantTempFan.setVisibility(((state == CanMmcData.State.on) &&
+                        App.obd.mmcCan && App.obd.can.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
+        ui.updateCoolantTemperatureIcon(ivCoolantTemp, temp);
+        ui.updateCoolantTemperatureText(tvCoolantTemp, temp);
     }
 
     @SuppressLint("SetTextI18n")

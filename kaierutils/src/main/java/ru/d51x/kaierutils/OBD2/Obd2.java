@@ -35,7 +35,6 @@ import pt.lighthouselabs.obd.commands.protocol.LineFeedOffObdCommand;
 import pt.lighthouselabs.obd.commands.protocol.ObdResetCommand;
 import pt.lighthouselabs.obd.commands.protocol.SelectHeaderObdCommand;
 import pt.lighthouselabs.obd.commands.protocol.SelectProtocolObdCommand;
-import pt.lighthouselabs.obd.commands.temperature.EngineCoolantTemperatureObdCommand;
 import pt.lighthouselabs.obd.enums.ObdProtocols;
 import pt.lighthouselabs.obd.exceptions.MisunderstoodCommandException;
 import pt.lighthouselabs.obd.exceptions.NoDataException;
@@ -62,13 +61,11 @@ public class Obd2 {
     private static long tSleep = 0;
     public boolean isConnected;
     public boolean useOBD;
-    public boolean engineTempShow = false;
     public boolean fuelDataShow = false;
     public boolean fuelConsumpShow = false;
     public int engineTempUpdateTime = 5; // сек
     public EngineRPMObdCommand engineRpmCommand;
     public SpeedObdCommand speedCommand;
-    public EngineCoolantTemperatureObdCommand coolantTempCommand;
     public MassAirFlowObdCommand mafObdCommand;
 
     public ObdData obdData;
@@ -92,7 +89,6 @@ public class Obd2 {
     private Handler mHandler = new Handler();
     private BluetoothSocket socket;
     private long mafTimeStamp1, mafTimeStamp2;
-    private long coolantTimeStamp1, coolantTimeStamp2;
 
     public int fuelTankCapacity;
 
@@ -110,7 +106,6 @@ public class Obd2 {
         useOBD = prefs.getBoolean("ODBII_USE_BLUETOOTH", false);
         mmcCan = prefs.getBoolean("ODBII_USE_MMC_CAN", false);
 
-        engineTempShow = prefs.getBoolean("ODBII_ENGINE_TEMP_SHOW", false);
         fuelDataShow = prefs.getBoolean("ODBII_FUEL_DATA_SHOW", false);
         fuelConsumpShow = prefs.getBoolean("ODBII_FUEL_CONSUMP_SHOW", false);
 
@@ -130,9 +125,6 @@ public class Obd2 {
 
         mafTimeStamp1 = System.currentTimeMillis();
         mafTimeStamp2 = System.currentTimeMillis();
-
-        coolantTimeStamp1 = System.currentTimeMillis();
-        coolantTimeStamp2 = System.currentTimeMillis();
 
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -309,7 +301,6 @@ public class Obd2 {
         if ( !isConnected ) return;
         engineRpmCommand = new EngineRPMObdCommand();
         speedCommand = new SpeedObdCommand();
-        coolantTempCommand = new EngineCoolantTemperatureObdCommand();
         mafObdCommand = new MassAirFlowObdCommand();
 
     }
@@ -414,58 +405,7 @@ public class Obd2 {
         activeOther = false;
     }
 
-    private void processObdCoolantTemp() {
-        if (isServiceCommand) return;
-        if ( activeMAF ) return;
-        if ( App.GS.isReverseMode ) return;
-        if ( !engineTempShow) return;
-
-        coolantTimeStamp2 = System.currentTimeMillis();
-        long t = coolantTimeStamp2 - coolantTimeStamp1;
-        if ( t < ( engineTempUpdateTime * 1000L)) {return;}
-
-
-        activeOther = true;
-        try {
-            long tt = System.currentTimeMillis();
-            coolantTempCommand.run(socket.getInputStream(), socket.getOutputStream());
-            obdData.coolant = coolantTempCommand.getTemperature();
-            Log.d(TAG, String.format("Command Coolant :: %d ms", System.currentTimeMillis() - tt));
-
-            coolantTimeStamp1 = coolantTimeStamp2;
-
-            Intent intent = new Intent();
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            intent.putExtra("coolantTemp", coolantTempCommand.getFormattedResult());
-            intent.putExtra("coolantTempD", obdData.coolant);
-            intent.setAction(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED);
-            App.getInstance ().sendBroadcast(intent);
-
-            //Log.d("OBDII-->processOBD_coolantTemp()", "coolantTemp: " + coolantTempCommand.getFormattedResult());
-        }  catch ( NonNumericResponseException e5) {
-            activeOther = false;
-            disconnect();
-            Log.e("OBDII-->processOBD_coolantTemp()", e5.toString());
-            e5.printStackTrace();
-        }
-        catch ( StoppedException e6) {
-            activeOther = false;
-            Log.e("OBDII-->processOBD_coolantTemp()", e6.toString());
-            e6.printStackTrace();
-        }
-        catch (UnableToConnectException | IOException e3) {
-            activeOther = false;
-            Log.e("processOBD_coolantTemp()", e3.toString());
-            e3.printStackTrace();
-            disconnect();
-        } catch ( Exception e2) {
-            activeOther = false;
-            Log.e("processOBD_coolantTemp()", e2.toString());
-            e2.printStackTrace();
-        }
-    }
-
-    public void processObdMaf() {
+        public void processObdMaf() {
         if (isServiceCommand) return;
         //if ( activeOther ) return;
         try {

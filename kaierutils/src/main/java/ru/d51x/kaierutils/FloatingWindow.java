@@ -17,7 +17,6 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_ENGINE_2110;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A1;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A3;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AE;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_MAF_CHANGED;
 
 import android.annotation.SuppressLint;
@@ -275,10 +274,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     String action = intent.getAction();
-                    if (OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED.equals(action)) {
-                        ui.updateCoolantTemperatureText(tvCoolantTemp, intent.getFloatExtra("coolantTempD", -255));
-                    }
-                    else if (OBD_BROADCAST_ACTION_MAF_CHANGED.equals(action)) {
+                    if (OBD_BROADCAST_ACTION_MAF_CHANGED.equals(action)) {
                         ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmAvg);
                     }
                     else if (ACTION_OBD_ENGINE_2101_CHANGED.equals(action)) {
@@ -349,7 +345,6 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                     }
                 }
             };
-            context.registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_MAF_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2101_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2102_CHANGED));

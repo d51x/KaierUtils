@@ -31,7 +31,6 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CVT_2110;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A3;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AD;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21BC;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_MAF_CHANGED;
@@ -84,7 +83,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TextView tvDeviceStatus;
     private TextView tvOBDEngineRPM;
     private TextView tvOBDSpeed;
-    private TextView tvOBD_CoolantTemp;
+    private TextView tvCoolantTemp;
     private TextView tvOBD_FuelUsage;
     private TextView tvOBD_FuelUsage2;
     private TextView tvVoltage;
@@ -140,9 +139,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
             }
             else if (OBD_BROADCAST_ACTION_SPEED_CHANGED.equals(action)) {
                 tvOBDSpeed.setText(String.format(getString(R.string.text_obd_speed_f), intent.getStringExtra("speed")));
-            }
-            else if (OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED.equals(action)) {
-                tvOBD_CoolantTemp.setText(String.format(getString(R.string.text_obd_coolant_temp_f), intent.getStringExtra("coolantTemp")));
             }
             else if (OBD_BROADCAST_ACTION_MAF_CHANGED.equals(action)) {
                 tvOBD_MAF.setText(String.format(getString(R.string.text_obd_fuel_consumption_maf_f)
@@ -308,7 +304,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvDeviceStatus = findViewById(R.id.tvDeviceStatus);
         tvOBDEngineRPM = findViewById(R.id.tvOBDEngineRPM);
         tvOBDSpeed = findViewById(R.id.tvOBD_Speed);
-        tvOBD_CoolantTemp = findViewById(R.id.tvCoolantTemp);
+        tvCoolantTemp = findViewById(R.id.tvCoolantTemp);
         tvOBD_FuelUsage = findViewById(R.id.tvOBD_FuelUsage);
         tvVoltage = findViewById(R.id.tvOBD_CMUVoltage);
         tvGPS_Distanse = findViewById(R.id.tvGPS_Distanse);
@@ -363,7 +359,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
         tvOBDEngineRPM.setText(String.format(getString(R.string.text_obd_engine_rpm_f), "---"));
         tvOBDSpeed.setText(String.format(getString(R.string.text_obd_speed_f), "---"));
-        tvOBD_CoolantTemp.setText(String.format(getString(R.string.text_obd_coolant_temp_f), "---"));
+        tvCoolantTemp.setText(String.format(getString(R.string.text_obd_coolant_temp_f), "---"));
         tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage_f), 0.0f));
         tvVoltage.setText(String.format(getString(R.string.text_obd_cmu_voltage_f), "---"));
         tvGPS_Distanse.setText(String.format(getString(R.string.text_obd_distanse_f), 0.0f));
@@ -397,7 +393,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         // OBD GENERIC
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_SPEED_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED));
-        registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_MAF_CHANGED));
 

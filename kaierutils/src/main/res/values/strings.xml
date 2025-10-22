@@ -235,7 +235,6 @@
 	<string name="text_obd_can_fuel_level">%1$s</string>
     <string name="text_air_cond_external_temp">A/C External temperature: %1$s</string>
     <string name="cbOBD_new_process">Новый процесс запроса данных</string>
-    <string name="cbOBD_show_engine_temp">Отображать теммпературу охлаждающей жидкости</string>
     <string name="cbOBD_show_fuel_detail">Отображать данные о количестве топлива (в баке / потрачено)</string>
     <string name="cbOBD_show_fuel_consump_detail">Отображать данные о расходе топлива (мгновенный расход ; л/100км мгновенный; л/100км средний)</string>
     <string name="cbCanMMC_show_fuel">Остаток топлива по CAN</string>
