@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import java.util.Objects;
+
 import ru.d51x.kaierutils.App;
 
 /**
@@ -37,16 +39,13 @@ public class TWUtilProcessingThread extends Thread {
 
 	public synchronized void finish() {
 		Log.d ("TWUtilProcessingThread", "finish()");
-		handler.post(new Runnable() {
-			@Override
-			public void run() {
-				if ( twUtil != null){
-					twUtil.Destroy();
-					twUtil = null;
-				}
-			Looper.myLooper().quit();
-			}
-		});
+		handler.post(() -> {
+            if ( twUtil != null){
+                twUtil.Destroy();
+                twUtil = null;
+            }
+        Objects.requireNonNull(Looper.myLooper()).quit();
+        });
 	}
 
 }

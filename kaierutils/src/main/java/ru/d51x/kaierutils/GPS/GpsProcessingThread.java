@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import java.util.Objects;
+
 import ru.d51x.kaierutils.App;
 
 public class GpsProcessingThread extends Thread {
@@ -39,7 +41,7 @@ public class GpsProcessingThread extends Thread {
                     gpsProcessing.Destroy();
                     gpsProcessing = null;
                 }
-                Looper.myLooper().quit();
+                Objects.requireNonNull(Looper.myLooper()).quit();
             }
         });
     }

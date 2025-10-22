@@ -1,12 +1,11 @@
 package ru.d51x.kaierutils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -24,11 +23,13 @@ public class App extends Application implements Application.ActivityLifecycleCal
 	static App self;
 	public static GlSets GS;
     public static Obd2 obd;
-	public static SensorsToast sensorsToast;
+	@SuppressLint("StaticFieldLeak")
+    public static SensorsToast sensorsToast;
 	public static Toast gToast;
 
 	private final static int REQUEST_ENABLE_BT = 1;
-	public static FloatingWindow floatingWindow;
+	@SuppressLint("StaticFieldLeak")
+    public static FloatingWindow floatingWindow;
 
 	private WindowManager.LayoutParams mWindowManagerLayoutParams = new WindowManager.LayoutParams();
 	public WindowManager.LayoutParams getWindowManagerLayoutParams() {
@@ -43,49 +44,33 @@ public class App extends Application implements Application.ActivityLifecycleCal
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.d ("App", "onCreate");
+		Log.d("App", "onCreate");
 		self = this;
 		GS = new GlSets();
 
 		registerActivityLifecycleCallbacks(this);
 		handler = new Handler(getMainLooper());
 
-		boolean bluetoothAvailable = getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
-		//boolean bluetoothLEAvailable = getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                BluetoothManager bluetoothManager = getSystemService(BluetoothManager.class);
-				BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
-				if (bluetoothAdapter == null) {
-					// Device doesn't support Bluetooth
-				}
-				if (!bluetoothAdapter.isEnabled()) {
-					Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-					//startActivityForResult(MainActivity, enableBtIntent, REQUEST_ENABLE_BT);
-				}
-            }
-        }
-
-		obd = new Obd2( self );
-		//this.startService (new Intent (this, BackgroundService.class));
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			this.startForegroundService(new Intent(this, BackgroundService.class));
-		} else {
-			this.startService(new Intent(this, BackgroundService.class));
+		BluetoothManager bluetoothManager = getSystemService(BluetoothManager.class);
+		BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
+		if (bluetoothAdapter != null) {
+			if (!bluetoothAdapter.isEnabled()) {
+				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				//startActivityForResult(MainActivity, enableBtIntent, REQUEST_ENABLE_BT);
+			}
 		}
+        obd = new Obd2( self );
+        this.startForegroundService(new Intent(this, BackgroundService.class));
         sensorsToast = new SensorsToast( self );
         gToast = new Toast( self );
 		floatingWindow = new FloatingWindow(getApplicationContext(), App.GS.ui.floatingWindowVertical);
 	}
 
-	private Runnable appMinimize = new Runnable() {
-		@Override
-		public void run() {
-			if (App.GS.ui.showFloatingOnMinimize) {
-				App.floatingWindow.show();
-			}
-		}
-	};
+	private final Runnable appMinimize = () -> {
+        if (App.GS.ui.showFloatingOnMinimize) {
+            App.floatingWindow.show();
+        }
+    };
 
 	@Override
 	public void onActivityCreated(Activity activity, Bundle savedInstanceState) {

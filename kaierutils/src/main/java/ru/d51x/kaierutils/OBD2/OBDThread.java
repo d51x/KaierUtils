@@ -13,7 +13,7 @@ import ru.d51x.kaierutils.App;
 public class OBDThread extends Thread {
 
     private long readingTime1, readingTime2;
-    private long mafRequestTimePrev, mafRequestTime;
+    private long mafRequestTimePrev;
     Timer obdTimer;
     ObdTimerTask obdTimerTask;
 
@@ -66,7 +66,7 @@ public class OBDThread extends Thread {
                     }
 
                     //------- reqiesting MAF period 1 sec
-                    mafRequestTime = System.currentTimeMillis();
+                    long mafRequestTime = System.currentTimeMillis();
                     if ( (mafRequestTime - mafRequestTimePrev) > 1000) // 1 sec
                     {
 

@@ -57,10 +57,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.ArrayList;

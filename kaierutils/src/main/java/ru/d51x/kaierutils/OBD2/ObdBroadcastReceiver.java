@@ -19,10 +19,11 @@ public class ObdBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
 
-        if ( action.equals( ACTION_OBD_PARKING_2101_CHANGED )) {
+        if ( ACTION_OBD_PARKING_2101_CHANGED.equals(action)) {
             ArrayList<Integer> buffer = intent.getIntegerArrayListExtra(KEY_OBD_PARKING_2101);
+            if (buffer == null) return;
 
-            if ( App.GS.isReverseMode ) {
+            if (App.GS.isReverseMode ) {
                 App.sensorsToast.cancel();
                 App.sensorsToast.SetSensors( buffer );
                 App.sensorsToast.showToast();

@@ -222,7 +222,7 @@ public class Obd2 {
             new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
             Log.d(TAG, "OBD2->disconnect(): try to close socked ");
             socket.close();
-	        Log.d(TAG, "OBD2->disconnect() socket is closed");
+            Log.d(TAG, "OBD2->disconnect() socket is closed");
 
         } catch (Exception e) {
             Log.e(TAG, "OBDII-->disconnect(): " + e.toString());
@@ -325,7 +325,6 @@ public class Obd2 {
         if (isServiceCommand) return;
         //if ( activeOther ) return;
         try {
-
             // TODO: убрать костыль, когда найду нужный пид
             setHeaders("7E0", "7E8", false);
             activeMAF = true;
@@ -339,14 +338,9 @@ public class Obd2 {
             long t = mafTimeStamp2 - mafTimeStamp1;
             mafTimeStamp1 = mafTimeStamp2;
 
-            //Log.d("OBDII-->processOBD_MAF()", "MAF time: " + Float.toString( t / 1000f ) + " сек");
-
-
             oneTrip.calculateData(obdData.speed, obdData.maf, t);
             todayTrip.calculateData(obdData.speed, obdData.maf, t);
             totalTrip.calculateData(obdData.speed, obdData.maf, t);
-
-
 
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
@@ -354,9 +348,7 @@ public class Obd2 {
             intent.putExtra("dMAF", obdData.maf);
             intent.setAction(OBD_BROADCAST_ACTION_MAF_CHANGED);
             App.getInstance ().sendBroadcast(intent);
-            //Log.d("OBDII-->processOBD_MAF()", "MAF: " + MAFObdCommand.getFormattedResult());
             activeMAF = false;
-
         }  catch ( NonNumericResponseException e5) {
             activeMAF = false;
             disconnect();
@@ -377,11 +369,7 @@ public class Obd2 {
             Log.e("OBDII-->processOBD_MAF()", e2.toString());
             e2.printStackTrace();
             activeMAF = false;
-        } finally {
-            activeMAF = false;
         }
-
-
     }
 
 
@@ -534,7 +522,6 @@ public class Obd2 {
 
     private void notify_disconnect() {
         isConnected = false;
-        //App.obd.isConnected = false;
         socket = null;
         SendBroadcastAction(OBD_BROADCAST_ACTION_STATUS_CHANGED, "Status", false);
     }
@@ -576,8 +563,6 @@ public class Obd2 {
             activeOther = false;
             //socket = null;
             e4.printStackTrace();
-        } finally {
-            activeOther = false;
         }
         activeOther = false;
     }

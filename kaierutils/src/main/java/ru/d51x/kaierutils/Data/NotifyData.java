@@ -14,12 +14,7 @@ import ru.d51x.kaierutils.R;
 public class NotifyData {
 
     public static final int NOTIFY_ID = 1;
-    public static final int NOTIFY_SPEED_ID = 2;
-    public static final int NOTIFY_AUDIO_FOCUS_ID = 3;
-    public static final int NOTIFY_VOLUME_CHANGED_ID = 2;
     public static final String NOTIFICATION_TITLE = "KaierUtils";
-    public static final String OPTION_SHOW_NOTIFICATION_ICON = "kaierutils_show_notification_icon";
-    public static final String OPTION_SHOW_VOLUME_ON_NOTIFICATION_ICON = "kaierutils_show_volume_on_notification_icon";
 
     public int NotifyID;
     public int smallIcon; // -1 - нет иконки
@@ -41,14 +36,11 @@ public class NotifyData {
         Title = NOTIFICATION_TITLE;
         Text = "";
         volumeLevel = -1;
-        //flags =  0;
         flags =  Notification.FLAG_ONGOING_EVENT;;
         ActivityClass = MainActivity.class;
         number = 0;
-
         line_inway_time = "";
         line_inway_distance = "";
-
         this.context = context;
     }
 
@@ -61,11 +53,7 @@ public class NotifyData {
         builder.setContentText(this.Text);
         builder.setAutoCancel(false);
 
-       // builder.addAction();
-
-        //builder.setWhen( App.GS.startDate);
         if ( this.smallIcon > 0 ) builder.setSmallIcon( this.smallIcon );
-        //Notification notification = builder.build();
         Notification notification = new Notification.InboxStyle(builder)
                 .addLine(line_inway_time)
                 .addLine(line_inway_distance)

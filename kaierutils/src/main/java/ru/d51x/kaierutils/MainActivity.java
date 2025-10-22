@@ -286,7 +286,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
 		ivVolumeLevel = findViewById(R.id.ivVolumeLevel);
         ivVolumeLevel.setOnClickListener(this);
-		ivSpeed = findViewById(R.id.ivSpeed);
+        ivSpeed = findViewById(R.id.ivSpeed);
 
         ivOBD2Status = findViewById(R.id.ivOBD2Status);
         ivOBD2Status.setOnClickListener(this);

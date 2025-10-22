@@ -29,32 +29,19 @@ public class GlSets {
     public boolean isMoving = false; // едем сейчас или стоим больше
     public boolean isFirstStart = false; // едем сейчас или стоим больше
     public long prevTime = 0;
-    public long SpeedStopTime = 4*60*1000;  // интервал с нулевой скоростью в минутах, если простояли дольше, значит вообще остановилилсь и не движемся, по хорошему, это надо вынести в настройки
-
     public long startDate;
     public long workTime;
     public long lastSleep;
     public long wakeUpTime;
-
     public GpsData gpsData = new GpsData();
-
-    String BT_deviceAddress = "unknown";
-
     public UiOptions ui = new UiOptions();
-
     public int curAudioFocusID = -1;
-
-
-
     public boolean isShowingFloatingPanel = false;
     public boolean showFloatingPanelButton = true;
 
 
 	public GlSets() {
 		Volume = 3;
-		//Brightness = 7;
-		//BrightnessMode = 0;
-
         ReverseActivityCount = 0;
         SleepModeCount = 0;
         startDate = System.currentTimeMillis();
@@ -66,28 +53,23 @@ public class GlSets {
             ui.load();
             volumeOptions.load();
             gpsData.load();
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 
 		}
-	}
-
-	private void InitValues() {
-
 	}
 
 	public int getVolumeLevel () {
 		return Volume;
 	}
 
-	public boolean setVolumeLevel (int level, boolean change) {
+	public void setVolumeLevel (int level, boolean change) {
 		if ( !change ) {
 			Volume = level;
-			return true;
+			return;
 		}
 		if ( TWUtilEx.setVolumeLevel(level)) {
 			Volume = level;
-			return true;
-		} else { return false;}
+        }
 	}
 
 

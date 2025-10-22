@@ -21,9 +21,5 @@ public class SettingsActivity extends PreferenceActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-//		if (App.GS.ui.showFloatingOnMinimize) {
-//			// hide floating panel
-//			App.floatingWindow.dismiss();
-//		}
 	}
 }

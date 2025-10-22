@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.BackgroundService;
-import ru.d51x.kaierutils.DebugLogger;
 import ru.d51x.kaierutils.MainActivity;
 
 public class TWUtilBroadcastReceiver extends BroadcastReceiver {
@@ -31,7 +30,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 		Log.d (TAG, "onReceive ");
 
 		String action = intent.getAction();
-		DebugLogger.ToLog(TAG, String.format("onReceive(), action %s", action));
+		Log.d(TAG, String.format("onReceive(), action %s", action));
 
         // устройство загрузилось, запустим фоновый сервис
 		if ( Intent.ACTION_BOOT_COMPLETED.equals(action) ) {
@@ -95,7 +94,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
         // включился задний ход
 		else if ( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_START.equals(action))
 		{
-			prevVolume = App.GS.getVolumeLevel (); // запомнили текущую громкость
+			prevVolume = App.GS.getVolumeLevel(); // запомнили текущую громкость
             App.GS.ReverseActivityCount++;         // увеличим счетчик включений заднего хода
 			changeVolumeAtReverse();
 		}
@@ -103,7 +102,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 		else if ( TWUtilConst.TW_BROADCAST_ACTION_REVERSE_ACTIVITY_FINISH.equals(action))
 		{
 			TWUtilEx.setVolumeLevel(prevVolume);  // вернем громкость обратно, которая была до включения заднего хода
-			App.GS.getVolumeLevel ();
+			App.GS.getVolumeLevel();
 		}
 	}
 

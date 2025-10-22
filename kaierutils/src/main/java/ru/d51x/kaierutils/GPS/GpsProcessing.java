@@ -26,8 +26,6 @@ public class GpsProcessing implements LocationListener, GpsStatus.Listener {
     public static final int signal_quality = 5;
     private static final int min_good_sats = 3;
     private static final int delayTimer = 40;
-    private static final int MIN_SPEED = 3;
-
     private static final int MINUTES_TWO = 1000 * 120;
     private BroadcastReceiver gpsReceiver;
     private Context context;

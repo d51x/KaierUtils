@@ -27,10 +27,10 @@ public class SensorsToast {
 		this.context = context;
 		mLayout = (RelativeLayout) ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(R.layout.sensors_toast, null);
 
-        iv_sensor_rear_left_outer = (ImageView) mLayout.findViewById(R.id.iv_sensor_rear_left_outer);
-        iv_sensor_rear_left_inner = (ImageView) mLayout.findViewById(R.id.iv_sensor_rear_left_inner);
-        iv_sensor_rear_right_outer = (ImageView) mLayout.findViewById(R.id.iv_sensor_rear_right_outer);
-        iv_sensor_rear_right_inner = (ImageView) mLayout.findViewById(R.id.iv_sensor_rear_right_inner);
+        iv_sensor_rear_left_outer = mLayout.findViewById(R.id.iv_sensor_rear_left_outer);
+        iv_sensor_rear_left_inner = mLayout.findViewById(R.id.iv_sensor_rear_left_inner);
+        iv_sensor_rear_right_outer = mLayout.findViewById(R.id.iv_sensor_rear_right_outer);
+        iv_sensor_rear_right_inner = mLayout.findViewById(R.id.iv_sensor_rear_right_inner);
 
 	}
 

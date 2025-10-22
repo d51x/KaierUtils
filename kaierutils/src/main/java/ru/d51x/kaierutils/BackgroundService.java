@@ -138,7 +138,7 @@ public class BackgroundService extends Service {
 		Toast.makeText(getApplicationContext(), "KaierUtils is stopped", Toast.LENGTH_LONG).show();
 		Log.d ("BackgroundService", "onDestroy");
 		stopForeground(true);
-        stopGpsProcessingThread();
+		stopGpsProcessingThread();
 		stopTWUtilProcessingThread();
         stopOBDThread();
 		super.onDestroy();
