@@ -227,7 +227,6 @@
 	<string name="text_obd_distanse_f">%1$.3f км</string>
     <!--<string name="text_obd_fuel_consumption_avg2">Средний расход (л/100км) с учетом простоев: %1$.1f</string>-->
     <string name="text_obd_fuel_consumption_avg2">  без простоев (л/100км): %1$.1f</string>
-    <string name="cbCanMMC">Mitsubishi CAN</string>
     <string name="text_can_211D_A3">Вентилятор охлаждения: %1$s</string>
 
 	<string name="text_can_2110_cvt_oil_degr">%1$s</string>

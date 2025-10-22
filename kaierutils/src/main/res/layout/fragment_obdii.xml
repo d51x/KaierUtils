@@ -145,14 +145,6 @@
                     android:textSize="16sp"
                     android:enabled="true"/>
 
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cbCanMMC"
-                    android:id="@+id/cbCanMMC"
-                    android:layout_weight="0.5"
-                    android:textSize="16sp"/>
-
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="fill_parent"

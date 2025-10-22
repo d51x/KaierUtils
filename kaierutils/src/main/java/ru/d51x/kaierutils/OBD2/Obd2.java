@@ -75,7 +75,6 @@ public class Obd2 {
     public boolean readExtendMeter = false;
     public boolean readExtendClimate = false;
     public boolean newObdProcess = true;
-    public boolean mmcCan;
     public boolean newDistanceCalc = true;
     public TripData totalTrip;
     public TripData oneTrip;
@@ -103,7 +102,6 @@ public class Obd2 {
         socket = null;
         mHandler = new Handler();
         useOBD = prefs.getBoolean("ODBII_USE_BLUETOOTH", false);
-        mmcCan = prefs.getBoolean("ODBII_USE_MMC_CAN", false);
 
         fuelConsumpShow = prefs.getBoolean("ODBII_FUEL_CONSUMP_SHOW", false);
 
@@ -323,15 +321,12 @@ public class Obd2 {
         if (isServiceCommand) return;
         //Log.d("OBDII-->processData()", "_");
 
-        if (mmcCan)  {
-            // переходим на режим работы MMC CAN и пиды 21хх
-            requestMmcEngine(false, false);
-            requestMmcCvt(App.obd.readExtendCvt);
-            requestMmcCombineMeter(App.obd.readExtendMeter);
-            requestMmcAirCond(App.obd.readExtendClimate);
-            //request_MMC_ECU_AWC();
-
-        }
+        // переходим на режим работы MMC CAN и пиды 21хх
+        requestMmcEngine(false, false);
+        requestMmcCvt(App.obd.readExtendCvt);
+        requestMmcCombineMeter(App.obd.readExtendMeter);
+        requestMmcAirCond(App.obd.readExtendClimate);
+        //request_MMC_ECU_AWC();
     }
 
     private void processObdEngineRpm() {

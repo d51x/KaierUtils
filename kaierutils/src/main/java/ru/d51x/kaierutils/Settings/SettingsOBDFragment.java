@@ -37,7 +37,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     private TextView tvOBDDevice;
     private TextView tvDeviceState;
     private CheckBox cbNewObdProcess;
-    private CheckBox cbCanMMC;
+
     private CheckBox cbCanMMC_show_climate_data;
     private CheckBox cbCanMMC_show_parking_data;
     private CheckBox cbOBD_show_fuel_consump_detail;
@@ -73,10 +73,6 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         cbNewObdProcess = mV.findViewById(R.id.cbNewObdProcess);
         cbNewObdProcess.setOnClickListener(this);
         cbNewObdProcess.setChecked(App.obd.newObdProcess);
-
-        cbCanMMC = mV.findViewById(R.id.cbCanMMC);
-        cbCanMMC.setOnClickListener(this);
-        cbCanMMC.setChecked(App.obd.mmcCan);
 
         tvOBDDevice = mV.findViewById(R.id.tvOBDDevice);
         tvDeviceState = mV.findViewById(R.id.tvDeviceState);
@@ -159,10 +155,6 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
             case R.id.cbNewObdProcess:
                 App.obd.newObdProcess = cbNewObdProcess.isChecked();
                 prefs.edit().putBoolean("ODBII_NEW_PROCESS", App.obd.newObdProcess).apply();
-                break;
-            case R.id.cbCanMMC:
-                App.obd.mmcCan = cbCanMMC.isChecked();
-                prefs.edit().putBoolean("ODBII_USE_MMC_CAN", App.obd.mmcCan).apply();
                 break;
             case R.id.cbCanMMC_show_climate_data:
                 App.obd.can.can_mmc_ac_data_show = cbCanMMC_show_climate_data.isChecked();

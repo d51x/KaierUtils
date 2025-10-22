@@ -479,7 +479,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layoutObd2.setVisibility( App.obd.useOBD ? View.VISIBLE : View.INVISIBLE );
         layoutFuelConsump.setVisibility( (App.obd.fuelConsumpShow) ? View.VISIBLE : View.GONE);
 
-        layoutMmcClimate.setVisibility( (App.obd.mmcCan && App.obd.can.can_mmc_ac_data_show) ? View.VISIBLE : View.GONE);
+        layoutMmcClimate.setVisibility(App.obd.can.can_mmc_ac_data_show ? View.VISIBLE : View.GONE);
         ibFloatingPanel.setVisibility(!App.GS.isShowingFloatingPanel ? View.VISIBLE : View.INVISIBLE);
 
         // обновить данные OBD
@@ -1212,8 +1212,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
     @SuppressLint("DefaultLocale")
     public void updateCoolantTemp(int mode, CanMmcData.State state){
         float temp = App.obd.can.engine.getCoolantTemperature();
-        ivCoolantTempFan.setVisibility(((state == CanMmcData.State.on) &&
-                        App.obd.mmcCan && App.obd.can.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
+        ivCoolantTempFan.setVisibility(((state == CanMmcData.State.on)
+                        && App.obd.can.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
         ui.updateCoolantTemperatureIcon(ivCoolantTemp, temp);
         ui.updateCoolantTemperatureText(tvCoolantTemp, temp);
     }

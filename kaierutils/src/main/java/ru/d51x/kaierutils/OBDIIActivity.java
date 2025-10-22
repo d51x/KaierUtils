@@ -120,10 +120,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
     private TextView tvOBD_MAF;
     private Switch swUseOBD;
-    private CheckBox cbCanMMC;
 
-    private TableRow trMMCHeader;
-    private TableRow trMMCValues;
     private UiUtils ui = new UiUtils();
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @SuppressLint("DefaultLocale")
@@ -345,18 +342,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 	    swUseOBD.setOnClickListener(this);
 	    swUseOBD.setChecked(App.obd.useOBD);
 
-        cbCanMMC = findViewById(R.id.cbCanMMC);
-        cbCanMMC.setOnClickListener(this);
-        cbCanMMC.setChecked(App.obd.mmcCan);
-
-
-        trMMCHeader = findViewById(R.id.trMMCHeader);
-        trMMCHeader.setVisibility(App.obd.mmcCan ? View.VISIBLE : View.GONE);
-
-        trMMCValues = findViewById(R.id.trMMCValues);
-        trMMCValues.setVisibility(App.obd.mmcCan ? View.VISIBLE : View.GONE);
-
-
         tvOBDEngineRPM.setText(String.format(getString(R.string.text_obd_engine_rpm_f), "---"));
         tvOBDSpeed.setText(String.format(getString(R.string.text_obd_speed_f), "---"));
         tvCoolantTemp.setText(String.format(getString(R.string.text_obd_coolant_temp_f), "---"));
@@ -487,15 +472,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 prefs.edit().putBoolean("ODBII_USE_BLUETOOTH", App.obd.useOBD).apply();
                 // connect or disconnect
                 setOnOffOBD( App.obd.useOBD );
-                break;
-            case R.id.cbCanMMC:
-                App.obd.mmcCan = cbCanMMC.isChecked();
-
-                trMMCHeader.setVisibility(App.obd.mmcCan ? View.VISIBLE : View.GONE);
-                trMMCValues.setVisibility(App.obd.mmcCan ? View.VISIBLE : View.GONE);
-
-
-                prefs.edit().putBoolean("ODBII_USE_MMC_CAN", App.obd.mmcCan).apply();
                 break;
             case R.id.btnResetDegr: {
                     btnResetDegradation.setEnabled(false);
