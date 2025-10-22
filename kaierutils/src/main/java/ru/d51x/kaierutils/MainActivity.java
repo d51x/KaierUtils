@@ -48,7 +48,6 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A3;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AD;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AE;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21BC;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED;
@@ -158,8 +157,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private LinearLayout layoutFuelConsump;
     private LinearLayout layoutTempData;
     private LinearLayout layoutCvtData;
-    private LinearLayout layoutBattery;
-
     private ImageView ivOBD2Status;
     private ImageView ivCarBattery;
     private TextView tvCarBattery;
@@ -396,9 +393,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layoutTempData = findViewById(R.id.layout_temp_data);
         layoutTempData.setOnClickListener (this);
 
-        layoutBattery = findViewById(R.id.layout_battery);
-        layoutBattery.setOnClickListener(this);
-
         layoutCvtData = findViewById(R.id.layout_cvt_data);
         layoutCvtData.setOnClickListener (this);
 
@@ -491,7 +485,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         updateOBDStatus(App.obd.isConnected);
 
         layoutObd2.setVisibility( App.obd.useOBD ? View.VISIBLE : View.INVISIBLE );
-        layoutBattery.setVisibility( (App.obd.batteryShow) ? View.VISIBLE : View.GONE);
         layoutObdFuel.setVisibility( (App.obd.fuelDataShow) ? View.VISIBLE : View.GONE);
         layoutFuelConsump.setVisibility( (App.obd.fuelConsumpShow) ? View.VISIBLE : View.GONE);
 
@@ -852,10 +845,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     updateOBDStatus(obd_status);
                     break;
                 //*********** ACTIONS: COMMON OBD COMMANDS ***********************************
-                case OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED:
-                    // TODO: 06.10.2025 select voltage type from preferences
-                    updateCarBattery(App.obd.obdData.voltage);
-                    break;
                 case OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED:
                     // TODO: 06.10.2025 select coolant type from preferences
                     updateCoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
@@ -879,11 +868,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
                                 tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.obd.oneTrip.getAverageSpeed()));
                                 tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.obd.oneTrip.getMaxSpeed()));
                             }
-                            // TODO: 06.10.2025 select voltage type from preferences
                             //voltage
                             float voltage = engine.getVoltage();
                             updateCarBattery(voltage);
-                            //updateOBD_CarBattery(App.obd.can.engine.getVoltage());
                         }
                     }
                     break;
@@ -1176,7 +1163,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_SPEED_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED));
-        registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_MAF_CHANGED));
 
@@ -1255,13 +1241,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     @SuppressLint("DefaultLocale")
     public void updateCarBattery(float voltage) {
-        if (App.obd.batteryShow) {
-            layoutBattery.setVisibility(View.VISIBLE);
-            ui.updateBatteryLevelIcon(ivCarBattery, voltage);
-            ui.updateBatteryLevelText(tvCarBattery, voltage);
-        } else {
-            layoutBattery.setVisibility(View.GONE);
-        }
+        ui.updateBatteryLevelIcon(ivCarBattery, voltage);
+        ui.updateBatteryLevelText(tvCarBattery, voltage);
     }
 
     @SuppressLint("DefaultLocale")

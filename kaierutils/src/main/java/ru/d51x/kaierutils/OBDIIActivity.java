@@ -31,7 +31,6 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_CVT_2110;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A3;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AD;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21BC;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED;
@@ -88,7 +87,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TextView tvOBD_CoolantTemp;
     private TextView tvOBD_FuelUsage;
     private TextView tvOBD_FuelUsage2;
-    private TextView tvOBD_CMUVoltage;
+    private TextView tvVoltage;
     private TextView tvGPS_Distanse;
     private TextView tvOBD_FuelConsumption_lph;
     private TextView tvOBD_FuelConsumption_mpg;
@@ -145,12 +144,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
             else if (OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED.equals(action)) {
                 tvOBD_CoolantTemp.setText(String.format(getString(R.string.text_obd_coolant_temp_f), intent.getStringExtra("coolantTemp")));
             }
-            else if (OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED.equals(action)) {
-                tvOBD_CMUVoltage.setText(String.format(getString(R.string.text_obd_cmu_voltage_f), intent.getStringExtra("cmuVoltage")));
-            }
-//            else if (OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED.equals(action)) {
-//
-//            }
             else if (OBD_BROADCAST_ACTION_MAF_CHANGED.equals(action)) {
                 tvOBD_MAF.setText(String.format(getString(R.string.text_obd_fuel_consumption_maf_f)
                         .replace("g/s", ""), intent.getStringExtra("sMAF")));
@@ -317,7 +310,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBDSpeed = findViewById(R.id.tvOBD_Speed);
         tvOBD_CoolantTemp = findViewById(R.id.tvCoolantTemp);
         tvOBD_FuelUsage = findViewById(R.id.tvOBD_FuelUsage);
-        tvOBD_CMUVoltage = findViewById(R.id.tvOBD_CMUVoltage);
+        tvVoltage = findViewById(R.id.tvOBD_CMUVoltage);
         tvGPS_Distanse = findViewById(R.id.tvGPS_Distanse);
         tvOBD_FuelConsumption_lph = findViewById(R.id.tvOBD_FuelConsumption_lph);
         tvOBD_FuelConsumption_mpg = findViewById(R.id.tvOBD_FuelConsumption_mpg);
@@ -372,7 +365,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         tvOBDSpeed.setText(String.format(getString(R.string.text_obd_speed_f), "---"));
         tvOBD_CoolantTemp.setText(String.format(getString(R.string.text_obd_coolant_temp_f), "---"));
         tvOBD_FuelUsage.setText(String.format(getString(R.string.text_obd_fuel_usage_f), 0.0f));
-        tvOBD_CMUVoltage.setText(String.format(getString(R.string.text_obd_cmu_voltage_f), "---"));
+        tvVoltage.setText(String.format(getString(R.string.text_obd_cmu_voltage_f), "---"));
         tvGPS_Distanse.setText(String.format(getString(R.string.text_obd_distanse_f), 0.0f));
 
         tvOBD_MAF.setText(String.format(getString(R.string.text_obd_fuel_consumption_maf_f), "0.0"));
@@ -405,7 +398,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_SPEED_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_ENGINE_RPM_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_COOLANT_TEMP_CHANGED));
-        registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_FUEL_CONSUMPTION_CHANGED));
         registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_MAF_CHANGED));
 

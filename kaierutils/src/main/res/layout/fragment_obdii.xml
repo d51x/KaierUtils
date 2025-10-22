@@ -143,40 +143,6 @@
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/cbOBD_show_battery"
-                        android:id="@+id/cbOBD_show_battery"
-                        android:layout_weight="0.5"
-                        android:textSize="16sp"
-                        android:singleLine="false"
-                        android:enabled="true"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_update_time_min"
-                        android:id="@+id/textView16"
-                        android:textSize="16sp"
-                        android:enabled="true"/>
-
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:ems="10"
-                        android:id="@+id/edtOBD_voltage_update_time"
-                        android:width="60dp"
-                        android:textSize="16sp"
-                        android:enabled="true"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="@string/cbOBD_show_engine_temp"
                         android:id="@+id/cbOBD_show_engine_temp"
                         android:layout_weight="0.5"

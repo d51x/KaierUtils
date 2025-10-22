@@ -62,16 +62,13 @@ public class Obd2 {
     private static long tSleep = 0;
     public boolean isConnected;
     public boolean useOBD;
-       public boolean batteryShow = false;
     public boolean engineTempShow = false;
     public boolean fuelDataShow = false;
     public boolean fuelConsumpShow = false;
-    public int voltageUpdateTime = 5; // сек
     public int engineTempUpdateTime = 5; // сек
     public EngineRPMObdCommand engineRpmCommand;
     public SpeedObdCommand speedCommand;
     public EngineCoolantTemperatureObdCommand coolantTempCommand;
-    public ControlModuleVoltageObdCommand cmuVoltageCommand;
     public MassAirFlowObdCommand mafObdCommand;
 
     public ObdData obdData;
@@ -95,7 +92,6 @@ public class Obd2 {
     private Handler mHandler = new Handler();
     private BluetoothSocket socket;
     private long mafTimeStamp1, mafTimeStamp2;
-    private long voltageTimeStamp1, voltageTimeStamp2;
     private long coolantTimeStamp1, coolantTimeStamp2;
 
     public int fuelTankCapacity;
@@ -114,12 +110,10 @@ public class Obd2 {
         useOBD = prefs.getBoolean("ODBII_USE_BLUETOOTH", false);
         mmcCan = prefs.getBoolean("ODBII_USE_MMC_CAN", false);
 
-        batteryShow = prefs.getBoolean("ODBII_BATTERY_SHOW", false);
         engineTempShow = prefs.getBoolean("ODBII_ENGINE_TEMP_SHOW", false);
         fuelDataShow = prefs.getBoolean("ODBII_FUEL_DATA_SHOW", false);
         fuelConsumpShow = prefs.getBoolean("ODBII_FUEL_CONSUMP_SHOW", false);
 
-        voltageUpdateTime = prefs.getInt("ODBII_VOLTAGE_UPDATE_TIME", 5); // сек
         engineTempUpdateTime = prefs.getInt("ODBII_ENGINE_TEMP_UPDATE_TIME", 5); // сек
         fuelTankCapacity = prefs.getInt("ODBII_FUEL_TANK_CAPACITY", 60); // l
 
@@ -137,8 +131,6 @@ public class Obd2 {
         mafTimeStamp1 = System.currentTimeMillis();
         mafTimeStamp2 = System.currentTimeMillis();
 
-        voltageTimeStamp1 = System.currentTimeMillis();
-        voltageTimeStamp2 = System.currentTimeMillis();
         coolantTimeStamp1 = System.currentTimeMillis();
         coolantTimeStamp2 = System.currentTimeMillis();
 
@@ -318,7 +310,6 @@ public class Obd2 {
         engineRpmCommand = new EngineRPMObdCommand();
         speedCommand = new SpeedObdCommand();
         coolantTempCommand = new EngineCoolantTemperatureObdCommand();
-        cmuVoltageCommand = new ControlModuleVoltageObdCommand();
         mafObdCommand = new MassAirFlowObdCommand();
 
     }
@@ -351,16 +342,6 @@ public class Obd2 {
             requestMmcAirCond(App.obd.readExtendClimate);
             //request_MMC_ECU_AWC();
 
-        } else {
-            // переходим на дефолтный режим работы по стандартным пидам 01 хх
-            setHeaders("7E0", "7E8", false); // TODO: сделать это 1 раз после включения галки
-
-            processObdEngineRpm();         // RPM:             01 0C
-            processObdSpeed();             // Speed:           01 0D
-            processObdCoolantTemp();       // Coolant:         01 05
-            processObdVoltage();         // Voltage:         01 42
-            // к этому моменту уже должна пройти 1 сек = 5 функций с задержкой 200 мсек
-            //processOBD_MAF();               // MAF:             01 10
         }
     }
 
@@ -482,51 +463,6 @@ public class Obd2 {
             Log.e("processOBD_coolantTemp()", e2.toString());
             e2.printStackTrace();
         }
-    }
-
-    private void processObdVoltage() {
-        if (isServiceCommand) return;
-        if ( activeMAF ) return;
-        if ( !batteryShow) return;
-        if ( App.GS.isReverseMode ) return;
-
-        voltageTimeStamp2 = System.currentTimeMillis();
-        long t = voltageTimeStamp2 - voltageTimeStamp1;
-        if ( t < ( voltageUpdateTime * 1000L)) {return;}
-
-        activeOther = true;
-        try {
-            long tt = System.currentTimeMillis();
-            cmuVoltageCommand.run(socket.getInputStream(), socket.getOutputStream());
-            obdData.voltage = cmuVoltageCommand.getVoltage();
-            Log.d(TAG, String.format("Command Voltage :: %d ms", System.currentTimeMillis() - tt));
-
-            voltageTimeStamp1 = voltageTimeStamp2;
-
-            Intent intent = new Intent();
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            intent.putExtra("cmuVoltage", cmuVoltageCommand.getFormattedResult());
-            intent.putExtra("cmuVoltageD", obdData.voltage);
-            intent.setAction(OBD_BROADCAST_ACTION_CMU_VOLTAGE_CHANGED);
-            App.getInstance ().sendBroadcast(intent);
-            //Log.d("OBDII-->processOBD_CMVoltage()", "cmuVoltage: " + cmuVoltageCommand.getFormattedResult());
-        }  catch ( NonNumericResponseException e5) {
-            activeOther = false;
-            disconnect();
-            Log.e("OBDII-->processOBD_CMVoltage()", e5.toString());
-            e5.printStackTrace();
-        }
-        catch (UnableToConnectException | IOException e3) {
-            activeOther = false;
-            Log.e("OBDII-->processOBD_CMVoltage()", e3.toString());
-            e3.printStackTrace();
-            disconnect();
-        } catch ( Exception e2) {
-            activeOther = false;
-            Log.e("OBDII-->processOBD_CMVoltage()", e2.toString());
-            e2.printStackTrace();
-        }
-        activeOther = false;
     }
 
     public void processObdMaf() {
