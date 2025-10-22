@@ -43,7 +43,6 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     private CheckBox cbCanMMC_cvt_oil_degradation;
     private CheckBox cbCanMMC_show_climate_data;
     private CheckBox cbCanMMC_show_parking_data;
-    private CheckBox cbOBD_show_fuel_detail;
     private CheckBox cbOBD_show_fuel_consump_detail;
 
     private EditText edtCanMMC_fueltank_update_time;
@@ -105,10 +104,6 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         cbCanMMC_show_parking_data = mV.findViewById(R.id.cbCanMMC_show_parking_data);
         cbCanMMC_show_parking_data.setOnClickListener(this);
         cbCanMMC_show_parking_data.setChecked(App.obd.can.can_mmc_parking_data_show);
-
-        cbOBD_show_fuel_detail = mV.findViewById(R.id.cbOBD_show_fuel_detail);
-        cbOBD_show_fuel_detail.setOnClickListener(this);
-        cbOBD_show_fuel_detail.setChecked(App.obd.fuelDataShow);
 
         cbOBD_show_fuel_consump_detail = mV.findViewById(R.id.cbOBD_show_fuel_consump_detail);
         cbOBD_show_fuel_consump_detail.setOnClickListener(this);
@@ -214,10 +209,6 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
                 break;
             case R.id.btnOBDDisconnect2:
                 BackgroundService.stopOBDThread();
-                break;
-            case R.id.cbOBD_show_fuel_detail:
-                App.obd.fuelDataShow = cbOBD_show_fuel_detail.isChecked();
-                prefs.edit().putBoolean("ODBII_FUEL_DATA_SHOW", App.obd.fuelDataShow).apply();
                 break;
             case R.id.cbOBD_show_fuel_consump_detail:
                 App.obd.fuelConsumpShow = cbOBD_show_fuel_consump_detail.isChecked();
