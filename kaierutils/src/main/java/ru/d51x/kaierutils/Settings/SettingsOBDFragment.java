@@ -38,12 +38,11 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     private TextView tvDeviceState;
     private CheckBox cbNewObdProcess;
     private CheckBox cbCanMMC;
-    private CheckBox cbCanMMC_show_CVT_temp;
-    private CheckBox cbCanMMC_cvt_oil_degradation;
     private CheckBox cbCanMMC_show_climate_data;
     private CheckBox cbCanMMC_show_parking_data;
     private CheckBox cbOBD_show_fuel_consump_detail;
 
+    private EditText edtCanMMC_fueltank_update_time;
     private EditText edtCVT_temp_update_time;
     private EditText edtCanMMC_oil_degr_update_time;
     private EditText etSettingsFuelTankCapacity;
@@ -82,15 +81,6 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         tvOBDDevice = mV.findViewById(R.id.tvOBDDevice);
         tvDeviceState = mV.findViewById(R.id.tvDeviceState);
 
-
-        cbCanMMC_show_CVT_temp = mV.findViewById(R.id.cbCanMMC_show_CVT_temp);
-        cbCanMMC_show_CVT_temp.setOnClickListener(this);
-        cbCanMMC_show_CVT_temp.setChecked(App.obd.can.can_mmc_cvt_temp_show);
-
-        cbCanMMC_cvt_oil_degradation = mV.findViewById(R.id.cbCanMMC_cvt_oil_degradation);
-        cbCanMMC_cvt_oil_degradation.setOnClickListener(this);
-        cbCanMMC_cvt_oil_degradation.setChecked(App.obd.can.can_mmc_cvt_degr_show);
-
         cbCanMMC_show_climate_data = mV.findViewById(R.id.cbCanMMC_show_climate_data);
         cbCanMMC_show_climate_data.setOnClickListener(this);
         cbCanMMC_show_climate_data.setChecked(App.obd.can.can_mmc_ac_data_show);
@@ -102,6 +92,10 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         cbOBD_show_fuel_consump_detail = mV.findViewById(R.id.cbOBD_show_fuel_consump_detail);
         cbOBD_show_fuel_consump_detail.setOnClickListener(this);
         cbOBD_show_fuel_consump_detail.setChecked(App.obd.fuelConsumpShow);
+
+        edtCanMMC_fueltank_update_time = mV.findViewById(R.id.edtCanMMC_fueltank_update_time);
+        edtCanMMC_fueltank_update_time.setText(Integer.toString(App.obd.can.can_mmc_fuel_remain_update_time));
+        edtCanMMC_fueltank_update_time.setOnFocusChangeListener( this );
 
         edtCVT_temp_update_time = mV.findViewById(R.id.edtCVT_temp_update_time);
         edtCVT_temp_update_time.setText( Integer.toString(App.obd.can.can_mmc_cvt_temp_update_time));
@@ -170,14 +164,6 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
                 App.obd.mmcCan = cbCanMMC.isChecked();
                 prefs.edit().putBoolean("ODBII_USE_MMC_CAN", App.obd.mmcCan).apply();
                 break;
-            case R.id.cbCanMMC_show_CVT_temp:
-                App.obd.can.can_mmc_cvt_temp_show = cbCanMMC_show_CVT_temp.isChecked();
-                prefs.edit().putBoolean("ODBII_CAN_MMC_CVT_TEMP_SHOW", App.obd.can.can_mmc_cvt_temp_show).apply();
-                break;
-            case R.id.cbCanMMC_cvt_oil_degradation:
-                App.obd.can.can_mmc_cvt_degr_show = cbCanMMC_cvt_oil_degradation.isChecked();
-                prefs.edit().putBoolean("ODBII_CAN_MMC_CVT_DEGR_SHOW", App.obd.can.can_mmc_cvt_degr_show).apply();
-                break;
             case R.id.cbCanMMC_show_climate_data:
                 App.obd.can.can_mmc_ac_data_show = cbCanMMC_show_climate_data.isChecked();
                 prefs.edit().putBoolean("ODBII_CAN_MMC_AC_DATA_SHOW", App.obd.can.can_mmc_ac_data_show).apply();
@@ -210,6 +196,15 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     public void onFocusChange(View v, boolean hasFocus) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
         switch (v.getId()) {
+            case R.id.edtCanMMC_fueltank_update_time:
+                    // show dialog slider
+                if ( hasFocus ) {
+                    // появился фокус?
+                } else {
+                    App.obd.can.can_mmc_fuel_remain_update_time = Integer.parseInt( edtCanMMC_fueltank_update_time.getText().toString() );
+                    prefs.edit().putInt("ODBII_CAN_MMC_FUEL_REMAIN_UPDATE_TIME", App.obd.can.can_mmc_fuel_remain_update_time).apply();
+                }
+                break;
             case R.id.edtCanMMC_oil_degr_update_time:
                 if ( ! hasFocus ) {
                     App.obd.can.can_mmc_cvt_degradation_update_time = Integer.parseInt( edtCanMMC_oil_degr_update_time.getText().toString() );

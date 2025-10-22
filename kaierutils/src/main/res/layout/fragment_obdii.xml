@@ -168,7 +168,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/cbCanMMC_show_fuel"
-                            android:id="@+id/cbCanMMC_show_fuel"
                             android:layout_weight="0.5"
                             android:textSize="16sp"/>
 
@@ -194,11 +193,10 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content">
 
-                        <CheckBox
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/cbCanMMC_show_CVT_temp"
-                            android:id="@+id/cbCanMMC_show_CVT_temp"
                             android:layout_weight="0.5"
                             android:textSize="16sp"/>
 
@@ -224,11 +222,10 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content">
 
-                        <CheckBox
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/cbCanMMC_cvt_oil_degradation"
-                            android:id="@+id/cbCanMMC_cvt_oil_degradation"
                             android:layout_weight="0.5"
                             android:textSize="16sp"/>
 

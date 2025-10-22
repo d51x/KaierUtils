@@ -16,11 +16,8 @@ public class CanMmcData {
     public int can_mmc_fuel_remain_update_time;       // время обновления данных об остатке топлива в баке
 
     public int can_mmc_cvt_temp_update_time;        // время обновления температуры масла CVT
-    public boolean can_mmc_cvt_temp_show;        // читать температуру CVT
 
     public int can_mmc_cvt_degradation_update_time;     // время обновления степени деградации масла в CVT
-    public boolean can_mmc_cvt_degr_show;        // читать деградацию CVT
-
     public boolean can_mmc_ac_data_show;            // отображать и читать данные климата
     public boolean can_mmc_parking_data_show;            // отображать и читать данные парковочных сенсоров
 
@@ -45,11 +42,9 @@ public class CanMmcData {
 
       cvt.setTemperature(-255);
       can_mmc_cvt_temp_update_time = -1;
-      can_mmc_cvt_temp_show = false;
 
       cvt.setOilDegradation(-255);
       can_mmc_cvt_degradation_update_time = -1;
-      can_mmc_cvt_degr_show = false;
 
       engine.setCoolantTemperature(-255); // TODO:  ?????
 
@@ -61,11 +56,8 @@ public class CanMmcData {
       can_mmc_fuel_remain_update_time = prefs.getInt("ODBII_CAN_MMC_FUEL_REMAIN_UPDATE_TIME", 30);
 
       can_mmc_cvt_temp_update_time = prefs.getInt("ODBII_CAN_MMC_CVT_TEMP_UPDATE_TIME", 5);
-      can_mmc_cvt_temp_show = prefs.getBoolean("ODBII_CAN_MMC_CVT_TEMP_SHOW", false);
 
      can_mmc_cvt_degradation_update_time = prefs.getInt("ODBII_CAN_MMC_CVT_DEGR_UPDATE_TIME", 5);
-     can_mmc_cvt_degr_show = prefs.getBoolean("ODBII_CAN_MMC_CVT_DEGR_SHOW", false);
-
 
      can_mmc_ac_data_show = prefs.getBoolean("ODBII_CAN_MMC_AC_DATA_SHOW", false);
      can_mmc_parking_data_show = prefs.getBoolean("ODBII_CAN_MMC_PARKING_DATA_SHOW", false);

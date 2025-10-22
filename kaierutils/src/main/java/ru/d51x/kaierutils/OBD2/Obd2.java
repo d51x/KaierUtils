@@ -707,44 +707,33 @@ public class Obd2 {
                 21 10  - 330        oil degr, work time
              */
         ArrayList<Integer> buffer;
-        if ( can.can_mmc_cvt_temp_show || can.can_mmc_cvt_degr_show) {
-            can.CVT_oil_temp_TimeStamp2 = System.currentTimeMillis();
-            //can.CVT_oil_degr_TimeStamp2 = System.currentTimeMillis();
-            long t_temp = can.CVT_oil_temp_TimeStamp2 - can.CVT_oil_temp_TimeStamp1;
-            //long t_degr = can.CVT_oil_degr_TimeStamp2 - can.CVT_oil_degr_TimeStamp1;
+        can.CVT_oil_temp_TimeStamp2 = System.currentTimeMillis();
+        long t_temp = can.CVT_oil_temp_TimeStamp2 - can.CVT_oil_temp_TimeStamp1;
 
-//            if ((t_degr < (can.can_mmc_cvt_degradation_update_time * 1000L))
-//                    && (t_temp < (can.can_mmc_cvt_temp_update_time * 1000L)))
-            if (t_temp < (can.can_mmc_cvt_temp_update_time * 1000L))
-            {
-                // пропускаем, время не вышло ни у одного параметра
-                return;
-            }
-
-            activeOther = true;
-            setHeaders(BLOCK_7E1, BLOCK_RX_7E9, true);
-
-            if ( can.can_mmc_cvt_temp_show ) {
-                if ( t_temp < (can.can_mmc_cvt_temp_update_time * 1000L) ) return; //время не вышло
-                buffer = requestCanEcu(BLOCK_7E1_PID_2103, BLOCK_7E1); // // cvt_temp_count
-                processObdCommandResult(BLOCK_7E1_PID_2103, BLOCK_7E1, buffer);
-                can.CVT_oil_temp_TimeStamp1 = can.CVT_oil_temp_TimeStamp2;
-            }
-
-            // request_CAN_ECU("2107", "7E1", "7E9", false, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED);  // selector position
-
-            // TODO: можно выполнять не часто, раз в 10 сек вполне достаточно или даже реже
-            if (extended) {
-                if (can.can_mmc_cvt_degr_show) {
-//                    if (t_temp < (can.can_mmc_cvt_degradation_update_time * 1000L))
-//                        return; //время не вышло
-                    buffer = requestCanEcu(BLOCK_7E1_PID_2110, BLOCK_7E1); // cvt_oil_degradation
-                    processObdCommandResult(BLOCK_7E1_PID_2110, BLOCK_7E1, buffer);
-                    //can.CVT_oil_degr_TimeStamp1 = can.CVT_oil_degr_TimeStamp2;
-                }
-            }
-            activeOther = false;
+        if (t_temp < (can.can_mmc_cvt_temp_update_time * 1000L)) {
+            // пропускаем, время не вышло ни у одного параметра
+            return;
         }
+
+        activeOther = true;
+        setHeaders(BLOCK_7E1, BLOCK_RX_7E9, true);
+
+        if ( t_temp < (can.can_mmc_cvt_temp_update_time * 1000L) ) return; //время не вышло
+        buffer = requestCanEcu(BLOCK_7E1_PID_2103, BLOCK_7E1); // // cvt_temp_count
+        processObdCommandResult(BLOCK_7E1_PID_2103, BLOCK_7E1, buffer);
+        can.CVT_oil_temp_TimeStamp1 = can.CVT_oil_temp_TimeStamp2;
+
+        // request_CAN_ECU("2107", "7E1", "7E9", false, OBD_BROADCAST_ACTION_ECU_CVT_CHANGED);  // selector position
+
+        // TODO: можно выполнять не часто, раз в 10 сек вполне достаточно или даже реже
+        if (extended) {
+            if (t_temp < (can.can_mmc_cvt_degradation_update_time * 1000L))
+                return; //время не вышло
+            buffer = requestCanEcu(BLOCK_7E1_PID_2110, BLOCK_7E1); // cvt_oil_degradation
+            processObdCommandResult(BLOCK_7E1_PID_2110, BLOCK_7E1, buffer);
+            //can.CVT_oil_degr_TimeStamp1 = can.CVT_oil_degr_TimeStamp2;
+        }
+        activeOther = false;
     }
 
     private void requestMmcCombineMeter(boolean extended){

@@ -124,7 +124,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private int modeFuelTank = 0;
     private int modeEngineTemp = 0;
-    private int modeCVT = 0;
     private int modeFuelConsump = 0;
 
 	private TextView tvDistance;
@@ -155,7 +154,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private LinearLayout layoutObdFuel;
     private LinearLayout layoutFuelConsump;
     private LinearLayout layoutTempData;
-    private LinearLayout layoutCvtData;
     private ImageView ivOBD2Status;
     private ImageView ivCarBattery;
     private TextView tvCarBattery;
@@ -391,10 +389,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layoutTempData = findViewById(R.id.layout_temp_data);
         layoutTempData.setOnClickListener (this);
 
-        layoutCvtData = findViewById(R.id.layout_cvt_data);
-        layoutCvtData.setOnClickListener (this);
-
-
         layoutMmcClimate = findViewById(R.id.layout_MMC_climate);
 
         ibFloatingPanel = findViewById(R.id.ibFloatingPanel);
@@ -485,7 +479,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layoutObd2.setVisibility( App.obd.useOBD ? View.VISIBLE : View.INVISIBLE );
         layoutFuelConsump.setVisibility( (App.obd.fuelConsumpShow) ? View.VISIBLE : View.GONE);
 
-        layoutCvtData.setVisibility( (App.obd.mmcCan && (App.obd.can.can_mmc_cvt_degr_show || App.obd.can.can_mmc_cvt_temp_show)) ? View.VISIBLE : View.GONE);
         layoutMmcClimate.setVisibility( (App.obd.mmcCan && App.obd.can.can_mmc_ac_data_show) ? View.VISIBLE : View.GONE);
         ibFloatingPanel.setVisibility(!App.GS.isShowingFloatingPanel ? View.VISIBLE : View.INVISIBLE);
 
@@ -586,9 +579,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 break;
             case R.id.layout_temp_data:
                 switch_temp_mode();
-                break;
-            case R.id.layout_cvt_data:
-                switch_cvt_mode();
                 break;
             case R.id.ibFloatingPanel:
                 App.GS.showFloatingPanelButton = false;
@@ -901,22 +891,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 case ACTION_OBD_CVT_2103_CHANGED: {
                         CvtData cvtData = (CvtData) intent.getSerializableExtra(KEY_OBD_CVT_2103);
                         if (cvtData != null) {
-//                        if (modeCVT == 0) {
-//                            updateCvtTemperatureText(tvOBD_CVT_Data, cvtData.getTemperature());
-//                            updateCvtTemperatureIcon(ivOBD_CVT_Data, cvtData.getTemperature());
-//                        }
-                            updateCvtData(modeCVT, cvtData.getTemperature(), -255);
-                        }
-                    }
-                    break;
-                case ACTION_OBD_CVT_2110_CHANGED: {
-                        CvtData cvtData = (CvtData) intent.getSerializableExtra(KEY_OBD_CVT_2110);
-                        if (cvtData != null) {
-//                        if (modeCVT == 1) {
-//                            updateCvtTemperatureText(tvOBD_CVT_Data, cvtData.getTemperature());
-//                            updateCvtOilDegradationIcon(ivOBD_CVT_Data, cvtData.getOilDegradation());
-//                        }
-                            updateCvtData(modeCVT, -255, cvtData.getOilDegradation());
+                            updateCvtTemp(cvtData.getTemperature());
                         }
                     }
                     break;
@@ -1243,34 +1218,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
         ui.updateCoolantTemperatureText(tvCoolantTemp, temp);
     }
 
-    @SuppressLint("SetTextI18n")
-    public void updateCvtData(int mode, int temperature, int degr) {
-        if ( App.obd.mmcCan && (App.obd.can.can_mmc_cvt_degr_show
-                || App.obd.can.can_mmc_cvt_temp_show)) {
-            layoutCvtData.setVisibility( View.VISIBLE);
-        } else {
-            layoutCvtData.setVisibility( View.GONE);
-            return;
-        }
-
-        switch (mode) {
-            case 0:
-                if ( App.obd.mmcCan && App.obd.can.can_mmc_cvt_temp_show) {
-                    ui.updateCvtTemperatureText(tvCvtData, temperature);
-                    ui.updateCvtTemperatureIcon(ivCvtData, temperature);
-                }
-                break;
-            case 1:
-                if ( App.obd.mmcCan && App.obd.can.can_mmc_cvt_degr_show) {
-                    ui.updateCvtTemperatureText(tvCvtData, degr);
-                    ui.updateCvtOilDegradationIcon(ivCvtData, degr);
-                }
-                break;
-            default:
-                ivCvtData.setImageResource( R.drawable.cvt_temp_nom);
-                tvCvtData.setText( "--");
-                break;
-        }
+    public void updateCvtTemp(int temperature) {
+        ui.updateCvtTemperatureText(tvCvtData, temperature);
+        ui.updateCvtTemperatureIcon(ivCvtData, temperature);
     }
 
     public void saveFuelTankToStorage(float remain){
@@ -1333,19 +1283,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         updateCoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
 
-    }
-
-    // переключение режима показаний данных cvt
-    private void switch_cvt_mode() {
-        // режим отображения уровня топлива
-        // 0 - коробка
-        // 1 - деградация
-        modeCVT++;
-        if ( modeCVT > 1) modeCVT = 0;
-
-        updateCvtData(modeCVT,
-                modeCVT == 0 ? App.obd.can.cvt.getTemperature() : -255,
-                modeCVT == 1 ? App.obd.can.cvt.getOilDegradation() : -255);
     }
 
     // переключение режима показаний расхода
