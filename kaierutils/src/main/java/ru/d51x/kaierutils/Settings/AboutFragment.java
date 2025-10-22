@@ -2,6 +2,7 @@ package ru.d51x.kaierutils.Settings;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ public class AboutFragment extends Fragment {
     private TextView tvSleepModeLastTime;
     private TextView tvWorkingStart;
     private TextView tvDeviceName;
+    private TextView tvAndroidVersion;
     private TextView tvProgramVersion;
 
     public AboutFragment() {
@@ -42,6 +44,7 @@ public class AboutFragment extends Fragment {
         tvSleepModeLastTime = mV.findViewById(R.id.tv_sleep_mode_last_time);
         tvWorkingStart = mV.findViewById(R.id.tv_working_start);
         tvDeviceName = mV.findViewById(R.id.txtDeviceName);
+        tvAndroidVersion = mV.findViewById(R.id.tvAndroidVersion);
         tvProgramVersion = mV.findViewById(R.id.tvProgramVersion);
 
         showStatistics();
@@ -55,6 +58,8 @@ public class AboutFragment extends Fragment {
 
         String string_device_name = String.format(getResources().getString(R.string.text_device_name), TWUtilEx.GetDeviceID());
         tvDeviceName.setText( string_device_name );
+        tvAndroidVersion.setText(String.format(getResources().getString(R.string.text_android_version),
+                Build.VERSION.RELEASE, Build.VERSION.SDK_INT));
 
             tvReverseCount.setText( String.format(getResources().getString(R.string.text_reverse_count), App.GS.ReverseActivityCount) );
             tvSleepModeCount.setText( String.format(getResources().getString(R.string.text_sleep_mode_count), App.GS.SleepModeCount) );

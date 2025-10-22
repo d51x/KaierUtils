@@ -36,7 +36,14 @@
             android:textSize="20sp"
             android:textIsSelectable="false"
             android:layout_gravity="end"/>
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_android_version"
+            android:id="@+id/tvAndroidVersion"
+            android:textSize="20sp"
+            android:textIsSelectable="false"
+            android:layout_gravity="end"/>
     </LinearLayout>
 
     <ScrollView
