@@ -111,6 +111,7 @@
                         android:id="@+id/cbNewObdProcess"
                         android:layout_weight="0.5"
                         android:textSize="16sp"
+                        android:checked="true"
                         android:singleLine="false"
                         android:enabled="true"/>
                 </LinearLayout>
@@ -145,6 +146,7 @@
                     android:text="@string/cbOBD_show_fuel_consump_detail"
                     android:id="@+id/cbOBD_show_fuel_consump_detail"
                     android:textSize="16sp"
+                    android:checked="true"
                     android:enabled="true"/>
 
                 <LinearLayout

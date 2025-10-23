@@ -58,7 +58,7 @@ public class Obd2 {
     private static long tSleep = 0;
     public boolean isConnected;
     public boolean useOBD;
-    public boolean fuelConsumpShow = false;
+    public boolean fuelConsumpShow = true;
     public int engineTempUpdateTime = 5; // сек
     public MassAirFlowObdCommand mafObdCommand;
 
@@ -99,7 +99,7 @@ public class Obd2 {
         useOBD = prefs.getBoolean("ODBII_USE_BLUETOOTH", false);
         newObdProcess = prefs.getBoolean("ODBII_NEW_PROCESS", true);
 
-        fuelConsumpShow = prefs.getBoolean("ODBII_FUEL_CONSUMP_SHOW", false);
+        fuelConsumpShow = prefs.getBoolean("ODBII_FUEL_CONSUMP_SHOW", true);
 
         engineTempUpdateTime = prefs.getInt("ODBII_ENGINE_TEMP_UPDATE_TIME", 5); // сек
         fuelTankCapacity = prefs.getInt("ODBII_FUEL_TANK_CAPACITY", 60); // l
