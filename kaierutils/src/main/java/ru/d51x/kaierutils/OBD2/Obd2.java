@@ -85,6 +85,11 @@ public class Obd2 {
 
     public int fuelTankCapacity;
 
+    public boolean speedFromMeter;
+    public boolean speedFromEngine;
+    public boolean speedFromClimate;
+    public boolean speedFromCVT;
+
     @SuppressLint("HandlerLeak")
     public Obd2(Context context) {
         mContext = context;
@@ -104,6 +109,10 @@ public class Obd2 {
         engineTempUpdateTime = prefs.getInt("ODBII_ENGINE_TEMP_UPDATE_TIME", 5); // сек
         fuelTankCapacity = prefs.getInt("ODBII_FUEL_TANK_CAPACITY", 60); // l
 
+        speedFromEngine = prefs.getBoolean("ODB_SPEED_FROM_ENGINE", true);
+        speedFromMeter = prefs.getBoolean("ODB_SPEED_FROM_METER", true);
+        speedFromClimate = prefs.getBoolean("ODB_SPEED_FROM_AC", true);
+        speedFromCVT = prefs.getBoolean("ODB_SPEED_FROM_CVT", true);
 
         obdData = new ObdData();
         totalTrip = new TripData("total", true);
@@ -727,8 +736,10 @@ public class Obd2 {
 //            buffer = requestCanEcu(BLOCK_688_PID_2111, BLOCK_688);
 //            processObdCommandResult(BLOCK_688_PID_2111, BLOCK_688, buffer);
 
-//            buffer = requestCanEcu(BLOCK_688_PID_2113, BLOCK_688);
-//            processObdCommandResult(BLOCK_688_PID_2113, BLOCK_688, buffer);
+            if (speedFromClimate) {
+                buffer = requestCanEcu(BLOCK_688_PID_2113, BLOCK_688);
+                processObdCommandResult(BLOCK_688_PID_2113, BLOCK_688, buffer);
+            }
 
             // cond leak indicator
             // buffer = request_CAN_ECU("2132", "688");
@@ -840,9 +851,10 @@ public class Obd2 {
                  App.obd.can.climate.engineRpm = ((ClimateData) message.obj).engineRpm;
                  App.obd.can.climate.vehicleSpeed = ((ClimateData) message.obj).vehicleSpeed;
 
-//                 App.obd.oneTrip.setAverageSpeed((int) App.obd.can.climate.vehicleSpeed);
-//                 App.obd.oneTrip.setMaxSpeed((int) App.obd.can.climate.vehicleSpeed);
-
+                 if (speedFromClimate) {
+                     App.obd.oneTrip.setAverageSpeed((int) App.obd.can.climate.vehicleSpeed);
+                     App.obd.oneTrip.setMaxSpeed((int) App.obd.can.climate.vehicleSpeed);
+                 }
                  SendBroadcastAction(ACTION_OBD_CLIMATE_2113_CHANGED, KEY_OBD_CLIMATE_2113, (ClimateData) message.obj);
                  break;
              case MESSAGE_OBD_CLIMATE_2132:

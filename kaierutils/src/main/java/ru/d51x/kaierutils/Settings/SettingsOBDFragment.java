@@ -50,7 +50,10 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     private Button btnOBDSelectDevice2;
     private Button btnOBDConnect2;
     private Button btnOBDDisconnect2;
-
+    private CheckBox cbSpeedFromMeter;
+    private CheckBox cbSpeedFromEngine;
+    private CheckBox cbSpeedFromAC;
+    private CheckBox cbSpeedFromCVT;
 
     public SettingsOBDFragment() {
 
@@ -113,6 +116,22 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         etSettingsFuelTankCapacity.setText(Integer.toString(App.obd.fuelTankCapacity));
         etSettingsFuelTankCapacity.setOnFocusChangeListener( this );
 
+        cbSpeedFromMeter = mV.findViewById(R.id.cbUseSpeedFromMeter);
+        cbSpeedFromMeter.setOnClickListener(this);
+        cbSpeedFromMeter.setChecked(App.obd.speedFromMeter);
+
+        cbSpeedFromEngine = mV.findViewById(R.id.cbUseSpeedFromEngine);
+        cbSpeedFromEngine.setOnClickListener(this);
+        cbSpeedFromEngine.setChecked(App.obd.speedFromEngine);
+
+        cbSpeedFromAC = mV.findViewById(R.id.cbUseSpeedFromAC);
+        cbSpeedFromAC.setOnClickListener(this);
+        cbSpeedFromAC.setChecked(App.obd.speedFromClimate);
+
+        cbSpeedFromCVT = mV.findViewById(R.id.cbUseSpeedFromCVT);
+        cbSpeedFromCVT.setOnClickListener(this);
+        cbSpeedFromCVT.setChecked(App.obd.speedFromCVT);
+
         return mV;
     }
 
@@ -170,6 +189,22 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
             case R.id.cbOBD_show_fuel_consump_detail:
                 App.obd.fuelConsumpShow = cbOBD_show_fuel_consump_detail.isChecked();
                 prefs.edit().putBoolean("ODBII_FUEL_CONSUMP_SHOW", App.obd.fuelConsumpShow).apply();
+                break;
+            case R.id.cbUseSpeedFromEngine:
+                App.obd.speedFromEngine = cbSpeedFromEngine.isChecked();
+                prefs.edit().putBoolean("ODB_SPEED_FROM_ENGINE", App.obd.speedFromEngine).apply();
+                break;
+            case R.id.cbUseSpeedFromMeter:
+                App.obd.speedFromMeter = cbSpeedFromMeter.isChecked();
+                prefs.edit().putBoolean("ODB_SPEED_FROM_METER", App.obd.speedFromMeter).apply();
+                break;
+            case R.id.cbUseSpeedFromAC:
+                App.obd.speedFromClimate = cbSpeedFromAC.isChecked();
+                prefs.edit().putBoolean("ODB_SPEED_FROM_AC", App.obd.speedFromClimate).apply();
+                break;
+            case R.id.cbUseSpeedFromCVT:
+                App.obd.speedFromCVT = cbSpeedFromCVT.isChecked();
+                prefs.edit().putBoolean("ODB_SPEED_FROM_CVT", App.obd.speedFromCVT).apply();
                 break;
             default:
                 break;

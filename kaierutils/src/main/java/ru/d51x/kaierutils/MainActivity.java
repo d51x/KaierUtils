@@ -776,7 +776,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         EngineData engine = (EngineData) intent.getSerializableExtra(KEY_OBD_ENGINE_2101);
                         if (engine != null) {
                             // speed
-                            if (!App.GS.isGpsSpeed) {
+                            if (!App.GS.isGpsSpeed && App.obd.speedFromEngine) {
                                 ui.updateSpeedText(tvSpeed, engine.getSpeed(), App.GS.ui.isColorSpeed);
                                 ui.updateSpeedIcon(ivSpeed, engine.getSpeed());
 
@@ -827,6 +827,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         CvtData cvtData = (CvtData) intent.getSerializableExtra(KEY_OBD_CVT_2103);
                         if (cvtData != null) {
                             updateCvtTemp(cvtData.getTemperature());
+
+                            if (!App.GS.isGpsSpeed && App.obd.speedFromCVT) {
+                                ui.updateSpeedText(tvSpeed, cvtData.getVehicleSpeed(), App.GS.ui.isColorSpeed);
+                                ui.updateSpeedIcon(ivSpeed, cvtData.getVehicleSpeed());
+                                tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.obd.oneTrip.getAverageSpeed()));
+                                tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.obd.oneTrip.getMaxSpeed()));
+                            }
                         }
                     }
                     break;
@@ -834,8 +841,14 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 case ACTION_OBD_METER_21A1_CHANGED: {
                         CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A1);
                         //speed
-//                        tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.obd.oneTrip.getAverageSpeed()));
-//                        tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.obd.oneTrip.getMaxSpeed()));
+                        if (meterData != null) {
+                            if (!App.GS.isGpsSpeed && App.obd.speedFromMeter) {
+                                ui.updateSpeedText(tvSpeed, meterData.getVehicleSpeed(), App.GS.ui.isColorSpeed);
+                                ui.updateSpeedIcon(ivSpeed, meterData.getVehicleSpeed());
+                                tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.obd.oneTrip.getAverageSpeed()));
+                                tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.obd.oneTrip.getMaxSpeed()));
+                            }
+                        }
                     }
                     break;
                 case ACTION_OBD_METER_21A2_CHANGED: {
@@ -884,11 +897,17 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     break;
                 case ACTION_OBD_CLIMATE_2113_CHANGED: {
                         ClimateData climateData = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2113);
-                        //external temp
-                        //rpm
-                        //speed
-//                        tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.obd.oneTrip.getAverageSpeed()));
-//                        tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.obd.oneTrip.getMaxSpeed()));
+                        if (climateData != null) {
+                            //external temp
+                            //rpm
+                            //speed
+                            if (!App.GS.isGpsSpeed && App.obd.speedFromClimate) {
+                                ui.updateSpeedText(tvSpeed, climateData.vehicleSpeed, App.GS.ui.isColorSpeed);
+                                ui.updateSpeedIcon(ivSpeed, climateData.vehicleSpeed);
+                                tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.obd.oneTrip.getAverageSpeed()));
+                                tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.obd.oneTrip.getMaxSpeed()));
+                            }
+                        }
                     }
                     break;
                 case ACTION_OBD_CLIMATE_2160_CHANGED: {

@@ -278,13 +278,15 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                     if (OBD_BROADCAST_ACTION_MAF_CHANGED.equals(action)) {
                         ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmAvg);
                     }
+                    // ************* ENGINE BLOCK ************************************************
                     else if (ACTION_OBD_ENGINE_2101_CHANGED.equals(action)) {
                         EngineData engine = (EngineData) intent.getSerializableExtra("obd_engine_2101");
                         // speed
-                        // TODO: 06.10.2025 select speed type from preferences
                         if (engine != null) {
-                            ui.updateSpeedText(tvSpeed, engine.getSpeed(), App.GS.ui.isColorSpeed);
-                            ui.updateSpeedIcon(ivSpeed, engine.getSpeed());
+                            if (App.obd.speedFromEngine) {
+                                ui.updateSpeedText(tvSpeed, engine.getSpeed(), App.GS.ui.isColorSpeed);
+                                ui.updateSpeedIcon(ivSpeed, engine.getSpeed());
+                            }
 
                             // TODO: 06.10.2025 select voltage type from preferences
                             //voltage
@@ -309,11 +311,27 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                             ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmAvg);
                         }
                     }
+                    //*************** CVT BLOCK *************************************************
                     else if (ACTION_OBD_CVT_2103_CHANGED.equals(action)) {
                         CvtData cvtData = (CvtData) intent.getSerializableExtra(KEY_OBD_CVT_2103);
                         if (cvtData != null ) {
                             ui.updateCvtTemperatureText(tvCvtTemperature, cvtData.getTemperature());
                             ui.updateCvtTemperatureIcon(ivCvtTemperature, cvtData.getTemperature());
+
+                            if (App.obd.speedFromCVT) {
+                                ui.updateSpeedText(tvSpeed, cvtData.getVehicleSpeed(), App.GS.ui.isColorSpeed);
+                                ui.updateSpeedIcon(ivSpeed, cvtData.getVehicleSpeed());
+                            }
+                        }
+                    }
+                    //***************** METER BLOCK ********************************************
+                    else if (ACTION_OBD_METER_21A1_CHANGED.equals(action)) {
+                        CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A1);
+                        if (meterData != null) {
+                            if (App.obd.speedFromMeter) {
+                                ui.updateSpeedText(tvSpeed, meterData.getVehicleSpeed(), App.GS.ui.isColorSpeed);
+                                ui.updateSpeedIcon(ivSpeed, meterData.getVehicleSpeed());
+                            }
                         }
                     }
                     else if (ACTION_OBD_METER_21A3_CHANGED.equals(action)) {
@@ -337,12 +355,15 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                             ui.updateDistanceText(tvTrip, App.obd.todayTrip.distance);
                         }
                     }
+                    //********************* CLIMATE BLOCK ******************************
                     else if (ACTION_OBD_CLIMATE_2113_CHANGED.equals(action)) {
                         ClimateData climate = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2113);
                         if (climate != null) {
-//                        updateSpeedText(tvSpeed, climate.vehicleSpeed, App.GS.ui.isColorSpeed);
-//                        updateSpeedIcon(ivSpeed, climate.vehicleSpeed);
+                            if (App.obd.speedFromClimate) {
+                                ui.updateSpeedText(tvSpeed, climate.vehicleSpeed, App.GS.ui.isColorSpeed);
+                                ui.updateSpeedIcon(ivSpeed, climate.vehicleSpeed);
                             }
+                        }
                     }
                 }
             };

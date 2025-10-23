@@ -97,24 +97,16 @@
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content">
-
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cbOBD_new_process"
-                        android:id="@+id/cbNewObdProcess"
-                        android:layout_weight="0.5"
-                        android:textSize="16sp"
-                        android:checked="true"
-                        android:singleLine="false"
-                        android:enabled="true"/>
-                </LinearLayout>
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cbOBD_new_process"
+                    android:id="@+id/cbNewObdProcess"
+                    android:layout_weight="0.5"
+                    android:textSize="16sp"
+                    android:checked="true"
+                    android:singleLine="false"
+                    android:enabled="true"/>
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="fill_parent"
@@ -139,7 +131,6 @@
                         android:text="60"
                         android:enabled="true"/>
                 </LinearLayout>
-
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -148,7 +139,6 @@
                     android:textSize="16sp"
                     android:checked="true"
                     android:enabled="true"/>
-
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="fill_parent"
@@ -178,7 +168,6 @@
                         android:width="60dp"
                         android:textSize="16sp"/>
                 </LinearLayout>
-
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="fill_parent"
@@ -208,7 +197,6 @@
                         android:width="60dp"
                         android:textSize="16sp"/>
                 </LinearLayout>
-
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="fill_parent"
@@ -238,40 +226,54 @@
                         android:width="60dp"
                         android:textSize="16sp"/>
                 </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cbCanMMC_show_climate_data"
-                        android:id="@+id/cbCanMMC_show_climate_data"
-                        android:layout_weight="0.5"
-                        android:checked="true"
-                        android:textSize="16sp"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cbCanMMC_show_parking_data"
-                        android:id="@+id/cbCanMMC_show_parking_data"
-                        android:layout_weight="0.5"
-                        android:checked="true"
-                        android:textSize="16sp"/>
-                </LinearLayout>
-
-
-
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cbCanMMC_show_climate_data"
+                    android:id="@+id/cbCanMMC_show_climate_data"
+                    android:layout_weight="0.5"
+                    android:checked="true"
+                    android:textSize="16sp"/>
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cbCanMMC_show_parking_data"
+                    android:id="@+id/cbCanMMC_show_parking_data"
+                    android:layout_weight="0.5"
+                    android:checked="true"
+                    android:textSize="16sp"/>
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cbUseSpeedFromMeter"
+                    android:id="@+id/cbUseSpeedFromMeter"
+                    android:layout_weight="0.5"
+                    android:checked="true"
+                    android:textSize="16sp"/>
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cbUseSpeedFromEngine"
+                    android:id="@+id/cbUseSpeedFromEngine"
+                    android:layout_weight="0.5"
+                    android:checked="true"
+                    android:textSize="16sp"/>
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cbUseSpeedFromAC"
+                    android:id="@+id/cbUseSpeedFromAC"
+                    android:layout_weight="0.5"
+                    android:checked="true"
+                    android:textSize="16sp"/>
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cbUseSpeedFromCVT"
+                    android:id="@+id/cbUseSpeedFromCVT"
+                    android:layout_weight="0.5"
+                    android:checked="true"
+                    android:textSize="16sp"/>
             </LinearLayout>
         </ScrollView>
 

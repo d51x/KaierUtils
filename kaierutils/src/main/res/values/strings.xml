@@ -185,6 +185,10 @@
     <string name="text_update_time_min">Период обновления, сек:</string>
     <string name="cbCanMMC_show_climate_data">Отображать данные климат-контроля</string>
     <string name="cbCanMMC_show_parking_data">Отображать данные с парковочных сенсоров (только задние родные)</string>
+	<string name="cbUseSpeedFromMeter">Скорость с блока Meter</string>
+	<string name="cbUseSpeedFromEngine">Скорость с блока Engine</string>
+	<string name="cbUseSpeedFromAC">Скорость с блока Air Cond</string>
+	<string name="cbUseSpeedFromCVT">Скорость с блока CVT</string>
     <string name="text_distance_today">Пройдено (км): %1$.3f</string>
     <string name="km">км</string>
 	<string name="str_dashes">--</string>

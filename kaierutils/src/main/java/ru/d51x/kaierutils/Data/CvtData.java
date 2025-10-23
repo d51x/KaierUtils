@@ -11,13 +11,15 @@ public class CvtData implements Serializable {
     private float workHoursTotal;
     private float workHoursHot;
 
+    private float vehicleSpeed;
+
     public CvtData() {
         temperature = -255;
         oilDegradation = 0;
         workHoursHot = 0f;
         workHoursTotal = 0f;
+        vehicleSpeed = 0f;
     }
-
     public int getTemperature() {
         return temperature;
     }
@@ -48,6 +50,14 @@ public class CvtData implements Serializable {
 
     public void setWorkHoursHot(float workHoursHot) {
         this.workHoursHot = workHoursHot;
+    }
+
+    public float getVehicleSpeed() {
+        return vehicleSpeed;
+    }
+
+    public void setVehicleSpeed(float vehicleSpeed) {
+        this.vehicleSpeed = vehicleSpeed;
     }
 
     @Override

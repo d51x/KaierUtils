@@ -115,7 +115,8 @@ public class ObdClimateUtils {
     }
 
     public static float getAcVehicleSpeed(ArrayList<Integer> buffer) {
-        return (buffer.get(5) * 2.0f) * (buffer.get(6) / 128.0f);
+        //return (buffer.get(5) * 2.0f) * (buffer.get(6) / 128.0f);
+        return (buffer.get(5) * 2.0f  + buffer.get(6) / 128.0f);
     }
 
     public static boolean getAcLeak(ArrayList<Integer> buffer) {
