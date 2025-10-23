@@ -50,7 +50,7 @@ public class CanMmcData {
 
       engine_fan_show = true;
       can_mmc_ac_data_show = true;
-      can_mmc_parking_data_show = false;
+      can_mmc_parking_data_show = true;
 
       SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
       can_mmc_fuel_remain_update_time = prefs.getInt("ODBII_CAN_MMC_FUEL_REMAIN_UPDATE_TIME", 30);
@@ -60,7 +60,7 @@ public class CanMmcData {
      can_mmc_cvt_degradation_update_time = prefs.getInt("ODBII_CAN_MMC_CVT_DEGR_UPDATE_TIME", 5);
 
      can_mmc_ac_data_show = prefs.getBoolean("ODBII_CAN_MMC_AC_DATA_SHOW", true);
-     can_mmc_parking_data_show = prefs.getBoolean("ODBII_CAN_MMC_PARKING_DATA_SHOW", false);
+     can_mmc_parking_data_show = prefs.getBoolean("ODBII_CAN_MMC_PARKING_DATA_SHOW", true);
 
       FuelLevel_TimeStamp1  =  FuelLevel_TimeStamp2  = System.currentTimeMillis();
       CVT_oil_degr_TimeStamp1 = CVT_oil_degr_TimeStamp2 = System.currentTimeMillis();

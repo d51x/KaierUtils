@@ -266,6 +266,7 @@
                         android:text="@string/cbCanMMC_show_parking_data"
                         android:id="@+id/cbCanMMC_show_parking_data"
                         android:layout_weight="0.5"
+                        android:checked="true"
                         android:textSize="16sp"/>
                 </LinearLayout>
 
