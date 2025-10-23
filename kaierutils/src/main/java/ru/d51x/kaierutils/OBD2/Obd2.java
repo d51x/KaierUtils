@@ -97,6 +97,7 @@ public class Obd2 {
         socket = null;
         mHandler = new Handler();
         useOBD = prefs.getBoolean("ODBII_USE_BLUETOOTH", false);
+        newObdProcess = prefs.getBoolean("ODBII_NEW_PROCESS", true);
 
         fuelConsumpShow = prefs.getBoolean("ODBII_FUEL_CONSUMP_SHOW", false);
 
