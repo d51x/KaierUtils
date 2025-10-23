@@ -49,7 +49,7 @@ public class CanMmcData {
       engine.setCoolantTemperature(-255); // TODO:  ?????
 
       engine_fan_show = true;
-      can_mmc_ac_data_show = false;
+      can_mmc_ac_data_show = true;
       can_mmc_parking_data_show = false;
 
       SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -59,7 +59,7 @@ public class CanMmcData {
 
      can_mmc_cvt_degradation_update_time = prefs.getInt("ODBII_CAN_MMC_CVT_DEGR_UPDATE_TIME", 5);
 
-     can_mmc_ac_data_show = prefs.getBoolean("ODBII_CAN_MMC_AC_DATA_SHOW", false);
+     can_mmc_ac_data_show = prefs.getBoolean("ODBII_CAN_MMC_AC_DATA_SHOW", true);
      can_mmc_parking_data_show = prefs.getBoolean("ODBII_CAN_MMC_PARKING_DATA_SHOW", false);
 
       FuelLevel_TimeStamp1  =  FuelLevel_TimeStamp2  = System.currentTimeMillis();
