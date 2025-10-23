@@ -263,35 +263,36 @@ public class MainActivity extends Activity implements View.OnClickListener,
         LinearLayout layoutGpsSpeed = findViewById(R.id.layout_gps_speed);
 		layoutGpsSpeed.setOnLongClickListener(this);
 		layoutGpsSpeed.setOnClickListener(this);
+        tvSpeed = findViewById(R.id.text_gps_speed_value);
+        ivSpeed = findViewById(R.id.ivSpeed);
+        tvAverageSpeed = findViewById(R.id.tvAverageSpeed);
+        tvMaxSpeed = findViewById(R.id.tvMaxSpeed);
 
 		// track time
         LinearLayout layoutTrackTime = findViewById(R.id.layout_tracktime);
 		layoutTrackTime.setOnLongClickListener(this);
 		layoutTrackTime.setOnClickListener(this);
-
-		// gps info
-		tvSpeed = findViewById(R.id.text_gps_speed_value);
+        tvTrackTime = findViewById(R.id.tvTrackTime);
+        tvTrackTime2 = findViewById(R.id.tvTrackTime2);
+        tvTrackTimeMinOrSec = findViewById(R.id.tvTrackTimeMinOrSec);
+        tvTrackTimeHourOrMin = findViewById(R.id.tvTrackTimeHourOrMin);
+        ivTrackTime = findViewById(R.id.ivTrackTime);
 
 		// track distance
-		tvTrackTime = findViewById(R.id.tvTrackTime);
-		tvTrackTime2 = findViewById(R.id.tvTrackTime2);
-		tvTrackTimeMinOrSec = findViewById(R.id.tvTrackTimeMinOrSec);
-		tvTrackTimeHourOrMin = findViewById(R.id.tvTrackTimeHourOrMin);
-		tvDistance = findViewById(R.id.tvGPSDistance);
-        LinearLayout layoutWaypoints = findViewById(R.id.layout_waypoints);
+		LinearLayout layoutWaypoints = findViewById(R.id.layout_waypoints);
 		layoutWaypoints.setOnLongClickListener(this);
-		ivTrackTime = findViewById(R.id.ivTrackTime);
-		tvAverageSpeed = findViewById(R.id.tvAverageSpeed);
-		tvMaxSpeed = findViewById(R.id.tvMaxSpeed);
+        tvDistance = findViewById(R.id.tvGPSDistance);
 
-		ivVolumeLevel = findViewById(R.id.ivVolumeLevel);
+        // volume
+        ivVolumeLevel = findViewById(R.id.ivVolumeLevel);
         ivVolumeLevel.setOnClickListener(this);
-        ivSpeed = findViewById(R.id.ivSpeed);
 
+        // bluetooth & obd connection status
         ivOBD2Status = findViewById(R.id.ivOBD2Status);
         ivOBD2Status.setOnClickListener(this);
         ivOBD2Status.setOnLongClickListener(this);
 
+        //
         ivCarBattery = findViewById(R.id.ivCarBattery);
         tvCarBattery = findViewById(R.id.tvCarBattery);
         tvCarBattery.setText("--");
@@ -329,7 +330,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         ivClimateBlowDirection.setImageResource(R.drawable.air_wind_seat_my_to_face);
 
         ivClimateAcState = findViewById(R.id.iv_air_ac_state);
-        //iv_air_ac_state.setVisibility( View.INVISIBLE );
 
         ivClimateRrecirculation = findViewById(R.id.iv_air_recirculation);
         ivClimateRrecirculation.setVisibility( View.INVISIBLE );
@@ -391,15 +391,16 @@ public class MainActivity extends Activity implements View.OnClickListener,
     public void setInitData() {
 		// gps info
 		tvSpeed.setText( "---" );
+        tvMaxSpeed.setText( String.format(getString(R.string.text_max_speed), "---"));
+        tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), "---"));
 
-		//track distance
+		//track time & distance
 		tvTrackTime.setText( getString(R.string.text_gps_track_time_null));
 		tvTrackTime2.setText( getString(R.string.text_gps_track_time_null));
 		tvTrackTimeMinOrSec.setText(getString(R.string.text_gps_track_time_format_sec));
 		tvTrackTimeHourOrMin.setText( getString(R.string.text_gps_track_time_format_min));
 		tvDistance.setText( "----.-" );
-		tvMaxSpeed.setText( String.format(getString(R.string.text_max_speed), "---"));
-		tvAverageSpeed.setText( String.format( getString(R.string.text_average_speed), "---"));
+
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
         modeFuelTank = prefs.getInt("kaierutils_modeFuelTank", 0);
@@ -410,7 +411,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         switch_fuel_consump_mode(false);
         switch_fuel_tank_mode(false);
-
     }
 
     public void updataData() {
@@ -432,7 +432,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         TWUtilEx.requestAudioFocusState();
         updateOBDStatus(App.obd.isConnected);
 
-        layoutObd2.setVisibility( App.obd.useOBD ? View.VISIBLE : View.INVISIBLE );
         layoutFuelConsump.setVisibility( (App.obd.fuelConsumpShow) ? View.VISIBLE : View.GONE);
 
         layoutMmcClimate.setVisibility(App.obd.can.can_mmc_ac_data_show ? View.VISIBLE : View.GONE);
