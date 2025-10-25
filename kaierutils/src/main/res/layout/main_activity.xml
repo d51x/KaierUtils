@@ -1,7 +1,8 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 
+	android:id="@+id/relativeLayout2"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="horizontal"
@@ -15,9 +16,11 @@
 		android:id="@+id/linearLayout"
 		android:layout_width="160dp"
 		android:layout_height="wrap_content"
-		android:layout_alignParentTop="true"
-		android:layout_centerHorizontal="true"
-		android:orientation="vertical">
+		android:orientation="vertical"
+		app:layout_constraintHorizontal_bias="0.492"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
 
 		<LinearLayout
 			android:id="@+id/layout_volume_level"
@@ -50,11 +53,11 @@
 
 	<LinearLayout
 		android:id="@+id/layoutCanMMC"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentEnd="true"
-		android:layout_alignParentBottom="true"
-		android:layout_centerInParent="true"
+		android:layout_width="828dp"
+		android:layout_height="75dp"
+		android:layout_marginEnd="404dp"
+		android:layout_marginBottom="8dp"
+		android:background="@drawable/layout_bg"
 		android:baselineAligned="false"
 		android:gravity="center_vertical"
 		android:orientation="horizontal"
@@ -62,8 +65,10 @@
 		android:paddingTop="8dp"
 		android:paddingEnd="8dp"
 		android:paddingBottom="8dp"
-		android:background="@drawable/layout_bg"
-		>
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent">
 
 		<include layout="@layout/dash_panel" />
 
@@ -73,188 +78,17 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="start"
 			android:layout_weight="0"
-            app:srcCompat="@android:drawable/ic_menu_set_as" />
-
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:gravity="right"
-			android:orientation="horizontal"
-			tools:ignore="RtlHardcoded">
-
-
-
-			<ImageView
-				android:id="@+id/ivOBD2Status"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:clickable="true"
-				android:contentDescription="@string/obd2_status"
-				android:paddingLeft="10dp"
-				android:paddingTop="4dp"
-				android:paddingRight="10dp"
-				android:paddingBottom="4dp"
-				android:src="@drawable/obd_disconnected" />
-		</LinearLayout>
+			app:srcCompat="@drawable/arrows_more_up_24px" />
 
 	</LinearLayout>
-
-	<RelativeLayout
-		android:id="@+id/layout_MMC_climate"
-		android:layout_width="250dp"
-		android:layout_height="wrap_content"
-		android:layout_alignTop="@+id/layout_general_info"
-		android:layout_alignParentEnd="true"
-		android:layout_marginTop="0dp"
-		android:visibility="visible">
-
-		<LinearLayout
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentEnd="true"
-			android:orientation="vertical">
-
-			<LinearLayout
-				android:id="@+id/layout_ac_indicators"
-				android:layout_width="fill_parent"
-				android:layout_height="24dp"
-				android:orientation="horizontal">
-
-				<ImageView
-					android:id="@+id/iv_air_defogger"
-					android:layout_width="wrap_content"
-					android:layout_height="16dp"
-					android:layout_gravity="center_horizontal"
-					android:layout_weight="0.3"
-					android:contentDescription="@string/air_defogger"
-					android:src="@drawable/air_rear"
-					android:visibility="visible" />
-
-				<ImageView
-					android:id="@+id/iv_air_recirculation"
-					android:layout_width="wrap_content"
-					android:layout_height="16dp"
-					android:layout_gravity="center_horizontal"
-					android:layout_weight="0.3"
-					android:contentDescription="@string/air_recirculation"
-					android:src="@drawable/air_inner_loop"
-					android:visibility="visible" />
-
-				<ImageView
-					android:id="@+id/iv_air_ac_state"
-					android:layout_width="wrap_content"
-					android:layout_height="16dp"
-					android:layout_gravity="center_horizontal"
-					android:layout_weight="0.4"
-					android:contentDescription="@string/air_ac_state"
-					android:src="@drawable/air_cond__state_off" />
-
-			</LinearLayout>
-
-			<LinearLayout
-				android:id="@+id/layout_ac_blow_direction"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="10dp"
-				android:focusableInTouchMode="false"
-				android:orientation="vertical">
-
-				<ImageView
-					android:id="@+id/iv_bg_seat"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_gravity="right"
-					android:adjustViewBounds="false"
-					android:baselineAlignBottom="false"
-					android:contentDescription="@string/bg_seat"
-					android:src="@drawable/air_wind_seat_my"
-					tools:ignore="RtlHardcoded" />
-
-				<ImageView
-					android:id="@+id/iv_air_direction"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_horizontal|end"
-					android:layout_marginTop="-89dp"
-					android:contentDescription="@string/air_direction"
-					android:src="@drawable/air_wind_seat_my_to_between_window_and_feet_and_window" />
-
-				<ImageView
-					android:id="@+id/iv_ac_blow_auto"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_gravity="end"
-					android:layout_marginTop="-84dp"
-					android:layout_marginEnd="96dp"
-					android:contentDescription="@string/ac_blow_auto"
-					android:src="@drawable/ac_mode_auto" />
-			</LinearLayout>
-
-			<LinearLayout
-				android:id="@+id/layout_fan_speed"
-				android:layout_width="wrap_content"
-				android:layout_height="40dp"
-				android:layout_gravity="end"
-				android:gravity="center_horizontal|bottom"
-				android:orientation="vertical">
-
-				<ImageView
-					android:id="@+id/iv_air_fan_speed"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:contentDescription="@string/air_fan_speed"
-					android:src="@drawable/air_wind_seat_my_fan_8" />
-
-				<ImageView
-					android:id="@+id/iv_ac_fan_mode"
-					android:layout_width="40dp"
-					android:layout_height="wrap_content"
-					android:layout_gravity="end"
-					android:layout_marginTop="-36dp"
-					android:contentDescription="@string/ac_fan_mode"
-					android:src="@drawable/ac_mode_auto" />
-			</LinearLayout>
-
-			<LinearLayout
-				android:id="@+id/layout_ac_temp"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="end"
-				android:gravity="end"
-				android:orientation="horizontal">
-
-				<ImageView
-					android:id="@+id/iv_air_temp"
-					android:layout_width="50dp"
-					android:layout_height="50dp"
-					android:layout_gravity="end"
-					android:adjustViewBounds="false"
-					android:baselineAlignBottom="false"
-					android:contentDescription="@string/air_temp"
-					android:src="@drawable/ac_temp_green" />
-
-				<TextView
-					android:id="@+id/tv_air_cond_temp"
-					android:layout_width="wrap_content"
-					android:layout_height="match_parent"
-					android:layout_gravity="end"
-					android:gravity="center_vertical|end"
-					android:text="@string/empty_temp"
-					android:textAppearance="?android:attr/textAppearanceLarge"
-					android:textSize="42sp"
-					android:textStyle="bold" />
-			</LinearLayout>
-		</LinearLayout>
-
-	</RelativeLayout>
 
 	<LinearLayout
 		android:id="@+id/layout_general_info"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_alignParentStart="true"
-		android:orientation="vertical">
+		android:orientation="vertical"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
 
 		<include layout="@layout/layout_speed_panel" />
 
@@ -357,4 +191,46 @@
 
 	</LinearLayout>
 
-</RelativeLayout>
+	<ImageView
+		android:id="@+id/ivOBD2Status"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="0dp"
+		android:layout_marginEnd="0dp"
+		android:clickable="true"
+		android:paddingStart="0dp"
+		android:paddingTop="0dp"
+		android:paddingEnd="0dp"
+		android:paddingBottom="0dp"
+		android:src="@drawable/bt_state"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<!--	<ImageView-->
+	<!--		android:id="@+id/iv_bg_seat"-->
+	<!--		android:layout_width="290dp"-->
+	<!--		android:layout_height="282dp"-->
+	<!--		android:layout_gravity="right"-->
+	<!--		android:layout_marginEnd="16dp"-->
+	<!--		android:layout_marginBottom="24dp"-->
+	<!--		android:adjustViewBounds="false"-->
+	<!--		android:baselineAlignBottom="false"-->
+	<!--		android:contentDescription="@string/bg_seat"-->
+	<!--		android:src="@drawable/climate_seat_bg"-->
+	<!--		app:layout_constraintBottom_toTopOf="@+id/iv_air_fan_speed"-->
+	<!--		app:layout_constraintEnd_toEndOf="parent"-->
+	<!--		tools:ignore="RtlHardcoded" />-->
+	<include layout="@layout/climate"
+		app:layout_constraintEnd_toEndOf="@+id/ivOBD2Status"
+		app:layout_constraintTop_toBottomOf="@+id/ivOBD2Status"
+		android:layout_marginBottom="16dp"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		/>
+
+	<android.support.constraint.Guideline
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintGuide_begin="208dp" />
+
+</android.support.constraint.ConstraintLayout>

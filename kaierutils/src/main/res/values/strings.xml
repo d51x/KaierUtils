@@ -212,6 +212,6 @@
 	<string name="ac_fan_mode">ac fan mode</string>
 	<string name="air_temp">air temp</string>
 	<string name="vol_mute">vol mute</string>
-	<string name="empty_temp">--.-</string>
+	<string name="empty_temp">24.5</string>
 	<string name="speed">speed</string>
 </resources>

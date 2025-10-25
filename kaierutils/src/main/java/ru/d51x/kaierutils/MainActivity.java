@@ -68,12 +68,16 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -170,7 +174,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private TextView tvClimateTemperature;
 
-    private RelativeLayout layoutMmcClimate;
+    private ConstraintLayout layoutMmcClimate;
     private ImageButton ibFloatingPanel;
     private ImageView ivHideFloatingPanel;
 
@@ -324,24 +328,24 @@ public class MainActivity extends Activity implements View.OnClickListener,
         layoutObdFuel.setOnClickListener (this);
 
         ivClimateFanSpeed = findViewById(R.id.iv_air_fan_speed);
-        ivClimateFanSpeed.setImageResource( R.drawable.air_wind_seat_my_fan_0);
+        ivClimateFanSpeed.setImageResource( R.drawable.climate_fan_speed_0);
 
         ivClimateBlowDirection = findViewById(R.id.iv_air_direction);
-        ivClimateBlowDirection.setImageResource(R.drawable.air_wind_seat_my_to_face);
+        ivClimateBlowDirection.setImageResource(R.drawable.climate_air_wind_face);
 
         ivClimateAcState = findViewById(R.id.iv_air_ac_state);
 
         ivClimateRrecirculation = findViewById(R.id.iv_air_recirculation);
-        ivClimateRrecirculation.setVisibility( View.INVISIBLE );
+        //ivClimateRrecirculation.setVisibility( View.INVISIBLE );
 
         ivClimateDefogger = findViewById(R.id.iv_air_defogger);
-        ivClimateDefogger.setVisibility( View.INVISIBLE );
+        //ivClimateDefogger.setVisibility( View.INVISIBLE );
 
         ivClimateBlowMode = findViewById(R.id.iv_ac_blow_auto);
-        ivClimateBlowMode.setVisibility( View.INVISIBLE );
+        //ivClimateBlowMode.setVisibility( View.INVISIBLE );
 
         ivClimateFanMode = findViewById(R.id.iv_ac_fan_mode);
-        ivClimateFanMode.setVisibility( View.INVISIBLE );
+        //ivClimateFanMode.setVisibility( View.INVISIBLE );
 
         ivClimateTemperature = findViewById(R.id.iv_air_temp);
 
@@ -1125,10 +1129,14 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     public void updateOBDStatus(boolean status){
         //
+        //ivOBD2Status.setSelected(status);
+
         if ( status ) {
-            ivOBD2Status.setImageResource(R.drawable.obd_connected);
+            //ivOBD2Status.setImageResource(R.drawable.bt_state);
+            ivOBD2Status.setColorFilter(Color.BLUE);
         } else {
-            ivOBD2Status.setImageResource(R.drawable.obd_disconnected);
+            //ivOBD2Status.setImageResource(R.drawable.bt_state);
+            ivOBD2Status.setColorFilter(Color.WHITE);
         }
     }
 

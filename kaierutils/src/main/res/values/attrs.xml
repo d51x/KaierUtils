@@ -9,4 +9,19 @@
 	<declare-styleable name="ru.d51x.kaierutils.NumberTextPreference">
 	</declare-styleable>
 
+	<declare-styleable name="ClimateData">
+		<attr name="BlowDirection" format="enum">
+			<enum name="off" value="0"/>
+			<enum name="face" value="1"/>
+			<enum name="from_face_to_feet_and_face" value="3"/>
+			<enum name="feet_and_face" value="4"/>
+			<enum name="from_feet_and_face_to_feet" value="5"/>
+			<enum name="feet" value="7"/>
+			<enum name="from_feet_to_feet_and_window" value="9"/>
+			<enum name="feet_and_window" value="10"/>
+			<enum name="from_feet_and_window_to_window" value="11"/>
+			<enum name="window" value="13"/>
+		</attr>
+
+	</declare-styleable>
 </resources>
