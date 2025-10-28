@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:drawable="@drawable/climate_air_wind_face"
+        app:BlowDirection="off"/>
+    <item
+        android:drawable="@drawable/climate_air_wind_face"
+        app:BlowDirection="face"/>
+    <item
+        android:drawable="@drawable/climate_air_wind_feet2_face"
+        app:BlowDirection="from_face_to_feet_and_face"/>
+    <item
+        android:drawable="@drawable/climate_air_wind_feet_face"
+        app:BlowDirection="feet_and_face"/>
+    <item
+        android:drawable="@drawable/climate_air_wind_feet_face2"
+        app:BlowDirection="from_feet_and_face_to_feet"/>
+    <item
+        android:drawable="@drawable/climate_air_wind_feet"
+        app:BlowDirection="feet"/>
+    <item
+        android:drawable="@drawable/climate_air_wind_feet2_window"
+        app:BlowDirection="from_feet_to_feet_and_window"/>
+    <item
+        android:drawable="@drawable/climate_air_wind_face"
+        app:BlowDirection="feet_and_window"/>
+    <item
+        android:drawable="@drawable/climate_air_wind_feet_window2"
+        app:BlowDirection="from_feet_and_window_to_window"/>
+    <item
+        android:drawable="@drawable/climate_air_wind_window"
+        app:BlowDirection="window"/>
+
+</level-list>

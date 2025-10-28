@@ -12,15 +12,38 @@
 	android:paddingBottom="@dimen/activity_vertical_margin"
 	tools:context=".Settings.SettingsActivity">
 
+	<TextView
+		android:id="@+id/tvOuterTemperature"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:text="-15"
+		android:textSize="52sp"
+		app:layout_constraintBottom_toBottomOf="@+id/ivOuterTemperature"
+		app:layout_constraintStart_toEndOf="@+id/ivOuterTemperature"
+		app:layout_constraintTop_toTopOf="@+id/ivOuterTemperature"
+		app:layout_constraintVertical_bias="1.0" />
+
+	<ImageView
+		android:id="@+id/ivOuterTemperature"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:layout_marginStart="8dp"
+		android:layout_marginTop="8dp"
+		android:src="@drawable/outer_temperature"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
 	<LinearLayout
 		android:id="@+id/linearLayout"
 		android:layout_width="160dp"
-		android:layout_height="wrap_content"
+		android:layout_height="54dp"
 		android:orientation="vertical"
+		app:layout_constraintBottom_toTopOf="@+id/layoutCanMMC"
 		app:layout_constraintHorizontal_bias="0.492"
 		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toRightOf="parent"
-		app:layout_constraintTop_toTopOf="parent">
+		app:layout_constraintStart_toStartOf="parent">
 
 		<LinearLayout
 			android:id="@+id/layout_volume_level"
@@ -51,24 +74,15 @@
 
 	</LinearLayout>
 
+	<!--android:background="@drawable/layout_bg"-->
+
 	<LinearLayout
 		android:id="@+id/layoutCanMMC"
-		android:layout_width="828dp"
-		android:layout_height="75dp"
-		android:layout_marginEnd="404dp"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
 		android:layout_marginBottom="8dp"
-		android:background="@drawable/layout_bg"
-		android:baselineAligned="false"
-		android:gravity="center_vertical"
-		android:orientation="horizontal"
-		android:paddingStart="8dp"
-		android:paddingTop="8dp"
-		android:paddingEnd="8dp"
-		android:paddingBottom="8dp"
 		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toRightOf="parent">
+		app:layout_constraintStart_toStartOf="parent">
 
 		<include layout="@layout/dash_panel" />
 
@@ -82,114 +96,13 @@
 
 	</LinearLayout>
 
-	<LinearLayout
-		android:id="@+id/layout_general_info"
+	<include
+		android:id="@+id/include"
+		layout="@layout/layout_speed_panel"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent">
-
-		<include layout="@layout/layout_speed_panel" />
-
-		<LinearLayout
-			android:id="@+id/layout_waypoints"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:longClickable="true"
-			android:orientation="horizontal">
-
-			<ImageView
-				android:id="@+id/ivGPSDistance"
-				android:layout_width="48dp"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center"
-				android:layout_marginStart="26dp"
-				android:contentDescription="@string/gps_distance"
-				android:padding="6dp"
-				android:src="@drawable/route_length" />
-
-			<TextView
-				android:id="@+id/tvGPSDistance"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"
-				android:gravity="center_vertical"
-				android:longClickable="false"
-				android:paddingStart="10dp"
-				android:text="@string/text_gps_distance"
-				android:textSize="40sp"
-				tools:ignore="RtlSymmetry" />
-
-			<TextView
-				android:id="@+id/textView3"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:gravity="bottom|center_horizontal"
-				android:paddingStart="4dp"
-				android:text="@string/km"
-				android:textSize="20sp"
-				tools:ignore="RtlSymmetry" />
-		</LinearLayout>
-
-		<LinearLayout
-			android:id="@+id/layout_tracktime"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:clickable="true"
-			android:longClickable="true"
-			android:orientation="horizontal">
-
-			<ImageView
-				android:id="@+id/ivTrackTime"
-				android:layout_width="48dp"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center"
-				android:layout_marginStart="26dp"
-				android:contentDescription="@string/track_time"
-				android:padding="6dp"
-				android:src="@drawable/track_time_0"
-				tools:ignore="ContentDescription" />
-
-			<TextView
-				android:id="@+id/tvTrackTime"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingStart="10dp"
-				android:text="@string/empty_str_2_dashes"
-				android:textSize="40sp"
-				tools:ignore="RtlSymmetry" />
-
-			<TextView
-				android:id="@+id/tvTrackTimeHourOrMin"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:gravity="bottom|center_horizontal"
-				android:paddingStart="4dp"
-				android:text="@string/text_gps_track_time_format_min"
-				android:textSize="20sp"
-				tools:ignore="RtlSymmetry" />
-
-			<TextView
-				android:id="@+id/tvTrackTime2"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingStart="10dp"
-				android:text="@string/str_dashes"
-				android:textSize="40sp"
-				tools:ignore="RtlSymmetry" />
-
-			<TextView
-				android:id="@+id/tvTrackTimeMinOrSec"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:gravity="bottom|center_horizontal"
-				android:paddingStart="4dp"
-				android:text="@string/text_gps_track_time_format_sec"
-				android:textSize="20sp"
-				tools:ignore="RtlSymmetry" />
-		</LinearLayout>
-
-	</LinearLayout>
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
 
 	<ImageView
 		android:id="@+id/ivOBD2Status"
@@ -229,8 +142,135 @@
 		/>
 
 	<android.support.constraint.Guideline
+		android:id="@+id/guideline"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		app:layout_constraintGuide_begin="208dp" />
+
+	<ImageView
+		android:id="@+id/ivGPSDistance"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:layout_marginTop="160dp"
+		android:src="@drawable/distance"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<TextView
+		android:id="@+id/tvGPSDistance"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:longClickable="false"
+		android:text="@string/text_gps_distance"
+		android:textSize="52sp"
+		app:layout_constraintBottom_toBottomOf="@+id/ivGPSDistance"
+		app:layout_constraintStart_toEndOf="@+id/ivGPSDistance"
+		app:layout_constraintTop_toTopOf="@+id/ivGPSDistance" />
+
+	<TextView
+		android:id="@+id/textView3"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:text="@string/km"
+		android:textSize="20sp"
+		app:layout_constraintBottom_toBottomOf="@+id/tvGPSDistance"
+		app:layout_constraintStart_toEndOf="@+id/tvGPSDistance"
+		tools:ignore="RtlSymmetry" />
+
+	<ImageView
+		android:id="@+id/ivTrackTime"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/track_time"
+		app:layout_constraintStart_toStartOf="@+id/ivGPSDistance"
+		app:layout_constraintTop_toBottomOf="@+id/ivGPSDistance"
+		tools:ignore="ContentDescription" />
+
+	<TextView
+		android:id="@+id/tvTrackTime"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:paddingStart="10dp"
+		android:text="@string/empty_str_2_dashes"
+		android:textSize="52sp"
+		app:layout_constraintBottom_toBottomOf="@+id/ivTrackTime"
+		app:layout_constraintStart_toEndOf="@+id/ivTrackTime"
+		app:layout_constraintTop_toTopOf="@+id/ivTrackTime"
+		tools:ignore="RtlSymmetry" />
+
+	<TextView
+		android:id="@+id/tvTrackTimeHourOrMin"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="bottom|center_horizontal"
+		android:paddingStart="4dp"
+		android:text="@string/text_gps_track_time_format_min"
+		android:textSize="20sp"
+		app:layout_constraintBottom_toBottomOf="@+id/tvTrackTime"
+		app:layout_constraintStart_toEndOf="@+id/tvTrackTime"
+		tools:ignore="RtlSymmetry" />
+
+	<TextView
+		android:id="@+id/tvTrackTime2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:paddingStart="10dp"
+		android:text="@string/str_dashes"
+		android:textSize="52sp"
+		app:layout_constraintBottom_toBottomOf="@+id/tvTrackTime"
+		app:layout_constraintStart_toEndOf="@+id/tvTrackTimeHourOrMin"
+		tools:ignore="RtlSymmetry" />
+
+	<TextView
+		android:id="@+id/tvTrackTimeMinOrSec"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="bottom|center_horizontal"
+		android:paddingStart="4dp"
+		android:text="@string/text_gps_track_time_format_sec"
+		android:textSize="20sp"
+		app:layout_constraintBottom_toBottomOf="@+id/tvTrackTime2"
+		app:layout_constraintStart_toEndOf="@+id/tvTrackTime2"
+		tools:ignore="RtlSymmetry" />
+
+	<ImageView
+		android:id="@+id/ivFuelConsump"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="8dp"
+		android:src="@drawable/fuel_consumption_"
+		app:layout_constraintStart_toStartOf="@+id/ivTrackTime"
+		app:layout_constraintTop_toBottomOf="@+id/ivTrackTime" />
+
+	<TextView
+		android:id="@+id/tvOBD_FuelConsump"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:text="9.7"
+		android:textSize="52sp"
+		app:layout_constraintBottom_toBottomOf="@+id/ivFuelConsump"
+		app:layout_constraintStart_toEndOf="@+id/ivFuelConsump"
+		app:layout_constraintTop_toTopOf="@+id/ivFuelConsump" />
+
+	<TextView
+		android:id="@+id/tvOBD_FuelConsump_desc"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical"
+		android:layout_marginStart="8dp"
+		android:gravity="bottom"
+		android:text="л/\n100км"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:textSize="16sp"
+		app:layout_constraintBottom_toBottomOf="@+id/tvOBD_FuelConsump"
+		app:layout_constraintStart_toEndOf="@+id/tvOBD_FuelConsump" />
+
+
 
 </android.support.constraint.ConstraintLayout>

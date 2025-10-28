@@ -142,7 +142,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     private LinearLayout layoutObd2;
     private LinearLayout layoutObdFuel;
-    private LinearLayout layoutFuelConsump;
+//    private LinearLayout layoutFuelConsump;
     private LinearLayout layoutTempData;
     private ImageView ivOBD2Status;
     private ImageView ivCarBattery;
@@ -264,18 +264,12 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvCurrentVolume = findViewById(R.id.tvCurrentVolume);
 
 		// color speed
-        LinearLayout layoutGpsSpeed = findViewById(R.id.layout_gps_speed);
-		layoutGpsSpeed.setOnLongClickListener(this);
-		layoutGpsSpeed.setOnClickListener(this);
         tvSpeed = findViewById(R.id.text_gps_speed_value);
         ivSpeed = findViewById(R.id.ivSpeed);
         tvAverageSpeed = findViewById(R.id.tvAverageSpeed);
         tvMaxSpeed = findViewById(R.id.tvMaxSpeed);
 
 		// track time
-        LinearLayout layoutTrackTime = findViewById(R.id.layout_tracktime);
-		layoutTrackTime.setOnLongClickListener(this);
-		layoutTrackTime.setOnClickListener(this);
         tvTrackTime = findViewById(R.id.tvTrackTime);
         tvTrackTime2 = findViewById(R.id.tvTrackTime2);
         tvTrackTimeMinOrSec = findViewById(R.id.tvTrackTimeMinOrSec);
@@ -283,8 +277,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         ivTrackTime = findViewById(R.id.ivTrackTime);
 
 		// track distance
-		LinearLayout layoutWaypoints = findViewById(R.id.layout_waypoints);
-		layoutWaypoints.setOnLongClickListener(this);
         tvDistance = findViewById(R.id.tvGPSDistance);
 
         // volume
@@ -319,13 +311,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         ivFuelConsump = findViewById(R.id.ivFuelConsump);
         tvFuelConsump = findViewById(R.id.tvOBD_FuelConsump);
         tvFuelConsump.setText("--");
-        tvFuelConsump2 = findViewById(R.id.tvOBD_FuelConsump2);
-        tvFuelConsump2.setText("--");
-        tvFuelConsump2.setVisibility(View.GONE);
-
-        layoutObdFuel = findViewById(R.id.layout_fuel_data);
-        layoutObd2 = findViewById(R.id.layoutCanMMC);
-        layoutObdFuel.setOnClickListener (this);
 
         ivClimateFanSpeed = findViewById(R.id.iv_air_fan_speed);
         ivClimateFanSpeed.setImageResource( R.drawable.climate_fan_speed_0);
@@ -350,12 +335,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
         ivClimateTemperature = findViewById(R.id.iv_air_temp);
 
         tvClimateTemperature = findViewById(R.id.tv_air_cond_temp);
-
-        layoutFuelConsump = findViewById(R.id.layout_fuel_consump);
-        layoutFuelConsump.setOnClickListener (this);
-
-        layoutTempData = findViewById(R.id.layout_temp_data);
-        layoutTempData.setOnClickListener (this);
 
         layoutMmcClimate = findViewById(R.id.layout_MMC_climate);
 
@@ -410,8 +389,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
         modeFuelTank = prefs.getInt("kaierutils_modeFuelTank", 0);
         modeFuelConsump = prefs.getInt("kaierutils_modeFuelConsump", 0);
 
-        ivFuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst);
-        ivFuelTank.setImageResource(R.drawable.fuel_tank_in_tank_full);
+//        ivFuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst);
+        //ivFuelTank.setImageResource(R.drawable.fuel_tank_in_tank_full);
 
         switch_fuel_consump_mode(false);
         switch_fuel_tank_mode(false);
@@ -436,9 +415,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
         TWUtilEx.requestAudioFocusState();
         updateOBDStatus(App.obd.isConnected);
 
-        layoutFuelConsump.setVisibility( (App.obd.fuelConsumpShow) ? View.VISIBLE : View.GONE);
+//        layoutFuelConsump.setVisibility( (App.obd.fuelConsumpShow) ? View.VISIBLE : View.GONE);
 
-        layoutMmcClimate.setVisibility(App.obd.can.can_mmc_ac_data_show ? View.VISIBLE : View.GONE);
+//        layoutMmcClimate.setVisibility(App.obd.can.can_mmc_ac_data_show ? View.VISIBLE : View.GONE);
         ibFloatingPanel.setVisibility(!App.GS.isShowingFloatingPanel ? View.VISIBLE : View.INVISIBLE);
 
         // обновить данные OBD
@@ -454,35 +433,35 @@ public class MainActivity extends Activity implements View.OnClickListener,
     @Override
         public boolean onLongClick(View v) {
             switch (v.getId()) {
-                case R.id.layout_gps_speed:
-                    this.openOptionsMenu();
-                    return true;
-                case R.id.layout_waypoints:
-                    App.GS.gpsData.totalDistance = 0;
-                    tvDistance.setText( "----.-" );
-                    Toast.makeText(this, "Счетчик был сброшен", Toast.LENGTH_SHORT).show ();
-                    return true;
-                case R.id.layout_tracktime:
-	                switch(App.GS.gpsData.timeAtWayType) {
-		                case 0:
-			                App.GS.gpsData.timeAtWay = 0;
-			                App.GS.gpsData.prevTimeAtWay = 0;
-			                break;
-		                case 1:
-			                App.GS.gpsData.timeAtWayWithoutStops = 0;
-			                App.GS.gpsData.prevTimeAtWayWithoutStops = 0;
-			                break;
-		                default:
-			                break;
-	                }
-
-	                Toast.makeText(this, "Счетчик сброшен", Toast.LENGTH_SHORT).show();
-                    tvTrackTime.setText( getString(R.string.text_gps_track_time_null));
-                    tvTrackTime2.setText( getString(R.string.text_gps_track_time_null));
-                    tvTrackTimeMinOrSec.setText( getString(R.string.text_gps_track_time_format_sec));
-                    tvTrackTimeHourOrMin.setText( getString(R.string.text_gps_track_time_format_min));
-
-                    return true;
+//                case R.id.layout_gps_speed:
+//                    this.openOptionsMenu();
+//                    return true;
+//                case R.id.layout_waypoints:
+//                    App.GS.gpsData.totalDistance = 0;
+//                    tvDistance.setText( "----.-" );
+//                    Toast.makeText(this, "Счетчик был сброшен", Toast.LENGTH_SHORT).show ();
+//                    return true;
+//                case R.id.layout_tracktime:
+//	                switch(App.GS.gpsData.timeAtWayType) {
+//		                case 0:
+//			                App.GS.gpsData.timeAtWay = 0;
+//			                App.GS.gpsData.prevTimeAtWay = 0;
+//			                break;
+//		                case 1:
+//			                App.GS.gpsData.timeAtWayWithoutStops = 0;
+//			                App.GS.gpsData.prevTimeAtWayWithoutStops = 0;
+//			                break;
+//		                default:
+//			                break;
+//	                }
+//
+//	                Toast.makeText(this, "Счетчик сброшен", Toast.LENGTH_SHORT).show();
+//                    tvTrackTime.setText( getString(R.string.text_gps_track_time_null));
+//                    tvTrackTime2.setText( getString(R.string.text_gps_track_time_null));
+//                    tvTrackTimeMinOrSec.setText( getString(R.string.text_gps_track_time_format_sec));
+//                    tvTrackTimeHourOrMin.setText( getString(R.string.text_gps_track_time_format_min));
+//
+//                    return true;
                 case R.id.ivOBD2Status:
                     showObd2Activity(MainActivity.this);
                     return true;
@@ -498,30 +477,30 @@ public class MainActivity extends Activity implements View.OnClickListener,
     public void onClick(View v){
 
         switch (v.getId()) {
-            case R.id.layout_gps_speed:
-                //color_speed(tvGPSSpeed, App.GS.gpsData.speed);
-                ui.updateSpeedText(tvSpeed, 0, App.GS.ui.isColorSpeed);
-                App.GS.ui.isColorSpeed = ! App.GS.ui.isColorSpeed;
-	            PreferenceManager.getDefaultSharedPreferences (App.getInstance())
-                        .edit()
-                        .putBoolean ("kaierutils_show_color_speed", App.GS.ui.isColorSpeed)
-                        .apply();
-                break;
-            case R.id.layout_tracktime:
-                App.GS.gpsData.timeAtWayType++;
-                if ( App.GS.gpsData.timeAtWayType > 1) App.GS.gpsData.timeAtWayType = 0;
-                if ( App.GS.gpsData.timeAtWayType == 0) {
-                    Toast.makeText(this, "Пройденное время с учетом простоя", Toast.LENGTH_SHORT).show();
-                } else if (App.GS.gpsData.timeAtWayType == 1) {
-                    Toast.makeText(this, "Пройденное время без учета простоя", Toast.LENGTH_SHORT).show();
-                }
-                PreferenceManager.getDefaultSharedPreferences(App.getInstance())
-                    .edit()
-                        .putInt("CAR_SETTINGS__GPS_TIME_AT_WAY_TYPE", App.GS.gpsData.timeAtWayType)
-                        .apply();
-                // сменить иконку, сменить текст
-                showFormatedTrackTime( App.GS.gpsData.timeAtWayType);
-                break;
+//            case R.id.layout_gps_speed:
+//                //color_speed(tvGPSSpeed, App.GS.gpsData.speed);
+//                ui.updateSpeedText(tvSpeed, 0, App.GS.ui.isColorSpeed);
+//                App.GS.ui.isColorSpeed = ! App.GS.ui.isColorSpeed;
+//	            PreferenceManager.getDefaultSharedPreferences (App.getInstance())
+//                        .edit()
+//                        .putBoolean ("kaierutils_show_color_speed", App.GS.ui.isColorSpeed)
+//                        .apply();
+//                break;
+//            case R.id.layout_tracktime:
+//                App.GS.gpsData.timeAtWayType++;
+//                if ( App.GS.gpsData.timeAtWayType > 1) App.GS.gpsData.timeAtWayType = 0;
+//                if ( App.GS.gpsData.timeAtWayType == 0) {
+//                    Toast.makeText(this, "Пройденное время с учетом простоя", Toast.LENGTH_SHORT).show();
+//                } else if (App.GS.gpsData.timeAtWayType == 1) {
+//                    Toast.makeText(this, "Пройденное время без учета простоя", Toast.LENGTH_SHORT).show();
+//                }
+//                PreferenceManager.getDefaultSharedPreferences(App.getInstance())
+//                    .edit()
+//                        .putInt("CAR_SETTINGS__GPS_TIME_AT_WAY_TYPE", App.GS.gpsData.timeAtWayType)
+//                        .apply();
+//                // сменить иконку, сменить текст
+//                showFormatedTrackTime( App.GS.gpsData.timeAtWayType);
+//                break;
             case R.id.ivOBD2Status:
 //                if ( App.obd.isConnected ) {
 //                    BackgroundService.stopOBDThread();
@@ -530,15 +509,15 @@ public class MainActivity extends Activity implements View.OnClickListener,
 //                }
                 this.openOptionsMenu();
                 break;
-            case R.id.layout_fuel_data:
-                switch_fuel_tank_mode(true);
-                break;
-            case R.id.layout_fuel_consump:
-                switch_fuel_consump_mode(true);
-                break;
-            case R.id.layout_temp_data:
-                switch_temp_mode();
-                break;
+//            case R.id.layout_fuel_data:
+//                switch_fuel_tank_mode(true);
+//                break;
+//            case R.id.layout_fuel_consump:
+//                switch_fuel_consump_mode(true);
+//                break;
+//            case R.id.layout_temp_data:
+//                switch_temp_mode();
+//                break;
             case R.id.ibFloatingPanel:
                 App.GS.showFloatingPanelButton = false;
                 App.GS.isShowingFloatingPanel = true;
@@ -1187,26 +1166,26 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
         show_fuel_tank_data(modeFuelTank);
 
-        switch ( modeFuelTank ) {
-            case 0:
-                ivFuelTank.setImageResource(R.drawable.fuel_tank_in_tank_full);
-                //Toast.makeText(this, "Остаток в баке(л) ", Toast.LENGTH_SHORT).show();
-                tvFuelTankUnit.setVisibility( View.VISIBLE);
-                break;
-            case 1:
-                ivFuelTank.setImageResource(R.drawable.fuel_tank_in_tank_percent_full);
-                //Toast.makeText(this, "Остаток в баке (%)", Toast.LENGTH_SHORT).show();
-                tvFuelTankUnit.setVisibility( View.GONE);
-                break;
-            case 2:
-                ivFuelTank.setImageResource(R.drawable.fuel_tank_used_full);
-                //Toast.makeText(this, "Израсходовано топлива (л)", Toast.LENGTH_SHORT).show();
-                tvFuelTankUnit.setVisibility( View.VISIBLE);
-                break;
-            default:
-                ivFuelTank.setImageResource(R.drawable.fuel_tank_full);
-                break;
-        }
+//        switch ( modeFuelTank ) {
+//            case 0:
+//                ivFuelTank.setImageResource(R.drawable.fuel_tank_in_tank_full);
+//                //Toast.makeText(this, "Остаток в баке(л) ", Toast.LENGTH_SHORT).show();
+//                tvFuelTankUnit.setVisibility( View.VISIBLE);
+//                break;
+//            case 1:
+//                ivFuelTank.setImageResource(R.drawable.fuel_tank_in_tank_percent_full);
+//                //Toast.makeText(this, "Остаток в баке (%)", Toast.LENGTH_SHORT).show();
+//                tvFuelTankUnit.setVisibility( View.GONE);
+//                break;
+//            case 2:
+//                ivFuelTank.setImageResource(R.drawable.fuel_tank_used_full);
+//                //Toast.makeText(this, "Израсходовано топлива (л)", Toast.LENGTH_SHORT).show();
+//                tvFuelTankUnit.setVisibility( View.VISIBLE);
+//                break;
+//            default:
+//                ivFuelTank.setImageResource(R.drawable.fuel_tank_full);
+//                break;
+//        }
     }
 
     // TODO: переключение режима показаний температуры (учесть включение вентилятора)
@@ -1239,23 +1218,23 @@ public class MainActivity extends Activity implements View.OnClickListener,
         // инфу о переключении надо отображать здесь
         switch ( modeFuelConsump ) {
             case 0:
-                ivFuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst);
+//                ivFuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst);
                 show_hide_fuel_consump_line_2(modeFuelConsump == 3);
                 break;
             case 1:
-                ivFuelConsump.setImageResource(R.drawable.fuel_consump_lpk_avg);
+//                ivFuelConsump.setImageResource(R.drawable.fuel_consump_lpk_avg);
                 show_hide_fuel_consump_line_2(modeFuelConsump == 3);
                 break;
             case 2:
-                ivFuelConsump.setImageResource(R.drawable.fuel_consump_lph);
+//                ivFuelConsump.setImageResource(R.drawable.fuel_consump_lph);
                 show_hide_fuel_consump_line_2(modeFuelConsump == 3);
                 break;
             case 3:
-                ivFuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst_avg);
+//                ivFuelConsump.setImageResource(R.drawable.fuel_consump_lpk_inst_avg);
                 show_hide_fuel_consump_line_2(modeFuelConsump == 3);
                 break;
             default:
-                show_hide_fuel_consump_line_2(false);
+//                show_hide_fuel_consump_line_2(false);
                 ivFuelConsump.setImageResource(R.drawable.fuel_consump);
                 break;
         }
@@ -1311,16 +1290,16 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     // отобразить/спрятать второй показатель расхода при включении/выключении комбинированного режима
     private void show_hide_fuel_consump_line_2 (boolean line2) {
-        if ( ! App.obd.fuelConsumpShow) {
-            layoutFuelConsump.setVisibility( View.GONE );
-        } else {
-            layoutFuelConsump.setVisibility( View.VISIBLE );
-            if (line2) {
-                tvFuelConsump2.setVisibility(View.VISIBLE);
-            } else {
-                tvFuelConsump2.setVisibility(View.GONE);
-            }
-        }
+//        if ( ! App.obd.fuelConsumpShow) {
+//            layoutFuelConsump.setVisibility( View.GONE );
+//        } else {
+//            layoutFuelConsump.setVisibility( View.VISIBLE );
+//            if (line2) {
+//                tvFuelConsump2.setVisibility(View.VISIBLE);
+//            } else {
+//                tvFuelConsump2.setVisibility(View.GONE);
+//            }
+//        }
     }
 
     @SuppressLint("DefaultLocale")
