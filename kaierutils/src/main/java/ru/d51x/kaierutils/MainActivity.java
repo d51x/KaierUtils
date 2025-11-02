@@ -1128,9 +1128,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
     @SuppressLint("DefaultLocale")
     public void updateCoolantTemp(int mode, CanMmcData.State state){
         float temp = App.obd.can.engine.getCoolantTemperature();
-        ivCoolantTempFan.setVisibility(((state == CanMmcData.State.on)
-                        && App.obd.can.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
-        ui.updateCoolantTemperatureIcon(ivCoolantTemp, temp);
 //        ivCoolantTempFan.setVisibility(((state == CanMmcData.State.on)
 //                        && App.obd.can.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
 //        ui.updateCoolantTemperatureIcon(ivCoolantTemp, temp);
