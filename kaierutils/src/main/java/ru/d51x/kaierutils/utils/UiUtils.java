@@ -50,15 +50,21 @@ public class UiUtils {
         updateCvtTemperatureTextColor(view, temp);
     }
 
+    @SuppressLint("ResourceAsColor")
     public void updateCvtTemperatureTextColor(TextView view, int temp) {
-        if (temp < 71) {
-            view.setTextColor(Color.WHITE);
+        if (temp < 50) {
+            view.setTextColor(R.color.temp_blue);
+        }
+        else if (temp < 70) {
+            view.setTextColor(R.color.temp_mint);
         } else if (temp < 91) {
-            view.setTextColor(Color.GREEN);
+            view.setTextColor(R.color.white_color);
         } else if (temp < 103) {
-            view.setTextColor(Color.YELLOW);
+            view.setTextColor(R.color.temp_yellow);
+        } else if (temp < 115) {
+            view.setTextColor(R.color.temp_orange);
         } else {
-            view.setTextColor(Color.RED);
+            view.setTextColor(R.color.temp_red);
         }
     }
 
