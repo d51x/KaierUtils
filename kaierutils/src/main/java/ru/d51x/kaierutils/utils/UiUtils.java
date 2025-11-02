@@ -62,15 +62,31 @@ public class UiUtils {
         }
     }
 
+    public void updateCvtTemperatureIconColor(ImageView view, int temp) {
+        if (temp < 71) {
+            view.setColorFilter(Color.WHITE);
+        } else if (temp < 91) {
+            view.setColorFilter(Color.GREEN);
+        } else if (temp < 103) {
+            view.setColorFilter(Color.YELLOW);
+        } else {
+            view.setColorFilter(Color.RED);
+        }
+    }
+
     public void updateCvtTemperatureIcon(ImageView view, int temp) {
         int imageRes;
         if (temp < 71) {
+            view.setColorFilter(Color.WHITE);
             imageRes = R.drawable.cvt_temp_min;
         } else if (temp < 91) {
+            view.setColorFilter(Color.GREEN);
             imageRes = R.drawable.cvt_temp_nom_green;
         } else if (temp < 103) {
+            view.setColorFilter(Color.YELLOW);
             imageRes = R.drawable.cvt_temp_nom_yellow;
         } else {
+            view.setColorFilter(Color.RED);
             imageRes = R.drawable.cvt_temp_nom_orange;
         }
         view.setImageResource(imageRes);

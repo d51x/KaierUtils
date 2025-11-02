@@ -1140,6 +1140,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     public void updateCvtTemp(int temperature) {
         ui.updateCvtTemperatureText(tvCvtData, temperature);
 //        ui.updateCvtTemperatureIcon(ivCvtData, temperature);
+        ui.updateCvtTemperatureIconColor(ivCvtData, temperature);
     }
 
     public void saveFuelTankToStorage(float remain){
