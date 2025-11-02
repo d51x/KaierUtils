@@ -441,6 +441,12 @@ public class UiUtils {
         view.setVisibility((blowMode == ClimateData.BlowMode.auto) ? View.VISIBLE : View.INVISIBLE);
     }
 
-
+    public void updateObdStatus(ImageView view, boolean status) {
+        if ( status ) {
+            view.setColorFilter(R.color.temp_blue);
+        } else {
+            view.setColorFilter(R.color.temp_red);
+        }
+    }
 
 }
