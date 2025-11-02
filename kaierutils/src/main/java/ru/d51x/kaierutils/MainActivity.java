@@ -1269,6 +1269,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         switch (mode) {
             case 0:
                 ui.updateFuelLevelText(tvFuelTank, App.obd.can.meter.getFuelLevel());
+                ui.updateFuelLevelIconColor(ivFuelTank, App.obd.can.meter.getFuelLevel());
                 break;
             case 1:
                 if ( App.obd.can.meter.getFuelLevel() < 0) {

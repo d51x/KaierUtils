@@ -203,6 +203,20 @@ public class UiUtils {
             view.setTextColor(R.color.white_color);
         }
     }
+
+    @SuppressLint("ResourceAsColor")
+    public void updateFuelLevelIconColor(ImageView view, int level) {
+        if (level <= 5) {
+            view.setColorFilter(R.color.temp_red);
+        } else if (level <=10) {
+            view.setColorFilter(R.color.temp_orange);
+        } else if (level <= 15) {
+            view.setColorFilter(R.color.temp_yellow);
+        } else {
+            view.setColorFilter(R.color.white_color);
+        }
+    }
+
     public void updateFuelLevelText(TextView view, int level, int size) {
         view.setTextSize(size);
         updateFuelLevelText(view, level);
