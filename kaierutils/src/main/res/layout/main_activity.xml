@@ -5,6 +5,7 @@
 	android:id="@+id/relativeLayout2"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:background="@drawable/main_bg"
 	android:orientation="horizontal"
 	android:paddingLeft="@dimen/activity_horizontal_margin"
 	android:paddingTop="@dimen/activity_vertical_margin"
@@ -36,15 +37,18 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
 
+	<!--android:background="@drawable/layout_bg"-->
+
 	<LinearLayout
 		android:id="@+id/linearLayout"
 		android:layout_width="160dp"
 		android:layout_height="54dp"
+		android:layout_marginStart="24dp"
 		android:orientation="vertical"
-		app:layout_constraintBottom_toTopOf="@+id/layoutCanMMC"
-		app:layout_constraintHorizontal_bias="0.492"
+		app:layout_constraintBottom_toBottomOf="@+id/ivOuterTemperature"
 		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintStart_toStartOf="parent">
+		app:layout_constraintStart_toEndOf="@+id/tvOuterTemperature"
+		app:layout_constraintTop_toTopOf="@+id/ivOuterTemperature">
 
 		<LinearLayout
 			android:id="@+id/layout_volume_level"
@@ -74,8 +78,6 @@
 		</LinearLayout>
 
 	</LinearLayout>
-
-	<!--android:background="@drawable/layout_bg"-->
 
 	<LinearLayout
 		android:id="@+id/layoutCanMMC"
@@ -134,19 +136,19 @@
 	<!--		app:layout_constraintBottom_toTopOf="@+id/iv_air_fan_speed"-->
 	<!--		app:layout_constraintEnd_toEndOf="parent"-->
 	<!--		tools:ignore="RtlHardcoded" />-->
-	<include layout="@layout/climate"
-		app:layout_constraintEnd_toEndOf="@+id/ivOBD2Status"
-		app:layout_constraintTop_toBottomOf="@+id/ivOBD2Status"
-		android:layout_marginBottom="16dp"
+	<include
+		layout="@layout/climate"
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
-		/>
+		android:layout_marginBottom="16dp"
+		app:layout_constraintEnd_toEndOf="@+id/ivOBD2Status"
+		app:layout_constraintTop_toBottomOf="@+id/ivOBD2Status" />
 
 	<android.support.constraint.Guideline
 		android:id="@+id/guideline"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		app:layout_constraintGuide_begin="208dp" />
+		app:layout_constraintGuide_percent="1.1069278" />
 
 	<ImageView
 		android:id="@+id/ivGPSDistance"
@@ -275,6 +277,43 @@
 		app:layout_constraintBottom_toBottomOf="@+id/tvOBD_FuelConsump"
 		app:layout_constraintStart_toEndOf="@+id/tvOBD_FuelConsump" />
 
+	<android.support.constraint.Barrier android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+
+	<android.support.constraint.helper.Flow android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+
+	<android.support.constraint.helper.Flow android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+
+	<android.support.constraint.Guideline
+		android:id="@+id/guideline9"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+
+	<android.support.constraint.Guideline
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintGuide_percent="1.1024096" />
+
+	<android.support.constraint.Guideline
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintGuide_percent="1.0828314" />
+
+	<android.support.constraint.Guideline
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+
+	<android.support.constraint.Guideline android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+
+	<android.support.constraint.Guideline android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+
+	<android.support.constraint.Guideline
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
 
 
 </android.support.constraint.ConstraintLayout>
