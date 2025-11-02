@@ -18,6 +18,7 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A1;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A3;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AE;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_MAF_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_STATUS_CHANGED;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -64,6 +65,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     private int firstY = 0;
     public ImageView ivHideFloatingPanel;
 
+    private ImageView ivObdStatus;
     private ImageView ivSpeed;
 
     private TextView tvSpeed;
@@ -166,6 +168,8 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         ivCoolantTemp = floatingView.findViewById(R.id.ivCoolantTemp);
         ivCoolantTempFan = floatingView.findViewById(R.id.ivCoolantTempFan);
         tvCoolantTemp = floatingView.findViewById(R.id.tvCoolantTemp);
+
+        ivObdStatus = floatingView.findViewById(R.id.ivObdStatus);
 
         ivSpeed = floatingView.findViewById(R.id.ivSpeed);
         tvSpeed = floatingView.findViewById(R.id.tvSpeed);
@@ -278,6 +282,10 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                     if (OBD_BROADCAST_ACTION_MAF_CHANGED.equals(action)) {
                         ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmAvg);
                     }
+                    else if (OBD_BROADCAST_ACTION_STATUS_CHANGED.equals(action)) {
+                        boolean obd_status = intent.getBooleanExtra("Status", false);
+                        ui.updateObdStatus(ivObdStatus, obd_status);
+                    }
                     // ************* ENGINE BLOCK ************************************************
                     else if (ACTION_OBD_ENGINE_2101_CHANGED.equals(action)) {
                         EngineData engine = (EngineData) intent.getSerializableExtra("obd_engine_2101");
@@ -368,6 +376,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                 }
             };
             context.registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_MAF_CHANGED));
+            context.registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_STATUS_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2101_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2102_CHANGED));
             context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2110_CHANGED));

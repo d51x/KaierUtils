@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginBottom="8dp"
-        android:src="@drawable/fuel_tank_min"
+        android:src="@drawable/fuel_tank"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tvCvtData" />
 

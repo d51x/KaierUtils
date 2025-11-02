@@ -69,7 +69,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -77,7 +76,6 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -90,7 +88,6 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -107,7 +104,6 @@ import ru.d51x.kaierutils.Data.CombineMeterData;
 import ru.d51x.kaierutils.Data.CvtData;
 import ru.d51x.kaierutils.Data.EngineData;
 import ru.d51x.kaierutils.TWUtils.TWUtilConst;
-import ru.d51x.kaierutils.TWUtils.TWUtilEx;
 import ru.d51x.kaierutils.utils.UiUtils;
 
 public class MainActivity extends Activity implements View.OnClickListener,
@@ -1126,6 +1122,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     public void updateCarBattery(float voltage) {
 //        ui.updateBatteryLevelIcon(ivCarBattery, voltage);
         ui.updateBatteryLevelText(tvCarBattery, voltage, 52, 36);
+        ui.updateBatteryLeveIconColor(ivCarBattery, voltage);
     }
 
     @SuppressLint("DefaultLocale")
@@ -1135,11 +1132,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
 //                        && App.obd.can.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
 //        ui.updateCoolantTemperatureIcon(ivCoolantTemp, temp);
         ui.updateCoolantTemperatureText(tvCoolantTemp, temp);
+        ui.updateCoolantTemperatureIconColor(ivCoolantTemp, temp);
     }
 
     public void updateCvtTemp(int temperature) {
         ui.updateCvtTemperatureText(tvCvtData, temperature);
 //        ui.updateCvtTemperatureIcon(ivCvtData, temperature);
+        ui.updateCvtTemperatureIconColor(ivCvtData, temperature);
     }
 
     public void saveFuelTankToStorage(float remain){
@@ -1271,6 +1270,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         switch (mode) {
             case 0:
                 ui.updateFuelLevelText(tvFuelTank, App.obd.can.meter.getFuelLevel());
+                ui.updateFuelLevelIconColor(ivFuelTank, App.obd.can.meter.getFuelLevel());
                 break;
             case 1:
                 if ( App.obd.can.meter.getFuelLevel() < 0) {

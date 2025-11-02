@@ -16,6 +16,13 @@
         android:background="@drawable/layout_bg"
         >
 
+        <ImageView
+            android:id="@+id/ivObdStatus"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:src="@drawable/bt_state" />
+
         <LinearLayout
             android:id="@+id/layoutSpeed"
             android:layout_width="wrap_content"
@@ -295,5 +302,6 @@
         android:src="@drawable/close_small_24px" />
 
 
-</LinearLayout>
+    </LinearLayout>
+
 </FrameLayout>

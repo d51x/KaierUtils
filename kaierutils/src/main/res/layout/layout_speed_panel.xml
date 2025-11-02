@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout4"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginStart="32dp">
 
 
     <ImageView
@@ -15,6 +17,7 @@
         android:contentDescription="@string/speed"
         android:src="@drawable/speeedometer"
         app:layout_constraintEnd_toStartOf="@+id/text_gps_speed_value"
+        app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="43dp" />
 
 
@@ -39,26 +42,29 @@
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="@+id/text_gps_speed_value"
         app:layout_constraintStart_toEndOf="@+id/ivSpeed"
-        app:layout_constraintTop_toBottomOf="@+id/text_gps_speed_value"
-         />
+        app:layout_constraintTop_toBottomOf="@+id/text_gps_speed_value" />
 
     <TextView
         android:id="@+id/tvAverageSpeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
         android:text="@string/text_average_speed"
         android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/text_gps_speed_value"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivSpeed" />
 
     <TextView
         android:id="@+id/tvMaxSpeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
         android:text="@string/text_max_speed"
         android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/text_gps_speed_value"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvAverageSpeed" />
 
 
 </android.support.constraint.ConstraintLayout>
