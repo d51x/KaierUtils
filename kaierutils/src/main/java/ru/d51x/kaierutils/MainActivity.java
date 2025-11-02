@@ -69,7 +69,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -77,7 +76,6 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -90,7 +88,6 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -107,7 +104,6 @@ import ru.d51x.kaierutils.Data.CombineMeterData;
 import ru.d51x.kaierutils.Data.CvtData;
 import ru.d51x.kaierutils.Data.EngineData;
 import ru.d51x.kaierutils.TWUtils.TWUtilConst;
-import ru.d51x.kaierutils.TWUtils.TWUtilEx;
 import ru.d51x.kaierutils.utils.UiUtils;
 
 public class MainActivity extends Activity implements View.OnClickListener,

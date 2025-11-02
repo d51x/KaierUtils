@@ -149,6 +149,19 @@ public class UiUtils {
         } else {
             view.setText(String.format("%1$s", "--"));
         }
+        updateFuelLevelTextColor(view, level);
+    }
+    @SuppressLint("ResourceAsColor")
+    public void updateFuelLevelTextColor(TextView view, int level) {
+        if (level <= 5) {
+            view.setTextColor(R.color.temp_red);
+        } else if (level <=10) {
+            view.setTextColor(R.color.temp_orange);
+        } else if (level <= 15) {
+            view.setTextColor(R.color.temp_yellow);
+        } else {
+            view.setTextColor(R.color.white_color);
+        }
     }
     public void updateFuelLevelText(TextView view, int level, int size) {
         view.setTextSize(size);
