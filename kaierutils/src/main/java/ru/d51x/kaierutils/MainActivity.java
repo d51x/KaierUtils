@@ -722,7 +722,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                     // TODO: 06.10.2025 select speed type from preferences
                     if (App.GS.isGpsSpeed) {
                         int speed = intent.getIntExtra("Speed", 0);
-                        ui.updateSpeedIcon(ivSpeed, (float) speed);
+                        //ui.updateSpeedIcon(ivSpeed, (float) speed);
                         ui.updateSpeedText(tvSpeed, speed, App.GS.ui.isColorSpeed);
 
 
@@ -761,7 +761,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                             // speed
                             if (!App.GS.isGpsSpeed && App.obd.speedFromEngine) {
                                 ui.updateSpeedText(tvSpeed, engine.getSpeed(), App.GS.ui.isColorSpeed);
-                                ui.updateSpeedIcon(ivSpeed, engine.getSpeed());
+                                //ui.updateSpeedIcon(ivSpeed, engine.getSpeed());
 
                                 tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.obd.oneTrip.getAverageSpeed()));
                                 tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.obd.oneTrip.getMaxSpeed()));
@@ -813,7 +813,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
                             if (!App.GS.isGpsSpeed && App.obd.speedFromCVT) {
                                 ui.updateSpeedText(tvSpeed, cvtData.getVehicleSpeed(), App.GS.ui.isColorSpeed);
-                                ui.updateSpeedIcon(ivSpeed, cvtData.getVehicleSpeed());
+                                //ui.updateSpeedIcon(ivSpeed, cvtData.getVehicleSpeed());
                                 tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.obd.oneTrip.getAverageSpeed()));
                                 tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.obd.oneTrip.getMaxSpeed()));
                             }
@@ -827,7 +827,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         if (meterData != null) {
                             if (!App.GS.isGpsSpeed && App.obd.speedFromMeter) {
                                 ui.updateSpeedText(tvSpeed, meterData.getVehicleSpeed(), App.GS.ui.isColorSpeed);
-                                ui.updateSpeedIcon(ivSpeed, meterData.getVehicleSpeed());
+                                //ui.updateSpeedIcon(ivSpeed, meterData.getVehicleSpeed());
                                 tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.obd.oneTrip.getAverageSpeed()));
                                 tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.obd.oneTrip.getMaxSpeed()));
                             }
@@ -886,7 +886,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                             //speed
                             if (!App.GS.isGpsSpeed && App.obd.speedFromClimate) {
                                 ui.updateSpeedText(tvSpeed, climateData.vehicleSpeed, App.GS.ui.isColorSpeed);
-                                ui.updateSpeedIcon(ivSpeed, climateData.vehicleSpeed);
+                                //ui.updateSpeedIcon(ivSpeed, climateData.vehicleSpeed);
                                 tvAverageSpeed.setText(String.format(getString(R.string.text_average_speed), App.obd.oneTrip.getAverageSpeed()));
                                 tvMaxSpeed.setText(String.format(getString(R.string.text_max_speed), App.obd.oneTrip.getMaxSpeed()));
                             }
@@ -1121,8 +1121,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     @SuppressLint("DefaultLocale")
     public void updateCarBattery(float voltage) {
-        ui.updateBatteryLevelIcon(ivCarBattery, voltage);
-        ui.updateBatteryLevelText(tvCarBattery, voltage);
+//        ui.updateBatteryLevelIcon(ivCarBattery, voltage);
+        ui.updateBatteryLevelText(tvCarBattery, voltage, 52, 36);
     }
 
     @SuppressLint("DefaultLocale")
@@ -1131,12 +1131,15 @@ public class MainActivity extends Activity implements View.OnClickListener,
         ivCoolantTempFan.setVisibility(((state == CanMmcData.State.on)
                         && App.obd.can.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
         ui.updateCoolantTemperatureIcon(ivCoolantTemp, temp);
+//        ivCoolantTempFan.setVisibility(((state == CanMmcData.State.on)
+//                        && App.obd.can.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
+//        ui.updateCoolantTemperatureIcon(ivCoolantTemp, temp);
         ui.updateCoolantTemperatureText(tvCoolantTemp, temp);
     }
 
     public void updateCvtTemp(int temperature) {
         ui.updateCvtTemperatureText(tvCvtData, temperature);
-        ui.updateCvtTemperatureIcon(ivCvtData, temperature);
+//        ui.updateCvtTemperatureIcon(ivCvtData, temperature);
     }
 
     public void saveFuelTankToStorage(float remain){
