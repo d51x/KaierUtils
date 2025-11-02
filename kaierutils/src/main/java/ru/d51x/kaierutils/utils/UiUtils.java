@@ -231,7 +231,9 @@ public class UiUtils {
     }
     @SuppressLint("ResourceAsColor")
     public void updateFuelLevelTextColor(TextView view, int level) {
-        if (level <= 5) {
+        if (level < 1) {
+            view.setTextColor(R.color.white_color);
+        } else if (level <= 5) {
             view.setTextColor(R.color.temp_red);
         } else if (level <=10) {
             view.setTextColor(R.color.temp_orange);
