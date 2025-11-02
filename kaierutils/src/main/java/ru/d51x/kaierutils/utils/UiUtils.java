@@ -218,11 +218,42 @@ public class UiUtils {
     public void updateClimateBlowDirection(ImageView view, ClimateData.BlowDirection blowDirection) {
         int res = R.drawable.climate_blow_direction;
 
-        TypedArray a = App.getInstance().obtainStyledAttributes(R.styleable.ClimateData);
-        if (a.hasValue(R.styleable.ClimateData_BlowDirection)) {
-            res = ClimateData.BlowDirection.values()[a.getInt(R.styleable.ClimateData_BlowDirection, 0)].ordinal();
+        //TypedArray a = App.getInstance().obtainStyledAttributes(R.styleable.ClimateData);
+        //if (a.hasValue(R.styleable.ClimateData_BlowDirection)) {
+        //    res = ClimateData.BlowDirection.values()[a.getInt(R.styleable.ClimateData_BlowDirection, 0)].ordinal();
+        //}
+        switch (blowDirection) {
+            case off:
+                res = 0;
+                break;
+            case face:
+                res = R.drawable.climate_air_wind_face;
+                break;
+            case from_face_to_feet_and_face:
+                res = R.drawable.climate_air_wind_feet_face2;
+                break;
+            case feet_and_face:
+                res = R.drawable.climate_air_wind_feet_face;
+                break;
+            case from_feet_and_face_to_feet:
+                res = R.drawable.climate_air_wind_feet2_face;
+                break;
+            case feet:
+                res = R.drawable.climate_air_wind_feet;
+                break;
+            case from_feet_to_feet_and_window:
+                res = R.drawable.climate_air_wind_feet2_window;
+                break;
+            case feet_and_window:
+                res = R.drawable.climate_air_wind_feet2_window;
+                break;
+            case from_feet_and_window_to_window:
+                res = R.drawable.climate_air_wind_feet_window2;
+                break;
+            case window:
+                res = R.drawable.climate_air_wind_window;
+                break;
         }
-        a.recycle();
         view.setImageResource( res );
     }
      public void updateClimateFanSpeed(ImageView view, ClimateData.FanSpeed fanSpeed) {
