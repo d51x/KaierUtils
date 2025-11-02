@@ -1132,6 +1132,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 //                        && App.obd.can.engine_fan_show) ? View.VISIBLE : View.INVISIBLE);
 //        ui.updateCoolantTemperatureIcon(ivCoolantTemp, temp);
         ui.updateCoolantTemperatureText(tvCoolantTemp, temp);
+        ui.updateCoolantTemperatureIconColor(ivCoolantTemp, temp);
     }
 
     public void updateCvtTemp(int temperature) {

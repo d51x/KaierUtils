@@ -165,6 +165,7 @@ public class UiUtils {
         } else {
             view.setText("--");
         }
+        updateCoolantTemperatureTextColor(view, temp);
     }
     public void updateCoolantTemperatureText(TextView view, float temp, int size) {
         view.setTextSize(size);
@@ -181,7 +182,44 @@ public class UiUtils {
         }
         view.setImageResource(res);
     }
+    @SuppressLint("ResourceAsColor")
+    public void updateCoolantTemperatureTextColor(TextView view, float temp) {
+        if (temp == -255) {
+            view.setTextColor(R.color.white_color);
+        }
+        else if (temp < 50) {
+            view.setTextColor(R.color.temp_blue);
+        } else if (temp < 80) {
+            view.setTextColor(R.color.temp_mint);
+        } else if (temp < 93) {
+            view.setTextColor(R.color.white_color);
+        }  else if (temp < 98) {
+            view.setTextColor(R.color.temp_yellow);
+        } else if (temp < 105) {
+            view.setTextColor(R.color.temp_orange);
+        } else {
+            view.setTextColor(R.color.temp_red);
+        }
+    }
 
+    public void updateCoolantTemperatureIconColor(ImageView view, float temp) {
+        if (temp == -255) {
+            view.setColorFilter(R.color.white_color);
+        }
+        else if (temp < 50) {
+            view.setColorFilter(R.color.temp_blue);
+        } else if (temp < 80) {
+            view.setColorFilter(R.color.temp_mint);
+        } else if (temp < 93) {
+            view.setColorFilter(R.color.white_color);
+        }  else if (temp < 98) {
+            view.setColorFilter(R.color.temp_yellow);
+        } else if (temp < 105) {
+            view.setColorFilter(R.color.temp_orange);
+        } else {
+            view.setColorFilter(R.color.temp_red);
+        }
+    }
     //--------------- FUEL ----------------------------------------------------------------
     public void updateFuelLevelText(TextView view, int level) {
         if ( level > 0 && level < 67) {
