@@ -355,13 +355,13 @@ public class UiUtils {
     }
     public void updateClimateTemperatureIcon(ImageView view, float temp){
         if ( temp < 19f )
-            view.setColorFilter(Color.BLUE);
+            view.setColorFilter(R.color.temp_blue);
         else if ( temp < 21f )
-            view.setColorFilter(Color.GREEN);
+            view.setColorFilter(R.color.temp_green);
         else if ( temp < 23f )
-            view.setColorFilter(Color.parseColor("#FFA500"));
+            view.setColorFilter(R.color.temp_yellow);
         else
-            view.setColorFilter(Color.RED);
+            view.setColorFilter(R.color.temp_orange);
         int res = R.drawable.climate_temperature_setpoint;
         view.setImageResource(res);
     }
