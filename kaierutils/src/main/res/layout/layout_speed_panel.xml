@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout4"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginStart="32dp">
 
 
     <ImageView
@@ -15,6 +17,7 @@
         android:contentDescription="@string/speed"
         android:src="@drawable/speeedometer"
         app:layout_constraintEnd_toStartOf="@+id/text_gps_speed_value"
+        app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="43dp" />
 
 
@@ -39,8 +42,7 @@
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="@+id/text_gps_speed_value"
         app:layout_constraintStart_toEndOf="@+id/ivSpeed"
-        app:layout_constraintTop_toBottomOf="@+id/text_gps_speed_value"
-         />
+        app:layout_constraintTop_toBottomOf="@+id/text_gps_speed_value" />
 
     <TextView
         android:id="@+id/tvAverageSpeed"
