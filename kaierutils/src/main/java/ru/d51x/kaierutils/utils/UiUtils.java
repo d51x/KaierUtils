@@ -246,7 +246,9 @@ public class UiUtils {
 
     @SuppressLint("ResourceAsColor")
     public void updateFuelLevelIconColor(ImageView view, int level) {
-        if (level <= 5) {
+        if (level < 1) {
+            view.setColorFilter(R.color.white_color);
+        } else if (level <= 5) {
             view.setColorFilter(R.color.temp_red);
         } else if (level <=10) {
             view.setColorFilter(R.color.temp_orange);
