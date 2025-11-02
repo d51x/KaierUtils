@@ -142,7 +142,7 @@ public class UiUtils {
 
     @SuppressLint("DefaultLocale")
     public void updateFuelConsumptionText(TextView view, float consumption, int size1, int size2) {
-        if (consumption > 0) {
+        if (consumption > 0 && consumption < 100) {
             TextViewToSpans(view, String.format("%1$.1f", consumption).replace(",", "."),
                     size1, size2);
         } else {
