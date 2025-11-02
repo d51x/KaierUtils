@@ -200,7 +200,7 @@ public class UiUtils {
         if (temp < 15f || temp > 27f) {
             view.setText("--.-");
         } else {
-            TextViewToSpans(view, Float.toString(temp), TEXT_SIZE_BEFORE_DOT_4, TEXT_SIZE_AFTER_DOT);
+            TextViewToSpans(view, Float.toString(temp), 72, 44);
         }
     }
     public void updateClimateTemperatureIcon(ImageView view, float temp){
