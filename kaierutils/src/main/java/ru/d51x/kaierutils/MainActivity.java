@@ -414,7 +414,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvCurrentVolume.setText(Integer.toString(App.GS.getVolumeLevel()));
 
         setVolumeIcon(ivVolumeLevel, App.GS.getVolumeLevel());
-        TWUtilEx.requestAudioFocusState();
+        //TWUtilEx.requestAudioFocusState();
         updateOBDStatus(App.obd.isConnected);
 
 //        layoutFuelConsump.setVisibility( (App.obd.fuelConsumpShow) ? View.VISIBLE : View.GONE);
