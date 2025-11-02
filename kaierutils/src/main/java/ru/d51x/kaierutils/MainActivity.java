@@ -733,11 +733,11 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
                         if (App.obd.newDistanceCalc) {
                             ui.updateDistanceText(tvDistance, App.obd.todayTrip.distance,
-                                    TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_BEFORE_DOT);
+                                    52, 32);
                         } else {
                             float dist = App.GS.gpsData.totalDistance / 1000;
                             ui.updateDistanceText(tvDistance, dist,
-                                    TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_BEFORE_DOT);
+                                    52, 32);
                         }
                     }
                     showFormatedTrackTime(App.GS.gpsData.timeAtWayType);
@@ -859,7 +859,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                             // tripA tripB
                             if (App.obd.newDistanceCalc) {
                                 ui.updateDistanceText(tvDistance, App.obd.todayTrip.distance,
-                                        TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_BEFORE_DOT);
+                                        52, 32);
                             }
                         }
                     }
