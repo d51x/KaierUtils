@@ -1122,6 +1122,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     public void updateCarBattery(float voltage) {
 //        ui.updateBatteryLevelIcon(ivCarBattery, voltage);
         ui.updateBatteryLevelText(tvCarBattery, voltage, 52, 36);
+        ui.updateBatteryLeveIconColor(ivCarBattery, voltage);
     }
 
     @SuppressLint("DefaultLocale")

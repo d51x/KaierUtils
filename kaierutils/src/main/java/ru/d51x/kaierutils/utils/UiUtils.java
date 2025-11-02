@@ -113,10 +113,43 @@ public class UiUtils {
         } else {
             view.setText("--");
         }
+        updateBatteryLevelTextColor(view, voltage);
     }
     public void updateBatteryLevelText(TextView view, float voltage) {
         updateBatteryLevelText(view, voltage, TEXT_SIZE_BEFORE_DOT, TEXT_SIZE_AFTER_DOT);
     }
+    @SuppressLint("ResourceAsColor")
+    public void updateBatteryLevelTextColor(TextView view, float voltage) {
+        if (voltage < 1) {
+            view.setTextColor(R.color.white_color);
+        }
+        else if (voltage < 11.8f) {
+            view.setTextColor(R.color.temp_red);
+        } else if (voltage < 12.2) {
+            view.setTextColor(R.color.temp_orange);
+        } else if (voltage < 14.8) {
+            view.setTextColor(R.color.white_color);
+        } else {
+            view.setTextColor(R.color.temp_red);
+        }
+    }
+
+    @SuppressLint("ResourceAsColor")
+    public void updateBatteryLeveIconColor(ImageView view, float voltage) {
+        if (voltage < 1) {
+            view.setColorFilter(R.color.white_color);
+        }
+        else if (voltage < 11.8f) {
+            view.setColorFilter(R.color.temp_red);
+        } else if (voltage < 12.2) {
+            view.setColorFilter(R.color.temp_orange);
+        } else if (voltage < 14.8) {
+            view.setColorFilter(R.color.white_color);
+        } else {
+            view.setColorFilter(R.color.temp_red);
+        }
+    }
+
     public void updateBatteryLevelIcon(ImageView view, float voltage) {
         if (voltage < 12) {
             view.setImageResource(R.drawable.car_battery_bad);
