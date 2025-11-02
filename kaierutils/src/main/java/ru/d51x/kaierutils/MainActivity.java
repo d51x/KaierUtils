@@ -173,6 +173,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private ImageView ivClimateTemperature;
 
     private TextView tvClimateTemperature;
+    private TextView tvOuterTemperature;
 
     private ConstraintLayout layoutMmcClimate;
     private ImageButton ibFloatingPanel;
@@ -335,6 +336,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         ivClimateTemperature = findViewById(R.id.iv_air_temp);
 
         tvClimateTemperature = findViewById(R.id.tv_air_cond_temp);
+        tvOuterTemperature = findViewById(R.id.tvOuterTemperature);
 
         layoutMmcClimate = findViewById(R.id.layout_MMC_climate);
 
@@ -882,6 +884,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                         ClimateData climateData = (ClimateData) intent.getSerializableExtra(KEY_OBD_CLIMATE_2113);
                         if (climateData != null) {
                             //external temp
+                            ui.updateExternalTemperature(tvOuterTemperature, climateData.externalTemperature);
                             //rpm
                             //speed
                             if (!App.GS.isGpsSpeed && App.obd.speedFromClimate) {

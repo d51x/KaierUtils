@@ -203,6 +203,14 @@ public class UiUtils {
             TextViewToSpans(view, Float.toString(temp), 72, 44);
         }
     }
+
+    public void updateExternalTemperature(TextView view, float temp) {
+        if (temp < -50 || temp > 70) {
+            view.setText("--.-");
+        } else {
+            TextViewToSpans(view, String.format("%1$.1f", temp), 52, 32);
+        }
+    }
     public void updateClimateTemperatureIcon(ImageView view, float temp){
         if ( temp < 19f )
             view.setColorFilter(Color.BLUE);
