@@ -140,13 +140,16 @@ public class UiUtils {
         updateFuelConsumptionText(view, consumption, size1, TEXT_SIZE_AFTER_DOT);
     }
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     public void updateFuelConsumptionText(TextView view, float consumption, int size1, int size2) {
-        if (consumption > 0 && consumption < 100) {
+        if (consumption > 99.9f) {
+            view.setText("99.9");
+        }
+        else if (consumption < 1) {
+            view.setText("--.-");
+        }  else {
             TextViewToSpans(view, String.format("%1$.1f", consumption).replace(",", "."),
                     size1, size2);
-        } else {
-            view.setText("--.-");
         }
     }
 
@@ -203,7 +206,6 @@ public class UiUtils {
             TextViewToSpans(view, Float.toString(temp), 72, 44);
         }
     }
-
     public void updateExternalTemperature(TextView view, float temp) {
         if (temp < -50 || temp > 70) {
             view.setText("--.-");
@@ -264,7 +266,7 @@ public class UiUtils {
         }
         view.setImageResource( res );
     }
-     public void updateClimateFanSpeed(ImageView view, ClimateData.FanSpeed fanSpeed) {
+    public void updateClimateFanSpeed(ImageView view, ClimateData.FanSpeed fanSpeed) {
         int res;
         switch ( fanSpeed ) {
             case off:       res = R.drawable.climate_fan_speed_0; break;
@@ -294,9 +296,6 @@ public class UiUtils {
     }
     public void updateClimateAcState(ImageView view, ClimateData.State state) {
         view.setImageResource((state == ClimateData.State.on) ? R.drawable.climate_ac_on_ : R.drawable.climate_ac_off_);
-    }
-    public void updateClimateExteriorTemperature (ImageView view, float temp) {
-        // TODO
     }
     public void updateClimateBlowMode(ImageView view, ClimateData.BlowMode blowMode){
         view.setVisibility((blowMode == ClimateData.BlowMode.auto) ? View.VISIBLE : View.INVISIBLE);
