@@ -47,6 +47,19 @@ public class UiUtils {
     public void updateCvtTemperatureText(TextView view, int temp, int size) {
         view.setTextSize(size);
         updateCvtTemperatureText(view, temp);
+        updateCvtTemperatureTextColor(view, temp);
+    }
+
+    public void updateCvtTemperatureTextColor(TextView view, int temp) {
+        if (temp < 71) {
+            view.setTextColor(Color.WHITE);
+        } else if (temp < 91) {
+            view.setTextColor(Color.GREEN);
+        } else if (temp < 103) {
+            view.setTextColor(Color.YELLOW);
+        } else {
+            view.setTextColor(Color.RED);
+        }
     }
 
     public void updateCvtTemperatureIcon(ImageView view, int temp) {
@@ -62,6 +75,8 @@ public class UiUtils {
         }
         view.setImageResource(imageRes);
     }
+
+
     public void updateCvtOilDegradationIcon(ImageView view, int temp) {
         int imageRes = R.drawable.cvt_degr_nom;
         view.setImageResource(imageRes);
