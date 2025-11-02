@@ -334,6 +334,7 @@ public class Obd2 {
     public void processObdMaf() {
         if (isServiceCommand) return;
         //if ( activeOther ) return;
+        if (App.GS.isReverseMode) return;
         try {
             // TODO: убрать костыль, когда найду нужный пид
             setHeaders("7E0", "7E8", false);
@@ -393,8 +394,7 @@ public class Obd2 {
         }
         return seed;
     }
-    private int calculateSKey(int seed)
-    {
+    private int calculateSKey(int seed) {
         int b0 = (seed >> 24) & 0xFF;
         int b1 = (seed >> 16) & 0xFF;
         int b2 = (seed >> 8) & 0xFF;
@@ -494,15 +494,10 @@ public class Obd2 {
 
     public ArrayList<Integer> requestCanEcu(String PID, String CanAddress /*, String SenderAddress, boolean flowControl*/) {
         ArrayList<Integer> buffer = null;
-        if ( activeMAF ) return buffer;
-        activeOther = true;
 
         try {
             buffer = runObdCommand(PID, socket);
-            activeOther = false;
-
         }  catch ( NonNumericResponseException e5) {
-            activeOther = false;
             //disconnect();
             try {
                 new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
@@ -513,20 +508,16 @@ public class Obd2 {
             e5.printStackTrace();
         }
         catch (StoppedException | NoDataException e6) {
-            activeOther = false;
             Log.e(TAG, e6.toString());
             e6.printStackTrace();
         }
         catch (UnableToConnectException e3) {
-            activeOther = false;
             Log.e(TAG, e3.toString());
             e3.printStackTrace();
             disconnect();
         } catch (Exception e2) {
-            activeOther = false;
             Log.e(TAG, e2.toString());
         }
-        activeOther = false;
         return buffer;
     }
 
@@ -538,8 +529,6 @@ public class Obd2 {
 
     private void setHeaders(String canAddr, String txAddr, boolean flowControl) {
         if (localDebug) return;
-        if ( activeMAF ) return;
-        activeOther = true;
         try {
             long tt = System.currentTimeMillis();
             new SelectHeaderObdCommand("ATSH " + canAddr).run(socket.getInputStream(), socket.getOutputStream());
@@ -552,8 +541,7 @@ public class Obd2 {
                 new SelectHeaderObdCommand("ATFCSM 1").run(socket.getInputStream(), socket.getOutputStream());
             }
             new SelectHeaderObdCommand("ATCRA " + txAddr).run(socket.getInputStream(), socket.getOutputStream());
-            Log.d(TAG, String.format("SetHeader %s :: %d ms", flowControl ? "with flow control" : "", System.currentTimeMillis() - tt));
-            activeOther = false;
+            Log.d(TAG, String.format("SetHeader %s %s :: %d ms", canAddr, flowControl ? "with flow control" : "", System.currentTimeMillis() - tt));
         }
         catch (NullPointerException e) {
             Log.e(TAG, e.toString());
@@ -565,7 +553,6 @@ public class Obd2 {
             e.printStackTrace();
         }
         catch (NonNumericResponseException | StoppedException | NoDataException e) {
-            activeOther = false;
             Log.e("OBDII-->SetHeaders()", e.toString());
             e.printStackTrace();
         }
@@ -574,13 +561,13 @@ public class Obd2 {
             //socket = null;
             e4.printStackTrace();
         }
-        activeOther = false;
     }
 
     private void requestMmcEngine(boolean setHeader, boolean extended){
         if (isServiceCommand) return;
         if ( activeMAF ) return;
         if ( App.GS.isReverseMode ) return;
+        activeOther = true;
         // set ENGINE ECU addresses
         // если предыдущий запрос был по MAF, то здесь хедер можно не устанвливать,
         // т.к. он такой же, это экономит 100-200 ms, т.е. +1 лишний реквест в 7E0
@@ -608,6 +595,7 @@ public class Obd2 {
         // fuel pump relay
 //        buffer = request_CAN_ECU(BLOCK_7E0_PID_211E, BLOCK_7E0);
 //        processObdCommandResult(BLOCK_7E0_PID_211E, BLOCK_7E0, buffer);
+        activeOther = false;
     }
 
     private void requestMmcCvt(boolean extended){
@@ -675,9 +663,10 @@ public class Obd2 {
          */
         setHeaders(BLOCK_6A0, BLOCK_RX_514, true);
 
-//            buffer = requestCanEcu(BLOCK_6A0_PID_21A1, BLOCK_6A0); // speed - иногда отдает лажу
-//            processObdCommandResult(BLOCK_6A0_PID_21A1, BLOCK_6A0, buffer);
-
+        if (speedFromMeter) {
+            buffer = requestCanEcu(BLOCK_6A0_PID_21A1, BLOCK_6A0); // speed - иногда отдает лажу
+            processObdCommandResult(BLOCK_6A0_PID_21A1, BLOCK_6A0, buffer);
+        }
 //            buffer = requestCanEcu(BLOCK_6A0_PID_21A2, BLOCK_6A0); // rpm
 //            processObdCommandResult(BLOCK_6A0_PID_21A2, BLOCK_6A0, buffer);
 

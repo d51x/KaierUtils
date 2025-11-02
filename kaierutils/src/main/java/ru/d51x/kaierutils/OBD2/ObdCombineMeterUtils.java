@@ -17,7 +17,6 @@ public class ObdCombineMeterUtils {
     public static float getMeterVehicleSpeed(ArrayList<Integer> buffer) {
         float speed =  0;
         if (buffer.get(2) != 0xFF && buffer.get(3) != 0xFF) {
-            //speed = (buffer.get(2) + buffer.get(3) * 256) / 100.0f;
             speed = buffer.get(2) / 128.0f + buffer.get(3);
         }
         return speed;

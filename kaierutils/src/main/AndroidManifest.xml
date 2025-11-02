@@ -105,7 +105,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="ru.d51x.kaierutils.action.OBD_CAN_PARKING_SENSORS_CHANGED" />
+                <action android:name="ru.d51x.kaierutils.action.OBD_PARKING_2101" />
             </intent-filter>
         </receiver>
     </application>

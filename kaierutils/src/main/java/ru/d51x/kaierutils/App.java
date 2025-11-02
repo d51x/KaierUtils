@@ -1,11 +1,14 @@
 package ru.d51x.kaierutils;
 
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_PARKING_2101_CHANGED;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -13,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import ru.d51x.kaierutils.OBD2.Obd2;
+import ru.d51x.kaierutils.OBD2.ObdBroadcastReceiver;
 import ru.d51x.kaierutils.Toasts.SensorsToast;
 
 /**
@@ -26,7 +30,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
 	@SuppressLint("StaticFieldLeak")
     public static SensorsToast sensorsToast;
 	public static Toast gToast;
-
+    private final ObdBroadcastReceiver obdBroadcastReceiver = new ObdBroadcastReceiver();
 	private final static int REQUEST_ENABLE_BT = 1;
 	@SuppressLint("StaticFieldLeak")
     public static FloatingWindow floatingWindow;
@@ -64,6 +68,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
         sensorsToast = new SensorsToast( self );
         gToast = new Toast( self );
 		floatingWindow = new FloatingWindow(getApplicationContext(), App.GS.ui.floatingWindowVertical);
+
+		getApplicationContext().registerReceiver(obdBroadcastReceiver, new IntentFilter(ACTION_OBD_PARKING_2101_CHANGED));
 	}
 
 	private final Runnable appMinimize = () -> {

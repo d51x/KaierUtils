@@ -19,7 +19,7 @@ public class ObdCvt {
         if (buffer.isEmpty() || (buffer.size() < 16)) return;
         int N = buffer.get(15);
         int oilTemperature = Math.round( -21.592f + (1.137f * N) - (0.0063f * N * N) + (0.0000195f * N * N * N));
-        float speed =  buffer.get(2) +  buffer.get(1) / 128.0f;
+        float speed =  buffer.get(9) +  buffer.get(8) / 128.0f;
         CvtData cvtData = new CvtData();
         cvtData.setTemperature(oilTemperature);
         cvtData.setVehicleSpeed(speed);

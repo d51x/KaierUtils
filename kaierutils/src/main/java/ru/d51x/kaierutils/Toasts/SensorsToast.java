@@ -25,7 +25,7 @@ public class SensorsToast {
 
 	public SensorsToast(Context context) {
 		this.context = context;
-		mLayout = (RelativeLayout) ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(R.layout.sensors_toast, null);
+		mLayout = (RelativeLayout) ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.sensors_toast, null);
 
         iv_sensor_rear_left_outer = mLayout.findViewById(R.id.iv_sensor_rear_left_outer);
         iv_sensor_rear_left_inner = mLayout.findViewById(R.id.iv_sensor_rear_left_inner);

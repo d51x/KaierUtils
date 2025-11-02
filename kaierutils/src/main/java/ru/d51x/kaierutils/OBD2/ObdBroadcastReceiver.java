@@ -15,6 +15,9 @@ public class ObdBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = "ObdBroadcastReceiver";
 
+    public ObdBroadcastReceiver() {
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
