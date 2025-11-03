@@ -3,6 +3,8 @@ package ru.d51x.kaierutils;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_CODING_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_VARIANT_CODING_CHANGED;
+import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
+import static ru.d51x.kaierutils.utils.StringUtils.hexStringToBuffer;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -138,7 +140,11 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
         if (App.obd.isConnected) {
             runOnUiThread(() -> {
                 ArrayList<Integer> buffer = App.obd.readEtacsCodingCustom();
-
+                if (buffer != null) {
+                    String s = bufferToHex(buffer, 0, false);
+                    edtEtacsCustom.setText(s);
+                    edtEtacsCustom.setEnabled(true);
+                }
             });
         }
     }
@@ -156,7 +162,11 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
         if (App.obd.isConnected) {
             runOnUiThread(() -> {
                 ArrayList<Integer> buffer = App.obd.readEtacsCodingVariant();
-
+                if (buffer != null) {
+                    String s = bufferToHex(buffer, 0, false);
+                    edtEtacsVariant.setText(s);
+                    edtEtacsVariant.setEnabled(true);
+                }
             });
         }
     }
@@ -165,7 +175,7 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
         if (App.obd.isConnected) {
             runOnUiThread(() -> {
                 App.obd.writeEtacsCodingVariant(coding);
-
+                // String s = bufferToHex(buffer, 0, false);
             });
         }
     }
@@ -174,7 +184,11 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
         if (App.obd.isConnected) {
             runOnUiThread(() -> {
                 ArrayList<Integer> buffer = App.obd.readEngineCoding();
-
+                if (buffer != null) {
+                    String s = bufferToHex(buffer, 0, false);
+                    edtEngineCoding.setText(s);
+                    edtEngineCoding.setEnabled(true);
+                }
             });
         }
     }

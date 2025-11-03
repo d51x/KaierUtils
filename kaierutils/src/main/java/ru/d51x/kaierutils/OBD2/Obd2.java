@@ -2,6 +2,7 @@ package ru.d51x.kaierutils.OBD2;
 
 import static ru.d51x.kaierutils.OBD2.ObdConstants.*;
 import static ru.d51x.kaierutils.utils.MessageUtils.SendBroadcastAction;
+import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -554,18 +555,6 @@ public class Obd2 {
             isServiceCommand = false;
         }
         return res;
-    }
-    private String bufferToHex(ArrayList<Integer> buffer, int fromIdx, boolean withSpace) {
-        StringBuilder res = new StringBuilder();
-        if (buffer.size() > 1 && fromIdx < buffer.size()) {
-            for (int i = fromIdx; i < buffer.size(); i++) {
-                res.append(Integer.toHexString(buffer.get(i)).toUpperCase());
-                if (withSpace) {
-                    res.append(" ");
-                }
-            }
-        }
-        return res.toString();
     }
 
     private void writeCoding(String cmd, String coding) {
