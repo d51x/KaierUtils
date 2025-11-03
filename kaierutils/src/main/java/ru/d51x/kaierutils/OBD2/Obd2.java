@@ -417,8 +417,21 @@ public class Obd2 {
     private boolean startDiagnosticSession(String blokcId, String rxAddr) {
         ArrayList<Integer> buffer = null;
         activeMAF = false;
-        setHeaders(blokcId, rxAddr, false);
+        setHeaders(blokcId, rxAddr, true);
+
+        //String s = runObdStringCommand("ATAL", socket);
+//            if (s.equals("OK")) {
+//
+//            }
+        //Log.d(TAG, "ATAL = " +  s); // OK
+
+        //s = runObdStringCommand("ATCAF0", socket);
+        //Log.d(TAG, "ATCAF0 = " +  s); // OK
+        buffer = runObdCommand("1081", socket);
+        Log.d(TAG, "1081 = " + buffer);
+
         buffer = runObdCommand("1092", socket);
+        Log.d(TAG, "1092 = " + buffer);
         // 1092 ==> 5092
         return buffer.get(0) == 0x50 && buffer.get(1) == 0x92;
     }
@@ -426,22 +439,50 @@ public class Obd2 {
     public boolean resetOilDegradation() {
         boolean res = false;
         isServiceCommand = true;
-        sleep(2000);
+        try {
+            Thread.sleep(2000);
 
-        if (startDiagnosticSession(BLOCK_7E1, BLOCK_RX_7E9)) {
-            int seed = requestSeed();
-            if (seed > 0) {
-                int skey = calculateSKey(seed);
-                ArrayList<Integer> buffer = null;
-                buffer = runObdCommand("06" + "2702" + Integer.toHexString(skey).toUpperCase(), socket);
-                if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
-                    buffer = runObdCommand("3103", socket);
-                    res = buffer.get(0) == 0x71 && buffer.get(1) == 0x03;
-                    runObdCommand("2110", socket);
+            if (startDiagnosticSession(BLOCK_7E1, BLOCK_RX_7E9)) {
+                int seed = requestSeed();
+                Log.d(TAG, "Seed = " + seed);
+                Log.d(TAG, "Seed = " + Integer.toHexString(seed));
+                Log.d(TAG, "Seed = " +
+                        String.format("%02X%02X%02X%02X",
+                                (seed >> 24) & 0xFF,
+                                (seed >> 16) & 0xFF,
+                                (seed >> 8) & 0xFF,
+                                seed & 0xFF
+                        )
+                );
+
+                if (seed != 0) {
+                    int skey = calculateSKey(seed);
+                    ArrayList<Integer> buffer = null;
+                    // 06 27 02 AA BB CC DD
+                    String skey1 =
+                            String.format("%02X%02X%02X%02X",
+                                    (skey >> 24) & 0xFF,
+                                    (skey >> 16) & 0xFF,
+                                    (skey >> 8) & 0xFF,
+                                    skey & 0xFF
+                            );
+                    Log.d(TAG, "SKEY = " + skey1);
+                    Log.d(TAG, "_SKEY_ = " + Integer.toHexString(skey).toUpperCase());
+                    String command = "06" + "2702" + skey1;
+                    Log.d(TAG, "cmd = " + command);
+
+                    buffer = runObdCommand(command, socket);
+                    Log.d(TAG, "2702 = " + buffer);
+                    if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
+                        buffer = runObdCommand("3103", socket);
+                        res = buffer.get(0) == 0x71 && buffer.get(1) == 0x03;
+                        runObdCommand("2110", socket);
+                    }
                 }
             }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-
         isServiceCommand = false;
         return res;
     }
