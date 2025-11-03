@@ -466,35 +466,41 @@ public class Obd2 {
 
             setHeaders(BLOCK_6A0, BLOCK_RX_514, true);
             String s = runObdStringCommand("ATAL", socket);
-            Log.d(TAG, "ATAL = " +  s);
+//            if (s.equals("OK")) {
+//
+//            }
+            Log.d(TAG, "ATAL = " +  s); // OK
 
             s = runObdStringCommand("ATCAF0", socket);
-            Log.d(TAG, "ATCAF0 = " +  s);
+            Log.d(TAG, "ATCAF0 = " +  s); // OK
 
-            s = runObdStringCommand("ATCFС0", socket);
-            Log.d(TAG, "ATCFC0 = " +  s);
+            //s = runObdStringCommand("ATCFС0", socket);
+            //Log.d(TAG, "ATCFC0 = " +  s);
 
-            s = runObdStringCommand("ATST05", socket);
-            Log.d(TAG, "ATST05 = " +  s);
+            //s = runObdStringCommand("ATST05", socket);
+            //Log.d(TAG, "ATST05 = " +  s);
 
-            s = runObdStringCommand("021092", socket); //023106
-            Log.d(TAG, "1092 = " +  s);
+            buffer = runObdCommand("021092", socket); //023106
+            Log.d(TAG, "1092 = " +  buffer); // 02 50 92 07 02 00 38 31
 
-            s = runObdStringCommand("023106", socket); //023106
-            Log.d(TAG, "3106 = " +  s);
+            //s = runObdStringCommand("023106", socket); //023106
+            //Log.d(TAG, "3106 = " +  s);
 
             String cmd = "1008" + "3BDE" + String.format("%1$02X", (distance / 100) & 0xFF) + "00FFFF";
-            s = runObdStringCommand(cmd, socket);
-            Log.d(TAG, "10083BDE... = " +  s);
+            buffer = runObdCommand(cmd, socket);
+            Log.d(TAG, "10083BDE... = " +  buffer); // 30 08 14 FF FF FF FF FF
 
             //Log.d(TAG, buffer.toString());
             //Thread.sleep(50);
             cmd = "21"  + String.format("%1$02X", period & 0xFF); // + "FF";
-            s = runObdStringCommand(cmd, socket);
-            Log.d(TAG, "21... = " +  s);
+            buffer = runObdCommand(cmd, socket);
+            Log.d(TAG, "21... = " +  buffer); // 02 7B DE FF FF FF FF FF
 
             //res = buffer.get(0) == 0x71 && buffer.get(1) == 0x06;
             //runObdCommand("21BC", socket);
+
+            //buffer = runObdCommand("1081", socket); //023106
+            //Log.d(TAG, "1081 = " +  buffer); // 02 50 92 07 02 00 38 31
 
             Thread.sleep(2000);
             init();
