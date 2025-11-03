@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="white_color">#fff</color>
-	<color name="gray_color">#aaa</color>
+	<color name="white_color">#FFFFFFFF</color>
+	<color name="gray_color">#FFaaaaaa</color>
 
-	<color name="temp_orange">#FF8D28</color>
-	<color name="temp_red">#FF383C</color>
-	<color name="temp_yellow">#FFCC00</color>
-	<color name="temp_green">#34C759</color>
-	<color name="temp_mint">#00C8B3</color>
-	<color name="temp_cyan">#00C0E8</color>
-	<color name="temp_blue">#0088FF</color>
-	<color name="temp_indigo">#6155F5</color>
+	<color name="temp_orange">#FFFF8D28</color>
+	<color name="temp_red">#FFFF383C</color>
+	<color name="temp_yellow">#FFFFCC00</color>
+	<color name="temp_green">#FF34C759</color>
+	<color name="temp_mint">#FF00C8B3</color>
+	<color name="temp_cyan">#FF00C0E8</color>
+	<color name="temp_blue">#FF0088FF</color>
+	<color name="temp_indigo">#FF6155F5</color>
 
 </resources>
