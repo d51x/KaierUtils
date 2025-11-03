@@ -172,7 +172,7 @@ public class TripData {
     }
 
     public void setAverageSpeed(int speed) {
-        if (speed > 0) {
+        if (speed > 3) {
             this.averageSpeed = (this.averageSpeed + speed) / 2;
         }
     }
