@@ -108,7 +108,10 @@ public class CanObdCommand extends ObdCommand {
         rawData = res.toString().trim();
 
        boolean simple = ( rawData.indexOf(":") > 0 ) ? false : true;
-
+        if (rawData.equals("OK")) {
+            buffer.clear();
+            return;
+        }
         // get answer size
         if ( simple ) {
           buffer.clear();

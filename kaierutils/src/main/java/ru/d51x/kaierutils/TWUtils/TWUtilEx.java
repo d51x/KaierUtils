@@ -182,12 +182,12 @@ public class TWUtilEx {
 				isTWUtilOpened = true;
 				mTWUtil.start();
 				mTWUtil.addHandler(TWUTIL_HANDLER, mTWUtilHandler);
-				mTWUtil.write(TWUtilConst.TW_CONTEXT_VOLUME_CONTROL, 255);
+				//mTWUtil.write(TWUtilConst.TW_CONTEXT_VOLUME_CONTROL, 255);
 				//mTWUtil.write (TWUtilConst.TW_CONTEXT_BRIGHTNESS, 255);
-				Log.d("TWUtilEx", "Init --> requestEQData (257, 255)");
-				mTWUtil.write(TWUtilConst.TW_CONTEXT_EQ, 255);
-				Log.d("TWUtilEx", "Init --> requestAudioFocus (769, 255)");
-				mTWUtil.write(TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG, 255);
+				//Log.d("TWUtilEx", "Init --> requestEQData (257, 255)");
+				//mTWUtil.write(TWUtilConst.TW_CONTEXT_EQ, 255);
+				//Log.d("TWUtilEx", "Init --> requestAudioFocus (769, 255)");
+				//mTWUtil.write(TWUtilConst.TW_CONTEXT_AUDIO_FOCUS_TAG, 255);
 			}
 		} catch (UnsatisfiedLinkError e) {
 			Log.e("TW", e.getMessage());

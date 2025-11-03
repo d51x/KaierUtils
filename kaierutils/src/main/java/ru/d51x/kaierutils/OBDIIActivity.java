@@ -463,7 +463,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btnResetDegr: {
                     btnResetDegradation.setEnabled(false);
-
                     runOnUiThread(() -> {
                         App.obd.resetOilDegradation();
                         btnResetDegradation.setEnabled(true);
