@@ -961,6 +961,9 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	        case R.id.menu_odb2_settings:
 		        showObd2Activity(MainActivity.this);
 		        return true;
+	        case R.id.menu_odb2_etacs:
+		        showEtacsActivity(MainActivity.this);
+		        return true;
 	        case R.id.menu_agps_reset:
 		        Intent intent = new Intent();
 		        intent.setAction( GlSets.GPS_BROADCAST_ACTION_AGPS_RESET );
@@ -1002,6 +1005,17 @@ public class MainActivity extends Activity implements View.OnClickListener,
         try {
             Intent it = new Intent();
             it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.OBDIIActivity");
+            it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(it);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showEtacsActivity(Context context) {
+        try {
+            Intent it = new Intent();
+            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.EtacsActivity");
             it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(it);
         } catch (Exception e) {

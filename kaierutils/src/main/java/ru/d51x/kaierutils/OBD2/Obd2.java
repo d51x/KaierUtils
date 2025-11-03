@@ -70,6 +70,8 @@ public class Obd2 {
     public boolean readExtendCvt = false;
     public boolean readExtendMeter = false;
     public boolean readExtendClimate = false;
+    public boolean readEtacsCoding = false;
+    public boolean readEngineCoding = false;
     public boolean newObdProcess = true;
     public boolean newDistanceCalc = true;
     public TripData totalTrip;
@@ -436,6 +438,17 @@ public class Obd2 {
         return buffer.get(0) == 0x50 && buffer.get(1) == 0x92;
     }
 
+    private boolean stopDiagnosticSession(String blokcId, String rxAddr) {
+        ArrayList<Integer> buffer = null;
+        activeMAF = false;
+        setHeaders(blokcId, rxAddr, false);
+
+        buffer = runObdCommand("1081", socket);
+        Log.d(TAG, "1081 = " + buffer);
+
+        return buffer.get(0) == 0x50 && buffer.get(1) == 0x92;
+    }
+
     public boolean resetOilDegradation() {
         boolean res = false;
         isServiceCommand = true;
@@ -482,22 +495,12 @@ public class Obd2 {
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        } finally {
+            isServiceCommand = false;
         }
-        isServiceCommand = false;
         return res;
     }
 
-    private void sleep(long ms) {
-       //tSleep = System.currentTimeMillis();
-        while (System.currentTimeMillis() - tSleep < ms) {
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            tSleep = System.currentTimeMillis();
-        }
-    }
     public boolean setServiceReminder(int distance, int period) {
         boolean res = false;
         isServiceCommand = true;
@@ -547,9 +550,187 @@ public class Obd2 {
             init();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        } finally {
+            isServiceCommand = false;
         }
-        isServiceCommand = false;
         return res;
+    }
+    private String bufferToHex(ArrayList<Integer> buffer, int fromIdx, boolean withSpace) {
+        StringBuilder res = new StringBuilder();
+        if (buffer.size() > 1 && fromIdx < buffer.size()) {
+            for (int i = fromIdx; i < buffer.size(); i++) {
+                res.append(Integer.toHexString(buffer.get(i)).toUpperCase());
+                if (withSpace) {
+                    res.append(" ");
+                }
+            }
+        }
+        return res.toString();
+    }
+
+    private void writeCoding(String cmd, String coding) {
+        ArrayList<Integer> buffer = null;
+
+        String command = "10" +
+                String.format("%02X", coding.length() / 2) +
+                cmd +
+                coding.substring(0, 8).toUpperCase();
+        Log.d(TAG, " >>> " + command);
+
+        buffer = runObdCommand(command, socket);
+        Log.d(TAG, " <<< " + buffer);
+        Log.d(TAG, " <<< " + bufferToHex(buffer, 0, true));
+
+        int frame = 0x21;
+        for (int i = 8; i < coding.length(); i += 14) {
+            command = Integer.toHexString(frame) + coding.substring(i, i + 14);
+            Log.d(TAG, " >>> " + command);
+
+            buffer = runObdCommand(command, socket);
+            Log.d(TAG, " <<< " + bufferToHex(buffer, 0, true));
+
+            frame += 1;
+        }
+    }
+
+    public ArrayList<Integer> readEtacsCodingCustom() {
+        ArrayList<Integer> buffer = null;
+        isServiceCommand = true;
+        try {
+            Thread.sleep(2000);
+            if (startDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
+                buffer = runObdCommand("21B2", socket);
+                Log.d(TAG, "Etacs Custom: " + buffer);
+                Log.d(TAG, "Etacs Custom: " + bufferToHex(buffer, 0, true));
+
+                stopDiagnosticSession(BLOCK_620, BLOCK_RX_504);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            isServiceCommand = false;
+        }
+        return buffer;
+    }
+    public ArrayList<Integer> readEtacsCodingVariant() {
+        ArrayList<Integer> buffer = null;
+        isServiceCommand = true;
+        try {
+            if (startDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
+                buffer = runObdCommand("21B0", socket);
+                Log.d(TAG, "Etacs Variant: " + buffer);
+                Log.d(TAG, "Etacs Variant: " + bufferToHex(buffer, 0, true));
+
+                stopDiagnosticSession(BLOCK_620, BLOCK_RX_504);
+            }
+        } finally {
+            isServiceCommand = false;
+        }
+        return buffer;
+    }
+
+    public void writeEtacsCodingCustom(String coding) {
+        isServiceCommand = true;
+        ArrayList<Integer> buffer = null;
+        try {
+            if (startDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
+                int seed = requestSeed();
+                if (seed != 0) {
+                    int skey = calculateSKey(seed);
+                    String skey1 =
+                            String.format("%02X%02X%02X%02X",
+                                    (skey >> 24) & 0xFF,
+                                    (skey >> 16) & 0xFF,
+                                    (skey >> 8) & 0xFF,
+                                    skey & 0xFF
+                            );
+                    String command = "06" + "2702" + skey1;
+                    buffer = runObdCommand(command, socket);
+                    if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
+                        Log.d(TAG, "Write Etacs Custom: ");
+                        writeCoding("3BB2", coding);
+                    }
+                }
+            }
+            stopDiagnosticSession(BLOCK_620, BLOCK_RX_504);
+        } finally {
+            isServiceCommand = false;
+        }
+    }
+
+    public void writeEtacsCodingVariant(String coding) {
+        isServiceCommand = true;
+        ArrayList<Integer> buffer = null;
+        try {
+            if (startDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
+                int seed = requestSeed();
+                if (seed != 0) {
+                    int skey = calculateSKey(seed);
+                    String skey1 =
+                            String.format("%02X%02X%02X%02X",
+                                    (skey >> 24) & 0xFF,
+                                    (skey >> 16) & 0xFF,
+                                    (skey >> 8) & 0xFF,
+                                    skey & 0xFF
+                            );
+                    String command = "06" + "2702" + skey1;
+                    buffer = runObdCommand(command, socket);
+                    if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
+                        Log.d(TAG, "Write Etacs Variant: ");
+                        writeCoding("3BB0", coding);
+                    }
+                }
+                stopDiagnosticSession(BLOCK_620, BLOCK_RX_504);
+            }
+        } finally {
+            isServiceCommand = false;
+        }
+    }
+
+    public ArrayList<Integer> readEngineCoding() {
+        ArrayList<Integer> buffer = null;
+        isServiceCommand = true;
+        try {
+            if (startDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8)) {
+                buffer = runObdCommand("21C0", socket);
+                Log.d(TAG, "Engine Coding: " + buffer);
+                Log.d(TAG, "Engine Coding: " + bufferToHex(buffer, 0, true));
+
+                stopDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8);
+            }
+        } finally {
+            isServiceCommand = false;
+        }
+        return buffer;
+    }
+
+    public void writeEngineCoding(String coding) {
+        isServiceCommand = true;
+        ArrayList<Integer> buffer = null;
+        try {
+            if (startDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8)) {
+                int seed = requestSeed();
+                if (seed != 0) {
+                    int skey = calculateSKey(seed);
+                    String skey1 =
+                            String.format("%02X%02X%02X%02X",
+                                    (skey >> 24) & 0xFF,
+                                    (skey >> 16) & 0xFF,
+                                    (skey >> 8) & 0xFF,
+                                    skey & 0xFF
+                            );
+                    String command = "06" + "2702" + skey1;
+                    buffer = runObdCommand(command, socket);
+                    if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
+                        Log.d(TAG, "Write Engine Coding: ");
+                        writeCoding("3BC0", coding);
+                    }
+                }
+                stopDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8);
+            }
+        } finally {
+            isServiceCommand = false;
+        }
     }
 
     private ArrayList<Integer> runObdCommand(String PID, BluetoothSocket sock) {

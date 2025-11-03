@@ -40,6 +40,16 @@ public class ObdConstants {
     public static final String BLOCK_RX_763 = "764";   // PARKING
     public static final String BLOCK_763_PID_2101 = "2101";   // PARKING
 
+    public static final String BLOCK_620 = "620";   // ETACS
+    public static final String BLOCK_RX_504 = "504";   // ETACS RX
+    public static final String BLOCK_620_PID_21B2 = "21B2";   // ETACS Read Custom Coding
+    public static final String BLOCK_620_PID_3BB2 = "3BB2";   // ETACS Write Custom Coding
+    public static final String BLOCK_620_PID_21B0 = "21B0";   // ETACS Read Variant Coding
+    public static final String BLOCK_620_PID_3BB0 = "3BB0";   // ETACS Write Variant Coding
+    public static final String BLOCK_620_PID_21C0 = "21C0";   // ETACS Read Engine Coding
+    public static final String BLOCK_620_PID_3BC0 = "3BC0";   // ETACS Write Engine Coding
+    public static final String BLOCK_620_PID_2152 = "2152";   // ETACS Read Engine Coding  MH8115
+    public static final String BLOCK_620_PID_3B52 = "3B52";   // ETACS Write Engine Coding  MH8115
 
     public static final String ACTION_PREFIX = "ru.d51x.kaierutils.action.";
 
@@ -87,7 +97,9 @@ public class ObdConstants {
 
     public static final String OBD_BROADCAST_ACTION_STATUS_CHANGED = ACTION_PREFIX + "OBD_STATUS_CHANGED";
 
-
+    public static final String ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED = ACTION_PREFIX + "OBD_ETACS_CUSTOM_CODING";
+    public static final String ACTION_OBD_ETACS_VARIANT_CODING_CHANGED = ACTION_PREFIX + "OBD_ETACS_VARIANT_CODING";
+    public static final String ACTION_OBD_ENGINE_CODING_CHANGED = ACTION_PREFIX + "OBD_ENGINE_CODING";
 
     // MESSAGES ENGINE
     public static final int MESSAGE_OBD_CAN_ENGINE = 0x07E00000;
