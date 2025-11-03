@@ -30,6 +30,7 @@ import pt.lighthouselabs.obd.commands.engine.MassAirFlowObdCommand;
 import pt.lighthouselabs.obd.commands.protocol.EchoOffObdCommand;
 import pt.lighthouselabs.obd.commands.protocol.LineFeedOffObdCommand;
 import pt.lighthouselabs.obd.commands.protocol.ObdResetCommand;
+import pt.lighthouselabs.obd.commands.protocol.OdbRawCommand;
 import pt.lighthouselabs.obd.commands.protocol.SelectHeaderObdCommand;
 import pt.lighthouselabs.obd.commands.protocol.SelectProtocolObdCommand;
 import pt.lighthouselabs.obd.enums.ObdProtocols;
@@ -462,19 +463,41 @@ public class Obd2 {
         try {
             Thread.sleep(2000);
             ArrayList<Integer> buffer = null;
-            buffer = runObdCommand("3106", socket); //023106
+
+            setHeaders(BLOCK_6A0, BLOCK_RX_514, true);
+            String s = runObdStringCommand("ATAL", socket);
+            Log.d(TAG, "ATAL = " +  s);
+
+            s = runObdStringCommand("ATCAF0", socket);
+            Log.d(TAG, "ATCAF0 = " +  s);
+
+            s = runObdStringCommand("ATCFС0", socket);
+            Log.d(TAG, "ATCFC0 = " +  s);
+
+            s = runObdStringCommand("ATST05", socket);
+            Log.d(TAG, "ATST05 = " +  s);
+
+            s = runObdStringCommand("021092", socket); //023106
+            Log.d(TAG, "1092 = " +  s);
+
+            s = runObdStringCommand("023106", socket); //023106
+            Log.d(TAG, "3106 = " +  s);
 
             String cmd = "1008" + "3BDE" + String.format("%1$02X", (distance / 100) & 0xFF) + "00FFFF";
-            buffer = runObdCommand(cmd, socket);
-            Log.d(TAG, buffer.toString());
-            Thread.sleep(50);
-            cmd = "21"  + String.format("%1$02X", period & 0xFF) + "FF";
-            buffer = runObdCommand(cmd, socket);
+            s = runObdStringCommand(cmd, socket);
+            Log.d(TAG, "10083BDE... = " +  s);
 
-            res = buffer.get(0) == 0x71 && buffer.get(1) == 0x06;
-            runObdCommand("21BC", socket);
+            //Log.d(TAG, buffer.toString());
+            //Thread.sleep(50);
+            cmd = "21"  + String.format("%1$02X", period & 0xFF); // + "FF";
+            s = runObdStringCommand(cmd, socket);
+            Log.d(TAG, "21... = " +  s);
+
+            //res = buffer.get(0) == 0x71 && buffer.get(1) == 0x06;
+            //runObdCommand("21BC", socket);
 
             Thread.sleep(2000);
+            init();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -487,6 +510,16 @@ public class Obd2 {
             CanObdCommand cmd = new CanObdCommand(PID);
             cmd.run(sock.getInputStream(), sock.getOutputStream());
             return cmd.getBuffer();
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String runObdStringCommand(String command, BluetoothSocket sock) {
+        try {
+            OdbRawCommand rawCmd = new OdbRawCommand(command);
+            rawCmd.run(sock.getInputStream(), sock.getOutputStream());
+            return rawCmd.getFormattedResult();
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
