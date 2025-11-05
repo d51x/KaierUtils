@@ -8,7 +8,7 @@ public class StringUtils {
         StringBuilder res = new StringBuilder();
         if (buffer.size() > 1 && fromIdx < buffer.size()) {
             for (int i = fromIdx; i < buffer.size(); i++) {
-                res.append(Integer.toHexString(buffer.get(i)).toUpperCase());
+                res.append(String.format("%02X", buffer.get(i)));
                 if (withSpace) {
                     res.append(" ");
                 }

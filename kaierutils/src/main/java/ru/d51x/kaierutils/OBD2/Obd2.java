@@ -404,11 +404,7 @@ public class Obd2 {
 
     private boolean startExtendedDiagnosticSession(String blokcId, String rxAddr) {
         ArrayList<Integer> buffer = null;
-        activeMAF = false;
         setHeaders(blokcId, rxAddr, true);
-        buffer = runObdCommand("1081", socket);
-        Log.d(TAG, "1081 = " + buffer);
-
         buffer = runObdCommand("1092", socket);
         Log.d(TAG, "1092 = " + buffer);
         // 1092 ==> 5092
@@ -417,12 +413,8 @@ public class Obd2 {
 
     private boolean stopDiagnosticSession(String blokcId, String rxAddr) {
         ArrayList<Integer> buffer = null;
-        activeMAF = false;
-        setHeaders(blokcId, rxAddr, false);
-
         buffer = runObdCommand("1081", socket);
         Log.d(TAG, "1081 = " + buffer);
-
         return buffer.get(0) == 0x50 && buffer.get(1) == 0x92;
     }
 
@@ -438,7 +430,7 @@ public class Obd2 {
                     int skey = calculateSkeyCVT(seed);
                     ArrayList<Integer> buffer = null;
                     // 06 27 02 AA BB CC DD
-                    String command = "06" + "2702" + String.format("%04x", skey).toUpperCase();
+                    String command = "06" + "2702" + String.format("%04X", skey);
                     Log.d(TAG, "cmd = " + command);
 
                     buffer = runObdCommand(command, socket);
@@ -487,13 +479,13 @@ public class Obd2 {
             //s = runObdStringCommand("023106", socket); //023106
             //Log.d(TAG, "3106 = " +  s);
 
-            String cmd = "1008" + "3BDE" + String.format("%1$02X", (distance / 100) & 0xFF) + "00FFFF";
+            String cmd = "1008" + "3BDE" + String.format("%02X", (distance / 100) & 0xFF) + "00FFFF";
             buffer = runObdCommand(cmd, socket);
             Log.d(TAG, "10083BDE... = " +  buffer); // 30 08 14 FF FF FF FF FF
 
             //Log.d(TAG, buffer.toString());
             //Thread.sleep(50);
-            cmd = "21"  + String.format("%1$02X", period & 0xFF); // + "FF";
+            cmd = "21"  + String.format("%02X", period & 0xFF) + "FF";
             buffer = runObdCommand(cmd, socket);
             Log.d(TAG, "21... = " +  buffer); // 02 7B DE FF FF FF FF FF
 
@@ -516,26 +508,30 @@ public class Obd2 {
     private void writeCoding(String cmd, String coding) {
         ArrayList<Integer> buffer = null;
 
-        String command = "10" +
-                String.format("%02X", coding.length() / 2) +
-                cmd +
-                coding.substring(0, 8).toUpperCase();
-        Log.d(TAG, " >>> " + command);
-
         String s = runObdStringCommand("ATAL", socket);
         Log.d(TAG, "ATAL = " +  s);
         s = runObdStringCommand("ATCAF0", socket);
         Log.d(TAG, "ATCAF0 = " +  s); // OK
-//        s = runObdStringCommand("ATST05", socket);
-//        Log.d(TAG, "ATST05 = " +  s);
+
+        s = runObdStringCommand("ATCFС0", socket);
+        Log.d(TAG, "ATCFС0 = " +  s); // OK
+
+        s = runObdStringCommand("ATST05", socket);
+        Log.d(TAG, "ATST05 = " +  s);
+
+        String command = "10" +
+                String.format("%02X", coding.length() / 2 + 2) +  // +2 bytes = command size 3BB2
+                cmd +
+                coding.substring(0, 8).toUpperCase();
+        Log.d(TAG, " >>> " + command);
 
         buffer = runObdCommand(command, socket);
         Log.d(TAG, " <<< " + buffer);
         Log.d(TAG, " <<< " + bufferToHex(buffer, 0, true));
 
-        int frame = 0x21;
+        int frame = 1;
         for (int i = 8; i < coding.length(); i += 14) {
-            command = Integer.toHexString(frame) + coding.substring(i, i + 14);
+            command = String.format("%02X", 0x20 + frame) + coding.substring(i, i + 14);
             Log.d(TAG, " >>> " + command);
 
 //            buffer = runObdCommand(command, socket);
@@ -543,8 +539,11 @@ public class Obd2 {
 //            Log.d(TAG, " <<< " + bufferToHex(buffer, 0, true));
             Log.d(TAG, " <<< " + ss);
 
-            frame += 1;
+            frame++;
         }
+
+        // команда 3BB2
+        // ответ 7BB2 = 3BB2 + 0x4000 т.е.   успешно
     }
 
     public ArrayList<Integer> readEtacsCodingCustom() {
@@ -612,7 +611,7 @@ public class Obd2 {
                 int seed = requestSeed();
                 if (seed != 0) {
                     int skey = calculateSkeyEtacs(seed, 0); // TODO: put correct ecu type
-                    String command = "06" + "2702" + String.format("%04x", skey).toUpperCase();
+                    String command = "06" + "2702" + String.format("%04X",skey);
                     buffer = runObdCommand(command, socket);
                     if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
                         Log.d(TAG, "Write Etacs Variant: ");
