@@ -402,19 +402,10 @@ public class Obd2 {
         return seed;
     }
 
-    private boolean startDiagnosticSession(String blokcId, String rxAddr) {
+    private boolean startExtendedDiagnosticSession(String blokcId, String rxAddr) {
         ArrayList<Integer> buffer = null;
         activeMAF = false;
         setHeaders(blokcId, rxAddr, true);
-
-        //String s = runObdStringCommand("ATAL", socket);
-//            if (s.equals("OK")) {
-//
-//            }
-        //Log.d(TAG, "ATAL = " +  s); // OK
-
-        //s = runObdStringCommand("ATCAF0", socket);
-        //Log.d(TAG, "ATCAF0 = " +  s); // OK
         buffer = runObdCommand("1081", socket);
         Log.d(TAG, "1081 = " + buffer);
 
@@ -441,7 +432,7 @@ public class Obd2 {
         try {
             Thread.sleep(2000);
 
-            if (startDiagnosticSession(BLOCK_7E1, BLOCK_RX_7E9)) {
+            if (startExtendedDiagnosticSession(BLOCK_7E1, BLOCK_RX_7E9)) {
                 int seed = requestSeed();
                 if (seed != 0) {
                     int skey = calculateSkeyCVT(seed);
@@ -531,6 +522,13 @@ public class Obd2 {
                 coding.substring(0, 8).toUpperCase();
         Log.d(TAG, " >>> " + command);
 
+        String s = runObdStringCommand("ATAL", socket);
+        Log.d(TAG, "ATAL = " +  s);
+        s = runObdStringCommand("ATCAF0", socket);
+        Log.d(TAG, "ATCAF0 = " +  s); // OK
+//        s = runObdStringCommand("ATST05", socket);
+//        Log.d(TAG, "ATST05 = " +  s);
+
         buffer = runObdCommand(command, socket);
         Log.d(TAG, " <<< " + buffer);
         Log.d(TAG, " <<< " + bufferToHex(buffer, 0, true));
@@ -540,8 +538,10 @@ public class Obd2 {
             command = Integer.toHexString(frame) + coding.substring(i, i + 14);
             Log.d(TAG, " >>> " + command);
 
-            buffer = runObdCommand(command, socket);
-            Log.d(TAG, " <<< " + bufferToHex(buffer, 0, true));
+//            buffer = runObdCommand(command, socket);
+            String ss = runObdStringCommand(command, socket);
+//            Log.d(TAG, " <<< " + bufferToHex(buffer, 0, true));
+            Log.d(TAG, " <<< " + ss);
 
             frame += 1;
         }
@@ -552,7 +552,7 @@ public class Obd2 {
         isServiceCommand = true;
         try {
             Thread.sleep(2000);
-            if (startDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
+            if (startExtendedDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
                 buffer = runObdCommand("21B2", socket);
                 Log.d(TAG, "Etacs Custom: " + buffer);
                 Log.d(TAG, "Etacs Custom: " + bufferToHex(buffer, 0, true));
@@ -570,13 +570,16 @@ public class Obd2 {
         ArrayList<Integer> buffer = null;
         isServiceCommand = true;
         try {
-            if (startDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
+            Thread.sleep(2000);
+            if (startExtendedDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
                 buffer = runObdCommand("21B0", socket);
                 Log.d(TAG, "Etacs Variant: " + buffer);
                 Log.d(TAG, "Etacs Variant: " + bufferToHex(buffer, 0, true));
 
                 stopDiagnosticSession(BLOCK_620, BLOCK_RX_504);
             }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         } finally {
             isServiceCommand = false;
         }
@@ -587,11 +590,14 @@ public class Obd2 {
         isServiceCommand = true;
         ArrayList<Integer> buffer = null;
         try {
-            if (startDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
+            Thread.sleep(2000);
+            if (startExtendedDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
                 Log.d(TAG, "Write Etacs Custom: ");
                 writeCoding("3BB2", coding);
             }
             stopDiagnosticSession(BLOCK_620, BLOCK_RX_504);
+        }  catch (InterruptedException e) {
+            throw new RuntimeException(e);
         } finally {
             isServiceCommand = false;
         }
@@ -601,7 +607,8 @@ public class Obd2 {
         isServiceCommand = true;
         ArrayList<Integer> buffer = null;
         try {
-            if (startDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
+            Thread.sleep(2000);
+            if (startExtendedDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
                 int seed = requestSeed();
                 if (seed != 0) {
                     int skey = calculateSkeyEtacs(seed, 0); // TODO: put correct ecu type
@@ -614,6 +621,8 @@ public class Obd2 {
                 }
                 stopDiagnosticSession(BLOCK_620, BLOCK_RX_504);
             }
+        }  catch (InterruptedException e) {
+            throw new RuntimeException(e);
         } finally {
             isServiceCommand = false;
         }
@@ -623,13 +632,16 @@ public class Obd2 {
         ArrayList<Integer> buffer = null;
         isServiceCommand = true;
         try {
-            if (startDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8)) {
+            Thread.sleep(2000);
+            if (startExtendedDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8)) {
                 buffer = runObdCommand("21C0", socket);
                 Log.d(TAG, "Engine Coding: " + buffer);
                 Log.d(TAG, "Engine Coding: " + bufferToHex(buffer, 0, true));
 
                 stopDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8);
             }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         } finally {
             isServiceCommand = false;
         }
@@ -640,7 +652,8 @@ public class Obd2 {
         isServiceCommand = true;
         ArrayList<Integer> buffer = null;
         try {
-            if (startDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8)) {
+            Thread.sleep(2000);
+            if (startExtendedDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8)) {
                 int seed = requestSeed();
                 if (seed != 0) {
                     int skey = calculateSkeyEngine(seed);
@@ -660,6 +673,8 @@ public class Obd2 {
                 }
                 stopDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8);
             }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         } finally {
             isServiceCommand = false;
         }

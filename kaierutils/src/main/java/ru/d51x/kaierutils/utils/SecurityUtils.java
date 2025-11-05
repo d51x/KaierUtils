@@ -27,6 +27,22 @@ public class SecurityUtils {
         return calculateSkey(seed, 0x67, 0x4206); // TODO find correct a and b
     }
 
+    // Vendors:
+    // 0 - Lear
+    // 2 - other, except continental
+    // 3 - Omron
+    // 4 - denso
+    // 5 - melco
+    //
+    // Vendor ETACS определяется по PartNumber блока
+    // omron - 8637B2 8637A99 8637A84 8637B73 8637B051 8637B054 8637B074 8637A910
+    // если такиое не нашлось, то все остальное это ....
+    // lear - 8637A
+    // continental - 8637B
+    //
+     // Vendor Engine
+    // melco - 1860D 1860B551 1860C295 1860C440 1860C445 1860C901 1860C902 1860C903
+    // остальное 1860 - denso
     public static int calculateSkeyEtacs(int seed, int ecuType) {
         int a = 0x89;
         int b = 0x2012;
