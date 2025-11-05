@@ -141,7 +141,7 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
             runOnUiThread(() -> {
                 ArrayList<Integer> buffer = App.obd.readEtacsCodingCustom();
                 if (buffer != null) {
-                    String s = bufferToHex(buffer, 0, false);
+                    String s = bufferToHex(buffer, 2, false);
                     edtEtacsCustom.setText(s);
                     edtEtacsCustom.setEnabled(true);
                 }
@@ -163,7 +163,7 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
             runOnUiThread(() -> {
                 ArrayList<Integer> buffer = App.obd.readEtacsCodingVariant();
                 if (buffer != null) {
-                    String s = bufferToHex(buffer, 0, false);
+                    String s = bufferToHex(buffer, 2, false);
                     edtEtacsVariant.setText(s);
                     edtEtacsVariant.setEnabled(true);
                 }
@@ -185,7 +185,7 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
             runOnUiThread(() -> {
                 ArrayList<Integer> buffer = App.obd.readEngineCoding();
                 if (buffer != null) {
-                    String s = bufferToHex(buffer, 0, false);
+                    String s = bufferToHex(buffer, 2, false);
                     edtEngineCoding.setText(s);
                     edtEngineCoding.setEnabled(true);
                 }
