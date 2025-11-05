@@ -588,23 +588,8 @@ public class Obd2 {
         ArrayList<Integer> buffer = null;
         try {
             if (startDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
-                int seed = requestSeed();
-                if (seed != 0) {
-                    int skey = calculateSKey(seed);
-                    String skey1 =
-                            String.format("%02X%02X%02X%02X",
-                                    (skey >> 24) & 0xFF,
-                                    (skey >> 16) & 0xFF,
-                                    (skey >> 8) & 0xFF,
-                                    skey & 0xFF
-                            );
-                    String command = "06" + "2702" + skey1;
-                    buffer = runObdCommand(command, socket);
-                    if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
-                        Log.d(TAG, "Write Etacs Custom: ");
-                        writeCoding("3BB2", coding);
-                    }
-                }
+                Log.d(TAG, "Write Etacs Custom: ");
+                writeCoding("3BB2", coding);
             }
             stopDiagnosticSession(BLOCK_620, BLOCK_RX_504);
         } finally {
@@ -619,15 +604,8 @@ public class Obd2 {
             if (startDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
                 int seed = requestSeed();
                 if (seed != 0) {
-                    int skey = calculateSKey(seed);
-                    String skey1 =
-                            String.format("%02X%02X%02X%02X",
-                                    (skey >> 24) & 0xFF,
-                                    (skey >> 16) & 0xFF,
-                                    (skey >> 8) & 0xFF,
-                                    skey & 0xFF
-                            );
-                    String command = "06" + "2702" + skey1;
+                    int skey = calculateSkeyEtacs(seed, 0); // TODO: put correct ecu type
+                    String command = "06" + "2702" + String.format("%04x", skey).toUpperCase();
                     buffer = runObdCommand(command, socket);
                     if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
                         Log.d(TAG, "Write Etacs Variant: ");
@@ -665,7 +643,7 @@ public class Obd2 {
             if (startDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8)) {
                 int seed = requestSeed();
                 if (seed != 0) {
-                    int skey = calculateSKey(seed);
+                    int skey = calculateSkeyEngine(seed);
                     String skey1 =
                             String.format("%02X%02X%02X%02X",
                                     (skey >> 24) & 0xFF,
