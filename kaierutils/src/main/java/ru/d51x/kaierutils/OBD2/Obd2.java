@@ -2,6 +2,9 @@ package ru.d51x.kaierutils.OBD2;
 
 import static ru.d51x.kaierutils.OBD2.ObdConstants.*;
 import static ru.d51x.kaierutils.utils.MessageUtils.SendBroadcastAction;
+import static ru.d51x.kaierutils.utils.SecurityUtils.calculateSkeyCVT;
+import static ru.d51x.kaierutils.utils.SecurityUtils.calculateSkeyEngine;
+import static ru.d51x.kaierutils.utils.SecurityUtils.calculateSkeyEtacs;
 import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
 
 import android.Manifest;
@@ -398,24 +401,6 @@ public class Obd2 {
         }
         return seed;
     }
-    private int calculateSKey(int seed) {
-        int b0 = (seed >> 24) & 0xFF;
-        int b1 = (seed >> 16) & 0xFF;
-        int b2 = (seed >> 8) & 0xFF;
-        int b3 = (seed & 0xFF);
-
-        int a =  (((b0 << 8) | b1) << 3) & 0xFFFF;
-        int b = (b2 << 8) | b3;
-
-        int c = (b << 3) & 0xFFFF;
-        int d = (a << 4) & 0xFFFF;
-        int e = (c << 4) & 0xFFFF;
-
-        a = (a + 0x1209 + d) & 0xFFFF;
-        c = (c + 0x1209 + e) & 0xFFFF;
-
-        return a * 0x10000 + c;
-    }
 
     private boolean startDiagnosticSession(String blokcId, String rxAddr) {
         ArrayList<Integer> buffer = null;
@@ -458,31 +443,11 @@ public class Obd2 {
 
             if (startDiagnosticSession(BLOCK_7E1, BLOCK_RX_7E9)) {
                 int seed = requestSeed();
-                Log.d(TAG, "Seed = " + seed);
-                Log.d(TAG, "Seed = " + Integer.toHexString(seed));
-                Log.d(TAG, "Seed = " +
-                        String.format("%02X%02X%02X%02X",
-                                (seed >> 24) & 0xFF,
-                                (seed >> 16) & 0xFF,
-                                (seed >> 8) & 0xFF,
-                                seed & 0xFF
-                        )
-                );
-
                 if (seed != 0) {
-                    int skey = calculateSKey(seed);
+                    int skey = calculateSkeyCVT(seed);
                     ArrayList<Integer> buffer = null;
                     // 06 27 02 AA BB CC DD
-                    String skey1 =
-                            String.format("%02X%02X%02X%02X",
-                                    (skey >> 24) & 0xFF,
-                                    (skey >> 16) & 0xFF,
-                                    (skey >> 8) & 0xFF,
-                                    skey & 0xFF
-                            );
-                    Log.d(TAG, "SKEY = " + skey1);
-                    Log.d(TAG, "_SKEY_ = " + Integer.toHexString(skey).toUpperCase());
-                    String command = "06" + "2702" + skey1;
+                    String command = "06" + "2702" + String.format("%04x", skey).toUpperCase();
                     Log.d(TAG, "cmd = " + command);
 
                     buffer = runObdCommand(command, socket);
