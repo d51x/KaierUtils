@@ -15,10 +15,16 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import ru.d51x.kaierutils.Data.EtacsCustomCoding;
 
 public class EtacsActivity  extends Activity implements View.OnClickListener {
     public static final String TAG = "Etacs";
@@ -31,6 +37,7 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
     private Button btnEtacsWriteVariant;
     private Button btnEngineCodingRead;
     private Button btnEngineCodingWrite;
+    private ListView lvEtacsCustom;
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -75,6 +82,20 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
 
         btnEngineCodingWrite = findViewById(R.id.btnEngineCodingWrite);
         btnEngineCodingWrite.setOnClickListener(this);
+
+        lvEtacsCustom = findViewById(R.id.lvEtacsCustom);
+        ArrayAdapter<EtacsCustomCoding> etacsCustomCodingAdapter = new ArrayAdapter<EtacsCustomCoding>(this, R.layout.list_item_coding, EtacsCustomCoding.values());
+        lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
+        lvEtacsCustom.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void onItemClick(AdapterView<?> parent, View itemClicked, int position,
+                                    long id) {
+                Toast.makeText(getApplicationContext(),
+                        String.format("position = %d, id = %d", position, id),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED));
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ETACS_VARIANT_CODING_CHANGED));

@@ -44,11 +44,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
         android:text="Variant:"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtEtacsCustom" />
+        app:layout_constraintTop_toBottomOf="@+id/lvEtacsCustom" />
 
     <TextView
         android:id="@+id/textView4"
@@ -115,12 +114,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintGuide_begin="193dp" />
-
     <TextView
         android:id="@+id/textView28"
         android:layout_width="wrap_content"
@@ -174,6 +167,14 @@
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnEngineCodingRead" />
+
+    <ListView
+        android:id="@+id/lvEtacsCustom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtEtacsCustom" />
 
 
 </android.support.constraint.ConstraintLayout>
