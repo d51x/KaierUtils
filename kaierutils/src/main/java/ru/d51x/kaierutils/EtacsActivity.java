@@ -110,7 +110,6 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                 if (e == null) return;
                 int idx = e.getByteIdx();
 
-                // TODO: нужно указать активную опцию в диалоге
                 ArrayList<String> options = getAvailableOptions(e.getIdx());
                 CharSequence[] radioValues = options.toArray(new CharSequence[0]);
                 final int[] selectedValue = {-1};
@@ -122,6 +121,7 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                         selectedValue[0] = selected;
                         Log.d("ETACS", "selected value = " + selectedValue[0]);
                         // TODO: нужно изменить значение у опции на основе выбранного результата и выставить флаг, что есть активные изменения
+
                     }
                 });
                 dialog.show();
