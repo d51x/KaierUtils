@@ -611,7 +611,7 @@ public class Obd2 {
                 int seed = requestSeed();
                 if (seed != 0) {
                     int skey = calculateSkeyEtacs(seed, 0); // TODO: put correct ecu type
-                    String command = "06" + "2702" + String.format("%04X",skey);
+                    String command = "06" + "2702" + String.format("%08X",skey);
                     buffer = runObdCommand(command, socket);
                     if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
                         Log.d(TAG, "Write Etacs Variant: ");
@@ -656,14 +656,7 @@ public class Obd2 {
                 int seed = requestSeed();
                 if (seed != 0) {
                     int skey = calculateSkeyEngine(seed);
-                    String skey1 =
-                            String.format("%02X%02X%02X%02X",
-                                    (skey >> 24) & 0xFF,
-                                    (skey >> 16) & 0xFF,
-                                    (skey >> 8) & 0xFF,
-                                    skey & 0xFF
-                            );
-                    String command = "06" + "2702" + skey1;
+                    String command = "06" + "2702" + String.format("%08X", skey);
                     buffer = runObdCommand(command, socket);
                     if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
                         Log.d(TAG, "Write Engine Coding: ");
