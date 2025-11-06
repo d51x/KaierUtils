@@ -110,12 +110,12 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                 if (e == null) return;
                 int idx = e.getByteIdx();
 
-                // TODO: нужно сгенерировать список в зависимости от опции и указать активную опцию в диалоге
+                // TODO: нужно указать активную опцию в диалоге
                 ArrayList<String> options = getAvailableOptions(e.getIdx());
-                CharSequence[] radioValues = options.toArray(new CharSequence[options.size()]);
+                CharSequence[] radioValues = options.toArray(new CharSequence[0]);
                 final int[] selectedValue = {-1};
                 RadioListDialog dialog = new RadioListDialog(EtacsActivity.this, e.getTitle(), e.getName());
-                dialog.setValuesList(radioValues);
+                dialog.setValuesList(radioValues, options.indexOf(currentValue));
                 dialog.setListener(new RadioListDialog.RadioListDialogListener() {
                     @Override
                     public void onDialogResult(int selected) {

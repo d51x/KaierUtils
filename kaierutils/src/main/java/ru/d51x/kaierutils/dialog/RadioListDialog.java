@@ -42,8 +42,8 @@ public class RadioListDialog {
         });
     }
 
-    public void setValuesList(CharSequence[] values) {
-        dialog.setSingleChoiceItems(values, -1, new DialogInterface.OnClickListener() {
+    public void setValuesList(CharSequence[] values, int current) {
+        dialog.setSingleChoiceItems(values, current, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialogInterface, int item) {
