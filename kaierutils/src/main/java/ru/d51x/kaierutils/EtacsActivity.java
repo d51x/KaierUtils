@@ -7,14 +7,12 @@ import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
 import static ru.d51x.kaierutils.utils.StringUtils.hexStringToBuffer;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import ru.d51x.kaierutils.Data.EtacsCustomCoding;
+import ru.d51x.kaierutils.dialog.RadioListDialog;
 
 public class EtacsActivity  extends Activity implements View.OnClickListener {
     public static final String TAG = "Etacs";
@@ -110,9 +109,26 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                 if (e == null) return;
                 int idx = e.getByteIdx();
 
-                Toast.makeText(getApplicationContext(),
-                        String.format("%s = %s", e.getTitle(), currentValue),
-                        Toast.LENGTH_SHORT).show();
+                CharSequence[] radioValues = new CharSequence[4];
+                radioValues[0] = "string 1";
+                radioValues[1] = "string 2";
+                radioValues[2] = "string 3";
+                radioValues[3] = "string 4";
+                final int[] selectedValue = {-1};
+                RadioListDialog dialog = new RadioListDialog(EtacsActivity.this, e.getTitle(), e.getName());
+                dialog.setValuesList(radioValues);
+                dialog.setListener(new RadioListDialog.RadioListDialogListener() {
+                    @Override
+                    public void onDialogResult(int selected) {
+                        selectedValue[0] = selected;
+                        Log.d("ETACS", "selected value = " + selectedValue[0]);
+                    }
+                });
+                dialog.show();
+
+//                Toast.makeText(getApplicationContext(),
+//                        String.format("%s = %s", e.getTitle(), currentValue),
+//                        Toast.LENGTH_SHORT).show();
             }
         });
 
