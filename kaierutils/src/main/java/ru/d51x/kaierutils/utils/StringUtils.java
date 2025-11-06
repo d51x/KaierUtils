@@ -18,12 +18,13 @@ public class StringUtils {
     }
 
     public static ArrayList<Integer> hexStringToBuffer(String hexStr, int fromIdx) {
-        ArrayList<Integer> buffer = null;
+        ArrayList<Integer> buffer = new ArrayList<>();
         if (hexStr.length() > 2 && hexStr.length() % 2 == 0 &&
                 fromIdx < hexStr.length() && fromIdx % 2 == 0) {
             for (int i = fromIdx; i < hexStr.length(); i += 2) {
-                String s = hexStr.substring(i, i + 1);
-                buffer.add(Integer.parseInt(s, 16));
+                String s = hexStr.substring(i, i + 2);
+                int val = Integer.parseInt(s, 16);
+                buffer.add(val);
             }
         }
         return buffer;

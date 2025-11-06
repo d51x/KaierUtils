@@ -70,4 +70,384 @@ public enum EtacsCustomCoding {
         this.mask = mask;
         this.leftShift = leftShift;
     }
+
+    public static EtacsCustomCoding getById(int id) {
+        for (EtacsCustomCoding e: values()) {
+            if (e.idx == id) {
+                return e;
+            }
+        }
+        return EtacsCustomCoding.ETACS_CUSTOM_UNKNOWN;
+    }
+
+    public int getIdx() {
+        return idx;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getByteIdx() {
+        return byteIdx;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public int getStartBit() {
+        return startBit;
+    }
+
+    public int getMask() {
+        return mask;
+    }
+
+    public static String getCurrentValue(int id, int val) {
+        switch (id) {
+            case 1:
+                switch(val) {
+                    case 0: return "ACC or IG1";
+                    case 1: return "IG1";
+                    default: return "Cannot change";
+                }
+            case 2:
+                switch(val) {
+                    case 0: return "Disabled";
+                    case 1: return "Enable";
+                    default: return "Cannot change";
+                }
+            case 3:
+                switch(val) {
+                    case 0: return "Lock:1, Unlock:2";
+                    case 1: return "Lock:1, Unlock:0";
+                    case 2: return "Lock:0, Unlock:2";
+                    case 3: return "Lock:2, Unlock:1";
+                    case 4: return "Lock:0, Unlock:1";
+                    case 5: return "Lock:2, Unlock:0";
+                    case 6: return "Lock:0, Unlock:0";
+                    default: return "Cannot change";
+                }
+            case 4:
+                switch(val) {
+                    case 0: return "Normal INT";
+                    case 1: return "Variable INT";
+                    case 2: return "Speed Sensitive";
+                    case 3: return "Rain Sensitive";
+                    default: return "Cannot change";
+                }
+            case 5:
+                switch(val) {
+                    case 0: return "Only Washer";
+                    case 1: return "Washer & Wiper";
+                    case 2: return "With after wipe";
+                    default: return "Cannot change";
+                }
+            case 6:
+                switch(val) {
+                    case 0: return "0 sec";
+                    case 1: return "4 sec";
+                    case 2: return "8 sec";
+                    case 3: return "16 sec";
+                    default: return "Cannot change";
+                }
+            case 7:
+                switch(val) {
+                    case 0: return "Disabled";
+                    case 1: return "Enable";
+                    default: return "Cannot change";
+                }
+            case 8:
+                switch(val) {
+                    case 0: return "Not Auto";
+                    case 1: return "Open Vehicle SPD";
+                    case 2: return "Open/Close by IG";
+                    case 3: return "OPN/CLS Keyless";
+                    default: return "Cannot change";
+                }
+            case 9:
+                switch(val) {
+                    case 0: return "Level1 bright";
+                    case 1: return "Level2 bright";
+                    case 2: return "Level3";
+                    case 3: return "Level4 dark";
+                    case 4: return "Level5 dark";
+                    default: return "Cannot change";
+                }
+            case 10:
+                switch(val) {
+                    case 0: return "Disabled";
+                    case 1: return "Enable";
+                    default: return "Cannot select";
+                }
+            case 11:
+                switch(val) {
+                    case 0: return "0 sec";
+                    case 1: return "7.5 sect";
+                    case 2: return "15 sec";
+                    case 3: return "30 sec";
+                    case 4: return "60 sec";
+                    case 5: return "120 sec";
+                    case 6: return "180 sec";
+                    default: return "Cannot change";
+                }
+            case 12:
+                switch(val) {
+                    case 0: return "Disable";
+                    case 1: return "Enable (A-spec.)";
+                    case 2: return "Enable (B-spec.)";
+                    case 3: return "Enable (C-spec.)";
+                    case 4: return "Enable (D-spec.)";
+                    case 5: return "Enable (E-spec.)";
+                    default: return "Cannot change";
+                }
+            case 13:
+                switch(val) {
+                    case 0: return "Disable";
+                    case 1: return "3 min";
+                    case 2: return "30 min";
+                    case 3: return "60 min";
+                    default: return "Cannot change";
+                }
+            case 14:
+                switch(val) {
+                    case 0: return "Disable";
+                    case 1: return "Relock";
+                    case 2: return "Not relock";
+                    default: return "Cannot change";
+                }
+            case 15:
+                switch(val) {
+                    case 0: return "Disable";
+                    case 1: return "Always (P pos)";
+                    case 2: return "P/W unlock (P)";
+                    case 3: return "Always (Lock pos)";
+                    case 4: return "P/W unlock (Lock)";
+                    default: return "Cannot change";
+                }
+            case 16:
+                switch(val) {
+                    case 0: return "All Doors Unlock";
+                    case 1: return "Dr door Unlock";
+                    default: return "Cannot change";
+                }
+            case 17:
+                switch(val) {
+                    case 0: return "Enable";
+                    case 1: return "Disable";
+                    default: return "Cannot select";
+                }
+            case 18:
+                switch(val) {
+                    case 0: return "Twice";
+                    case 1: return "Once";
+                    default: return "Cannot select";
+                }
+            case 19:
+                switch(val) {
+                    case 0: return "Not sound horn";
+                    case 1: return "Lock any time";
+                    case 2: return "Lock/auto ON";
+                    case 3: return "W lock any time";
+                    default: return "Cannot select";
+                }
+            case 20:
+                switch(val) {
+                    case 0: return "Not sound buzzer";
+                    case 1: return "At KOS";
+                    case 2: return "At keyless";
+                    case 3: return "At Both";
+                    default: return "Cannot select";
+                }
+            case 21:
+                switch(val) {
+                    case 0: return "30 sec";
+                    case 1: return "60 sec";
+                    case 2: return "120 sec";
+                    case 3: return "180 sec";
+                    default: return "Cannot select";
+                }
+            case 22:
+                switch(val) {
+                    case 0: return "Disabled";
+                    case 1: return "Enable";
+                    default: return "Cannot change";
+                }
+            case 23:
+                switch(val) {
+                    case 0: return "0 sec";
+                    case 1: return "30 sec";
+                    case 2: return "180 sec";
+                    case 3: return "600 sec";
+                    default: return "Cannot change";
+                }
+            case 24:
+                switch(val) {
+                    case 0: return "10 sec";
+                    case 1: return "6 sec";
+                    default: return "Cannot change";
+                }
+            case 25:
+                switch(val) {
+                    case 0: return "Disable";
+                    case 1: return "P/W:O&C, D/M:O&C";
+                    case 2: return "P/W:O&C";
+                    case 3: return "P/W:C, D/M:O&C";
+                    case 4: return "D/M:O&C";
+                    case 5: return "P/W:C";
+                    default: return "Cannot change";
+                }
+            case 26:
+                switch(val) {
+                    case 0: return "Disable";
+                    case 1: return "Enable";
+                    default: return "Cannot change";
+                }
+            case 27:
+                switch(val) {
+                    case 0: return "Short";
+                    case 1: return "Long";
+                    default: return "Cannot change";
+                }
+            case 28:
+                switch(val) {
+                    case 0: return "Enable";
+                    case 1: return "Disable";
+                    default: return "Cannot change";
+                }
+            case 29:
+                switch(val) {
+                    case 0: return "Both enable";
+                    case 1: return "DoorEntry enable";
+                    case 2: return "ENG start enable";
+                    case 3: return "Both disable";
+                    default: return "Cannot change";
+                }
+            case 30:
+                switch(val) {
+                    case 0: return "0 sec";
+                    case 1: return "3 sec";
+                    case 2: return "5 sec";
+                    default: return "Cannot change";
+                }
+            case 31:
+                switch(val) {
+                    case 0: return "Disable";
+                    case 1: return "Enable";
+                    default: return "Cannot change";
+                }
+            case 32:
+                switch(val) {
+                    case 0: return "Enable";
+                    case 1: return "Disable";
+                    default: return "Cannot change";
+                }
+            case 33:
+                switch(val) {
+                    case 0: return "Enable";
+                    case 1: return "Disable";
+                    default: return "Cannot change";
+                }
+            case 34:
+                switch(val) {
+                    case 0: return "Disable";
+                    case 1: return "30 min";
+                    case 2: return "60 min";
+                    default: return "Cannot change";
+                }
+            case 35:
+                switch(val) {
+                    case 0: return "Normal";
+                    case 1: return "Long";
+                    default: return "Cannot change";
+                }
+            case 36:
+                switch(val) {
+                    case 0: return "Disable";
+                    case 1: return "Enable";
+                    default: return "Cannot change";
+                }
+            case 37:
+                switch(val) {
+                    case 0: return "Same EXT lights";
+                    case 1: return "Independe.Normal";
+                    case 2: return "Independent late";
+                    default: return "Cannot change";
+                }
+            case 38:
+                switch(val) {
+                    case 0: return "Disable";
+                    case 1: return "15 sec";
+                    case 2: return "30 sec";
+                    case 3: return "60 sec";
+                    case 4: return "180 sec";
+                    default: return "Cannot change";
+                }
+            case 39:
+                switch(val) {
+                    case 0: return "Disable";
+                    case 1: return "Small lamp";
+                    case 2: return "Head lamp";
+                    default: return "Cannot change";
+                }
+            case 40:
+                switch(val) {
+                    case 0: return "Enable(R wip.ON)";
+                    case 1: return "Enable(R/F wip.)";
+                    default: return "Cannot change";
+                }
+            case 41:
+                switch(val) {
+                    case 0: return "Level 1";
+                    case 1: return "Level 2";
+                    case 2: return "Level 3";
+                    case 3: return "Level 4";
+                    default: return "Cannot change";
+                }
+            case 42:
+                switch(val) {
+                    case 0: return "Volume 1";
+                    case 1: return "Volume 2";
+                    case 2: return "Volume 3";
+                    case 3: return "Volume auto";
+                    default: return "Cannot change";
+                }
+            case 43:
+                switch(val) {
+                    case 0: return "No sound";
+                    case 1: return "Sound 1";
+                    case 2: return "Sound 2";
+                    case 3: return "Sound 3";
+                    case 4: return "Sound 4";
+                    case 5: return "Sound 5";
+                    case 6: return "Sound 6";
+                    default: return "Cannot change";
+                }
+            case 44:
+                switch(val) {
+                    case 0: return "Disable";
+                    case 1: return "Small 30 sec";
+                    case 2: return "Small 60 sec";
+                    case 3: return "Small 180 sec";
+                    case 4: return "Head 30 sec";
+                    case 5: return "Head 60 sec";
+                    case 6: return "Head 180 sec";
+                    default: return "Cannot change";
+                }
+            case 45:
+                switch(val) {
+                    case 0: return "Disable";
+                    case 1: return "15 sec";
+                    case 2: return "30 sec";
+                    case 3: return "45 sec";
+                    default: return "Cannot change";
+                }
+            default: return "unknown";
+        }
+    }
 }

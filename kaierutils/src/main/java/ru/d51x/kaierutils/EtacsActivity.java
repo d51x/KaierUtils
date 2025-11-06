@@ -7,22 +7,27 @@ import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
 import static ru.d51x.kaierutils.utils.StringUtils.hexStringToBuffer;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import ru.d51x.kaierutils.Data.EtacsCustomCoding;
 
@@ -37,7 +42,9 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
     private Button btnEtacsWriteVariant;
     private Button btnEngineCodingRead;
     private Button btnEngineCodingWrite;
+    private Button btnTestCustomCoding;
     private ListView lvEtacsCustom;
+    private ArrayList<EtacsCustomCoding> customCodings = new ArrayList<>();
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -62,8 +69,13 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_etacs);
 
         edtEtacsCustom = findViewById(R.id.edtEtacsCustom);
+        edtEtacsCustom.setText("11302210F222120FF03F0F113F0FFFFF00000F1F2FF1FFFFFF");
+
         edtEtacsVariant = findViewById(R.id.edtEtacsVariant);
         edtEngineCoding = findViewById(R.id.edtEngineCoding);
+
+        btnTestCustomCoding = findViewById(R.id.btnTestCustomCoding);
+        btnTestCustomCoding.setOnClickListener(this);
 
         btnEtacsReadCustom = findViewById(R.id.btnEtacsReadCustom);
         btnEtacsReadCustom.setOnClickListener(this);
@@ -84,15 +96,22 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
         btnEngineCodingWrite.setOnClickListener(this);
 
         lvEtacsCustom = findViewById(R.id.lvEtacsCustom);
-        ArrayAdapter<EtacsCustomCoding> etacsCustomCodingAdapter = new ArrayAdapter<EtacsCustomCoding>(this, R.layout.list_item_coding, EtacsCustomCoding.values());
-        lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
         lvEtacsCustom.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @SuppressLint("DefaultLocale")
             @Override
             public void onItemClick(AdapterView<?> parent, View itemClicked, int position,
                                     long id) {
+
+                EtacsCustomCoding e = (EtacsCustomCoding) itemClicked.getTag(R.id.ITEM_OBJECT_TAG);
+                int byteValue = (int) itemClicked.getTag(R.id.ITEM_BYTE_VALUE_TAG);
+                String currentValue = (String) itemClicked.getTag(R.id.ITEM_CURRENT_VALUE_TAG);
+                if (customCodings.isEmpty()) return;
+
+                if (e == null) return;
+                int idx = e.getByteIdx();
+
                 Toast.makeText(getApplicationContext(),
-                        String.format("position = %d, id = %d", position, id),
+                        String.format("%s = %s", e.getTitle(), currentValue),
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -107,9 +126,33 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnEtacsReadCustom:
-                Log.d(TAG, "Read Etacs Custom coding...");
-                readEtacsCodingCustom();
+            case R.id.btnTestCustomCoding: {
+                    String str = edtEtacsCustom.getText().toString().trim();
+                    if (str.isEmpty()) return;
+                    ArrayList<Integer> buff = hexStringToBuffer(str, 0);
+                    customCodings.clear();
+                    customCodings.addAll(Arrays.stream(EtacsCustomCoding.values())
+                            .filter(i -> i.getIdx() % 2 == 0)
+                            .collect(Collectors.toList()));
+                    CodingAdapter etacsCustomCodingAdapter = new CodingAdapter(this, buff, R.layout.list_item_coding,
+                            customCodings);
+                    lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
+
+                    if (etacsCustomCodingAdapter.getCount() > 10) {
+                        View item = etacsCustomCodingAdapter.getView(0, null, lvEtacsCustom);
+                        item.measure(0, 0);
+                        ViewGroup.LayoutParams params = lvEtacsCustom.getLayoutParams();
+                        params.height = (int) (10.5 * item.getMeasuredHeight());
+                        lvEtacsCustom.setLayoutParams(params);
+                    }
+                }
+                break;
+            case R.id.btnEtacsReadCustom: {
+                    Log.d(TAG, "Read Etacs Custom coding...");
+                    ArrayList<Integer> buffer = readEtacsCodingCustom();
+                    CodingAdapter etacsCustomCodingAdapter = new CodingAdapter(this, buffer, R.layout.list_item_coding, Arrays.asList(EtacsCustomCoding.values()));
+                    lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
+                }
                 break;
             case R.id.btnEtacsReadVariant:
                 Log.d(TAG, "Read Etacs Variant coding...");
@@ -157,17 +200,19 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
         super.onDestroy();
     }
 
-    private void readEtacsCodingCustom() {
+    private ArrayList<Integer> readEtacsCodingCustom() {
+        AtomicReference<ArrayList<Integer>> buffer = new AtomicReference<>();
         if (App.obd.isConnected) {
             runOnUiThread(() -> {
-                ArrayList<Integer> buffer = App.obd.readEtacsCodingCustom();
-                if (buffer != null) {
-                    String s = bufferToHex(buffer, 2, false);
+                buffer.set(App.obd.readEtacsCodingCustom());
+                if (buffer.get() != null) {
+                    String s = bufferToHex(buffer.get(), 2, false);
                     edtEtacsCustom.setText(s);
                     edtEtacsCustom.setEnabled(true);
                 }
             });
         }
+        return buffer.get();
     }
 
     private void writeEtacsCodingCustom(String coding) {
