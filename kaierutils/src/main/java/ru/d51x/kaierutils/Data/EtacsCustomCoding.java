@@ -1,5 +1,12 @@
 package ru.d51x.kaierutils.Data;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public enum EtacsCustomCoding {
 
 
@@ -449,5 +456,332 @@ public enum EtacsCustomCoding {
                 }
             default: return "unknown";
         }
+    }
+
+    public static ArrayList<String> getAvailableOptions(int id) {
+        Stream<String> stream;
+
+        switch (id) {
+            case 1:
+                stream = Stream.of("ACC or IG1", "IG1", "Cannot change" );
+                break;
+            case 2:
+                stream = Stream.of("Disabled", "Enable", "Cannot change" );
+                break;
+            case 3:
+                stream = Stream.of(   "Lock:1, Unlock:2",
+                                                "Lock:1, Unlock:0",
+                                                "Lock:0, Unlock:2",
+                                                "Lock:2, Unlock:1",
+                                                "Lock:0, Unlock:1",
+                                                "Lock:2, Unlock:0",
+                                                "Lock:0, Unlock:0",
+                                                "Cannot change" );
+                break;
+            case 4:
+                stream = Stream.of("Normal INT",
+                                                "Variable INT",
+                                                "Speed Sensitive",
+                                                "Rain Sensitive",
+                                                "Cannot change" );
+                break;
+            case 5:
+                stream = Stream.of("Only Washer",
+                                                "Washer & Wiper",
+                                                "With after wipe",
+                                                "Cannot change" );
+                break;
+            case 6:
+                stream = Stream.of("0 sec",
+                                                "4 sec",
+                                                "8 sec",
+                                                "16 sec",
+                                                "Cannot change" );
+                break;
+            case 7:
+                stream = Stream.of("Disabled",
+                                                "Enable",
+                                                "Cannot change");
+                break;
+            case 8:
+                stream = Stream.of("Not Auto",
+                                                "Open Vehicle SPD",
+                                                "Open/Close by IG",
+                                                "OPN/CLS Keyless",
+                                                "Cannot change");
+                break;
+            case 9:
+                stream = Stream.of("Level1 bright",
+                                            "Level2 bright",
+                                            "Level3",
+                                            "Level4 dark",
+                                            "Level5 dark",
+                                            "Cannot change");
+                break;
+            case 10:
+                stream = Stream.of("Disabled",
+                                                "Enable",
+                                                "Cannot select");
+                break;
+            case 11:
+                stream = Stream.of("0 sec",
+                                            "7.5 sect",
+                                            "15 sec",
+                                            "30 sec",
+                                            "60 sec",
+                                            "120 sec",
+                                            "180 sec",
+                                            "Cannot change");
+                break;
+            case 12:
+                stream = Stream.of("Disable",
+                                           "Enable (A-spec.)",
+                                           "Enable (B-spec.)",
+                                           "Enable (C-spec.)",
+                                           "Enable (D-spec.)",
+                                           "Enable (E-spec.)",
+                                            "Cannot change");
+                break;
+            case 13:
+                stream = Stream.of("Disable",
+                                            "3 min",
+                                            "30 min",
+                                            "60 min",
+                                            "Cannot change");
+                break;
+            case 14:
+                stream = Stream.of("Disable",
+                                            "Relock",
+                                            "Not relock",
+                                             "Cannot change");
+                break;
+            case 15:
+                stream = Stream.of("Disable",
+                    "Always (P pos)",
+                    "P/W unlock (P)",
+                    "Always (Lock pos)",
+                    "P/W unlock (Lock)",
+                     "Cannot change");
+                break;
+            case 16:
+                stream = Stream.of(
+                    "All Doors Unlock",
+                    "Dr door Unlock",
+                     "Cannot change");
+                break;
+            case 17:
+                stream = Stream.of(
+                   "Enable",
+                   "Disable",
+                    "Cannot select");
+                break;
+            case 18:
+                stream = Stream.of(
+                    "Twice",
+                    "Once",
+                     "Cannot select");
+                break;
+            case 19:
+                stream = Stream.of(
+                    "Not sound horn",
+                    "Lock any time",
+                    "Lock/auto ON",
+                    "W lock any time",
+                    "Cannot select");
+                break;
+            case 20:
+                stream = Stream.of(
+                    "Not sound buzzer",
+                    "At KOS",
+                    "At keyless",
+                    "At Both",
+                     "Cannot select");
+                break;
+            case 21:
+                stream = Stream.of(
+                    "30 sec",
+                    "60 sec",
+                    "120 sec",
+                    "180 sec",
+                     "Cannot select");
+                break;
+            case 22:
+                stream = Stream.of(
+                    "Disabled",
+                    "Enable",
+                     "Cannot change");
+                break;
+            case 23:
+                stream = Stream.of(
+                    "0 sec",
+                    "30 sec",
+                    "180 sec",
+                    "600 sec",
+                     "Cannot change");
+                break;
+            case 24:
+                stream = Stream.of(
+                    "10 sec",
+                    "6 sec",
+                     "Cannot change");
+                break;
+            case 25:
+                stream = Stream.of(
+                    "Disable",
+                    "P/W:O&C, D/M:O&C",
+                    "P/W:O&C",
+                    "P/W:C, D/M:O&C",
+                    "D/M:O&C",
+                    "P/W:C",
+                     "Cannot change");
+                break;
+            case 26:
+                stream = Stream.of(
+                    "Disable",
+                    "Enable",
+                     "Cannot change");
+                break;
+            case 27:
+                stream = Stream.of(
+                    "Short",
+                    "Long",
+                     "Cannot change");
+                break;
+            case 28:
+                stream = Stream.of(
+                    "Enable",
+                    "Disable",
+                     "Cannot change");
+                break;
+            case 29:
+                stream = Stream.of(
+                    "Both enable",
+                    "DoorEntry enable",
+                    "ENG start enable",
+                    "Both disable",
+                     "Cannot change");
+                break;
+            case 30:
+                stream = Stream.of(
+                    "0 sec",
+                    "3 sec",
+                    "5 sec",
+                     "Cannot change");
+                break;
+            case 31:
+                stream = Stream.of(
+                    "Disable",
+                    "Enable",
+                     "Cannot change");
+                break;
+            case 32:
+                stream = Stream.of(
+                   "Enable",
+                   "Disable",
+                    "Cannot change");
+                break;
+            case 33:
+                stream = Stream.of(
+                    "Enable",
+                    "Disable",
+                     "Cannot change");
+                break;
+            case 34:
+                stream = Stream.of(
+                    "Disable",
+                    "30 min",
+                    "60 min",
+                     "Cannot change");
+                break;
+            case 35:
+                stream = Stream.of(
+                    "Normal",
+                    "Long",
+                     "Cannot change");
+                break;
+            case 36:
+                stream = Stream.of(
+                    "Disable",
+                    "Enable",
+                     "Cannot change");
+                break;
+            case 37:
+                stream = Stream.of(
+                    "Same EXT lights",
+                    "Independe.Normal",
+                    "Independent late",
+                     "Cannot change");
+                break;
+            case 38:
+                stream = Stream.of(
+                    "Disable",
+                    "15 sec",
+                    "30 sec",
+                    "60 sec",
+                    "180 sec",
+                     "Cannot change");
+                break;
+            case 39:
+                stream = Stream.of(
+                    "Disable",
+                    "Small lamp",
+                    "Head lamp",
+                     "Cannot change");
+                break;
+            case 40:
+                stream = Stream.of(
+                    "Enable(R wip.ON)",
+                    "Enable(R/F wip.)",
+                     "Cannot change");
+                break;
+            case 41:
+                stream = Stream.of(
+                    "Level 1",
+                    "Level 2",
+                    "Level 3",
+                    "Level 4",
+                     "Cannot change");
+                break;
+            case 42:
+                stream = Stream.of(
+                    "Volume 1",
+                    "Volume 2",
+                    "Volume 3",
+                    "Volume auto",
+                     "Cannot change");
+                break;
+            case 43:
+                stream = Stream.of(
+                    "No sound",
+                    "Sound 1",
+                    "Sound 2",
+                    "Sound 3",
+                    "Sound 4",
+                    "Sound 5",
+                    "Sound 6",
+                     "Cannot change");
+                break;
+            case 44:
+                stream = Stream.of(
+                    "Disable",
+                    "Small 30 sec",
+                    "Small 60 sec",
+                    "Small 180 sec",
+                    "Head 30 sec",
+                    "Head 60 sec",
+                    "Head 180 sec",
+                     "Cannot change");
+                break;
+            case 45:
+                stream = Stream.of(
+                    "Disable",
+                    "15 sec",
+                    "30 sec",
+                    "45 sec",
+                     "Cannot change");
+                break;
+            default: stream = Stream.of("unknown");
+        }
+        return stream.collect(Collectors.toCollection(ArrayList::new));
     }
 }

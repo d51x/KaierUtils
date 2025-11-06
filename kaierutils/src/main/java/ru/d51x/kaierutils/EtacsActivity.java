@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils;
 
+import static ru.d51x.kaierutils.Data.EtacsCustomCoding.getAvailableOptions;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_CODING_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_VARIANT_CODING_CHANGED;
@@ -109,11 +110,9 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                 if (e == null) return;
                 int idx = e.getByteIdx();
 
-                CharSequence[] radioValues = new CharSequence[4];
-                radioValues[0] = "string 1";
-                radioValues[1] = "string 2";
-                radioValues[2] = "string 3";
-                radioValues[3] = "string 4";
+                // TODO: нужно сгенерировать список в зависимости от опции и указать активную опцию в диалоге
+                ArrayList<String> options = getAvailableOptions(e.getIdx());
+                CharSequence[] radioValues = options.toArray(new CharSequence[options.size()]);
                 final int[] selectedValue = {-1};
                 RadioListDialog dialog = new RadioListDialog(EtacsActivity.this, e.getTitle(), e.getName());
                 dialog.setValuesList(radioValues);
@@ -122,6 +121,7 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                     public void onDialogResult(int selected) {
                         selectedValue[0] = selected;
                         Log.d("ETACS", "selected value = " + selectedValue[0]);
+                        // TODO: нужно изменить значение у опции на основе выбранного результата и выставить флаг, что есть активные изменения
                     }
                 });
                 dialog.show();
