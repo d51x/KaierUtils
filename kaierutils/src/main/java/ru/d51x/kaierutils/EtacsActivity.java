@@ -121,6 +121,7 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                         selectedValue[0] = selected;
                         Log.d("ETACS", "selected value = " + selectedValue[0]);
                         // TODO: нужно изменить значение у опции на основе выбранного результата и выставить флаг, что есть активные изменения
+                        // TODO: обновить список новым выбором
 
                     }
                 });
@@ -148,7 +149,8 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                     ArrayList<Integer> buff = hexStringToBuffer(str, 0);
                     customCodings.clear();
                     customCodings.addAll(Arrays.stream(EtacsCustomCoding.values())
-                            .filter(i -> i.getIdx() % 2 == 0)
+                            //.filter(i -> i.getIdx() % 2 == 0)
+                            .filter(i -> i.getIdx() != 999)
                             .collect(Collectors.toList()));
                     CodingAdapter etacsCustomCodingAdapter = new CodingAdapter(this, buff, R.layout.list_item_coding,
                             customCodings);
