@@ -91,11 +91,12 @@
 
 		<ImageButton
 			android:id="@+id/ibFloatingPanel"
+			style="@style/Widget.AppCompat.ImageButton"
 			android:layout_width="36dp"
-			android:layout_height="wrap_content"
-			android:layout_gravity="start"
+			android:layout_height="36dp"
+			android:layout_gravity="top|end"
 			android:layout_weight="0"
-			app:srcCompat="@drawable/arrows_more_up_24px" />
+			android:background="@drawable/arrows_more_up_24px" />
 
 	</LinearLayout>
 
