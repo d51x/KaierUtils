@@ -1030,10 +1030,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
         {
             tm = App.GS.gpsData.timeAtWay;// - TimeZone.getDefault().getOffset(0L);
             // поменять значек
-            ivTrackTime.setImageResource(R.drawable.track_time_0);
+            //ivTrackTime.setImageResource(R.drawable.track_time_0);
         } else if ( wayType == 1) {
             tm =  App.GS.gpsData.timeAtWayWithoutStops;// - TimeZone.getDefault().getOffset(0L);
-            ivTrackTime.setImageResource(R.drawable.track_time_1);
+            //ivTrackTime.setImageResource(R.drawable.track_time_1);
 
         }
 
