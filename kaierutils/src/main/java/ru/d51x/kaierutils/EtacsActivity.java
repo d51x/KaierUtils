@@ -10,7 +10,6 @@ import static ru.d51x.kaierutils.utils.StringUtils.hexStringToBuffer;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,9 +34,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -214,7 +216,7 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
         return adapter;
     }
 
-    private void prepareData(boolean showExtended) {
+    private void prepareAndFillCustomCodingList(boolean showExtended) {
         prevCustomCodingBuffer.clear();
         prevCustomCodingBuffer.addAll(customCodingBuffer);
         customCoding.clear();
@@ -222,12 +224,16 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
                 //.filter(i -> i.getIdx() % 2 == 0)
                 .filter(i -> i.getIdx() != 999)
                 .collect(Collectors.toList()));
+        etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
+                prevCustomCodingBuffer, customCoding);
     }
 
     private void saveCustomToFile() {
         String sValue = bufferToHex(customCodingBuffer, 0, false);
         File path = this.getFilesDir();
-        @SuppressLint("DefaultLocale") String fName = String.format("etacs_custom_%d.cuf", System.currentTimeMillis());
+         SimpleDateFormat formater = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+        Date date = new Date();
+        String fName = String.format("etacs_custom_%s.cuf", formater.format(date));
         File f = new File(path, fName);
 
         try {
@@ -262,20 +268,13 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
                     if (str.isEmpty()) return;
                     edtEtacsCustom2.setText(str);
                     customCodingBuffer = hexStringToBuffer(str, 0);
-                    prepareData(true);
-                    //etacsCustomCodingAdapter = new CodingAdapter(this, customCodingBuffer, R.layout.list_item_coding,
-                    //        customCodings);
-                    //lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
-                    etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
-                            prevCustomCodingBuffer, customCoding);
+                    prepareAndFillCustomCodingList(true);
                 }
                 break;
             case R.id.btnEtacsReadCustom: {
                     Log.d(TAG, "Read Etacs Custom coding...");
                     customCodingBuffer = readEtacsCodingCustom();
-                    prepareData(true);
-                    etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
-                            prevCustomCodingBuffer, customCoding);
+                    prepareAndFillCustomCodingList(true);
                 }
                 break;
             case R.id.btnEtacsReadVariant:
@@ -463,9 +462,8 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
             String sCoding = in.readLine();
             customCodingBuffer = hexStringToBuffer(sCoding, 0);
             edtEtacsCustom.setText(sCoding);
-            prepareData(true);
-            etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
-                    prevCustomCodingBuffer, customCoding);
+            edtEtacsCustom2.setText(sCoding);
+            prepareAndFillCustomCodingList(true);
         } catch (FileNotFoundException e) {
             Log.e(TAG, "File " + fName + " not found");
         } catch (IOException e) {
