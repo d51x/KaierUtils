@@ -8,13 +8,19 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_VARIANT_CODI
 import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
 import static ru.d51x.kaierutils.utils.StringUtils.hexStringToBuffer;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +29,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,10 +42,14 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import ru.d51x.kaierutils.Data.EtacsCustomCoding;
+import ru.d51x.kaierutils.dialog.FileSelector;
+import ru.d51x.kaierutils.dialog.FileSelectorDialog;
+import ru.d51x.kaierutils.dialog.OnFileSelectListener;
 import ru.d51x.kaierutils.dialog.RadioListDialog;
 
-public class EtacsActivity  extends Activity implements View.OnClickListener {
+public class EtacsActivity  extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = "Etacs";
+    private static final int REQUEST_CODE_PERMISSION = 1000;
     private EditText edtEtacsCustom;
     private EditText edtEtacsCustom2;
     private EditText edtEtacsVariant;
@@ -191,68 +202,80 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
         CodingAdapter adapter = new CodingAdapter(EtacsActivity.this, buffer, prevBuffer,
                 R.layout.list_item_coding, list);
         lv.setAdapter(adapter);
+
+        if (adapter.getCount() > 10) {
+            View item = adapter.getView(0, null, lv);
+            item.measure(0, 0);
+            ViewGroup.LayoutParams params = lv.getLayoutParams();
+            params.height = (int) (10.5 * item.getMeasuredHeight());
+            lv.setLayoutParams(params);
+        }
+
         return adapter;
+    }
+
+    private void prepareData(boolean showExtended) {
+        prevCustomCodingBuffer.clear();
+        prevCustomCodingBuffer.addAll(customCodingBuffer);
+        customCoding.clear();
+        customCoding.addAll(Arrays.stream(EtacsCustomCoding.values())
+                //.filter(i -> i.getIdx() % 2 == 0)
+                .filter(i -> i.getIdx() != 999)
+                .collect(Collectors.toList()));
+    }
+
+    private void saveCustomToFile() {
+        String sValue = bufferToHex(customCodingBuffer, 0, false);
+        File path = this.getFilesDir();
+        @SuppressLint("DefaultLocale") String fName = String.format("etacs_custom_%d.cuf", System.currentTimeMillis());
+        File f = new File(path, fName);
+
+        try {
+            FileWriter out = new FileWriter(f);
+            out.write(sValue);
+            out.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnFromFileCustomCoding:
-                String sValue = bufferToHex(customCodingBuffer, 0, false);
-                File path = this.getFilesDir();
-                @SuppressLint("DefaultLocale") String fName = String.format("etacs_custom_%d.cuf", System.currentTimeMillis());
-                File f = new File(path, fName);
+            case R.id.btnFromFileCustomCoding: {
+                    // TODO: диалог выбора файлов
+//                    if (checkPermission()) {
+                        this.doSearchFile("cuf");
 
-                try {
-                    FileWriter out = new FileWriter(f);
-                    out.write(sValue);
-                    out.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+//                    } else {
+//                        Log.e(TAG, "Permissions not granted");
+//
+//                    }
                 }
                 break;
             case R.id.btnToFileCustomCoding:
-
+                saveCustomToFile();
                 break;
             case R.id.btnTestCustomCoding: {
                     String str = edtEtacsCustom.getText().toString().trim();
                     if (str.isEmpty()) return;
                     edtEtacsCustom2.setText(str);
                     customCodingBuffer = hexStringToBuffer(str, 0);
-                    prevCustomCodingBuffer.clear();
-                    prevCustomCodingBuffer.addAll(customCodingBuffer);
-                    customCoding.clear();
-                    customCoding.addAll(Arrays.stream(EtacsCustomCoding.values())
-                            //.filter(i -> i.getIdx() % 2 == 0)
-                            .filter(i -> i.getIdx() != 999)
-                            .collect(Collectors.toList()));
+                    prepareData(true);
                     //etacsCustomCodingAdapter = new CodingAdapter(this, customCodingBuffer, R.layout.list_item_coding,
                     //        customCodings);
                     //lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
                     etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
                             prevCustomCodingBuffer, customCoding);
-
-                    if (etacsCustomCodingAdapter.getCount() > 10) {
-                        View item = etacsCustomCodingAdapter.getView(0, null, lvEtacsCustom);
-                        item.measure(0, 0);
-                        ViewGroup.LayoutParams params = lvEtacsCustom.getLayoutParams();
-                        params.height = (int) (10.5 * item.getMeasuredHeight());
-                        lvEtacsCustom.setLayoutParams(params);
-                    }
                 }
                 break;
             case R.id.btnEtacsReadCustom: {
                     Log.d(TAG, "Read Etacs Custom coding...");
-                    //ArrayList<Integer> buffer = readEtacsCodingCustom();
                     customCodingBuffer = readEtacsCodingCustom();
-                    prevCustomCodingBuffer.clear();
-                    prevCustomCodingBuffer.addAll(customCodingBuffer);
-                    //CodingAdapter etacsCustomCodingAdapter = new CodingAdapter(this, customCodingBuffer, R.layout.list_item_coding, Arrays.asList(EtacsCustomCoding.values()));
-                    //lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
+                    prepareData(true);
                     etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
-                            prevCustomCodingBuffer, Arrays.stream(EtacsCustomCoding.values())
-                                    .collect(Collectors.toList()));
+                            prevCustomCodingBuffer, customCoding);
                 }
                 break;
             case R.id.btnEtacsReadVariant:
@@ -373,5 +396,94 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
 
             });
         }
+    }
+
+    private boolean checkPermission() {
+        // Check if we have Call permission
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            Log.d(TAG, "Request file storage permissions");
+
+            String[] permissions = {
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            };
+
+            List<String> permissionsToRequest = new ArrayList<>();
+
+            for (String permission : permissions) {
+                if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                    Log.e("Permissions", String.format("Permission %s is not granted", permission));
+                    permissionsToRequest.add(permission);
+                }
+            }
+
+            if (!permissionsToRequest.isEmpty()) {
+                ActivityCompat.requestPermissions(
+                        this,
+                        permissionsToRequest.toArray(new String[0]), // Convert list to array
+                        REQUEST_CODE_PERMISSION // Pass the request code
+                );
+            } else {
+                Log.i("Permissions", "All permissions already granted");
+                return true;
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_PERMISSION) {// Note: If request is cancelled, the result arrays are empty.
+            // Permissions granted (CALL_PHONE).
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                Log.i(TAG, "Permission granted!");
+
+                this.doSearchFile("kon");
+            }
+            // Cancelled or denied.
+            else {
+                Log.i(TAG, "Permission denied!");
+                //Toast.makeText(this, "Permission denied!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+    private void loadFile(String fName) {
+        BufferedReader in = null;
+        try {
+            File path = this.getFilesDir();
+            File f = new File(path, fName);
+            in = new BufferedReader(new FileReader(f));
+            String sCoding = in.readLine();
+            customCodingBuffer = hexStringToBuffer(sCoding, 0);
+            edtEtacsCustom.setText(sCoding);
+            prepareData(true);
+            etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
+                    prevCustomCodingBuffer, customCoding);
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "File " + fName + " not found");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void doSearchFile(String fileType) {
+        String path = this.getFilesDir().getAbsolutePath();
+        FileSelector fileSelector = new FileSelector(path, fileType);
+        List<File> resultList = fileSelector.getFiles(path, fileType);
+
+        FileSelectorDialog fileSelectorDialog = new FileSelectorDialog(EtacsActivity.this, resultList, new OnFileSelectListener() {
+            @Override
+            public void onSelect(File file) {
+                Log.d(TAG, "File is " + file.getName());
+                loadFile(file.getName());
+            }
+        });
+        fileSelectorDialog.show();
     }
 }
