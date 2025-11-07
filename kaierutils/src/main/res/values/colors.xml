@@ -16,6 +16,11 @@
 	<style name="MmcTheme" parent="@Theme.AppCompat">
 		<item name="android:windowBackground">@color/black_color</item>
 		<item name="android:colorBackground">@color/black_color</item>
+		<item name="android:itemBackground">@color/black_color</item>
+		<item name="android:popupBackground">@color/black_color</item>
+		<item name="android:headerBackground">@color/black_color</item>
+		<item name="android:panelBackground">@color/black_color</item>
+		<item name="android:panelFullBackground">@color/black_color</item>
 	</style>
 
 </resources>
