@@ -2,6 +2,7 @@
 <resources>
 	<color name="white_color">#FFFFFFFF</color>
 	<color name="gray_color">#FFaaaaaa</color>
+	<color name="black_color">#000</color>
 
 	<color name="temp_orange">#FFFF8D28</color>
 	<color name="temp_red">#FFFF383C</color>
@@ -11,5 +12,10 @@
 	<color name="temp_cyan">#FF00C0E8</color>
 	<color name="temp_blue">#FF0088FF</color>
 	<color name="temp_indigo">#FF6155F5</color>
+
+	<style name="MmcTheme" parent="@Theme.AppCompat">
+		<item name="android:windowBackground">@color/black_color</item>
+		<item name="android:colorBackground">@color/black_color</item>
+	</style>
 
 </resources>
