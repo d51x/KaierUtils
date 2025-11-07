@@ -71,6 +71,24 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:text="Test"
+            app:layout_constraintBottom_toBottomOf="@+id/btnToFileCustomCoding"
+            app:layout_constraintEnd_toStartOf="@+id/btnToFileCustomCoding" />
+
+        <Button
+            android:id="@+id/btnToFileCustomCoding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text="To File"
+            app:layout_constraintBottom_toBottomOf="@+id/btnFromFileCustomCoding"
+            app:layout_constraintEnd_toStartOf="@+id/btnFromFileCustomCoding" />
+
+        <Button
+            android:id="@+id/btnFromFileCustomCoding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text="From File"
             app:layout_constraintBottom_toBottomOf="@+id/btnEtacsReadCustom"
             app:layout_constraintEnd_toStartOf="@+id/btnEtacsReadCustom" />
 

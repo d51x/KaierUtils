@@ -4,12 +4,12 @@ import static ru.d51x.kaierutils.Data.EtacsCustomCoding.getCurrentValue;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,11 +22,14 @@ public class CodingAdapter extends ArrayAdapter<EtacsCustomCoding> {
     private int resourceLayout;
     private Context mContext;
     private ArrayList<Integer> buffer;
-    public CodingAdapter(Context context, ArrayList<Integer> buffer, int resource, List<EtacsCustomCoding> items) {
+    private ArrayList<Integer> prevBuffer;
+    public CodingAdapter(Context context, ArrayList<Integer> buffer, ArrayList<Integer> prevBuffer,
+                         int resource, List<EtacsCustomCoding> items) {
         super(context, resource, items);
         this.resourceLayout = resource;
         this.mContext = context;
         this.buffer = buffer;
+        this.prevBuffer = prevBuffer;
     }
 
     @SuppressLint("DefaultLocale")
@@ -41,26 +44,47 @@ public class CodingAdapter extends ArrayAdapter<EtacsCustomCoding> {
         Log.d("ETACS", "position = " + position);
         EtacsCustomCoding p = getItem(position);
         if (p != null) {
-            TextView tt1 = v.findViewById(R.id.tvCodingTitle);
-            TextView tt2 = v.findViewById(R.id.tvCodingSummary);
-            TextView tt3 = v.findViewById(R.id.tvCodingValue);
+            TextView tvCodingTitle = v.findViewById(R.id.tvCodingTitle);
+            TextView tvCodingSummary = v.findViewById(R.id.tvCodingSummary);
+            TextView tvCodingValue = v.findViewById(R.id.tvCodingValue);
+            TextView tvIdx = v.findViewById(R.id.tvIdx);
+            TextView tvOldValue = v.findViewById(R.id.tvOldValue);
+
             //EtacsCustomCoding etacsCustomCoding = EtacsCustomCoding.values()[position];
-            if (tt1 != null) {
-                tt1.setText(String.format("%02d. %s", p.getIdx(), p.getName()));
+            if (tvIdx != null) {
+                tvIdx.setText(String.format("%03d", p.getIdx()));
             }
-            if (tt2 != null) {
-                tt2.setText(p.getTitle());
+            if (tvCodingTitle != null) {
+                tvCodingTitle.setText(p.getName());
             }
-            if (tt3 != null) {
+            if (tvCodingSummary != null) {
+                tvCodingSummary.setText(p.getTitle());
+            }
+            if (tvCodingValue != null && tvOldValue != null) {
                 if (position < EtacsCustomCoding.values().length) {
                     int byteValue = buffer.get(p.getByteIdx());
                     int maskValue = byteValue & p.getMask();
                     int shiftValue = maskValue >> p.getStartBit();
+
                     String sValue = getCurrentValue(p.getIdx(), shiftValue);
-                    tt3.setText(sValue);
+                    tvCodingValue.setText(sValue);
+                    tvCodingValue.setTextColor(getContext().getColor(R.color.gray_color));
+
                     v.setTag(R.id.ITEM_OBJECT_TAG, (EtacsCustomCoding)p);
                     v.setTag(R.id.ITEM_BYTE_VALUE_TAG, byteValue);
                     v.setTag(R.id.ITEM_CURRENT_VALUE_TAG, sValue);
+
+                    int prevByteValue = prevBuffer.get(p.getByteIdx());
+                    maskValue = prevByteValue & p.getMask();
+                    shiftValue = maskValue >> p.getStartBit();
+                    String sPrevValue = getCurrentValue(p.getIdx(), shiftValue);
+
+                    if (sValue.equals(sPrevValue)) {
+                        tvOldValue.setText("");
+                    } else {
+                        tvOldValue.setText(sPrevValue);
+                        tvCodingValue.setTextColor(getContext().getColor(R.color.temp_orange));
+                    }
                 }
             }
         }

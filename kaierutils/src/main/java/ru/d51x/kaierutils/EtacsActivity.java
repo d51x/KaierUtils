@@ -21,10 +21,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,11 +49,14 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
     private Button btnEtacsWriteVariant;
     private Button btnEngineCodingRead;
     private Button btnEngineCodingWrite;
+    private Button btnFromFileCustomCoding;
+    private Button btnToFileCustomCoding;
     private Button btnTestCustomCoding;
     private ListView lvEtacsCustom;
     private CodingAdapter etacsCustomCodingAdapter;
-    private ArrayList<EtacsCustomCoding> customCodings = new ArrayList<>();
+    private ArrayList<EtacsCustomCoding> customCoding = new ArrayList<>();
     private ArrayList<Integer> customCodingBuffer = new ArrayList<>();
+    private ArrayList<Integer> prevCustomCodingBuffer = new ArrayList<>();
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -83,6 +89,12 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
         edtEtacsVariant = findViewById(R.id.edtEtacsVariant);
         edtEngineCoding = findViewById(R.id.edtEngineCoding);
 
+        btnToFileCustomCoding = findViewById(R.id.btnToFileCustomCoding);
+        btnToFileCustomCoding.setOnClickListener(this);
+
+        btnFromFileCustomCoding = findViewById(R.id.btnFromFileCustomCoding);
+        btnFromFileCustomCoding.setOnClickListener(this);
+
         btnTestCustomCoding = findViewById(R.id.btnTestCustomCoding);
         btnTestCustomCoding.setOnClickListener(this);
 
@@ -114,7 +126,7 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                 EtacsCustomCoding e = (EtacsCustomCoding) itemClicked.getTag(R.id.ITEM_OBJECT_TAG);
                 int byteValue = (int) itemClicked.getTag(R.id.ITEM_BYTE_VALUE_TAG);
                 String currentValue = (String) itemClicked.getTag(R.id.ITEM_CURRENT_VALUE_TAG);
-                if (customCodings.isEmpty()) return;
+                if (customCoding.isEmpty()) return;
 
                 if (e == null) return;
                 int idx = e.getByteIdx();
@@ -154,7 +166,8 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                         edtEtacsCustom.setText(newCodingStr);
 
                         int index = lvEtacsCustom.getFirstVisiblePosition();
-                        etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer, customCodings);
+                        etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
+                                prevCustomCodingBuffer, customCoding);
                         lvEtacsCustom.setSelection(index);
                     }
                 });
@@ -173,9 +186,10 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
 
 
     private CodingAdapter updateListView(ListView lv, ArrayList<Integer> buffer,
+                                         ArrayList<Integer> prevBuffer,
                                 List<EtacsCustomCoding> list) {
-        CodingAdapter adapter = new CodingAdapter(EtacsActivity.this, buffer, R.layout.list_item_coding,
-                list);
+        CodingAdapter adapter = new CodingAdapter(EtacsActivity.this, buffer, prevBuffer,
+                R.layout.list_item_coding, list);
         lv.setAdapter(adapter);
         return adapter;
     }
@@ -184,20 +198,40 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btnFromFileCustomCoding:
+                String sValue = bufferToHex(customCodingBuffer, 0, false);
+                File path = this.getFilesDir();
+                @SuppressLint("DefaultLocale") String fName = String.format("etacs_custom_%d.cuf", System.currentTimeMillis());
+                File f = new File(path, fName);
+
+                try {
+                    FileWriter out = new FileWriter(f);
+                    out.write(sValue);
+                    out.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+            case R.id.btnToFileCustomCoding:
+
+                break;
             case R.id.btnTestCustomCoding: {
                     String str = edtEtacsCustom.getText().toString().trim();
                     if (str.isEmpty()) return;
                     edtEtacsCustom2.setText(str);
                     customCodingBuffer = hexStringToBuffer(str, 0);
-                    customCodings.clear();
-                    customCodings.addAll(Arrays.stream(EtacsCustomCoding.values())
+                    prevCustomCodingBuffer.clear();
+                    prevCustomCodingBuffer.addAll(customCodingBuffer);
+                    customCoding.clear();
+                    customCoding.addAll(Arrays.stream(EtacsCustomCoding.values())
                             //.filter(i -> i.getIdx() % 2 == 0)
                             .filter(i -> i.getIdx() != 999)
                             .collect(Collectors.toList()));
                     //etacsCustomCodingAdapter = new CodingAdapter(this, customCodingBuffer, R.layout.list_item_coding,
                     //        customCodings);
                     //lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
-                    etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer, customCodings);
+                    etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
+                            prevCustomCodingBuffer, customCoding);
 
                     if (etacsCustomCodingAdapter.getCount() > 10) {
                         View item = etacsCustomCodingAdapter.getView(0, null, lvEtacsCustom);
@@ -212,10 +246,13 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                     Log.d(TAG, "Read Etacs Custom coding...");
                     //ArrayList<Integer> buffer = readEtacsCodingCustom();
                     customCodingBuffer = readEtacsCodingCustom();
+                    prevCustomCodingBuffer.clear();
+                    prevCustomCodingBuffer.addAll(customCodingBuffer);
                     //CodingAdapter etacsCustomCodingAdapter = new CodingAdapter(this, customCodingBuffer, R.layout.list_item_coding, Arrays.asList(EtacsCustomCoding.values()));
                     //lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
                     etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
-                            Arrays.stream(EtacsCustomCoding.values()).collect(Collectors.toList()));
+                            prevCustomCodingBuffer, Arrays.stream(EtacsCustomCoding.values())
+                                    .collect(Collectors.toList()));
                 }
                 break;
             case R.id.btnEtacsReadVariant:
@@ -230,6 +267,11 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                 } else {
                     Log.d(TAG, "Custom: " + customCoding);
                     writeEtacsCodingCustom(customCoding);
+                    prevCustomCodingBuffer.clear();
+                    prevCustomCodingBuffer.addAll(customCodingBuffer);
+
+                    // TODO: read custom after write
+                    //customCodingBuffer = readEtacsCodingCustom();
                 }
                 break;
             case R.id.btnEtacsWriteVariant:
