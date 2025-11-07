@@ -21,11 +21,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -46,6 +48,7 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
     private Button btnEngineCodingWrite;
     private Button btnTestCustomCoding;
     private ListView lvEtacsCustom;
+    private CodingAdapter etacsCustomCodingAdapter;
     private ArrayList<EtacsCustomCoding> customCodings = new ArrayList<>();
     private ArrayList<Integer> customCodingBuffer = new ArrayList<>();
 
@@ -134,19 +137,25 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                         int selValue = getAvailableValues(e.getIdx()).get(selected);
                         int oldValue = customCodingBuffer.get(e.getByteIdx());
                         int shiftedValue = selValue << e.getStartBit();
-                        int maskedValue = shiftedValue & e.getMask();
+                        int maskedValue = oldValue & ~e.getMask();
                         //int newValue = oldValue | maskedValue;
-                        int newValue = oldValue | selValue;
+                        int newValue = maskedValue ^ shiftedValue;
                         Log.d(TAG, String.format("Old value = 0x%02X", oldValue));
                         Log.d(TAG, "selected value = " + selValue);
                         Log.d(TAG, "start bit = " + e.getStartBit());
                         Log.d(TAG, String.format("mask = 0x%02X", e.getMask()));
                         Log.d(TAG, String.format("shifted value = 0x%02X", shiftedValue));
-                        Log.d(TAG, String.format("masked value = 0x%02X", maskedValue));
+                        //Log.d(TAG, String.format("masked value = 0x%02X", maskedValue));
                         Log.d(TAG, String.format("new value = 0x%02X", newValue));
                         // TODO: нужно изменить значение у опции на основе выбранного результата и выставить флаг, что есть активные изменения
                         // TODO: обновить список новым выбором
+                        customCodingBuffer.set(e.getByteIdx(), newValue);
+                        String newCodingStr = bufferToHex(customCodingBuffer, 0, false);
+                        edtEtacsCustom.setText(newCodingStr);
 
+                        int index = lvEtacsCustom.getFirstVisiblePosition();
+                        etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer, customCodings);
+                        lvEtacsCustom.setSelection(index);
                     }
                 });
                 dialog.show();
@@ -163,6 +172,14 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
     }
 
 
+    private CodingAdapter updateListView(ListView lv, ArrayList<Integer> buffer,
+                                List<EtacsCustomCoding> list) {
+        CodingAdapter adapter = new CodingAdapter(EtacsActivity.this, buffer, R.layout.list_item_coding,
+                list);
+        lv.setAdapter(adapter);
+        return adapter;
+    }
+
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
@@ -177,9 +194,10 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                             //.filter(i -> i.getIdx() % 2 == 0)
                             .filter(i -> i.getIdx() != 999)
                             .collect(Collectors.toList()));
-                    CodingAdapter etacsCustomCodingAdapter = new CodingAdapter(this, customCodingBuffer, R.layout.list_item_coding,
-                            customCodings);
-                    lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
+                    //etacsCustomCodingAdapter = new CodingAdapter(this, customCodingBuffer, R.layout.list_item_coding,
+                    //        customCodings);
+                    //lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
+                    etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer, customCodings);
 
                     if (etacsCustomCodingAdapter.getCount() > 10) {
                         View item = etacsCustomCodingAdapter.getView(0, null, lvEtacsCustom);
@@ -192,9 +210,12 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                 break;
             case R.id.btnEtacsReadCustom: {
                     Log.d(TAG, "Read Etacs Custom coding...");
-                    ArrayList<Integer> buffer = readEtacsCodingCustom();
-                    CodingAdapter etacsCustomCodingAdapter = new CodingAdapter(this, buffer, R.layout.list_item_coding, Arrays.asList(EtacsCustomCoding.values()));
-                    lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
+                    //ArrayList<Integer> buffer = readEtacsCodingCustom();
+                    customCodingBuffer = readEtacsCodingCustom();
+                    //CodingAdapter etacsCustomCodingAdapter = new CodingAdapter(this, customCodingBuffer, R.layout.list_item_coding, Arrays.asList(EtacsCustomCoding.values()));
+                    //lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
+                    etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
+                            Arrays.stream(EtacsCustomCoding.values()).collect(Collectors.toList()));
                 }
                 break;
             case R.id.btnEtacsReadVariant:
@@ -252,6 +273,7 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                     String s = bufferToHex(buffer.get(), 2, false);
                     edtEtacsCustom.setText(s);
                     edtEtacsCustom.setEnabled(true);
+                    edtEtacsCustom2.setText(s);
                 }
             });
         }

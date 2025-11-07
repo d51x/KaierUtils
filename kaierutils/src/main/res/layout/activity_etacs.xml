@@ -74,32 +74,54 @@
             app:layout_constraintBottom_toBottomOf="@+id/btnEtacsReadCustom"
             app:layout_constraintEnd_toStartOf="@+id/btnEtacsReadCustom" />
 
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="New"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edtEtacsCustom" />
+
         <EditText
             android:id="@+id/edtEtacsCustom"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
             android:enabled="true"
             android:text=""
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView5"
             app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Old"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edtEtacsCustom2" />
 
         <EditText
             android:id="@+id/edtEtacsCustom2"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:enabled="true"
             android:text=""
             android:textSize="16sp"
+            android:editable="false"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView7"
             app:layout_constraintTop_toBottomOf="@+id/edtEtacsCustom" />
 
         <ListView
