@@ -5,6 +5,7 @@ import static ru.d51x.kaierutils.Data.EtacsCustomCoding.getAvailableValues;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_CODING_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_VARIANT_CODING_CHANGED;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_STATUS_CHANGED;
 import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
 import static ru.d51x.kaierutils.utils.StringUtils.hexStringToBuffer;
 
@@ -27,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -66,6 +68,7 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
     private Button btnToFileCustomCoding;
     private Button btnTestCustomCoding;
     private ListView lvEtacsCustom;
+    private TextView tvObdStatus;
     private CodingAdapter etacsCustomCodingAdapter;
     private ArrayList<EtacsCustomCoding> customCoding = new ArrayList<>();
     private ArrayList<Integer> customCodingBuffer = new ArrayList<>();
@@ -83,6 +86,9 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
             }
             else if (ACTION_OBD_ENGINE_CODING_CHANGED.equals(action)) {
 
+            } else if (OBD_BROADCAST_ACTION_STATUS_CHANGED.equals(action)) {
+                boolean res = intent.getBooleanExtra("Status", false);
+                tvObdStatus.setText(String.format(getString(R.string.odbii_device_status), res ? "Подключен" : "Не подключен"));
             }
         }
 
@@ -92,6 +98,9 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_etacs);
+
+        tvObdStatus = findViewById(R.id.tvObdStatus);
+        tvObdStatus.setText(App.obd.isConnected ? "Подключн" : "Не подключен");
 
         edtEtacsCustom = findViewById(R.id.edtEtacsCustom);
         edtEtacsCustom.setText("11302210F222120FF03F0F113F0FFFFF00000F1F2FF1FFFFFF");
@@ -195,6 +204,7 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED));
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ETACS_VARIANT_CODING_CHANGED));
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_CODING_CHANGED));
+        registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_STATUS_CHANGED));
     }
 
 
