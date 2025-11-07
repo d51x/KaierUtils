@@ -10,7 +10,6 @@ import static ru.d51x.kaierutils.utils.StringUtils.hexStringToBuffer;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -214,7 +213,7 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
         return adapter;
     }
 
-    private void prepareData(boolean showExtended) {
+    private void prepareAndFillCustomCodingList(boolean showExtended) {
         prevCustomCodingBuffer.clear();
         prevCustomCodingBuffer.addAll(customCodingBuffer);
         customCoding.clear();
@@ -222,6 +221,8 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
                 //.filter(i -> i.getIdx() % 2 == 0)
                 .filter(i -> i.getIdx() != 999)
                 .collect(Collectors.toList()));
+        etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
+                prevCustomCodingBuffer, customCoding);
     }
 
     private void saveCustomToFile() {
@@ -262,20 +263,13 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
                     if (str.isEmpty()) return;
                     edtEtacsCustom2.setText(str);
                     customCodingBuffer = hexStringToBuffer(str, 0);
-                    prepareData(true);
-                    //etacsCustomCodingAdapter = new CodingAdapter(this, customCodingBuffer, R.layout.list_item_coding,
-                    //        customCodings);
-                    //lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
-                    etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
-                            prevCustomCodingBuffer, customCoding);
+                    prepareAndFillCustomCodingList(true);
                 }
                 break;
             case R.id.btnEtacsReadCustom: {
                     Log.d(TAG, "Read Etacs Custom coding...");
                     customCodingBuffer = readEtacsCodingCustom();
-                    prepareData(true);
-                    etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
-                            prevCustomCodingBuffer, customCoding);
+                    prepareAndFillCustomCodingList(true);
                 }
                 break;
             case R.id.btnEtacsReadVariant:
@@ -463,9 +457,8 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
             String sCoding = in.readLine();
             customCodingBuffer = hexStringToBuffer(sCoding, 0);
             edtEtacsCustom.setText(sCoding);
-            prepareData(true);
-            etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
-                    prevCustomCodingBuffer, customCoding);
+            edtEtacsCustom2.setText(sCoding);
+            prepareAndFillCustomCodingList(true);
         } catch (FileNotFoundException e) {
             Log.e(TAG, "File " + fName + " not found");
         } catch (IOException e) {
