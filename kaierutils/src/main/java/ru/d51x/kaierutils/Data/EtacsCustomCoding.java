@@ -1,20 +1,9 @@
 package ru.d51x.kaierutils.Data;
 
-import android.annotation.SuppressLint;
-import android.content.res.TypedArray;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import ru.d51x.kaierutils.App;
-import ru.d51x.kaierutils.R;
 
 public enum EtacsCustomCoding {
 
@@ -271,6 +260,150 @@ public enum EtacsCustomCoding {
                 stream = Arrays.stream(EtacsCustomData.EtacsCustomData45.values()).map(EtacsCustomData.EtacsCustomData45::getTitle);
                 break;
             default: stream = Stream.of("unknown");
+        }
+        return stream.collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public static ArrayList<Integer> getAvailableValues(int id) {
+        Stream<Integer> stream;
+
+        switch (id) {
+            case 1:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData1.values()).map(EtacsCustomData.EtacsCustomData1::getIdx);
+                break;
+            case 2:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData2.values()).map(EtacsCustomData.EtacsCustomData2::getIdx);
+                break;
+            case 3:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData3.values()).map(EtacsCustomData.EtacsCustomData3::getIdx);
+                break;
+            case 4:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData4.values()).map(EtacsCustomData.EtacsCustomData4::getIdx);
+                break;
+            case 5:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData5.values()).map(EtacsCustomData.EtacsCustomData5::getIdx);
+                break;
+            case 6:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData6.values()).map(EtacsCustomData.EtacsCustomData6::getIdx);
+                break;
+            case 7:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData7.values()).map(EtacsCustomData.EtacsCustomData7::getIdx);
+                break;
+            case 8:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData8.values()).map(EtacsCustomData.EtacsCustomData8::getIdx);
+                break;
+            case 9:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData9.values()).map(EtacsCustomData.EtacsCustomData9::getIdx);
+                break;
+            case 10:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData10.values()).map(EtacsCustomData.EtacsCustomData10::getIdx);
+                break;
+            case 11:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData11.values()).map(EtacsCustomData.EtacsCustomData11::getIdx);
+                break;
+            case 12:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData12.values()).map(EtacsCustomData.EtacsCustomData12::getIdx);
+                break;
+            case 13:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData13.values()).map(EtacsCustomData.EtacsCustomData13::getIdx);
+                break;
+            case 14:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData14.values()).map(EtacsCustomData.EtacsCustomData14::getIdx);
+                break;
+            case 15:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData15.values()).map(EtacsCustomData.EtacsCustomData15::getIdx);
+                break;
+            case 16:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData16.values()).map(EtacsCustomData.EtacsCustomData16::getIdx);
+                break;
+            case 17:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData17.values()).map(EtacsCustomData.EtacsCustomData17::getIdx);
+                break;
+            case 18:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData18.values()).map(EtacsCustomData.EtacsCustomData18::getIdx);
+                break;
+            case 19:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData19.values()).map(EtacsCustomData.EtacsCustomData19::getIdx);
+                break;
+            case 20:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData20.values()).map(EtacsCustomData.EtacsCustomData20::getIdx);
+                break;
+            case 21:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData21.values()).map(EtacsCustomData.EtacsCustomData21::getIdx);
+                break;
+            case 22:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData22.values()).map(EtacsCustomData.EtacsCustomData22::getIdx);
+                break;
+            case 23:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData23.values()).map(EtacsCustomData.EtacsCustomData23::getIdx);
+                break;
+            case 24:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData24.values()).map(EtacsCustomData.EtacsCustomData24::getIdx);
+                break;
+            case 25:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData25.values()).map(EtacsCustomData.EtacsCustomData25::getIdx);
+                break;
+            case 26:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData26.values()).map(EtacsCustomData.EtacsCustomData26::getIdx);
+                break;
+            case 27:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData27.values()).map(EtacsCustomData.EtacsCustomData27::getIdx);
+                break;
+            case 28:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData28.values()).map(EtacsCustomData.EtacsCustomData28::getIdx);
+                break;
+            case 29:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData29.values()).map(EtacsCustomData.EtacsCustomData29::getIdx);
+                break;
+            case 30:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData30.values()).map(EtacsCustomData.EtacsCustomData30::getIdx);
+                break;
+            case 31:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData31.values()).map(EtacsCustomData.EtacsCustomData31::getIdx);
+                break;
+            case 32:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData32.values()).map(EtacsCustomData.EtacsCustomData32::getIdx);
+                break;
+            case 33:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData33.values()).map(EtacsCustomData.EtacsCustomData33::getIdx);
+                break;
+            case 34:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData34.values()).map(EtacsCustomData.EtacsCustomData34::getIdx);
+                break;
+            case 35:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData35.values()).map(EtacsCustomData.EtacsCustomData35::getIdx);
+                break;
+            case 36:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData36.values()).map(EtacsCustomData.EtacsCustomData36::getIdx);
+                break;
+            case 37:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData37.values()).map(EtacsCustomData.EtacsCustomData37::getIdx);
+                break;
+            case 38:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData38.values()).map(EtacsCustomData.EtacsCustomData38::getIdx);
+                break;
+            case 39:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData39.values()).map(EtacsCustomData.EtacsCustomData39::getIdx);
+                break;
+            case 40:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData40.values()).map(EtacsCustomData.EtacsCustomData40::getIdx);
+                break;
+            case 41:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData41.values()).map(EtacsCustomData.EtacsCustomData41::getIdx);
+                break;
+            case 42:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData42.values()).map(EtacsCustomData.EtacsCustomData42::getIdx);
+                break;
+            case 43:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData43.values()).map(EtacsCustomData.EtacsCustomData43::getIdx);
+                break;
+            case 44:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData44.values()).map(EtacsCustomData.EtacsCustomData44::getIdx);
+                break;
+            case 45:
+                stream = Arrays.stream(EtacsCustomData.EtacsCustomData45.values()).map(EtacsCustomData.EtacsCustomData45::getIdx);
+                break;
+            default: stream = Stream.of(-1);
         }
         return stream.collect(Collectors.toCollection(ArrayList::new));
     }

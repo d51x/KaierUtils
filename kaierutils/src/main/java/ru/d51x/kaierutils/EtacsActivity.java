@@ -1,6 +1,7 @@
 package ru.d51x.kaierutils;
 
 import static ru.d51x.kaierutils.Data.EtacsCustomCoding.getAvailableOptions;
+import static ru.d51x.kaierutils.Data.EtacsCustomCoding.getAvailableValues;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_CODING_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_VARIANT_CODING_CHANGED;
@@ -34,6 +35,7 @@ import ru.d51x.kaierutils.dialog.RadioListDialog;
 public class EtacsActivity  extends Activity implements View.OnClickListener {
     public static final String TAG = "Etacs";
     private EditText edtEtacsCustom;
+    private EditText edtEtacsCustom2;
     private EditText edtEtacsVariant;
     private EditText edtEngineCoding;
     private Button btnEtacsReadCustom;
@@ -45,6 +47,7 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
     private Button btnTestCustomCoding;
     private ListView lvEtacsCustom;
     private ArrayList<EtacsCustomCoding> customCodings = new ArrayList<>();
+    private ArrayList<Integer> customCodingBuffer = new ArrayList<>();
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -70,6 +73,9 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
 
         edtEtacsCustom = findViewById(R.id.edtEtacsCustom);
         edtEtacsCustom.setText("11302210F222120FF03F0F113F0FFFFF00000F1F2FF1FFFFFF");
+
+        edtEtacsCustom2 = findViewById(R.id.edtEtacsCustom2);
+        edtEtacsCustom2.setText("11302210F222120FF03F0F113F0FFFFF00000F1F2FF1FFFFFF");
 
         edtEtacsVariant = findViewById(R.id.edtEtacsVariant);
         edtEngineCoding = findViewById(R.id.edtEngineCoding);
@@ -118,8 +124,26 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
                 dialog.setListener(new RadioListDialog.RadioListDialogListener() {
                     @Override
                     public void onDialogResult(int selected) {
+                        if (selected == -1) {
+                            Log.d(TAG, "option cancelled");
+                            return;
+                        }
                         selectedValue[0] = selected;
-                        Log.d("ETACS", "selected value = " + selectedValue[0]);
+                        Log.d(TAG, "selected idx = " + selectedValue[0]);
+
+                        int selValue = getAvailableValues(e.getIdx()).get(selected);
+                        int oldValue = customCodingBuffer.get(e.getByteIdx());
+                        int shiftedValue = selValue << e.getStartBit();
+                        int maskedValue = shiftedValue & e.getMask();
+                        //int newValue = oldValue | maskedValue;
+                        int newValue = oldValue | selValue;
+                        Log.d(TAG, String.format("Old value = 0x%02X", oldValue));
+                        Log.d(TAG, "selected value = " + selValue);
+                        Log.d(TAG, "start bit = " + e.getStartBit());
+                        Log.d(TAG, String.format("mask = 0x%02X", e.getMask()));
+                        Log.d(TAG, String.format("shifted value = 0x%02X", shiftedValue));
+                        Log.d(TAG, String.format("masked value = 0x%02X", maskedValue));
+                        Log.d(TAG, String.format("new value = 0x%02X", newValue));
                         // TODO: нужно изменить значение у опции на основе выбранного результата и выставить флаг, что есть активные изменения
                         // TODO: обновить список новым выбором
 
@@ -146,13 +170,14 @@ public class EtacsActivity  extends Activity implements View.OnClickListener {
             case R.id.btnTestCustomCoding: {
                     String str = edtEtacsCustom.getText().toString().trim();
                     if (str.isEmpty()) return;
-                    ArrayList<Integer> buff = hexStringToBuffer(str, 0);
+                    edtEtacsCustom2.setText(str);
+                    customCodingBuffer = hexStringToBuffer(str, 0);
                     customCodings.clear();
                     customCodings.addAll(Arrays.stream(EtacsCustomCoding.values())
                             //.filter(i -> i.getIdx() % 2 == 0)
                             .filter(i -> i.getIdx() != 999)
                             .collect(Collectors.toList()));
-                    CodingAdapter etacsCustomCodingAdapter = new CodingAdapter(this, buff, R.layout.list_item_coding,
+                    CodingAdapter etacsCustomCodingAdapter = new CodingAdapter(this, customCodingBuffer, R.layout.list_item_coding,
                             customCodings);
                     lvEtacsCustom.setAdapter(etacsCustomCodingAdapter);
 
