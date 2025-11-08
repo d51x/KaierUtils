@@ -21,7 +21,6 @@
 	<string name="menu_general_floating_window_vertical_summary">Если не включено, то будет горизонтальная</string>
 	<string name="menu_floating_window_show_units">Отображать единицы измерения</string>
 	<string name="menu_floating_window_show_units_summary">Отображать единицы измерения на вертикальной плавающей панели</string>
-	<string name="menu_general_hide_header">Скрывать заголовок окна</string>
 	<string name="menu_general_color_speed_title">Цветная скорость</string>
 	<string name="menu_general_speed_type_title">Скорость по GPS</string>
 	<string name="menu_general_speed_type_summary">Если выключено, скорость будет по CAN на главном экране</string>

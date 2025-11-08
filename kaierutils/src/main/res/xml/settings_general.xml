@@ -17,10 +17,6 @@
         />
     <SwitchPreference
         android:defaultValue="false"
-        android:key="kaierutils_hide_header"
-        android:title="@string/menu_general_hide_header" />
-    <SwitchPreference
-        android:defaultValue="false"
         android:key="kaierutils_show_color_speed"
         android:title="@string/menu_general_color_speed_title" />
     <SwitchPreference

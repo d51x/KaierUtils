@@ -10,7 +10,6 @@ public class UiOptions {
     public boolean isAutoStartFloating;
     public boolean floatingWindowVertical;
     public boolean showFloatingOnMinimize;
-    public boolean isHideHeader;
     public boolean isShowStatistics;
 
     public boolean isColorSpeed = false;
@@ -28,7 +27,6 @@ public class UiOptions {
         isAutoStartFloating = prefs.getBoolean ("kaierutils_auto_start_floating", false);
         floatingWindowVertical = prefs.getBoolean ("floating_window_vertical", false);
         showFloatingOnMinimize = prefs.getBoolean ("floating_window_show_on_minimize", false);
-        isHideHeader = prefs.getBoolean ("kaierutils_hide_header", false);
         isColorSpeed = prefs.getBoolean ("kaierutils_show_color_speed", false);
         floatingWindowLeft = prefs.getInt ("floating_window_left", 0);
         floatingWindowTop = prefs.getInt ("floating_window_top", 0);
