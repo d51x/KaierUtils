@@ -588,6 +588,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
         } else {
             Log.i("Permissions", "All permissions already granted");
         }
+
+        if (!Settings.canDrawOverlays(getApplicationContext())) {
+            startManageDrawOverlaysPermission();
+        }
     }
 
     public void showFineLocationPermissionsAlertDialog() {

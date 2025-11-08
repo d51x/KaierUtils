@@ -43,7 +43,7 @@ public class SettingsGeneralFragment extends PreferenceFragment implements Share
 			App.GS.ui.isAutoStartFloating = sharedPreferences.getBoolean(key, false);
 		}
 		else if ("floating_window_show_on_minimize".equals(key)) {
-			App.GS.ui.showFloatingOnMinimize = sharedPreferences.getBoolean(key, false);
+			App.GS.ui.showFloatingOnMinimize = sharedPreferences.getBoolean(key, true);
 		}
 		else if ("kaierutils_floating_window_vertical".equals(key)) {
 			App.GS.ui.floatingWindowVertical = sharedPreferences.getBoolean(key, true);

@@ -10,7 +10,7 @@
         android:title="@string/menu_general_auto_start_floating"
         />
     <SwitchPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:key="floating_window_show_on_minimize"
         android:title="@string/menu_general_show_floating"
         android:summary="@string/menu_general_show_floating_summary"
