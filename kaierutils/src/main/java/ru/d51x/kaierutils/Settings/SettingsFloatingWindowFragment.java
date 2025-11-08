@@ -33,6 +33,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
@@ -67,6 +68,8 @@ public class SettingsFloatingWindowFragment extends PreferenceFragmentCompat imp
 		}
     };
 
+	private final EditTextPreference.OnBindEditTextListener editTextListener = editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+
     @Override
 	public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
 		setPreferencesFromResource (R.xml.floating_panel, rootKey);
@@ -78,26 +81,38 @@ public class SettingsFloatingWindowFragment extends PreferenceFragmentCompat imp
 		prefs.registerOnSharedPreferenceChangeListener(this);
 
 		EditTextPreference iconSizePref = findPreference(SETTINGS_FLOATING_PANEL_ICON_SIZE);
-		iconSizePref.setSummaryProvider(summaryProvider);
+		if (iconSizePref != null) {
+			iconSizePref.setSummaryProvider(summaryProvider);
+			iconSizePref.setOnBindEditTextListener(editTextListener);
+		}
 
 		EditTextPreference mainSizePref = findPreference(SETTINGS_FLOATING_PANEL_MAIN_TEXT_SIZE);
-		mainSizePref.setSummaryProvider(summaryProvider);
+		if (mainSizePref != null) {
+			mainSizePref.setSummaryProvider(summaryProvider);
+			mainSizePref.setOnBindEditTextListener(editTextListener);
+		}
 
 		EditTextPreference secondSizePref = findPreference(SETTINGS_FLOATING_PANEL_SECOND_TEXT_SIZE);
-		secondSizePref.setSummaryProvider(summaryProvider);
+		if (secondSizePref != null) {
+			secondSizePref.setSummaryProvider(summaryProvider);
+			secondSizePref.setOnBindEditTextListener(editTextListener);
+		}
 
 		EditTextPreference unitSizePref = findPreference(SETTINGS_FLOATING_PANEL_UNITS_SIZE);
-		unitSizePref.setSummaryProvider(summaryProvider);
+		if (unitSizePref != null) {
+			unitSizePref.setSummaryProvider(summaryProvider);
+			unitSizePref.setOnBindEditTextListener(editTextListener);
+		}
 	}
 
 	public void onPause() {
 		super.onPause();
-		Objects.requireNonNull(getPreferenceScreen().getSharedPreferences()).unregisterOnSharedPreferenceChangeListener(this);
+		Objects.requireNonNull(getPreferenceManager().getSharedPreferences()).unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 	public void onResume() {
 		super.onResume();
-		Objects.requireNonNull(getPreferenceScreen().getSharedPreferences()).registerOnSharedPreferenceChangeListener(this);
+		Objects.requireNonNull(getPreferenceManager().getSharedPreferences()).registerOnSharedPreferenceChangeListener(this);
 	}
 
 
