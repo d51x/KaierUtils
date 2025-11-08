@@ -36,11 +36,11 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     private Switch swUseOBD2;
     private TextView tvOBDDevice;
     private TextView tvDeviceState;
-    private CheckBox cbNewObdProcess;
+    private Switch cbNewObdProcess;
 
-    private CheckBox cbCanMMC_show_climate_data;
-    private CheckBox cbCanMMC_show_parking_data;
-    private CheckBox cbOBD_show_fuel_consump_detail;
+    private Switch cbCanMMC_show_climate_data;
+    private Switch cbCanMMC_show_parking_data;
+    private Switch cbOBD_show_fuel_consump_detail;
 
     private EditText edtCanMMC_fueltank_update_time;
     private EditText edtCVT_temp_update_time;
@@ -50,10 +50,10 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     private Button btnOBDSelectDevice2;
     private Button btnOBDConnect2;
     private Button btnOBDDisconnect2;
-    private CheckBox cbSpeedFromMeter;
-    private CheckBox cbSpeedFromEngine;
-    private CheckBox cbSpeedFromAC;
-    private CheckBox cbSpeedFromCVT;
+    private Switch cbSpeedFromMeter;
+    private Switch cbSpeedFromEngine;
+    private Switch cbSpeedFromAC;
+    private Switch cbSpeedFromCVT;
 
     public SettingsOBDFragment() {
 
@@ -178,7 +178,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
                 break;
 
             case R.id.btnSelectDevice2:
-                show_odb_device_select_dialog( App.getInstance () );
+                show_odb_device_select_dialog( App.getInstance().getApplicationContext() );
                 break;
             case R.id.btnOBDConnect2:
                 if ( !App.obd.isConnected) BackgroundService.startOBDThread();
@@ -260,7 +260,7 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         }
     }
 
-    public  void show_odb_device_select_dialog(Context context) {
+    public  static void show_odb_device_select_dialog(Context context) {
         ArrayList<String> deviceStrs = new ArrayList<String>();
         final ArrayList<String> devices = new ArrayList<String>();
         final ArrayList<String> devicesName = new ArrayList<String>();
