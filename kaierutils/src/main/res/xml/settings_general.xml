@@ -1,10 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
-        android:defaultValue="true"
-        android:key="kaierutils_show_notification_icon"
-        android:title="@string/menu_general_show_notification_icon_title" />
-    <SwitchPreference
         android:defaultValue="false"
         android:key="kaierutils_auto_start"
         android:title="@string/menu_general_auto_start" />

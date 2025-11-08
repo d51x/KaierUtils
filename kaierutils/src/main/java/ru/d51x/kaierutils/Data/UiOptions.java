@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 import ru.d51x.kaierutils.App;
 
 public class UiOptions {
-    public boolean isNotificationIconShow;
     public boolean isAutoStart;
     public boolean isAutoStartFloating;
     public boolean floatingWindowVertical;
@@ -25,7 +24,6 @@ public class UiOptions {
 
     public void load() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
-        isNotificationIconShow = prefs.getBoolean ("kaierutils_show_notification_icon", true);
         isAutoStart = prefs.getBoolean ("kaierutils_auto_start", false);
         isAutoStartFloating = prefs.getBoolean ("kaierutils_auto_start_floating", false);
         floatingWindowVertical = prefs.getBoolean ("floating_window_vertical", false);

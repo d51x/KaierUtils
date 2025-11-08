@@ -36,14 +36,7 @@ public class SettingsGeneralFragment extends PreferenceFragment implements Share
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if ( "kaierutils_show_notification_icon".equals ( key ) ) {
-			App.GS.ui.isNotificationIconShow = sharedPreferences.getBoolean ( key, true);
-			NotifyData notifyData = new NotifyData( App.getInstance () );
-			notifyData.smallIcon = (App.GS.ui.isNotificationIconShow) ? R.drawable.notify_auto : 0;
-			notifyData.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-			notifyData.show();
-		}
-		else if ( "kaierutils_auto_start".equals ( key ) ) {
+		if ( "kaierutils_auto_start".equals ( key ) ) {
 			App.GS.ui.isAutoStart = sharedPreferences.getBoolean ( key, false);
 		}
 		else if ("kaierutils_auto_start_floating".equals(key)) {
