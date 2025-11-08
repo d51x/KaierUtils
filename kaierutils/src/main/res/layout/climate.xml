@@ -1,44 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_MMC_climate"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="64dp">
+    android:layout_height="match_parent"
+    >
 
     <ImageView
         android:id="@+id/iv_air_ac_state"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:contentDescription="@string/air_ac_state"
         android:src="@drawable/climate_ac_on_"
-        app:layout_constraintBottom_toTopOf="@+id/iv_air_direction"
-        app:layout_constraintEnd_toStartOf="@+id/iv_air_defogger" />
+        app:layout_constraintEnd_toStartOf="@+id/iv_air_defogger"
+        app:layout_constraintTop_toBottomOf="@+id/iv_air_fan_speed" />
 
     <ImageView
         android:id="@+id/iv_air_defogger"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
         android:contentDescription="@string/air_defogger"
         android:src="@drawable/climate_rear_window"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/iv_air_direction"
-        app:layout_constraintEnd_toStartOf="@+id/iv_air_recirculation" />
+        app:layout_constraintBottom_toBottomOf="@+id/iv_air_ac_state"
+        app:layout_constraintEnd_toStartOf="@+id/iv_air_recirculation"
+        app:layout_constraintTop_toBottomOf="@+id/iv_air_fan_speed" />
 
     <ImageView
         android:id="@+id/iv_air_recirculation"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginEnd="16dp"
         android:layout_weight="0.3"
         android:contentDescription="@string/air_recirculation"
         android:src="@drawable/climate_recirculation"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/iv_air_direction"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_air_ac_state" />
 
     <ImageView
         android:id="@+id/iv_ac_blow_auto"
@@ -58,47 +63,45 @@
         android:layout_height="282dp"
         android:layout_gravity="end"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="48dp"
         android:adjustViewBounds="false"
         android:background="@drawable/climate_seat_bg"
         android:baselineAlignBottom="false"
         android:contentDescription="@string/air_direction"
         android:src="@drawable/climate_blow_direction"
-        app:layout_constraintBottom_toTopOf="@+id/iv_air_fan_speed"
-        app:layout_constraintEnd_toEndOf="parent" />
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_air_fan_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="32dp"
         android:contentDescription="@string/air_fan_speed"
         android:src="@drawable/climate_fan_speed"
-        app:layout_constraintBottom_toTopOf="@+id/tv_air_cond_temp"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_air_direction" />
 
     <ImageView
         android:id="@+id/iv_ac_fan_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:contentDescription="@string/ac_fan_mode"
         android:src="@drawable/climate_fan"
-        app:layout_constraintBottom_toTopOf="@+id/tv_air_cond_temp"
-        app:layout_constraintEnd_toStartOf="@+id/iv_air_fan_speed" />
+        app:layout_constraintBottom_toBottomOf="@+id/iv_air_fan_speed"
+        app:layout_constraintEnd_toStartOf="@+id/iv_air_fan_speed"
+        app:layout_constraintTop_toTopOf="@+id/iv_air_fan_speed" />
 
     <ImageView
         android:id="@+id/iv_air_temp"
         android:layout_width="96dp"
         android:layout_height="96dp"
-        android:layout_gravity="end"
-        android:layout_marginBottom="16dp"
-        android:adjustViewBounds="true"
-        android:baselineAlignBottom="true"
+        android:layout_marginTop="16dp"
         android:contentDescription="@string/air_temp"
         android:src="@drawable/climate_temperature_setpoint"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_air_cond_temp" />
+        app:layout_constraintEnd_toStartOf="@+id/tv_air_cond_temp"
+        app:layout_constraintTop_toBottomOf="@+id/iv_air_ac_state" />
 
     <TextView
         android:id="@+id/tv_air_cond_temp"
@@ -106,16 +109,16 @@
         android:layout_height="96dp"
         android:layout_gravity="end"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         android:gravity="bottom|start"
         android:text="@string/empty_temp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="72sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/iv_air_temp" />
+        app:layout_constraintBottom_toBottomOf="@+id/iv_air_temp"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <android.support.constraint.Guideline android:layout_width="wrap_content"
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </android.support.constraint.ConstraintLayout>

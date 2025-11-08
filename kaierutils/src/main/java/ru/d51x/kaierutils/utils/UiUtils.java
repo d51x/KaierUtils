@@ -520,7 +520,7 @@ public class UiUtils {
     }
 
     public void updateObdStatus(ImageView view, boolean status) {
-        int color = R.color.white_color;
+        int color = R.color.gray_color;
         if ( status ) {
             color = R.color.temp_blue;
         } else {
