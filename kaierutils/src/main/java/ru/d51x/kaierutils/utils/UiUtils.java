@@ -467,20 +467,51 @@ public class UiUtils {
     }
     public void updateClimateDefogger(ImageView view, ClimateData.State state){
         //view.setVisibility( (state == ClimateData.State.on)  ? View.VISIBLE : View.INVISIBLE );
-        view.setImageResource( (state == ClimateData.State.on)
-                ? R.drawable.climate_rear_window_on
-                : R.drawable.climate_rear_window_off );
+//        view.setImageResource( (state == ClimateData.State.on)
+//                ? R.drawable.climate_rear_window_on
+//                : R.drawable.climate_rear_window_off );
+        int color = (state == ClimateData.State.on)
+                ? R.color.temp_orange
+                : R.color.gray_color;
+        Drawable drawable = ContextCompat.getDrawable(App.getInstance().getApplicationContext(),
+                R.drawable.climate_rear_window_off);
+        if (drawable != null) {
+            DrawableCompat.setTint(drawable,
+                    ContextCompat.getColor(App.getInstance().getApplicationContext(), color));
+            view.setImageDrawable(drawable);
+        }
     }
     public void updateClimateRecirculation(ImageView view, ClimateData.State state){
         //view.setVisibility((state == ClimateData.State.on) ? View.VISIBLE : View.INVISIBLE);
-        view.setImageResource((state == ClimateData.State.on)
-                ? R.drawable.climate_recirculation_on
-                : R.drawable.climate_recirculation_off);
+//        view.setImageResource((state == ClimateData.State.on)
+//                ? R.drawable.climate_recirculation_on
+//                : R.drawable.climate_recirculation_off);
+        int color = (state == ClimateData.State.on)
+                ? R.color.temp_orange
+                : R.color.gray_color;
+        Drawable drawable = ContextCompat.getDrawable(App.getInstance().getApplicationContext(),
+                R.drawable.climate_recirculation_off);
+        if (drawable != null) {
+            DrawableCompat.setTint(drawable,
+                    ContextCompat.getColor(App.getInstance().getApplicationContext(), color));
+            view.setImageDrawable(drawable);
+        }
     }
     public void updateClimateAcState(ImageView view, ClimateData.State state) {
-        view.setImageResource((state == ClimateData.State.on)
-                ? R.drawable.climate_ac_on_
-                : R.drawable.climate_ac_off_);
+//        view.setImageResource((state == ClimateData.State.on)
+//                ? R.drawable.climate_ac_on_
+//                : R.drawable.climate_ac_off_);
+        Drawable drawable = ContextCompat.getDrawable(App.getInstance().getApplicationContext(),
+                R.drawable.climate_ac_off_);
+        int color = (state == ClimateData.State.on)
+                ? R.color.temp_blue
+                : R.color.gray_color;
+
+        if (drawable != null) {
+            DrawableCompat.setTint(drawable,
+                    ContextCompat.getColor(App.getInstance().getApplicationContext(), color));
+            view.setImageDrawable(drawable);
+        }
     }
     public void updateClimateBlowMode(ImageView view, ClimateData.BlowMode blowMode){
         view.setVisibility((blowMode == ClimateData.BlowMode.auto)
