@@ -320,6 +320,27 @@ public class UiUtils {
         }
     }
     //---------------- SPEED ---------------------------------------------------------------
+    @SuppressLint("ResourceAsColor")
+    private int getSpeedColor(float speed, boolean withColor) {
+        int color = R.color.speed_lt_10;
+        if (!withColor) return color;
+        if (speed < 10) {
+            color = R.color.speed_lt_10;
+        } else if (speed < 40) {
+            color = R.color.speed_lt_40;
+        } else if (speed < 60) {
+            color = R.color.speed_lt_60;
+        } else if (speed < 80) {
+            color = R.color.speed_lt_80;
+        } else if (speed < 100) {
+            color = R.color.speed_lt_100;
+        } else if (speed < 120) {
+            color = R.color.speed_lt_120;
+        } else {
+            color = R.color.speed_max;
+        }
+        return color;
+    }
     public void updateSpeedText(TextView view, float speed, boolean withColor, int textSize) {
         view.setTextSize(textSize);
         updateSpeedText(view, speed, withColor);
@@ -328,17 +349,8 @@ public class UiUtils {
         view.setText(speed > 0 ? String.format(App.getInstance().getApplicationContext()
                 .getString(R.string.text_gps_speed_value), (int) speed) : "---");
 
-        int color = 0;
-        if ( withColor ) {
-            if ( speed < 10 ) color = Color.LTGRAY;
-            else if ( speed < 40 ) color = Color.rgb(0,255,255);
-            else if ( speed < 60 ) color = Color.rgb(0,255,144);
-            else if ( speed < 80 ) color = Color.rgb(182,255,0);
-            else if ( speed < 100 ) color = Color.rgb(255,216,0);
-            else if ( speed < 120 ) color = Color.rgb(155,106,0);
-            else color = Color.rgb(255,0,0);
-        }
-        view.setTextColor( color);
+        int color = getSpeedColor(speed, withColor);
+        view.setTextColor(ContextCompat.getColor(App.getInstance().getApplicationContext(), color));
     }
 
     public void updateSpeedIcon(ImageView view, float speed) {

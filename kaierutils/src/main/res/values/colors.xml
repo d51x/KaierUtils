@@ -13,6 +13,14 @@
 	<color name="temp_blue">#FF0088FF</color>
 	<color name="temp_indigo">#FF6155F5</color>
 
+	<color name="speed_lt_10">#FFCCCCCC</color>
+	<color name="speed_lt_40">#00FFFF</color>
+	<color name="speed_lt_60">#00FF90</color>
+	<color name="speed_lt_80">#B6FF00</color>
+	<color name="speed_lt_100">#FFD800</color>
+	<color name="speed_lt_120">#9B6A00</color>
+	<color name="speed_max">#FF0000</color>
+
 	<style name="MmcTheme" parent="@Theme.AppCompat">
 		<item name="android:windowBackground">@color/black_color</item>
 		<item name="android:colorBackground">@color/black_color</item>
