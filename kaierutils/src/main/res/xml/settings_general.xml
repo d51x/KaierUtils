@@ -5,7 +5,7 @@
         android:key="kaierutils_auto_start"
         android:title="@string/menu_general_auto_start" />
     <SwitchPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:key="kaierutils_auto_start_floating"
         android:title="@string/menu_general_auto_start_floating"
         />
