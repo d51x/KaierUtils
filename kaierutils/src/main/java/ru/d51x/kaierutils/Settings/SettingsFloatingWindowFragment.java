@@ -33,8 +33,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
+import androidx.preference.EditTextPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import java.util.Objects;
@@ -43,7 +46,28 @@ import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.R;
 
 public class SettingsFloatingWindowFragment extends PreferenceFragmentCompat implements OnSharedPreferenceChangeListener {
-	@Override
+
+	private final Preference.SummaryProvider<EditTextPreference> summaryProvider = preference -> {
+        String text = preference.getText();
+		switch (preference.getKey()) {
+			case SETTINGS_FLOATING_PANEL_ICON_SIZE:
+				if (!TextUtils.isEmpty(text))
+					return String.format(getString(R.string.menu_floating_panel_icon_size_summary), text);
+			case SETTINGS_FLOATING_PANEL_MAIN_TEXT_SIZE:
+				if (!TextUtils.isEmpty(text))
+					return String.format(getString(R.string.menu_floating_panel_main_text_size_summary), text);
+			case SETTINGS_FLOATING_PANEL_SECOND_TEXT_SIZE:
+				if (!TextUtils.isEmpty(text))
+					return String.format(getString(R.string.menu_floating_panel_second_text_size_summary), text);
+			case SETTINGS_FLOATING_PANEL_UNITS_SIZE:
+				if (!TextUtils.isEmpty(text))
+					return String.format(getString(R.string.menu_floating_panel_units_text_size_summary), text);
+			default:
+				return "not set";
+		}
+    };
+
+    @Override
 	public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
 		setPreferencesFromResource (R.xml.floating_panel, rootKey);
 		if (getActivity() != null) {
@@ -52,6 +76,18 @@ public class SettingsFloatingWindowFragment extends PreferenceFragmentCompat imp
 		Context context = App.getInstance();
 		SharedPreferences prefs = getDefaultSharedPreferences(context);
 		prefs.registerOnSharedPreferenceChangeListener(this);
+
+		EditTextPreference iconSizePref = findPreference(SETTINGS_FLOATING_PANEL_ICON_SIZE);
+		iconSizePref.setSummaryProvider(summaryProvider);
+
+		EditTextPreference mainSizePref = findPreference(SETTINGS_FLOATING_PANEL_MAIN_TEXT_SIZE);
+		mainSizePref.setSummaryProvider(summaryProvider);
+
+		EditTextPreference secondSizePref = findPreference(SETTINGS_FLOATING_PANEL_SECOND_TEXT_SIZE);
+		secondSizePref.setSummaryProvider(summaryProvider);
+
+		EditTextPreference unitSizePref = findPreference(SETTINGS_FLOATING_PANEL_UNITS_SIZE);
+		unitSizePref.setSummaryProvider(summaryProvider);
 	}
 
 	public void onPause() {
