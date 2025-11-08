@@ -92,10 +92,10 @@ public class Obd2 {
 
     public int fuelTankCapacity;
 
-    public boolean speedFromMeter;
-    public boolean speedFromEngine;
-    public boolean speedFromClimate;
-    public boolean speedFromCVT;
+    public boolean speedFromMeter = false;
+    public boolean speedFromEngine = true;
+    public boolean speedFromClimate = true;
+    public boolean speedFromCVT = false;
 
     @SuppressLint("HandlerLeak")
     public Obd2(Context context) {
@@ -117,9 +117,9 @@ public class Obd2 {
         fuelTankCapacity = prefs.getInt("ODBII_FUEL_TANK_CAPACITY", 60); // l
 
         speedFromEngine = prefs.getBoolean("ODB_SPEED_FROM_ENGINE", true);
-        speedFromMeter = prefs.getBoolean("ODB_SPEED_FROM_METER", true);
+        speedFromMeter = prefs.getBoolean("ODB_SPEED_FROM_METER", false);
         speedFromClimate = prefs.getBoolean("ODB_SPEED_FROM_AC", true);
-        speedFromCVT = prefs.getBoolean("ODB_SPEED_FROM_CVT", true);
+        speedFromCVT = prefs.getBoolean("ODB_SPEED_FROM_CVT", false);
 
         obdData = new ObdData();
         totalTrip = new TripData("total", true);
