@@ -68,7 +68,9 @@ public class SettingsFloatingWindowFragment extends PreferenceFragmentCompat imp
 		}
     };
 
-	private final EditTextPreference.OnBindEditTextListener editTextListener = editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+	private final EditTextPreference.OnBindEditTextListener editTextListener = editText -> {
+		editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+	};
 
     @Override
 	public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
