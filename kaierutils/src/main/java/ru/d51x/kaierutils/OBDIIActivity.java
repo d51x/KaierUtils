@@ -358,6 +358,11 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
 
 
         tvFuelLevel.setText(String.format( getString( R.string.text_obd_can_fuel_level), "---"));
+        tvMileage.setText("------");
+        tvWorkHoursTotal.setText("----.-");
+
+        tvServiceReminderDistance.setText("----");
+        tvServiceReminderPeriod.setText("--");
 
         App.obd.readExtendMeter = true;
         App.obd.readExtendCvt = true;
