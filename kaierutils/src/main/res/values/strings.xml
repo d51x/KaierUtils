@@ -6,13 +6,15 @@
 	<!-- menu headers -->
     <string name="header_about_title">О программе</string>
     <string name="header_main_title">Dashboard</string>
-    <string name="header_general_title">Общее</string>
+    <string name="header_settings_title">Настройки</string>
 	<string name="header_reverse_title">Задний ход</string>
 	<string name="header_sleep_wakeup_title">Sleep mode/WakeUp</string>
 	<string name="header_obd_settings_title">Настройки OBD</string>
 	<string name="header_floating_window_title">Плавающая панель</string>
 
 	<!-- general menu -->
+	<string name="menu_general_title">Общие настройки</string>
+	<string name="menu_general_summary">Основные настройки прииложения</string>
 	<string name="menu_general_auto_start">Показывать главное окно при включении</string>
 	<string name="menu_general_auto_start_floating">Плавающее окно при запуске</string>
 	<string name="menu_general_show_floating">Показывать плавающее окно</string>
@@ -28,6 +30,8 @@
 	<string name="menu_general_show_gps_satellities_title">Отображать данные о спутниках GPS</string>
 
 	<!-- Floating Panel -->
+	<string name="menu_floating_panel_title">Плавающая панель</string>
+	<string name="menu_floating_panel_summary">Настройки внешнего вида плавающей панели</string>
 	<string name="menu_category_floating_panel_settings">Настройки</string>
 	<string name="menu_category_floating_panel_icons">Отображать показания</string>
 	<string name="menu_floating_panel_icon_speed_title">Скорость</string>
@@ -49,6 +53,7 @@
 	<string name="menu_floating_panel_units_text_size_summary">Текущий размер %1$s</string>
 
 	<!-- reverse menu -->
+	<string name="menu_reverse_summary">Настройки звука при включении заднего хода</string>
 	<string name="menu_category_reverse_fixed_volume">Фиксированный уровень громкости</string>
 	<string name="menu_category_reverse_percent_volume">Относительный уровень громкости</string>
 	<string name="menu_reverse_change_volume_title">Уменьшать громкости при включении ЗХ</string>
@@ -64,6 +69,7 @@
 	<string name="menu_reverse_percent_volume_level_dialog">Введите процент уменьшения</string>
 
 	<!-- sleep mode / wake up -->
+	<string name="menu_sleep_wakeup_summary">Настройки звука при засыпании/просыпании устройства</string>
 	<string name="menu_category_startup_change_volume">Громкость при включении устройства</string>
 	<string name="menu_startup_volume_change_title">Изменять громкость при запуске</string>
 	<string name="menu_startup_volume_level_title">Уровень громкости</string>
@@ -76,6 +82,8 @@
 	<string name="menu_wakeup_volume_level_dialog">Выберите уровень громкости (от 1 до 10) </string>
 
 	    <!-- OBD II Settings -->
+    <string name="menu_obd_title">Настройки CAN</string>
+    <string name="menu_obd_summary">Настройки чтения параметров по CAN</string>
     <string name="menu_obd_use_obd">Подключаться к адаптеру OBD (ELM 327)</string>
 
 

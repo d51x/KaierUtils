@@ -1,12 +1,18 @@
 package ru.d51x.kaierutils.TWUtils;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_AUTOSTART;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_AUTOSTART_DEFAULT;
+
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.preference.PreferenceManager;
 
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.BackgroundService;
@@ -22,7 +28,8 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
     public TWUtilBroadcastReceiver () {
    }
 
-	@Override
+	@SuppressLint("SuspiciousIndentation")
+    @Override
 	public void onReceive (Context context, Intent intent) {
 
 		// TODO: надо ли так делать или достаточно при загрузке?
@@ -42,7 +49,10 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
 					"Boot completed", Toast.LENGTH_LONG);
 			toast.show();
 
-			if (App.GS.ui.isAutoStart) {
+			boolean autoStart = PreferenceManager.getDefaultSharedPreferences(context)
+					.getBoolean(SETTINGS_AUTOSTART, SETTINGS_AUTOSTART_DEFAULT);
+
+			if (autoStart) {
 				Intent mIntent = new Intent(context, MainActivity.class);
 				mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(mIntent);
@@ -59,7 +69,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             App.obd.todayTrip.saveData();
             App.obd.totalTrip.saveData();
 
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+			SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
 			prefs.edit().putInt("last_audio_focus_id", App.GS.curAudioFocusID).apply();
 
 		}
@@ -74,7 +84,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             App.obd.todayTrip.saveData();
             App.obd.totalTrip.saveData();
 
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+			SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
 			prefs.edit().putInt("last_audio_focus_id", App.GS.curAudioFocusID).apply();
 
 		}
@@ -87,7 +97,7 @@ public class TWUtilBroadcastReceiver extends BroadcastReceiver {
             App.obd.oneTrip.loadData();
             App.obd.todayTrip.loadData();
             App.obd.totalTrip.loadData();
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+			SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
 			App.GS.curAudioFocusID = prefs.getInt("last_audio_focus_id", -1);
 
 		}

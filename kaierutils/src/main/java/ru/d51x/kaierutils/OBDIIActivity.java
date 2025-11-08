@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_AWC_2130_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2110_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2111_CHANGED;
@@ -44,15 +45,12 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -61,20 +59,18 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.core.app.ActivityCompat;
+
 import java.util.ArrayList;
 import java.util.Set;
 
 import ru.d51x.kaierutils.Data.CombineMeterData;
 import ru.d51x.kaierutils.Data.CvtData;
-import ru.d51x.kaierutils.utils.UiUtils;
 
 
 public class OBDIIActivity extends Activity implements View.OnClickListener {
 
 
-    private Button btnSelectDevice;
-    private Button btnConnect;
-    private Button btnDisconnect;
     private TextView tvDeviceName;
     private TextView tvDeviceStatus;
     private TextView tvOBDEngineRPM;
@@ -117,7 +113,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     private TextView tvOBD_MAF;
     private Switch swUseOBD;
 
-    private UiUtils ui = new UiUtils();
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @SuppressLint("DefaultLocale")
         @Override
@@ -208,7 +203,6 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
             else if (ACTION_OBD_METER_21BC_CHANGED.equals(action)) {
                 CombineMeterData meterData = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21BC );
                 if (meterData != null) {
-                    int i = meterData.getFuelLevel();
                     tvServiceReminderDistance.setText(String.format("%1$d", meterData.getServiceReminderDistance()));
                     tvServiceReminderPeriod.setText(String.format("%1$d", meterData.getServiceReminderPeriod()));
                 }
@@ -217,9 +211,9 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     };
 
     public static void show_odb_device_select_dialog(Context context) {
-        ArrayList<String> deviceStrs = new ArrayList<String>();
-        final ArrayList<String> devices = new ArrayList<String>();
-        final ArrayList<String> devicesName = new ArrayList<String>();
+        ArrayList<String> deviceStrs = new ArrayList<>();
+        final ArrayList<String> devices = new ArrayList<>();
+        final ArrayList<String> devicesName = new ArrayList<>();
 
 
         BluetoothManager btManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
@@ -252,22 +246,19 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         // show list
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.select_dialog_singlechoice,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.select_dialog_singlechoice,
                 deviceStrs.toArray(new String[0]));
 
-        alertDialog.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                int position = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                App.obd.setDeviceAddress(devices.get(position));
-                App.obd.setDeviceName(devicesName.get(position));
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
-                prefs.edit()
-                        .putString("ODBII_DEVICE_ADDRESS", App.obd.getDeviceAddress())
-                        .putString("ODBII_DEVICE_NAME", App.obd.getDeviceName())
-                        .apply();
-            }
+        alertDialog.setSingleChoiceItems(adapter, -1, (dialog, which) -> {
+            dialog.dismiss();
+            int position = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+            App.obd.setDeviceAddress(devices.get(position));
+            App.obd.setDeviceName(devicesName.get(position));
+            SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
+            prefs.edit()
+                    .putString("ODBII_DEVICE_ADDRESS", App.obd.getDeviceAddress())
+                    .putString("ODBII_DEVICE_NAME", App.obd.getDeviceName())
+                    .apply();
         });
 
         alertDialog.setTitle("Choose Bluetooth device");
@@ -281,11 +272,11 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_obdii);
 
-        btnSelectDevice = findViewById(R.id.btnSelectDevice);
+        Button btnSelectDevice = findViewById(R.id.btnSelectDevice);
         btnSelectDevice.setOnClickListener(this);
-        btnConnect = findViewById(R.id.btnOBDConnect);
+        Button btnConnect = findViewById(R.id.btnOBDConnect);
         btnConnect.setOnClickListener(this);
-        btnDisconnect = findViewById(R.id.btnOBDDisconnect);
+        Button btnDisconnect = findViewById(R.id.btnOBDDisconnect);
         btnDisconnect.setOnClickListener(this);
         tvDeviceName = findViewById(R.id.tvDeviceName);
         tvDeviceStatus = findViewById(R.id.tvDeviceStatus);
@@ -449,7 +440,7 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
         switch (v.getId()) {
             case R.id.btnSelectDevice:
                 show_odb_device_select_dialog( this );
@@ -511,11 +502,4 @@ public class OBDIIActivity extends Activity implements View.OnClickListener {
     }
 
 
-    public UiUtils getUi() {
-        return ui;
-    }
-
-    public void setUi(UiUtils ui) {
-        this.ui = ui;
-    }
 }

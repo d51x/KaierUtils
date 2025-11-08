@@ -1,7 +1,8 @@
 package ru.d51x.kaierutils.Settings;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
+//import android.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,8 +37,12 @@ public class AboutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View mV = inflater.inflate(R.layout.fragment_about, container, false);
+        if (getActivity() != null) {
+            getActivity().setTitle(getString(R.string.header_about_title));
+        }
         // statistics
         tvReverseCount = mV.findViewById(R.id.tv_reverse_count);
         tvSleepModeCount = mV.findViewById(R.id.tv_sleep_mode_count);

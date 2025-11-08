@@ -1,48 +1,63 @@
 package ru.d51x.kaierutils.Settings;
 
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP_LEVEL;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP_LEVEL_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP_LEVEL;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP_LEVEL_DEFAULT;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
+
+import androidx.annotation.Nullable;
+import androidx.preference.PreferenceFragmentCompat;
+
+import java.util.Objects;
 
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.R;
 
-public class SettingsSleepWakeUpFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+public class SettingsSleepWakeUpFragment extends PreferenceFragmentCompat implements OnSharedPreferenceChangeListener {
 
-
-	public void onCreate (Bundle savedInstanceState) {
-		super.onCreate (savedInstanceState);
-		addPreferencesFromResource (R.xml.sleep_wakeup);
-
+	@Override
+	public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+		setPreferencesFromResource (R.xml.sleep_wakeup, rootKey);
+		if (getActivity() != null) {
+			getActivity().setTitle(getString(R.string.header_sleep_wakeup_title));
+		}
 		Context context = App.getInstance();
-		SharedPreferences prefs =
-				PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences prefs = getDefaultSharedPreferences(context);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 	}
 
 	public void onPause() {
 		super.onPause();
-		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+		Objects.requireNonNull(getPreferenceScreen().getSharedPreferences()).unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 	public void onResume() {
 		super.onResume();
-		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+		Objects.requireNonNull(getPreferenceScreen().getSharedPreferences()).registerOnSharedPreferenceChangeListener(this);
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if ( key.equals ( "CAR_SETTINGS__VOLUME_AT_START_UP__DO_CHANGE" )) {
-			App.GS.volumeOptions.isNeedSoundDecreaseAtStartUp = sharedPreferences.getBoolean ( key, false);
-		} else if (key.equals ("CAR_SETTINGS__VOLUME_AT_START_UP__LEVEL")) {
-			App.GS.volumeOptions.volumeLevelAtStartUp = sharedPreferences.getInt (key, 3);
-		} else if (key.equals ("CAR_SETTINGS__VOLUME_AT_WAKE_UP__DO_CHANGE")) {
-			App.GS.volumeOptions.isNeedSoundDecreaseAtWakeUp = sharedPreferences.getBoolean (key, false);
-		} else if (key.equals ("CAR_SETTINGS__VOLUME_AT_WAKE_UP__LEVEL")) {
-			App.GS.volumeOptions.volumeLevelAtWakeUp = sharedPreferences.getInt (key, 3);
-		}
+		switch (Objects.requireNonNull(key)) {
+            case SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP ->
+                    App.GS.volumeOptions.isNeedSoundDecreaseAtStartUp = sharedPreferences.getBoolean(key, SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP_DEFAULT);
+            case SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP_LEVEL ->
+                    App.GS.volumeOptions.volumeLevelAtStartUp = sharedPreferences.getInt(key, SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP_LEVEL_DEFAULT);
+            case SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP ->
+                    App.GS.volumeOptions.isNeedSoundDecreaseAtWakeUp = sharedPreferences.getBoolean(key, SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP_DEFAULT);
+            case SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP_LEVEL ->
+                    App.GS.volumeOptions.volumeLevelAtWakeUp = sharedPreferences.getInt(key, SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP_LEVEL_DEFAULT);
+        }
 	}
 }

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 1
 def versionMinor = 12
-def versionPatch = 8
+def versionPatch = 9
 def packageName = "ru.d51x.kaierutils"
 
 android {
@@ -21,6 +21,12 @@ android {
 	signingConfigs {
 		debug {
 //            storeFile file("debug.keystore")
+			storeFile file('../keystore.jks')
+			storePassword '123456'
+			keyAlias 'key0'
+			keyPassword '123456'
+			v1SigningEnabled true
+			v2SigningEnabled true
 		}
 		release {
 			storeFile file('../keystore.jks')
@@ -55,6 +61,12 @@ android {
 			buildConfigField "Boolean", "SIMULATE_OBD", "false"
 		}
 	}
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_17
+		targetCompatibility JavaVersion.VERSION_17
+	}
+
+	buildToolsVersion '36.0.0'
 
 	applicationVariants.all { variant ->
 		variant.outputs.all { output ->
@@ -67,13 +79,15 @@ android {
 }
 
 dependencies {
+	implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
-	//implementation 'com.android.support:appcompat-v7:26.1.0'
-	implementation 'com.android.support.constraint:constraint-layout:2.0.4'
-	implementation 'com.android.support:design:28.0.0'
-	implementation 'com.android.support:support-v4:28.0.0'
-	implementation 'com.android.support:cardview-v7:28.0.0'
+
+	implementation 'androidx.preference:preference:1.2.1'
+	implementation 'androidx.appcompat:appcompat:1.7.1'
+	implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+	implementation 'androidx.cardview:cardview:1.0.0'
+//	implementation 'com.android.support:cardview-v7:28.0.0'
 	compileOnly files('libs/twUtil.jar')
-//	implementation 'androidx.activity:activity:1.11.0'
-//	implementation 'androidx.fragment:fragment:1.8.9'
+	implementation 'androidx.activity:activity:1.11.0'
+	implementation 'androidx.fragment:fragment:1.8.9'
 }

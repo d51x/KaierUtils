@@ -1,4 +1,4 @@
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 
@@ -118,9 +118,10 @@
 		android:paddingEnd="0dp"
 		android:paddingBottom="0dp"
 		android:src="@drawable/bt_state"
-		android:tint="@color/gray_color"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/gray_color" />
 
 	<!--	<ImageView-->
 	<!--		android:id="@+id/iv_bg_seat"-->
@@ -143,12 +144,6 @@
 		android:layout_marginBottom="16dp"
 		app:layout_constraintEnd_toEndOf="@+id/ivOBD2Status"
 		app:layout_constraintTop_toBottomOf="@+id/ivOBD2Status" />
-
-	<android.support.constraint.Guideline
-		android:id="@+id/guideline"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		app:layout_constraintGuide_percent="1.1069278" />
 
 	<ImageView
 		android:id="@+id/ivGPSDistance"
@@ -277,36 +272,4 @@
 		app:layout_constraintBottom_toBottomOf="@+id/tvOBD_FuelConsump"
 		app:layout_constraintStart_toEndOf="@+id/tvOBD_FuelConsump" />
 
-	<android.support.constraint.Barrier android:layout_width="wrap_content"
-		android:layout_height="wrap_content" />
-
-	<android.support.constraint.helper.Flow android:layout_width="wrap_content"
-		android:layout_height="wrap_content" />
-
-	<android.support.constraint.helper.Flow android:layout_width="wrap_content"
-		android:layout_height="wrap_content" />
-
-	<android.support.constraint.Guideline
-		android:id="@+id/guideline9"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" />
-
-	<android.support.constraint.Guideline
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		app:layout_constraintGuide_percent="1.1024096" />
-
-	<android.support.constraint.Guideline
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		app:layout_constraintGuide_percent="1.0828314" />
-
-	<android.support.constraint.Guideline
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" />
-
-	<android.support.constraint.Guideline android:layout_width="wrap_content"
-		android:layout_height="wrap_content" />
-
-
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

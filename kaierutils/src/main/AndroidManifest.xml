@@ -73,7 +73,7 @@
         <activity
             android:name=".Settings.SettingsActivity"
             android:exported="true"
-            android:label="@string/header_general_title"
+            android:label="@string/header_settings_title"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.GeneralSettings" />

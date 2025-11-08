@@ -1,18 +1,16 @@
 package ru.d51x.kaierutils.utils;
 
 import android.annotation.SuppressLint;
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.Data.ClimateData;
@@ -107,10 +105,10 @@ public class UiUtils {
     }
 
 
-    public void updateCvtOilDegradationIcon(ImageView view, int temp) {
-        int imageRes = R.drawable.cvt_degr_nom;
-        view.setImageResource(imageRes);
-    }
+//    public void updateCvtOilDegradationIcon(ImageView view, int temp) {
+//        int imageRes = R.drawable.cvt_degr_nom;
+//        view.setImageResource(imageRes);
+//    }
 
     //---------------- BATTERY ----------------------------------------------------------
     @SuppressLint("DefaultLocale")
@@ -127,7 +125,7 @@ public class UiUtils {
     }
 
     private int getBatteryLevelColor(float voltage) {
-        int color = R.color.white_color;
+        int color;
         if (voltage < 1) {
             color = R.color.white_color;
         }
@@ -193,7 +191,7 @@ public class UiUtils {
         view.setImageResource(res);
     }
     private int getCoolantTemperatureColor(float temp) {
-        int color = R.color.white_color;
+        int color;
         if (temp == -255) {
             color = R.color.white_color;
         }
@@ -378,7 +376,7 @@ public class UiUtils {
     }
 
     private int getClimateTemperatureColor(float temp) {
-        int color = R.color.white_color;
+        int color;
         if ( temp < 19f )
             color = R.color.temp_blue;
         else if ( temp < 21f )
@@ -409,54 +407,34 @@ public class UiUtils {
         //if (a.hasValue(R.styleable.ClimateData_BlowDirection)) {
         //    res = ClimateData.BlowDirection.values()[a.getInt(R.styleable.ClimateData_BlowDirection, 0)].ordinal();
         //}
-        switch (blowDirection) {
-            case off:
-                res = 0;
-                break;
-            case face:
-                res = R.drawable.climate_air_wind_face;
-                break;
-            case from_face_to_feet_and_face:
-                res = R.drawable.climate_air_wind_feet_face2;
-                break;
-            case feet_and_face:
-                res = R.drawable.climate_air_wind_feet_face;
-                break;
-            case from_feet_and_face_to_feet:
-                res = R.drawable.climate_air_wind_feet2_face;
-                break;
-            case feet:
-                res = R.drawable.climate_air_wind_feet;
-                break;
-            case from_feet_to_feet_and_window:
-                res = R.drawable.climate_air_wind_feet2_window;
-                break;
-            case feet_and_window:
-                res = R.drawable.climate_air_wind_feet2_window;
-                break;
-            case from_feet_and_window_to_window:
-                res = R.drawable.climate_air_wind_feet_window2;
-                break;
-            case window:
-                res = R.drawable.climate_air_wind_window;
-                break;
-        }
+        res = switch (blowDirection) {
+            case off -> 0;
+            case face -> R.drawable.climate_air_wind_face;
+            case from_face_to_feet_and_face -> R.drawable.climate_air_wind_feet_face2;
+            case feet_and_face -> R.drawable.climate_air_wind_feet_face;
+            case from_feet_and_face_to_feet -> R.drawable.climate_air_wind_feet2_face;
+            case feet -> R.drawable.climate_air_wind_feet;
+            case from_feet_to_feet_and_window -> R.drawable.climate_air_wind_feet2_window;
+            case feet_and_window -> R.drawable.climate_air_wind_feet2_window;
+            case from_feet_and_window_to_window -> R.drawable.climate_air_wind_feet_window2;
+            case window -> R.drawable.climate_air_wind_window;
+            default -> res;
+        };
         view.setImageResource( res );
     }
     public void updateClimateFanSpeed(ImageView view, ClimateData.FanSpeed fanSpeed) {
-        int res;
-        switch ( fanSpeed ) {
-            case off:       res = R.drawable.climate_fan_speed_0; break;
-            case speed1:    res = R.drawable.climate_fan_speed_1; break;
-            case speed2:    res = R.drawable.climate_fan_speed_2; break;
-            case speed3:    res = R.drawable.climate_fan_speed_3; break;
-            case speed4:    res = R.drawable.climate_fan_speed_4; break;
-            case speed5:    res = R.drawable.climate_fan_speed_5; break;
-            case speed6:    res = R.drawable.climate_fan_speed_6; break;
-            case speed7:    res = R.drawable.climate_fan_speed_7; break;
-            case speed8:    res = R.drawable.climate_fan_speed_8; break;
-            default: res = R.drawable.climate_fan_speed_0;
-        }
+        int res = switch (fanSpeed) {
+            case off -> R.drawable.climate_fan_speed_0;
+            case speed1 -> R.drawable.climate_fan_speed_1;
+            case speed2 -> R.drawable.climate_fan_speed_2;
+            case speed3 -> R.drawable.climate_fan_speed_3;
+            case speed4 -> R.drawable.climate_fan_speed_4;
+            case speed5 -> R.drawable.climate_fan_speed_5;
+            case speed6 -> R.drawable.climate_fan_speed_6;
+            case speed7 -> R.drawable.climate_fan_speed_7;
+            case speed8 -> R.drawable.climate_fan_speed_8;
+            default -> R.drawable.climate_fan_speed_0;
+        };
         view.setImageResource( res );
     }
     public void updateClimateFanMode(ImageView view, ClimateData.FanMode fanMode) {
@@ -520,7 +498,7 @@ public class UiUtils {
     }
 
     public void updateObdStatus(ImageView view, boolean status) {
-        int color = R.color.gray_color;
+        int color;
         if ( status ) {
             color = R.color.temp_blue;
         } else {

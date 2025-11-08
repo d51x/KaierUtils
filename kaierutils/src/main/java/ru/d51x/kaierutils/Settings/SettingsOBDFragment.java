@@ -1,28 +1,25 @@
 package ru.d51x.kaierutils.Settings;
 
 
-import android.Manifest;
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.SwitchCompat;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -30,30 +27,28 @@ import java.util.Set;
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.BackgroundService;
 import ru.d51x.kaierutils.R;
+import ru.d51x.kaierutils.utils.Permissions;
 
 public class SettingsOBDFragment extends  Fragment  implements View.OnClickListener, View.OnFocusChangeListener {
 
-    private Switch swUseOBD2;
+    private SwitchCompat swUseOBD2;
     private TextView tvOBDDevice;
     private TextView tvDeviceState;
-    private Switch cbNewObdProcess;
+    private SwitchCompat cbNewObdProcess;
 
-    private Switch cbCanMMC_show_climate_data;
-    private Switch cbCanMMC_show_parking_data;
-    private Switch cbOBD_show_fuel_consump_detail;
+    private SwitchCompat cbCanMMC_show_climate_data;
+    private SwitchCompat cbCanMMC_show_parking_data;
+    private SwitchCompat cbOBD_show_fuel_consump_detail;
 
     private EditText edtCanMMC_fueltank_update_time;
     private EditText edtCVT_temp_update_time;
     private EditText edtCanMMC_oil_degr_update_time;
     private EditText etSettingsFuelTankCapacity;
 
-    private Button btnOBDSelectDevice2;
-    private Button btnOBDConnect2;
-    private Button btnOBDDisconnect2;
-    private Switch cbSpeedFromMeter;
-    private Switch cbSpeedFromEngine;
-    private Switch cbSpeedFromAC;
-    private Switch cbSpeedFromCVT;
+    private SwitchCompat cbSpeedFromMeter;
+    private SwitchCompat cbSpeedFromEngine;
+    private SwitchCompat cbSpeedFromAC;
+    private SwitchCompat cbSpeedFromCVT;
 
     public SettingsOBDFragment() {
 
@@ -65,8 +60,10 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View mV = inflater.inflate(R.layout.fragment_obdii, container, false);
-        // statistics
-       // tvReverseCount = (TextView) mV.findViewById(R.id.tv_reverse_count);
+        if (getActivity() != null) {
+            getActivity().setTitle(getString(R.string.header_obd_settings_title));
+        }
+
         Context context = App.getInstance();
 
         swUseOBD2 = mV.findViewById(R.id.swUseOBD2);
@@ -104,12 +101,12 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         edtCanMMC_oil_degr_update_time.setText(Integer.toString(App.obd.can.can_mmc_cvt_degradation_update_time));
         edtCanMMC_oil_degr_update_time.setOnFocusChangeListener( this );
 
-        btnOBDSelectDevice2 = mV.findViewById(R.id.btnSelectDevice2);
+        Button btnOBDSelectDevice2 = mV.findViewById(R.id.btnSelectDevice2);
         btnOBDSelectDevice2.setOnClickListener(this);
 
-        btnOBDConnect2 = mV.findViewById(R.id.btnOBDConnect2);
+        Button btnOBDConnect2 = mV.findViewById(R.id.btnOBDConnect2);
         btnOBDConnect2.setOnClickListener(this);
-        btnOBDDisconnect2 = mV.findViewById(R.id.btnOBDDisconnect2);
+        Button btnOBDDisconnect2 = mV.findViewById(R.id.btnOBDDisconnect2);
         btnOBDDisconnect2.setOnClickListener(this);
 
         etSettingsFuelTankCapacity = mV.findViewById(R.id.etSettingsFuelTankCapacity);
@@ -135,11 +132,6 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         return mV;
     }
 
-
-	//	super.onPause();
-//getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-//	}
-
 	public void onResume() {
 		super.onResume();
 
@@ -149,14 +141,12 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         }
         tvOBDDevice.setText(String.format(getString(R.string.odbii_device_name), str));
         tvDeviceState.setText(String.format(getString(R.string.odbii_device_status), App.obd.isConnected ? "Подключен" : "Не подключен"));
-
-
     }
 
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
         switch (v.getId()) {
             case R.id.swUseOBD2:
                 App.obd.useOBD = swUseOBD2.isChecked();
@@ -214,13 +204,11 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
         switch (v.getId()) {
             case R.id.edtCanMMC_fueltank_update_time:
                     // show dialog slider
-                if ( hasFocus ) {
-                    // появился фокус?
-                } else {
+                if ( !hasFocus ) {
                     App.obd.can.can_mmc_fuel_remain_update_time = Integer.parseInt( edtCanMMC_fueltank_update_time.getText().toString() );
                     prefs.edit().putInt("ODBII_CAN_MMC_FUEL_REMAIN_UPDATE_TIME", App.obd.can.can_mmc_fuel_remain_update_time).apply();
                 }
@@ -245,7 +233,6 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
                 break;
             default:
                 break;
-
         }
     }
 
@@ -260,12 +247,13 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         }
     }
 
-    public  static void show_odb_device_select_dialog(Context context) {
-        ArrayList<String> deviceStrs = new ArrayList<String>();
-        final ArrayList<String> devices = new ArrayList<String>();
-        final ArrayList<String> devicesName = new ArrayList<String>();
+    public  void show_odb_device_select_dialog(Context context) {
+        ArrayList<String> deviceStrs = new ArrayList<>();
+        final ArrayList<String> devices = new ArrayList<>();
+        final ArrayList<String> devicesName = new ArrayList<>();
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (ActivityCompat.checkSelfPermission(App.getInstance().getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+        //if (ActivityCompat.checkSelfPermission(App.getInstance().getApplicationContext(),
+        //        Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -273,8 +261,10 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
+            Permissions permissions = new Permissions(SettingsOBDFragment.this);
+            permissions.requestPermissions2();
+            //return;
+        //}
         Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
         if (!pairedDevices.isEmpty())
         {
@@ -288,22 +278,17 @@ public class SettingsOBDFragment extends  Fragment  implements View.OnClickListe
         // show list
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder( context );
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.select_dialog_singlechoice,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.select_dialog_singlechoice,
                 deviceStrs.toArray(new String[0]));
 
-        alertDialog.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                dialog.dismiss();
-                int position = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                App.obd.setDeviceAddress(devices.get(position));
-                App.obd.setDeviceName( devicesName.get(position));
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
-                prefs.edit().putString("ODBII_DEVICE_ADDRESS", App.obd.getDeviceAddress()).apply();
-                prefs.edit().putString("ODBII_DEVICE_NAME", App.obd.getDeviceName()).apply();
-            }
+        alertDialog.setSingleChoiceItems(adapter, -1, (dialog, which) -> {
+            dialog.dismiss();
+            int position = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+            App.obd.setDeviceAddress(devices.get(position));
+            App.obd.setDeviceName( devicesName.get(position));
+            SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
+            prefs.edit().putString("ODBII_DEVICE_ADDRESS", App.obd.getDeviceAddress()).apply();
+            prefs.edit().putString("ODBII_DEVICE_NAME", App.obd.getDeviceName()).apply();
         });
 
         alertDialog.setTitle("Choose Bluetooth device");

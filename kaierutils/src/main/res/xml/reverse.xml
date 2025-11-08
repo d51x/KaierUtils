@@ -1,7 +1,8 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:seekbar="http://schemas.android.com/apk/res-auto"
 	>
-	<SwitchPreference
+	<SwitchPreferenceCompat
 		android:key="CAR_SETTINGS__VOLUME_AT_REVERSE__DO_CHANGE"
 		android:title="@string/menu_reverse_change_volume_title"
 		android:defaultValue="false"
@@ -15,7 +16,7 @@
 			android:dependency="CAR_SETTINGS__VOLUME_AT_REVERSE__DO_CHANGE"
 			/>
 
-		<ru.d51x.kaierutils.Settings.SeekBarPreference
+		<EditTextPreference
 			android:key="CAR_SETTINGS__VOLUME_AT_REVERSE__FIXED_LEVEL"
 			android:title="@string/menu_reverse_fixed_volume_level_title"
 			android:summary="@string/menu_reverse_fixed_volume_level_summary"
@@ -35,7 +36,7 @@
 			android:dependency="CAR_SETTINGS__VOLUME_AT_REVERSE__DO_CHANGE"
 		/>
 
-		<ru.d51x.kaierutils.Settings.SeekBarPreference
+		<EditTextPreference
 			android:key="CAR_SETTINGS__VOLUME_AT_REVERSE__PERCENTAGE_LEVEL"
 			android:title="@string/menu_reverse_percent_volume_level_title"
 			android:summary="@string/menu_reverse_percent_volume_level_summary"
@@ -46,4 +47,4 @@
 			seekbar:minValue="10"
 		/>
 	</PreferenceCategory>
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

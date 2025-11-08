@@ -1,5 +1,7 @@
 package ru.d51x.kaierutils;
 
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_GPS_SPEED_DEFAULT;
+
 import ru.d51x.kaierutils.Data.GpsData;
 import ru.d51x.kaierutils.Data.UiOptions;
 import ru.d51x.kaierutils.Data.VolumeOptions;
@@ -18,7 +20,7 @@ public class GlSets {
 
 	private int Volume;
 
-    public boolean isGpsSpeed = false;
+    public boolean isGpsSpeed = SETTINGS_GPS_SPEED_DEFAULT;
     public VolumeOptions volumeOptions = new VolumeOptions();
 
     public int ReverseActivityCount;

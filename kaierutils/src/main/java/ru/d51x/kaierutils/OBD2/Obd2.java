@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils.OBD2;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.*;
 import static ru.d51x.kaierutils.utils.MessageUtils.SendBroadcastAction;
 import static ru.d51x.kaierutils.utils.SecurityUtils.calculateSkeyCVT;
@@ -20,9 +21,10 @@ import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,11 +62,11 @@ public class Obd2 {
 
     public static final String TAG = "OBD2";
 
-    private static long tSleep = 0;
+//    private static long tSleep = 0;
     public boolean isConnected;
     public boolean useOBD;
-    public boolean fuelConsumpShow = true;
-    public int engineTempUpdateTime = 5; // сек
+    public boolean fuelConsumpShow;
+    public int engineTempUpdateTime;
     public MassAirFlowObdCommand mafObdCommand;
 
     public ObdData obdData;
@@ -76,26 +78,26 @@ public class Obd2 {
     public boolean readExtendClimate = false;
     public boolean readEtacsCoding = false;
     public boolean readEngineCoding = false;
-    public boolean newObdProcess = true;
+    public boolean newObdProcess;
     public boolean newDistanceCalc = true;
     public TripData totalTrip;
     public TripData oneTrip;
     public TripData todayTrip;
 
     public CanMmcData can;
-    private Context mContext;
+    private final Context mContext;
     private String deviceName;
     private String deviceAddress;
-    private Handler mHandler = new Handler();
+    private Handler mHandler;
     private BluetoothSocket socket;
     private long mafTimeStamp1, mafTimeStamp2;
 
     public int fuelTankCapacity;
 
-    public boolean speedFromMeter = false;
-    public boolean speedFromEngine = true;
-    public boolean speedFromClimate = true;
-    public boolean speedFromCVT = false;
+    public boolean speedFromMeter;
+    public boolean speedFromEngine;
+    public boolean speedFromClimate;
+    public boolean speedFromCVT;
 
     @SuppressLint("HandlerLeak")
     public Obd2(Context context) {
@@ -103,7 +105,7 @@ public class Obd2 {
         deviceName = null;
         deviceAddress = null;
         isConnected = false;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences prefs = getDefaultSharedPreferences(mContext);
         deviceAddress = prefs.getString("ODBII_DEVICE_ADDRESS", null);
         deviceName = prefs.getString("ODBII_DEVICE_NAME", null);
         socket = null;
@@ -136,7 +138,7 @@ public class Obd2 {
 
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
-            public void handleMessage(Message message) {
+            public void handleMessage(@NonNull Message message) {
                 processHandler(message);
             }
         };
@@ -159,13 +161,13 @@ public class Obd2 {
     }
 
     public boolean connect() {
-	    Log.d(TAG, "OBD2->connect(), useOBD is " + String.valueOf (useOBD));
+	    Log.d(TAG, "OBD2->connect(), useOBD is " + useOBD);
         if ( !useOBD ) return false;
         if ( deviceAddress == null) {
             Log.w(TAG, "No device selected");
             return false;
         }
-	    Log.d(TAG, "OBD2->connect(), isConnected is " + String.valueOf (isConnected));
+        Log.d(TAG, "OBD2->connect(), isConnected is " + isConnected);
         //if ( isConnected ) return;
         BluetoothManager btManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter btAdapter = btManager.getAdapter();
@@ -228,7 +230,7 @@ public class Obd2 {
 
        } catch (Exception e) {
             //socket = null;
-            Log.e(TAG, "OBDII-->connect(): " + e.toString());
+            Log.e(TAG, "OBDII-->connect(): " + e);
             e.printStackTrace();
             return false;
         }
@@ -242,18 +244,18 @@ public class Obd2 {
             Log.d(TAG, "OBD2->disconnect() socket is closed");
 
         } catch (Exception e) {
-            Log.e(TAG, "OBDII-->disconnect(): " + e.toString());
+            Log.e(TAG, "OBDII-->disconnect(): " + e);
             e.printStackTrace();
         }
         notify_disconnect();
     }
 
     public boolean init() {
-        boolean res = true;
+        boolean res;
 	    Log.d("OBD2->init()", "_");
         try {
             //new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
-            String result = "";
+            String result;
             new ObdResetCommand().run(socket.getInputStream(), socket.getOutputStream());
             // echo off: "AT E0"
             Log.d(TAG, "Send AT E0");
@@ -261,7 +263,7 @@ public class Obd2 {
             cmd1.run(socket.getInputStream(), socket.getOutputStream());
             result = cmd1.getFormattedResult().replace("\n", "");
             Log.d(TAG, "echoOff result: " + result);
-            res = res && (result.equalsIgnoreCase("OK"));
+            res = result.equalsIgnoreCase("OK");
             if ( !res ) return res;
 
             // "AT L0"
@@ -270,7 +272,7 @@ public class Obd2 {
             cmd2.run(socket.getInputStream(), socket.getOutputStream());
             result = cmd2.getFormattedResult();
             Log.d(TAG, "LineFeedOff result: " + result);
-            res = res && (result.equalsIgnoreCase("OK")); // тут можем получить что то другое, но коннект с сокетом есть, рвать не надо
+            res = result.equalsIgnoreCase("OK"); // тут можем получить что то другое, но коннект с сокетом есть, рвать не надо
             if ( !res ) return res;
 
             // AT ST
@@ -283,7 +285,7 @@ public class Obd2 {
             cmd3.run(socket.getInputStream(), socket.getOutputStream());
             result = cmd3.getFormattedResult();
             Log.d(TAG, "SelectProtocol result: " + result);
-            res = res && (result.equalsIgnoreCase("OK"));
+            res = result.equalsIgnoreCase("OK");
             if ( !res ) return res;
             return res;
         }
@@ -392,7 +394,7 @@ public class Obd2 {
 
 
     private int requestSeed() {
-        ArrayList<Integer> buffer = null;
+        ArrayList<Integer> buffer;
         int seed = 0;
         buffer = runObdCommand("2701", socket);
         // 2701 ==> 6701 XX XX XX XX (seed)
@@ -403,7 +405,7 @@ public class Obd2 {
     }
 
     private boolean startExtendedDiagnosticSession(String blokcId, String rxAddr) {
-        ArrayList<Integer> buffer = null;
+        ArrayList<Integer> buffer;
         setHeaders(blokcId, rxAddr, true);
         buffer = runObdCommand("1092", socket);
         Log.d(TAG, "1092 = " + buffer);
@@ -411,11 +413,10 @@ public class Obd2 {
         return buffer.get(0) == 0x50 && buffer.get(1) == 0x92;
     }
 
-    private boolean stopDiagnosticSession(String blokcId, String rxAddr) {
-        ArrayList<Integer> buffer = null;
+    private void stopDiagnosticSession(String blokcId, String rxAddr) {
+        ArrayList<Integer> buffer;
         buffer = runObdCommand("1081", socket);
         Log.d(TAG, "1081 = " + buffer);
-        return buffer.get(0) == 0x50 && buffer.get(1) == 0x92;
     }
 
     public boolean resetOilDegradation() {
@@ -428,7 +429,7 @@ public class Obd2 {
                 int seed = requestSeed();
                 if (seed != 0) {
                     int skey = calculateSkeyCVT(seed);
-                    ArrayList<Integer> buffer = null;
+                    ArrayList<Integer> buffer;
                     // 06 27 02 AA BB CC DD
                     String command = "06" + "2702" + String.format("%04X", skey);
                     Log.d(TAG, "cmd = " + command);
@@ -450,12 +451,12 @@ public class Obd2 {
         return res;
     }
 
-    public boolean setServiceReminder(int distance, int period) {
+    public void setServiceReminder(int distance, int period) {
         boolean res = false;
         isServiceCommand = true;
         try {
             Thread.sleep(2000);
-            ArrayList<Integer> buffer = null;
+            ArrayList<Integer> buffer;
 
             setHeaders(BLOCK_6A0, BLOCK_RX_514, true);
             String s = runObdStringCommand("ATAL", socket);
@@ -502,11 +503,10 @@ public class Obd2 {
         } finally {
             isServiceCommand = false;
         }
-        return res;
     }
 
     private void writeCoding(String cmd, String coding) {
-        ArrayList<Integer> buffer = null;
+        ArrayList<Integer> buffer;
 
         String s = runObdStringCommand("ATAL", socket);
         Log.d(TAG, "ATAL = " +  s);
@@ -587,7 +587,6 @@ public class Obd2 {
 
     public void writeEtacsCodingCustom(String coding) {
         isServiceCommand = true;
-        ArrayList<Integer> buffer = null;
         try {
             Thread.sleep(2000);
             if (startExtendedDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
@@ -604,7 +603,7 @@ public class Obd2 {
 
     public void writeEtacsCodingVariant(String coding) {
         isServiceCommand = true;
-        ArrayList<Integer> buffer = null;
+        ArrayList<Integer> buffer;
         try {
             Thread.sleep(2000);
             if (startExtendedDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
@@ -649,7 +648,7 @@ public class Obd2 {
 
     public void writeEngineCoding(String coding) {
         isServiceCommand = true;
-        ArrayList<Integer> buffer = null;
+        ArrayList<Integer> buffer;
         try {
             Thread.sleep(2000);
             if (startExtendedDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8)) {
@@ -745,7 +744,7 @@ public class Obd2 {
         }
         catch (NullPointerException e) {
             Log.e(TAG, e.toString());
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, Objects.requireNonNull(e.getMessage()));
             e.printStackTrace();
         }
         catch (MisunderstoodCommandException e) {
@@ -961,7 +960,7 @@ public class Obd2 {
     private void requestMmcAwc(){
         if (isServiceCommand) return;
         if ( activeMAF ) return;
-        ArrayList<Integer> buffer = null;
+        ArrayList<Integer> buffer;
         setHeaders( "7B6", "7B7", true);
         buffer = requestCanEcu("2130", "7B6");
         processObdCommandResult("2130", "7B6", buffer);
@@ -1114,7 +1113,7 @@ public class Obd2 {
                  break;
              case MESSAGE_OBD_PARKING_SENSORS:
                  if (Objects.nonNull(message.obj)) {
-                     ArrayList<Integer> buffer = (ArrayList<Integer>) message.obj;
+                     ArrayList<?> buffer = (ArrayList<?>) (message.obj);
 
                      Intent intent = new Intent();
                      intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);

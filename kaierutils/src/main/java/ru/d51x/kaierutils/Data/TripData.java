@@ -1,8 +1,9 @@
 package ru.d51x.kaierutils.Data;
 
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import java.util.Calendar;
 
@@ -21,8 +22,8 @@ public class TripData {
     public float distance;                      // дистанция за поездку
     public float tripTime;                     // время за поездку
     public float tripTimeWoStops;            // время за поездку без остановок
-    private String mPrefix;
-    private boolean isStoreData;
+    private final String mPrefix;
+    private final boolean isStoreData;
     private long timeStamp;
     private float prevOffset = 0; // для хранения предыдущего tripA
 
@@ -36,13 +37,13 @@ public class TripData {
         loadData();
     }
 
-    public void Destroy() {
-        saveData();
-    }
+//    public void Destroy() {
+//        saveData();
+//    }
 
     public void loadData() {
         if ( !isStoreData ) return;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance());
+        SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance());
         fuelRemains = prefs.getFloat("fuel_remains_" + mPrefix, 0f);
         fuelUsage = prefs.getFloat("fuel_usage_" + mPrefix, 0f);
         fuelUsageForDisplay = fuelUsage;
@@ -73,7 +74,7 @@ public class TripData {
 
     public void saveData() {
         if ( !isStoreData ) return;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
         prefs.edit().putFloat("fuel_remains_" + mPrefix, fuelRemains).apply();
         prefs.edit().putFloat("fuel_usage_" + mPrefix, fuelUsage).apply();
         prefs.edit().putFloat("fuel_usage_wo_stops_" + mPrefix, fuelUsageWoStops).apply();
@@ -103,29 +104,29 @@ public class TripData {
         tripTimeWoStops = 0;
     }
 
-    public void updateData(boolean isFullTank, float remain, float tank) {
-        fuelRemains = remain;
-        if ( isFullTank ) {
-            // залит полный бак (авторежим по кнопке)
-            fuelUsageForDisplay = 0;
-        } else {
-            // коррекция остатка топлива и объема бака
-            fuelUsageForDisplay = tank - remain;
-        }
-        saveData();
-    }
+//    public void updateData(boolean isFullTank, float remain, float tank) {
+//        fuelRemains = remain;
+//        if ( isFullTank ) {
+//            // залит полный бак (авторежим по кнопке)
+//            fuelUsageForDisplay = 0;
+//        } else {
+//            // коррекция остатка топлива и объема бака
+//            fuelUsageForDisplay = tank - remain;
+//        }
+//        saveData();
+//    }
 
-    public void calculateFuelConsumptionbyMAF() {
-        /*
-            Формула расчёта расхода топлива по данным с датчика массового расхода воздуха (MAF):
-            Расход топлива (л/100 км) = (MAF × 0,746 × 100) / (AFR × ρ × V), где:
-            MAF — массовый расход воздуха (г/с);
-            AFR — коэффициент воздух-топливо (стехиометрия: 14,7 для бензина);
-            ρ — плотность бензина (примерно 0,745 кг/л);
-            V — средняя скорость (км/ч).
-        */
-
-    }
+//    public void calculateFuelConsumptionbyMAF() {
+//        /*
+//            Формула расчёта расхода топлива по данным с датчика массового расхода воздуха (MAF):
+//            Расход топлива (л/100 км) = (MAF × 0,746 × 100) / (AFR × ρ × V), где:
+//            MAF — массовый расход воздуха (г/с);
+//            AFR — коэффициент воздух-топливо (стехиометрия: 14,7 для бензина);
+//            ρ — плотность бензина (примерно 0,745 кг/л);
+//            V — средняя скорость (км/ч).
+//        */
+//
+//    }
 
     public void calculateData(float speed, float maf, long deltaTime) {
         // литры в секунду

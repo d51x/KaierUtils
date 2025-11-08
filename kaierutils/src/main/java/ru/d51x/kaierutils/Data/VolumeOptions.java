@@ -1,7 +1,27 @@
 package ru.d51x.kaierutils.Data;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_REVERSE_FIXED_VOLUME;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_REVERSE_FIXED_VOLUME_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_REVERSE_FIXED_VOLUME_LEVEL;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_REVERSE_FIXED_VOLUME_LEVEL_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_REVERSE_PERCENT_VOLUME;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_REVERSE_PERCENT_VOLUME_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_REVERSE_PERCENT_VOLUME_LEVEL;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_REVERSE_PERCENT_VOLUME_LEVEL_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_REVERSE_VOLUME;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_REVERSE_VOLUME_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP_LEVEL;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP_LEVEL_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP_LEVEL;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP_LEVEL_DEFAULT;
+
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import ru.d51x.kaierutils.App;
 
@@ -27,23 +47,23 @@ public class VolumeOptions {
         percentVolumeLevelAtReverse = 30;
     }
 
-    public void save() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
-
-    }
+//    public void save() {
+//        SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
+//
+//    }
 
     public void load() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
-        isNeedSoundDecreaseAtStartUp = prefs.getBoolean ("CAR_SETTINGS__VOLUME_AT_START_UP__DO_CHANGE", false);
-        volumeLevelAtStartUp = prefs.getInt("CAR_SETTINGS__VOLUME_AT_START_UP__LEVEL", 3);
-        isNeedSoundDecreaseAtWakeUp = prefs.getBoolean ("CAR_SETTINGS__VOLUME_AT_WAKE_UP__DO_CHANGE", false);
-        volumeLevelAtWakeUp = prefs.getInt("CAR_SETTINGS__VOLUME_AT_WAKE_UP__LEVEL", 3);
+        SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
+        isNeedSoundDecreaseAtStartUp = prefs.getBoolean (SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP, SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP_DEFAULT);
+        volumeLevelAtStartUp = prefs.getInt(SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP_LEVEL, SETTINGS_SLEEP_WAKEUP_VOLUME_STARTUP_LEVEL_DEFAULT);
+        isNeedSoundDecreaseAtWakeUp = prefs.getBoolean (SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP, SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP_DEFAULT);
+        volumeLevelAtWakeUp = prefs.getInt(SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP_LEVEL, SETTINGS_SLEEP_WAKEUP_VOLUME_WAKEUP_LEVEL_DEFAULT);
 
 
-        isNeedSoundDecreaseAtReverse = prefs.getBoolean ("CAR_SETTINGS__VOLUME_AT_REVERSE__DO_CHANGE", false);
-        isFixedVolumeAtReverse = prefs.getBoolean ("CAR_SETTINGS__VOLUME_AT_REVERSE__FIXED_LEVEL_AVAILABLE", false);
-        isPercentVolumeAtReverse = prefs.getBoolean ("CAR_SETTINGS__VOLUME_AT_REVERSE__PERCENTAGE_LEVEL_AVAILABLE", false);
-        fixedVolumeLevelAtReverse = prefs.getInt("CAR_SETTINGS__VOLUME_AT_REVERSE__FIXED_LEVEL", 3);
-        percentVolumeLevelAtReverse = prefs.getInt("CAR_SETTINGS__VOLUME_AT_REVERSE__PERCENTAGE_LEVEL", 30);
+        isNeedSoundDecreaseAtReverse = prefs.getBoolean (SETTINGS_REVERSE_VOLUME, SETTINGS_REVERSE_VOLUME_DEFAULT);
+        isFixedVolumeAtReverse = prefs.getBoolean (SETTINGS_REVERSE_FIXED_VOLUME, SETTINGS_REVERSE_FIXED_VOLUME_DEFAULT);
+        isPercentVolumeAtReverse = prefs.getBoolean (SETTINGS_REVERSE_PERCENT_VOLUME, SETTINGS_REVERSE_PERCENT_VOLUME_DEFAULT);
+        fixedVolumeLevelAtReverse = prefs.getInt(SETTINGS_REVERSE_FIXED_VOLUME_LEVEL, SETTINGS_REVERSE_FIXED_VOLUME_LEVEL_DEFAULT);
+        percentVolumeLevelAtReverse = prefs.getInt(SETTINGS_REVERSE_PERCENT_VOLUME_LEVEL, SETTINGS_REVERSE_PERCENT_VOLUME_LEVEL_DEFAULT);
     }
 }

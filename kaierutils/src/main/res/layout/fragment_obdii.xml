@@ -16,7 +16,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 style="0.4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content">
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/cbNewObdProcess"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -138,7 +138,7 @@
                         android:enabled="true"/>
                 </LinearLayout>
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/cbOBD_show_fuel_consump_detail"
@@ -234,7 +234,7 @@
                         android:width="60dp"
                         android:textSize="16sp"/>
                 </LinearLayout>
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/cbCanMMC_show_climate_data"
@@ -244,7 +244,7 @@
                         android:text="@string/cbCanMMC_show_climate_data"
                         android:checked="true"
                         android:textSize="18sp"/>
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/cbCanMMC_show_parking_data"
@@ -255,7 +255,7 @@
                         android:checked="true"
                         android:textSize="18sp"/>
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/cbUseSpeedFromMeter"
@@ -265,7 +265,7 @@
                         android:layout_marginEnd="8dp"
                         android:checked="true"
                         android:textSize="18sp"/>
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/cbUseSpeedFromEngine"
@@ -275,7 +275,7 @@
                         android:paddingBottom="8dp"
                         android:checked="true"
                         android:textSize="18sp"/>
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/cbUseSpeedFromAC"
@@ -286,7 +286,7 @@
                         android:checked="true"
                         android:textSize="18sp"/>
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/cbUseSpeedFromCVT"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

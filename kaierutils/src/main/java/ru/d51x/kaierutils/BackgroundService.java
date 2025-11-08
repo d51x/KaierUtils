@@ -1,5 +1,7 @@
 package ru.d51x.kaierutils;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -7,18 +9,18 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 
 import ru.d51x.kaierutils.GPS.GpsProcessingThread;
 import ru.d51x.kaierutils.OBD2.OBDThread;
 import ru.d51x.kaierutils.TWUtils.TWUtilProcessingThread;
 
 public class BackgroundService extends Service {
-	private static Integer NOTIFICATION_SERVICE_ID = 1;
-	private static String NOTIFICATION_CHANNEL_ID = "KaierUtils";
+	private static final Integer NOTIFICATION_SERVICE_ID = 1;
+	private static final String NOTIFICATION_CHANNEL_ID = "KaierUtils";
 	private TWUtilProcessingThread twUtilProcessingThread;
     private GpsProcessingThread gpsProcessingThread;
     public static OBDThread obdiiThread;
@@ -48,7 +50,7 @@ public class BackgroundService extends Service {
 
 		startCount = startId;
 
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+		SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
         App.GS.curAudioFocusID = prefs.getInt("last_audio_focus_id", -1);
 
 

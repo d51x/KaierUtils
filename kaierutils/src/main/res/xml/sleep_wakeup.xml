@@ -1,4 +1,4 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:seekbar="http://schemas.android.com/apk/res-auto"
 	>
 	<PreferenceCategory android:title="@string/menu_category_startup_change_volume">
@@ -8,7 +8,7 @@
 	        android:defaultValue="false"
 		/>
 
-		<ru.d51x.kaierutils.Settings.SeekBarPreference
+		<EditTextPreference
             android:key="CAR_SETTINGS__VOLUME_AT_START_UP__LEVEL"
                                              android:title="@string/menu_startup_volume_level_title"
                                              android:summary="@string/menu_startup_volume_level_summary"
@@ -27,7 +27,7 @@
 			android:title="@string/menu_wakeup_volume_change_title"
 			android:defaultValue="false"
 		/>
-		<ru.d51x.kaierutils.Settings.SeekBarPreference
+		<EditTextPreference
             android:key="CAR_SETTINGS__VOLUME_AT_WAKE_UP__LEVEL"
 		                                      android:title="@string/menu_wakeup_volume_level_title"
 		                                      android:summary="@string/menu_wakeup_volume_level_summary"
@@ -38,4 +38,4 @@
 		                                      android:dependency="CAR_SETTINGS__VOLUME_AT_WAKE_UP__DO_CHANGE"
 		/>
 	</PreferenceCategory>
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

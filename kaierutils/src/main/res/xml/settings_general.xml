@@ -1,33 +1,34 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="kaierutils_auto_start"
         android:title="@string/menu_general_auto_start" />
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="kaierutils_auto_start_floating"
         android:title="@string/menu_general_auto_start_floating"
         />
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="floating_window_show_on_minimize"
         android:title="@string/menu_general_show_floating"
         android:summary="@string/menu_general_show_floating_summary"
         />
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="kaierutils_show_color_speed"
         android:title="@string/menu_general_color_speed_title" />
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="isGpsSpeed"
         android:title="@string/menu_general_speed_type_title"
         android:summary="@string/menu_general_speed_type_summary"
         />
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="kaierutils_show_statistics"
         android:title="@string/menu_general_show_statistics_title" />
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>
 

@@ -9,7 +9,6 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_STATUS_C
 import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
 import static ru.d51x.kaierutils.utils.StringUtils.hexStringToBuffer;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,10 +16,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +24,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -48,7 +46,6 @@ import java.util.stream.Collectors;
 import ru.d51x.kaierutils.Data.EtacsCustomCoding;
 import ru.d51x.kaierutils.dialog.FileSelector;
 import ru.d51x.kaierutils.dialog.FileSelectorDialog;
-import ru.d51x.kaierutils.dialog.OnFileSelectListener;
 import ru.d51x.kaierutils.dialog.RadioListDialog;
 
 public class EtacsActivity  extends AppCompatActivity implements View.OnClickListener {
@@ -58,42 +55,34 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
     private EditText edtEtacsCustom2;
     private EditText edtEtacsVariant;
     private EditText edtEngineCoding;
-    private Button btnEtacsReadCustom;
-    private Button btnEtacsWriteCustom;
-    private Button btnEtacsReadVariant;
-    private Button btnEtacsWriteVariant;
-    private Button btnEngineCodingRead;
-    private Button btnEngineCodingWrite;
-    private Button btnFromFileCustomCoding;
-    private Button btnToFileCustomCoding;
-    private Button btnTestCustomCoding;
     private ListView lvEtacsCustom;
     private TextView tvObdStatus;
     private CodingAdapter etacsCustomCodingAdapter;
-    private ArrayList<EtacsCustomCoding> customCoding = new ArrayList<>();
+    private final ArrayList<EtacsCustomCoding> customCoding = new ArrayList<>();
     private ArrayList<Integer> customCodingBuffer = new ArrayList<>();
-    private ArrayList<Integer> prevCustomCodingBuffer = new ArrayList<>();
+    private final ArrayList<Integer> prevCustomCodingBuffer = new ArrayList<>();
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED.equals(action)) {
-
-            }
-            else if (ACTION_OBD_ETACS_VARIANT_CODING_CHANGED.equals(action)) {
-
-            }
-            else if (ACTION_OBD_ENGINE_CODING_CHANGED.equals(action)) {
-
-            } else if (OBD_BROADCAST_ACTION_STATUS_CHANGED.equals(action)) {
+//            if (ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED.equals(action)) {
+//
+//            }
+//            else if (ACTION_OBD_ETACS_VARIANT_CODING_CHANGED.equals(action)) {
+//
+//            }
+//            else if (ACTION_OBD_ENGINE_CODING_CHANGED.equals(action)) {
+//
+//            } else
+            if (OBD_BROADCAST_ACTION_STATUS_CHANGED.equals(action)) {
                 boolean res = intent.getBooleanExtra("Status", false);
                 tvObdStatus.setText(String.format(getString(R.string.odbii_device_status), res ? "Подключен" : "Не подключен"));
             }
         }
 
     };
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint({"MissingInflatedId", "UnspecifiedRegisterReceiverFlag"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,31 +100,31 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
         edtEtacsVariant = findViewById(R.id.edtEtacsVariant);
         edtEngineCoding = findViewById(R.id.edtEngineCoding);
 
-        btnToFileCustomCoding = findViewById(R.id.btnToFileCustomCoding);
+        Button btnToFileCustomCoding = findViewById(R.id.btnToFileCustomCoding);
         btnToFileCustomCoding.setOnClickListener(this);
 
-        btnFromFileCustomCoding = findViewById(R.id.btnFromFileCustomCoding);
+        Button btnFromFileCustomCoding = findViewById(R.id.btnFromFileCustomCoding);
         btnFromFileCustomCoding.setOnClickListener(this);
 
-        btnTestCustomCoding = findViewById(R.id.btnTestCustomCoding);
+        Button btnTestCustomCoding = findViewById(R.id.btnTestCustomCoding);
         btnTestCustomCoding.setOnClickListener(this);
 
-        btnEtacsReadCustom = findViewById(R.id.btnEtacsReadCustom);
+        Button btnEtacsReadCustom = findViewById(R.id.btnEtacsReadCustom);
         btnEtacsReadCustom.setOnClickListener(this);
 
-        btnEtacsWriteCustom = findViewById(R.id.btnEtacsWriteCustom);
+        Button btnEtacsWriteCustom = findViewById(R.id.btnEtacsWriteCustom);
         btnEtacsWriteCustom.setOnClickListener(this);
 
-        btnEtacsReadVariant = findViewById(R.id.btnEtacsReadVariant);
+        Button btnEtacsReadVariant = findViewById(R.id.btnEtacsReadVariant);
         btnEtacsReadVariant.setOnClickListener(this);
 
-        btnEtacsWriteVariant = findViewById(R.id.btnEtacsWriteVariant);
+        Button btnEtacsWriteVariant = findViewById(R.id.btnEtacsWriteVariant);
         btnEtacsWriteVariant.setOnClickListener(this);
 
-        btnEngineCodingRead = findViewById(R.id.btnEngineCodingRead);
+        Button btnEngineCodingRead = findViewById(R.id.btnEngineCodingRead);
         btnEngineCodingRead.setOnClickListener(this);
 
-        btnEngineCodingWrite = findViewById(R.id.btnEngineCodingWrite);
+        Button btnEngineCodingWrite = findViewById(R.id.btnEngineCodingWrite);
         btnEngineCodingWrite.setOnClickListener(this);
 
         lvEtacsCustom = findViewById(R.id.lvEtacsCustom);
@@ -146,52 +135,49 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
                                     long id) {
 
                 EtacsCustomCoding e = (EtacsCustomCoding) itemClicked.getTag(R.id.ITEM_OBJECT_TAG);
-                int byteValue = (int) itemClicked.getTag(R.id.ITEM_BYTE_VALUE_TAG);
+//                int byteValue = (int) itemClicked.getTag(R.id.ITEM_BYTE_VALUE_TAG);
                 String currentValue = (String) itemClicked.getTag(R.id.ITEM_CURRENT_VALUE_TAG);
                 if (customCoding.isEmpty()) return;
 
                 if (e == null) return;
-                int idx = e.getByteIdx();
+//                int idx = e.getByteIdx();
 
                 ArrayList<String> options = getAvailableOptions(e.getIdx());
                 CharSequence[] radioValues = options.toArray(new CharSequence[0]);
                 final int[] selectedValue = {-1};
                 RadioListDialog dialog = new RadioListDialog(EtacsActivity.this, e.getTitle(), e.getName());
                 dialog.setValuesList(radioValues, options.indexOf(currentValue));
-                dialog.setListener(new RadioListDialog.RadioListDialogListener() {
-                    @Override
-                    public void onDialogResult(int selected) {
-                        if (selected == -1) {
-                            Log.d(TAG, "option cancelled");
-                            return;
-                        }
-                        selectedValue[0] = selected;
-                        Log.d(TAG, "selected idx = " + selectedValue[0]);
-
-                        int selValue = getAvailableValues(e.getIdx()).get(selected);
-                        int oldValue = customCodingBuffer.get(e.getByteIdx());
-                        int shiftedValue = selValue << e.getStartBit();
-                        int maskedValue = oldValue & ~e.getMask();
-                        //int newValue = oldValue | maskedValue;
-                        int newValue = maskedValue ^ shiftedValue;
-                        Log.d(TAG, String.format("Old value = 0x%02X", oldValue));
-                        Log.d(TAG, "selected value = " + selValue);
-                        Log.d(TAG, "start bit = " + e.getStartBit());
-                        Log.d(TAG, String.format("mask = 0x%02X", e.getMask()));
-                        Log.d(TAG, String.format("shifted value = 0x%02X", shiftedValue));
-                        //Log.d(TAG, String.format("masked value = 0x%02X", maskedValue));
-                        Log.d(TAG, String.format("new value = 0x%02X", newValue));
-                        // TODO: нужно изменить значение у опции на основе выбранного результата и выставить флаг, что есть активные изменения
-                        // TODO: обновить список новым выбором
-                        customCodingBuffer.set(e.getByteIdx(), newValue);
-                        String newCodingStr = bufferToHex(customCodingBuffer, 0, false);
-                        edtEtacsCustom.setText(newCodingStr);
-
-                        int index = lvEtacsCustom.getFirstVisiblePosition();
-                        etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
-                                prevCustomCodingBuffer, customCoding);
-                        lvEtacsCustom.setSelection(index);
+                dialog.setListener(selected -> {
+                    if (selected == -1) {
+                        Log.d(TAG, "option cancelled");
+                        return;
                     }
+                    selectedValue[0] = selected;
+                    Log.d(TAG, "selected idx = " + selectedValue[0]);
+
+                    int selValue = getAvailableValues(e.getIdx()).get(selected);
+                    int oldValue = customCodingBuffer.get(e.getByteIdx());
+                    int shiftedValue = selValue << e.getStartBit();
+                    int maskedValue = oldValue & ~e.getMask();
+                    //int newValue = oldValue | maskedValue;
+                    int newValue = maskedValue ^ shiftedValue;
+                    Log.d(TAG, String.format("Old value = 0x%02X", oldValue));
+                    Log.d(TAG, "selected value = " + selValue);
+                    Log.d(TAG, "start bit = " + e.getStartBit());
+                    Log.d(TAG, String.format("mask = 0x%02X", e.getMask()));
+                    Log.d(TAG, String.format("shifted value = 0x%02X", shiftedValue));
+                    //Log.d(TAG, String.format("masked value = 0x%02X", maskedValue));
+                    Log.d(TAG, String.format("new value = 0x%02X", newValue));
+                    // TODO: нужно изменить значение у опции на основе выбранного результата и выставить флаг, что есть активные изменения
+                    // TODO: обновить список новым выбором
+                    customCodingBuffer.set(e.getByteIdx(), newValue);
+                    String newCodingStr = bufferToHex(customCodingBuffer, 0, false);
+                    edtEtacsCustom.setText(newCodingStr);
+
+                    int index = lvEtacsCustom.getFirstVisiblePosition();
+                    etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
+                            prevCustomCodingBuffer, customCoding);
+                    lvEtacsCustom.setSelection(index);
                 });
                 dialog.show();
 
@@ -356,10 +342,7 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
 
     private void writeEtacsCodingCustom(String coding) {
         if (App.obd.isConnected) {
-            runOnUiThread(() -> {
-                App.obd.writeEtacsCodingCustom(coding);
-
-            });
+            runOnUiThread(() -> App.obd.writeEtacsCodingCustom(coding));
         }
     }
 
@@ -400,47 +383,44 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
 
     private void writeEngineCoding(String coding) {
         if (App.obd.isConnected) {
-            runOnUiThread(() -> {
-                App.obd.writeEngineCoding(coding);
-
-            });
+            runOnUiThread(() -> App.obd.writeEngineCoding(coding));
         }
     }
 
-    private boolean checkPermission() {
-        // Check if we have Call permission
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            Log.d(TAG, "Request file storage permissions");
-
-            String[] permissions = {
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            };
-
-            List<String> permissionsToRequest = new ArrayList<>();
-
-            for (String permission : permissions) {
-                if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                    Log.e("Permissions", String.format("Permission %s is not granted", permission));
-                    permissionsToRequest.add(permission);
-                }
-            }
-
-            if (!permissionsToRequest.isEmpty()) {
-                ActivityCompat.requestPermissions(
-                        this,
-                        permissionsToRequest.toArray(new String[0]), // Convert list to array
-                        REQUEST_CODE_PERMISSION // Pass the request code
-                );
-            } else {
-                Log.i("Permissions", "All permissions already granted");
-                return true;
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
+//    private boolean checkPermission() {
+//        // Check if we have Call permission
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+//            Log.d(TAG, "Request file storage permissions");
+//
+//            String[] permissions = {
+//                    Manifest.permission.READ_EXTERNAL_STORAGE,
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            };
+//
+//            List<String> permissionsToRequest = new ArrayList<>();
+//
+//            for (String permission : permissions) {
+//                if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+//                    Log.e("Permissions", String.format("Permission %s is not granted", permission));
+//                    permissionsToRequest.add(permission);
+//                }
+//            }
+//
+//            if (!permissionsToRequest.isEmpty()) {
+//                ActivityCompat.requestPermissions(
+//                        this,
+//                        permissionsToRequest.toArray(new String[0]), // Convert list to array
+//                        REQUEST_CODE_PERMISSION // Pass the request code
+//                );
+//            } else {
+//                Log.i("Permissions", "All permissions already granted");
+//                return true;
+//            }
+//            return false;
+//        } else {
+//            return true;
+//        }
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -464,7 +444,7 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
 
 
     private void loadFile(String fName) {
-        BufferedReader in = null;
+        BufferedReader in;
         try {
             File path = this.getFilesDir();
             File f = new File(path, fName);
@@ -485,13 +465,19 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
         FileSelector fileSelector = new FileSelector(path, fileType);
         List<File> resultList = fileSelector.getFiles(path, fileType);
 
-        FileSelectorDialog fileSelectorDialog = new FileSelectorDialog(EtacsActivity.this, resultList, new OnFileSelectListener() {
-            @Override
-            public void onSelect(File file) {
-                Log.d(TAG, "File is " + file.getName());
-                loadFile(file.getName());
-            }
+        FileSelectorDialog fileSelectorDialog = new FileSelectorDialog(EtacsActivity.this,
+                resultList, file -> {
+            Log.d(TAG, "File is " + file.getName());
+            loadFile(file.getName());
         });
         fileSelectorDialog.show();
+    }
+
+    public CodingAdapter getEtacsCustomCodingAdapter() {
+        return etacsCustomCodingAdapter;
+    }
+
+    public void setEtacsCustomCodingAdapter(CodingAdapter etacsCustomCodingAdapter) {
+        this.etacsCustomCodingAdapter = etacsCustomCodingAdapter;
     }
 }

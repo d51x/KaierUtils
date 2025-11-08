@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 import static java.lang.Math.abs;
 
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2113_CHANGED;
@@ -19,6 +20,24 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21A3;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.KEY_OBD_METER_21AE;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_MAF_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_STATUS_CHANGED;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_BATTERY;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_BATTERY_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_COOLANT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_COOLANT_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_CVT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_CVT_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_DISTANCE;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_DISTANCE_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_FUEL_LEVEL;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_FUEL_LEVEL_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_FUEL_RATE;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_FUEL_RATE_DEFAULT;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_ICON_SIZE;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_MAIN_TEXT_SIZE;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_SECOND_TEXT_SIZE;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_UNITS_SIZE;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_SPEED;
+import static ru.d51x.kaierutils.Settings.SettingConstants.SETTINGS_FLOATING_PANEL_SPEED_DEFAULT;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -27,7 +46,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
@@ -38,6 +56,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import ru.d51x.kaierutils.Data.ClimateData;
 import ru.d51x.kaierutils.Data.CombineMeterData;
@@ -97,7 +117,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
 
 
     private BroadcastReceiver receiver;
-    private UiUtils ui = new UiUtils();
+    private final UiUtils ui = new UiUtils();
 
     public boolean floatingWindowShowUnits;
     public boolean showSpeed = true;
@@ -145,20 +165,20 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
     }
 
     private void load() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
-        showSpeed = sharedPreferences.getBoolean ( "floating_panel_show_speed", true);
-        showBatteryLevel = sharedPreferences.getBoolean ( "floating_panel_show_battery_level", true);
-        showCoolantTemperature = sharedPreferences.getBoolean ( "floating_panel_show_coolant_temperature", true);
-        showCvtTemperature = sharedPreferences.getBoolean ( "floating_panel_show_cvt_temperature", true);
-        showFuelLevel = sharedPreferences.getBoolean ( "floating_panel_show_fuel_level", true);
-        showFuelConsumption = sharedPreferences.getBoolean ( "floating_panel_show_fuel_consumption", true);
-        showDistance = sharedPreferences.getBoolean ( "floating_panel_show_distance", true);
+        SharedPreferences sharedPreferences = getDefaultSharedPreferences (App.getInstance ());
+        showSpeed = sharedPreferences.getBoolean ( SETTINGS_FLOATING_PANEL_SPEED, SETTINGS_FLOATING_PANEL_SPEED_DEFAULT);
+        showBatteryLevel = sharedPreferences.getBoolean ( SETTINGS_FLOATING_PANEL_BATTERY, SETTINGS_FLOATING_PANEL_BATTERY_DEFAULT);
+        showCoolantTemperature = sharedPreferences.getBoolean ( SETTINGS_FLOATING_PANEL_COOLANT, SETTINGS_FLOATING_PANEL_COOLANT_DEFAULT);
+        showCvtTemperature = sharedPreferences.getBoolean ( SETTINGS_FLOATING_PANEL_CVT, SETTINGS_FLOATING_PANEL_CVT_DEFAULT);
+        showFuelLevel = sharedPreferences.getBoolean ( SETTINGS_FLOATING_PANEL_FUEL_LEVEL, SETTINGS_FLOATING_PANEL_FUEL_LEVEL_DEFAULT);
+        showFuelConsumption = sharedPreferences.getBoolean ( SETTINGS_FLOATING_PANEL_FUEL_RATE, SETTINGS_FLOATING_PANEL_FUEL_RATE_DEFAULT);
+        showDistance = sharedPreferences.getBoolean ( SETTINGS_FLOATING_PANEL_DISTANCE, SETTINGS_FLOATING_PANEL_DISTANCE_DEFAULT);
 
 
-        iconSize = Integer.parseInt(sharedPreferences.getString("FLOATING_PANEL_ICON_SIZE", Integer.toString(DEFAULT_ICON_SIZE)));
-        mainTextSize = Integer.parseInt(sharedPreferences.getString("FLOATING_PANEL_MAIN_TEXT_SIZE", Integer.toString(DEFAULT_MAIN_TEXT_SIZE)));
-        secondTextSize = Integer.parseInt(sharedPreferences.getString("FLOATING_PANEL_SECOND_TEXT_SIZE", Integer.toString(DEFAULT_SECOND_TEXT_SIZE)));
-        unitsTextSize = Integer.parseInt(sharedPreferences.getString("FLOATING_PANEL_UNITS_SIZE", Integer.toString(DEFAULT_UNITS_TEXT_SIZE)));
+        iconSize = Integer.parseInt(sharedPreferences.getString(SETTINGS_FLOATING_PANEL_ICON_SIZE, Integer.toString(DEFAULT_ICON_SIZE)));
+        mainTextSize = Integer.parseInt(sharedPreferences.getString(SETTINGS_FLOATING_PANEL_MAIN_TEXT_SIZE, Integer.toString(DEFAULT_MAIN_TEXT_SIZE)));
+        secondTextSize = Integer.parseInt(sharedPreferences.getString(SETTINGS_FLOATING_PANEL_SECOND_TEXT_SIZE, Integer.toString(DEFAULT_SECOND_TEXT_SIZE)));
+        unitsTextSize = Integer.parseInt(sharedPreferences.getString(SETTINGS_FLOATING_PANEL_UNITS_SIZE, Integer.toString(DEFAULT_UNITS_TEXT_SIZE)));
     }
 
     private void init() {
@@ -348,13 +368,6 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                             ui.updateFuelLevelText(tvFuelLevel, meterData.getFuelLevel());
                         }
                     }
-                    else if (ACTION_OBD_METER_21A1_CHANGED.equals(action)) {
-                        CombineMeterData meter = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21A1);
-                        if (meter != null) {
-                            ui.updateSpeedText(tvSpeed, meter.getVehicleSpeed(), App.GS.ui.isColorSpeed);
-                            ui.updateSpeedIcon(ivSpeed, meter.getVehicleSpeed());
-                        }
-                    }
                     else if (ACTION_OBD_METER_21AE_CHANGED.equals(action)) {
                         CombineMeterData meter = (CombineMeterData) intent.getSerializableExtra(KEY_OBD_METER_21AE);
                         if (meter != null) {
@@ -375,16 +388,16 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
                     }
                 }
             };
-            context.registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_MAF_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(OBD_BROADCAST_ACTION_STATUS_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2101_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2102_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_2110_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_CVT_2103_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21A1_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21A3_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_CLIMATE_2113_CHANGED));
-            context.registerReceiver(receiver, new IntentFilter(ACTION_OBD_METER_21AE_CHANGED));
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(OBD_BROADCAST_ACTION_MAF_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(OBD_BROADCAST_ACTION_STATUS_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_ENGINE_2101_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_ENGINE_2102_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_ENGINE_2110_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_CVT_2103_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_METER_21A1_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_METER_21A3_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_CLIMATE_2113_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(context, receiver, new IntentFilter(ACTION_OBD_METER_21AE_CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
         }
     }
 
@@ -469,8 +482,7 @@ public class FloatingWindow implements View.OnClickListener, View.OnTouchListene
         App.GS.ui.floatingWindowLeft = location[0];
         App.GS.ui.floatingWindowTop = location[1];
 
-        SharedPreferences prefs =
-                PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = getDefaultSharedPreferences(context);
         prefs.edit()
                 .putInt ("floating_window_left", App.GS.ui.floatingWindowLeft)
                 .putInt ("floating_window_top", App.GS.ui.floatingWindowTop)

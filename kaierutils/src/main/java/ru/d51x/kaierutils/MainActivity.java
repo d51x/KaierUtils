@@ -2,7 +2,7 @@ package ru.d51x.kaierutils;
 
 import static android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE;
 import static android.widget.Toast.LENGTH_LONG;
-
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_AWC_2130_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2110_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_CLIMATE_2111_CHANGED;
@@ -62,7 +62,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -72,12 +71,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -87,9 +82,12 @@ import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -136,10 +134,6 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private ImageView ivVolumeLevel;
     private ImageView ivSpeed;
 
-    private LinearLayout layoutObd2;
-    private LinearLayout layoutObdFuel;
-//    private LinearLayout layoutFuelConsump;
-    private LinearLayout layoutTempData;
     private ImageView ivOBD2Status;
     private ImageView ivCarBattery;
     private TextView tvCarBattery;
@@ -171,11 +165,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private TextView tvClimateTemperature;
     private TextView tvOuterTemperature;
 
-    private ConstraintLayout layoutMmcClimate;
     private ImageButton ibFloatingPanel;
-    private ImageView ivHideFloatingPanel;
-
-
 
     private final UiUtils ui = new UiUtils();
 	@SuppressLint("SuspiciousIndentation")
@@ -334,7 +324,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         tvClimateTemperature = findViewById(R.id.tv_air_cond_temp);
         tvOuterTemperature = findViewById(R.id.tvOuterTemperature);
 
-        layoutMmcClimate = findViewById(R.id.layout_MMC_climate);
+//        layoutMmcClimate = findViewById(R.id.layout_MMC_climate);
 
         ibFloatingPanel = findViewById(R.id.ibFloatingPanel);
 
@@ -383,7 +373,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
 		tvDistance.setText( "----.-" );
 
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences (App.getInstance ());
+        SharedPreferences prefs = getDefaultSharedPreferences (App.getInstance ());
         modeFuelTank = prefs.getInt("kaierutils_modeFuelTank", 0);
         modeFuelConsump = prefs.getInt("kaierutils_modeFuelConsump", 0);
 
@@ -601,16 +591,12 @@ public class MainActivity extends Activity implements View.OnClickListener,
         alertDialogBuilder.setMessage("Приложению необходимо разрешение на получение геолокации. Продолжить?");
         //alertDialogBuilder.setIcon(R.drawable.fuel_tank_full);
 
-        alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[]{
-                                Manifest.permission.ACCESS_COARSE_LOCATION,
-                                Manifest.permission.ACCESS_FINE_LOCATION,
-                                //Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                        }, REQUEST_CODE_PERMISSION);
-            }
-        });
+        alertDialogBuilder.setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(MainActivity.this,
+                new String[]{
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        //Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                }, REQUEST_CODE_PERMISSION));
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
@@ -623,15 +609,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
         alertDialogBuilder.setMessage("Приложению необходимо разрешение обнаружение и подключение к Bluetooth устройствам. Продолжить?");
         //alertDialogBuilder.setIcon(R.drawable.fuel_tank_full);
 
-        alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{
-                                    Manifest.permission.BLUETOOTH_CONNECT,
-                                    Manifest.permission.BLUETOOTH_SCAN
-                            }, REQUEST_CODE_PERMISSION);
-                }
+        alertDialogBuilder.setPositiveButton("Ok", (dialog, which) -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{
+                                Manifest.permission.BLUETOOTH_CONNECT,
+                                Manifest.permission.BLUETOOTH_SCAN
+                        }, REQUEST_CODE_PERMISSION);
             }
         });
 
@@ -1161,13 +1145,13 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     public void saveFuelTankToStorage(float remain){
         show_fuel_tank_data(modeFuelTank);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
         prefs.edit().putInt("kaierutils_modeFuelTank", modeFuelTank).apply();
     }
 
     public void saveFuelConsumptionToStorage(float consump){
         show_fuel_consumption(modeFuelConsump);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(App.getInstance());
+        SharedPreferences prefs = getDefaultSharedPreferences(App.getInstance());
         prefs.edit().putInt("kaierutils_modeFuelConsump", modeFuelConsump).apply();
     }
 
@@ -1208,18 +1192,18 @@ public class MainActivity extends Activity implements View.OnClickListener,
 //        }
     }
 
-    // TODO: переключение режима показаний температуры (учесть включение вентилятора)
-    private void switch_temp_mode() {
-        // режим отображения уровня топлива
-        // 0 - движок
-        // 1 - коробка
-        // 2 - деградация
-        modeEngineTemp++;
-        if ( modeEngineTemp > 0) modeEngineTemp = 0;
-
-        updateCoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
-
-    }
+//    // TODO: переключение режима показаний температуры (учесть включение вентилятора)
+//    private void switch_temp_mode() {
+//        // режим отображения уровня топлива
+//        // 0 - движок
+//        // 1 - коробка
+//        // 2 - деградация
+//        modeEngineTemp++;
+//        if ( modeEngineTemp > 0) modeEngineTemp = 0;
+//
+//        updateCoolantTemp(modeEngineTemp, App.obd.can.engine.isAcFanRelay());
+//
+//    }
 
     // переключение режима показаний расхода
     private void switch_fuel_consump_mode(boolean increase) {
