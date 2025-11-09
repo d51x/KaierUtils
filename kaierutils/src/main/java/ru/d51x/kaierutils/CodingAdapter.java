@@ -1,10 +1,9 @@
 package ru.d51x.kaierutils;
 
-import static ru.d51x.kaierutils.Data.EtacsCustomCoding.getCurrentValue;
+import static ru.d51x.kaierutils.etacs.EtacsCustomCoding.getCurrentValue;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.d51x.kaierutils.Data.EtacsCustomCoding;
+import ru.d51x.kaierutils.etacs.EtacsCustomCoding;
 
 public class CodingAdapter extends ArrayAdapter<EtacsCustomCoding> {
 

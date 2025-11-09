@@ -86,7 +86,7 @@
             android:label="@string/title_activity_obdii"
             android:launchMode="singleTop" />
         <activity
-            android:name=".EtacsActivity"
+            android:name=".etacs.EtacsActivity"
             android:label="@string/title_activity_etacs"
             android:launchMode="singleTop" />
         <receiver

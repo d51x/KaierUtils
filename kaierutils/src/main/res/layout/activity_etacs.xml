@@ -2,6 +2,7 @@
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -36,217 +37,56 @@
             app:layout_constraintStart_toEndOf="@+id/textView4"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView16"
-            android:layout_width="wrap_content"
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/codingViewPager"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Etacs Custom Coding:"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+            app:layout_constraintTop_toBottomOf="@+id/codingTabLayout">
+
+        </androidx.viewpager2.widget.ViewPager2>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/codingTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="34dp">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Etacs Custom" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Etacs Variant" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Engine Coding" />
+        </com.google.android.material.tabs.TabLayout>
 
         <Button
-            android:id="@+id/btnEtacsReadCustom"
+            android:id="@+id/btnReadBlocks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="Read"
-            app:layout_constraintBottom_toBottomOf="@+id/textView16"
-            app:layout_constraintEnd_toStartOf="@+id/btnEtacsWriteCustom" />
-
-        <Button
-            android:id="@+id/btnEtacsWriteCustom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:text="Wite"
-            app:layout_constraintBottom_toBottomOf="@+id/btnEtacsReadCustom"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <Button
-            android:id="@+id/btnTestCustomCoding"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:text="Test"
-            app:layout_constraintBottom_toBottomOf="@+id/btnToFileCustomCoding"
-            app:layout_constraintEnd_toStartOf="@+id/btnToFileCustomCoding" />
-
-        <Button
-            android:id="@+id/btnToFileCustomCoding"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:text="To File"
-            app:layout_constraintBottom_toBottomOf="@+id/btnFromFileCustomCoding"
-            app:layout_constraintEnd_toStartOf="@+id/btnFromFileCustomCoding" />
-
-        <Button
-            android:id="@+id/btnFromFileCustomCoding"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:text="From File"
-            app:layout_constraintBottom_toBottomOf="@+id/btnEtacsReadCustom"
-            app:layout_constraintEnd_toStartOf="@+id/btnEtacsReadCustom" />
+            android:text="Read blocks"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView5"
-            android:layout_width="40dp"
+            android:id="@+id/tvEtacsVersion"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="New"
+            android:layout_marginEnd="8dp"
+            android:text="--------"
             android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edtEtacsCustom" />
-
-        <EditText
-            android:id="@+id/edtEtacsCustom"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:enabled="true"
-            android:text=""
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView5"
-            app:layout_constraintTop_toBottomOf="@+id/textView16" />
-
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="Old"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/edtEtacsCustom2" />
-
-        <EditText
-            android:id="@+id/edtEtacsCustom2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:editable="false"
-            android:enabled="true"
-            android:text=""
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView7"
-            app:layout_constraintTop_toBottomOf="@+id/edtEtacsCustom" />
-
-        <ListView
-            android:id="@+id/lvEtacsCustom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:background="@color/black_color"
-            android:nestedScrollingEnabled="true"
-            android:overScrollMode="always"
-            android:scrollIndicators="end"
-            android:scrollbarStyle="insideInset"
-            android:verticalScrollbarPosition="right"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edtEtacsCustom2" />
-
-        <TextView
-            android:id="@+id/textView26"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="Variant:"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lvEtacsCustom" />
-
-        <Button
-            android:id="@+id/btnEtacsWriteVariant"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:text="Wite"
-            app:layout_constraintBottom_toBottomOf="@+id/btnEtacsReadVariant"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <Button
-            android:id="@+id/btnEtacsReadVariant"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="Read"
-            app:layout_constraintBottom_toBottomOf="@+id/textView26"
-            app:layout_constraintEnd_toStartOf="@+id/btnEtacsWriteVariant" />
-
-
-        <EditText
-            android:id="@+id/edtEtacsVariant"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:enabled="false"
-            android:text=""
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView26" />
-
-        <TextView
-            android:id="@+id/textView29"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="Engine Coding"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edtEtacsVariant" />
-
-        <Button
-            android:id="@+id/btnEngineCodingWrite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:text="Write"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView29" />
-
-        <Button
-            android:id="@+id/btnEngineCodingRead"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="Read"
-            app:layout_constraintBottom_toBottomOf="@+id/btnEngineCodingWrite"
-            app:layout_constraintEnd_toStartOf="@+id/btnEngineCodingWrite" />
-
-        <EditText
-            android:id="@+id/edtEngineCoding"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:enabled="false"
-            app:layout_constraintEnd_toStartOf="@+id/btnEngineCodingRead"
-            app:layout_constraintHorizontal_bias="0.505"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnEngineCodingRead" />
+            app:layout_constraintBottom_toBottomOf="@+id/btnReadBlocks"
+            app:layout_constraintEnd_toStartOf="@+id/btnReadBlocks"
+            app:layout_constraintTop_toTopOf="@+id/btnReadBlocks" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

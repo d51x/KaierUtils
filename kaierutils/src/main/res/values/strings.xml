@@ -3,94 +3,93 @@
 
     <string name="app_name">KaierUtils</string>
 
-	<!-- menu headers -->
+    <!-- menu headers -->
     <string name="header_about_title">О программе</string>
     <string name="header_main_title">Dashboard</string>
     <string name="header_settings_title">Настройки</string>
-	<string name="header_reverse_title">Задний ход</string>
-	<string name="header_sleep_wakeup_title">Sleep mode/WakeUp</string>
-	<string name="header_obd_settings_title">Настройки OBD</string>
-	<string name="header_floating_window_title">Плавающая панель</string>
+    <string name="header_reverse_title">Задний ход</string>
+    <string name="header_sleep_wakeup_title">Sleep mode/WakeUp</string>
+    <string name="header_obd_settings_title">Настройки OBD</string>
+    <string name="header_floating_window_title">Плавающая панель</string>
 
-	<!-- general menu -->
-	<string name="menu_general_title">Общие настройки</string>
-	<string name="menu_general_summary">Основные настройки прииложения</string>
-	<string name="menu_general_auto_start">Показывать главное окно при включении</string>
-	<string name="menu_general_auto_start_floating">Плавающее окно при запуске</string>
-	<string name="menu_general_show_floating">Показывать плавающее окно</string>
-	<string name="menu_general_show_floating_summary">Показывать плавающее окно при сворачивании приложения</string>
-	<string name="menu_general_floating_window_vertical">Вертикальная плавающая панель</string>
-	<string name="menu_general_floating_window_vertical_summary">Если не включено, то будет горизонтальная</string>
-	<string name="menu_floating_window_show_units">Отображать единицы измерения</string>
-	<string name="menu_floating_window_show_units_summary">Отображать единицы измерения на вертикальной плавающей панели</string>
-	<string name="menu_general_color_speed_title">Цветная скорость</string>
-	<string name="menu_general_speed_type_title">Скорость по GPS</string>
-	<string name="menu_general_speed_type_summary">Если выключено, скорость будет по CAN на главном экране</string>
-	<string name="menu_general_show_statistics_title">Отображать статистику</string>
-	<string name="menu_general_show_gps_satellities_title">Отображать данные о спутниках GPS</string>
+    <!-- general menu -->
+    <string name="menu_general_title">Общие настройки</string>
+    <string name="menu_general_summary">Основные настройки прииложения</string>
+    <string name="menu_general_auto_start">Показывать главное окно при включении</string>
+    <string name="menu_general_auto_start_floating">Плавающее окно при запуске</string>
+    <string name="menu_general_show_floating">Показывать плавающее окно</string>
+    <string name="menu_general_show_floating_summary">Показывать плавающее окно при сворачивании приложения</string>
+    <string name="menu_general_floating_window_vertical">Вертикальная плавающая панель</string>
+    <string name="menu_general_floating_window_vertical_summary">Если не включено, то будет горизонтальная</string>
+    <string name="menu_floating_window_show_units">Отображать единицы измерения</string>
+    <string name="menu_floating_window_show_units_summary">Отображать единицы измерения на вертикальной плавающей панели</string>
+    <string name="menu_general_color_speed_title">Цветная скорость</string>
+    <string name="menu_general_speed_type_title">Скорость по GPS</string>
+    <string name="menu_general_speed_type_summary">Если выключено, скорость будет по CAN на главном экране</string>
+    <string name="menu_general_show_statistics_title">Отображать статистику</string>
+    <string name="menu_general_show_gps_satellities_title">Отображать данные о спутниках GPS</string>
 
-	<!-- Floating Panel -->
-	<string name="menu_floating_panel_title">Плавающая панель</string>
-	<string name="menu_floating_panel_summary">Настройки внешнего вида плавающей панели</string>
-	<string name="menu_category_floating_panel_settings">Настройки</string>
-	<string name="menu_category_floating_panel_icons">Отображать показания</string>
-	<string name="menu_floating_panel_icon_speed_title">Скорость</string>
-	<string name="menu_floating_panel_icon_battery_level_title">Заряд аккумулятора</string>
-	<string name="menu_floating_panel_icon_coolant_temp_title">Температура ОЖ</string>
-	<string name="menu_floating_panel_icon_cvt_temp_title">Температура CVT</string>
-	<string name="menu_floating_panel_icon_fuel_level_title">Остаток топлива в баке</string>
-	<string name="menu_floating_panel_icon_fuel_consumption_title">Расход топлива</string>
-	<string name="menu_floating_panel_icon_distance_title">Пройденый путь</string>
+    <!-- Floating Panel -->
+    <string name="menu_floating_panel_title">Плавающая панель</string>
+    <string name="menu_floating_panel_summary">Настройки внешнего вида плавающей панели</string>
+    <string name="menu_category_floating_panel_settings">Настройки</string>
+    <string name="menu_category_floating_panel_icons">Отображать показания</string>
+    <string name="menu_floating_panel_icon_speed_title">Скорость</string>
+    <string name="menu_floating_panel_icon_battery_level_title">Заряд аккумулятора</string>
+    <string name="menu_floating_panel_icon_coolant_temp_title">Температура ОЖ</string>
+    <string name="menu_floating_panel_icon_cvt_temp_title">Температура CVT</string>
+    <string name="menu_floating_panel_icon_fuel_level_title">Остаток топлива в баке</string>
+    <string name="menu_floating_panel_icon_fuel_consumption_title">Расход топлива</string>
+    <string name="menu_floating_panel_icon_distance_title">Пройденый путь</string>
 
-	<string name="menu_category_floating_panel_sizes">Размеры значков и текста</string>
-	<string name="menu_floating_panel_icon_size_title">Размер значка</string>
-	<string name="menu_floating_panel_icon_size_summary">Текущий размер %1$s</string>
-	<string name="menu_floating_panel_main_text_size_title">Размер основного текста</string>
-	<string name="menu_floating_panel_main_text_size_summary">Текущий размер %1$s</string>
-	<string name="menu_floating_panel_second_text_size_title">Размер текста после точки</string>
-	<string name="menu_floating_panel_second_text_size_summary">Текущий размер %1$s</string>
-	<string name="menu_floating_panel_units_text_size_title">Размер единиц измерения</string>
-	<string name="menu_floating_panel_units_text_size_summary">Текущий размер %1$s</string>
+    <string name="menu_category_floating_panel_sizes">Размеры значков и текста</string>
+    <string name="menu_floating_panel_icon_size_title">Размер значка</string>
+    <string name="menu_floating_panel_icon_size_summary">Текущий размер %1$s</string>
+    <string name="menu_floating_panel_main_text_size_title">Размер основного текста</string>
+    <string name="menu_floating_panel_main_text_size_summary">Текущий размер %1$s</string>
+    <string name="menu_floating_panel_second_text_size_title">Размер текста после точки</string>
+    <string name="menu_floating_panel_second_text_size_summary">Текущий размер %1$s</string>
+    <string name="menu_floating_panel_units_text_size_title">Размер единиц измерения</string>
+    <string name="menu_floating_panel_units_text_size_summary">Текущий размер %1$s</string>
 
-	<!-- reverse menu -->
-	<string name="menu_reverse_summary">Настройки звука при включении заднего хода</string>
-	<string name="menu_category_reverse_fixed_volume">Фиксированный уровень громкости</string>
-	<string name="menu_category_reverse_percent_volume">Относительный уровень громкости</string>
-	<string name="menu_reverse_change_volume_title">Уменьшать громкости при включении ЗХ</string>
-	<string name="menu_reverse_fixed_volume_available_title">Уменьшение громкости до уровня</string>
-	<string name="menu_reverse_fixed_volume_available_summary">Имеет приоритет над относительным уровнем</string>
-	<string name="menu_reverse_fixed_volume_level_title">Уровень громкости</string>
-	<string name="menu_reverse_fixed_volume_level_summary">Текущее значение %1$d</string>
-	<string name="menu_reverse_fixed_volume_level_dialog">Выберите уровень громкости (от 1 до 10)</string>
-	<string name="menu_reverse_percent_volume_available_title">Уменьшение громкости на процент</string>
-	<string name="menu_reverse_percent_volume_available_summary">Не работает при включенном фиксированном уровне</string>
-	<string name="menu_reverse_percent_volume_level_title">Процент уменьшения</string>
-	<string name="menu_reverse_percent_volume_level_summary">Текущее значение %1$d </string>
-	<string name="menu_reverse_percent_volume_level_dialog">Введите процент уменьшения</string>
+    <!-- reverse menu -->
+    <string name="menu_reverse_summary">Настройки звука при включении заднего хода</string>
+    <string name="menu_category_reverse_fixed_volume">Фиксированный уровень громкости</string>
+    <string name="menu_category_reverse_percent_volume">Относительный уровень громкости</string>
+    <string name="menu_reverse_change_volume_title">Уменьшать громкости при включении ЗХ</string>
+    <string name="menu_reverse_fixed_volume_available_title">Уменьшение громкости до уровня</string>
+    <string name="menu_reverse_fixed_volume_available_summary">Имеет приоритет над относительным уровнем</string>
+    <string name="menu_reverse_fixed_volume_level_title">Уровень громкости</string>
+    <string name="menu_reverse_fixed_volume_level_summary">Текущее значение %1$d</string>
+    <string name="menu_reverse_fixed_volume_level_dialog">Выберите уровень громкости (от 1 до 10)</string>
+    <string name="menu_reverse_percent_volume_available_title">Уменьшение громкости на процент</string>
+    <string name="menu_reverse_percent_volume_available_summary">Не работает при включенном фиксированном уровне</string>
+    <string name="menu_reverse_percent_volume_level_title">Процент уменьшения</string>
+    <string name="menu_reverse_percent_volume_level_summary">Текущее значение %1$d </string>
+    <string name="menu_reverse_percent_volume_level_dialog">Введите процент уменьшения</string>
 
-	<!-- sleep mode / wake up -->
-	<string name="menu_sleep_wakeup_summary">Настройки звука при засыпании/просыпании устройства</string>
-	<string name="menu_category_startup_change_volume">Громкость при включении устройства</string>
-	<string name="menu_startup_volume_change_title">Изменять громкость при запуске</string>
-	<string name="menu_startup_volume_level_title">Уровень громкости</string>
-	<string name="menu_startup_volume_level_summary">Текущее значение %1$d</string>
-	<string name="menu_startup_volume_level_dialog">Выберите уровень громкости (от 1 до 10) </string>
-	<string name="menu_category_wakeup_change_volume">Громкость при просыпании устройства</string>
-	<string name="menu_wakeup_volume_change_title">Изменять громкость при просыпании</string>
-	<string name="menu_wakeup_volume_level_title">Уровень громкости</string>
-	<string name="menu_wakeup_volume_level_summary">Текущее значение %1$d</string>
-	<string name="menu_wakeup_volume_level_dialog">Выберите уровень громкости (от 1 до 10) </string>
+    <!-- sleep mode / wake up -->
+    <string name="menu_sleep_wakeup_summary">Настройки звука при засыпании/просыпании устройства</string>
+    <string name="menu_category_startup_change_volume">Громкость при включении устройства</string>
+    <string name="menu_startup_volume_change_title">Изменять громкость при запуске</string>
+    <string name="menu_startup_volume_level_title">Уровень громкости</string>
+    <string name="menu_startup_volume_level_summary">Текущее значение %1$d</string>
+    <string name="menu_startup_volume_level_dialog">Выберите уровень громкости (от 1 до 10) </string>
+    <string name="menu_category_wakeup_change_volume">Громкость при просыпании устройства</string>
+    <string name="menu_wakeup_volume_change_title">Изменять громкость при просыпании</string>
+    <string name="menu_wakeup_volume_level_title">Уровень громкости</string>
+    <string name="menu_wakeup_volume_level_summary">Текущее значение %1$d</string>
+    <string name="menu_wakeup_volume_level_dialog">Выберите уровень громкости (от 1 до 10) </string>
 
-	    <!-- OBD II Settings -->
+    <!-- OBD II Settings -->
     <string name="menu_obd_title">Настройки CAN</string>
     <string name="menu_obd_summary">Настройки чтения параметров по CAN</string>
     <string name="menu_obd_use_obd">Подключаться к адаптеру OBD (ELM 327)</string>
 
 
-	<string name="menu_item_fixed_volume_level_at_startup_title">Уровень громкости</string>
-	<string name="fixed_volume_level_at_startup_summary">Текущее значение %1$d</string>
-	<string name="fixed_volume_level_at_startup_dialog">Выберите уровень громкости (от 1 до 10)</string>
-
+    <string name="menu_item_fixed_volume_level_at_startup_title">Уровень громкости</string>
+    <string name="fixed_volume_level_at_startup_summary">Текущее значение %1$d</string>
+    <string name="fixed_volume_level_at_startup_dialog">Выберите уровень громкости (от 1 до 10)</string>
 
 
     <string name="action_settings">Настройки</string>
@@ -100,7 +99,6 @@
     <string name="sound_settings_title">Дополнительные настройки звука</string>
     <string name="text_device_name">Устройство %1$s</string>
     <string name="text_android_version">Android %1$s SDK %2$d</string>
-
 
 
     <string name="text_reverse_count">Задний ход включался %1$d раз(а)</string>
@@ -131,16 +129,15 @@
     <string name="dsc_delta_to_change_dialogtitle">Выберите дельту скорости</string>
     <string name="text_obd2_settings">OBD 2</string>
     <string name="text_obd2_etacs">Etacs</string>
-	<string name="text_distance">%1$.1f</string>
-	<string name="text_gps_distance">%1$.2f</string>
+    <string name="text_distance">%1$.1f</string>
+    <string name="text_gps_distance">%1$.2f</string>
     <string name="text_average_speed">Avg: %1$s км/ч</string>
     <string name="text_max_speed">Max: %1$s км/ч</string>
 
-	<string name="title_activity_floating">Floating Activity</string>
+    <string name="title_activity_floating">Floating Activity</string>
 
 
-
-	<string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_obdii">OBDII информация</string>
     <string name="title_activity_etacs">Скрытые функции</string>
 
@@ -150,24 +147,24 @@
     <string name="btnOBDConnect">Подключить</string>
     <string name="btnOBDDisconnect">Отключить</string>
     <string name="text_obd_speed">Скорость: %1$s</string>
-	<string name="text_obd_speed_f">%1$s</string>
+    <string name="text_obd_speed_f">%1$s</string>
     <string name="text_obd_engine_rpm">Обороты двигателя: %1$s</string>
-	<string name="text_obd_engine_rpm_f">%1$s</string>
+    <string name="text_obd_engine_rpm_f">%1$s</string>
     <string name="text_obd_coolant_temp">Температура охл. жид.: %1$s</string>
-	<string name="text_obd_coolant_temp_f">%1$s</string>
-	<string name="text_obd_fuel_usage">Потрачено топлива (л):</string>
-	<string name="text_obd_fuel_usage_f">%1$.3f</string>
+    <string name="text_obd_coolant_temp_f">%1$s</string>
+    <string name="text_obd_fuel_usage">Потрачено топлива (л):</string>
+    <string name="text_obd_fuel_usage_f">%1$.3f</string>
     <string name="text_obd_cmu_voltage">Напряжение: %1$s</string>
-	<string name="text_obd_cmu_voltage_f">%1$s</string>
+    <string name="text_obd_cmu_voltage_f">%1$s</string>
     <string name="text_obd_use">Bluetooth OBD (ELM327)</string>
     <!--<string name="text_obd_fuel_consumption_lph">Мгновенный расход (л/ч): %1$.1f</string>-->
     <string name="text_obd_fuel_consumption_lph"> (л/ч): %1$.1f</string>
-	<string name="text_obd_fuel_consumption_lph_f">%1$.1f л/ч</string>
+    <string name="text_obd_fuel_consumption_lph_f">%1$.1f л/ч</string>
     <string name="text_obd_fuel_consumption_mpg">Мгновенный расход (л/100км): %1$.1f</string>
-	<string name="text_obd_fuel_consumption_mpg_f">%1$.1f л/100км</string>
-	<string name="text_obd_fuel_consumption_maf_f">%1$s г/сек</string>
-	<string name="text_obd_fuel_consumption_avg">Средний расход (л/100км):</string>
-	<string name="text_obd_fuel_consumption_avg_f">%1$.1f</string>
+    <string name="text_obd_fuel_consumption_mpg_f">%1$.1f л/100км</string>
+    <string name="text_obd_fuel_consumption_maf_f">%1$s г/сек</string>
+    <string name="text_obd_fuel_consumption_avg">Средний расход (л/100км):</string>
+    <string name="text_obd_fuel_consumption_avg_f">%1$.1f</string>
     <string name="text_fuel_tank_full">Бак заправлен полностью?</string>
     <string name="text_fuel_tank_capacity">Объем бака, л</string>
     <string name="text_fuel_tank_remain">Осталось топлива (л)</string>
@@ -175,15 +172,15 @@
     <string name="text_fuel_tank_detail">Параметры бака</string>
     <!--<string name="text_obd_fuel_usage_with_stops">Потрачено топлива с учетом простоев: %1$.3f</string>-->
     <string name="text_obd_fuel_usage_with_stops"> без простоев: %1$.3f</string>
-	<string name="text_obd_distanse">Пройдено (км): </string>
-	<string name="text_obd_distanse_f">%1$.3f км</string>
+    <string name="text_obd_distanse">Пройдено (км): </string>
+    <string name="text_obd_distanse_f">%1$.3f км</string>
     <!--<string name="text_obd_fuel_consumption_avg2">Средний расход (л/100км) с учетом простоев: %1$.1f</string>-->
     <string name="text_obd_fuel_consumption_avg2">  без простоев (л/100км): %1$.1f</string>
     <string name="text_can_211D_A3">Вентилятор охлаждения: %1$s</string>
 
-	<string name="text_can_2110_cvt_oil_degr">%1$s</string>
-	<string name="text_can_2103_cvt_temp_count">%1$s</string>
-	<string name="text_obd_can_fuel_level">%1$s</string>
+    <string name="text_can_2110_cvt_oil_degr">%1$s</string>
+    <string name="text_can_2103_cvt_temp_count">%1$s</string>
+    <string name="text_obd_can_fuel_level">%1$s</string>
     <string name="text_air_cond_external_temp">A/C External temperature: %1$s</string>
     <string name="cbOBD_new_process">Новый процесс запроса данных</string>
     <string name="cbOBD_show_fuel_consump_detail">Отображать данные о расходе топлива (мгновенный расход ; л/100км мгновенный; л/100км средний)</string>
@@ -193,33 +190,33 @@
     <string name="text_update_time_min">Период обновления, сек:</string>
     <string name="cbCanMMC_show_climate_data">Отображать данные климат-контроля</string>
     <string name="cbCanMMC_show_parking_data">Отображать данные с парковочных сенсоров (только задние родные)</string>
-	<string name="cbUseSpeedFromMeter">Скорость с блока Meter</string>
-	<string name="cbUseSpeedFromEngine">Скорость с блока Engine</string>
-	<string name="cbUseSpeedFromAC">Скорость с блока Air Cond</string>
-	<string name="cbUseSpeedFromCVT">Скорость с блока CVT</string>
+    <string name="cbUseSpeedFromMeter">Скорость с блока Meter</string>
+    <string name="cbUseSpeedFromEngine">Скорость с блока Engine</string>
+    <string name="cbUseSpeedFromAC">Скорость с блока Air Cond</string>
+    <string name="cbUseSpeedFromCVT">Скорость с блока CVT</string>
     <string name="text_distance_today">Пройдено (км): %1$.3f</string>
     <string name="km">км</string>
-	<string name="str_dashes">--</string>
-	<string name="_0">0</string>
-	<string name="todo">TODO</string>
-	<string name="_2">2</string>
-	<string name="_10">10</string>
+    <string name="str_dashes">--</string>
+    <string name="_0">0</string>
+    <string name="todo">TODO</string>
+    <string name="_2">2</string>
+    <string name="_10">10</string>
     <string name="unit_km_h">км/ч</string>
-	<string name="empty_str_2_dashes">--</string>
-	<string name="track_time">track time</string>
-	<string name="gps_distance">gps distance</string>
-	<string name="album_art">album art</string>
-	<string name="obd2_status">obd2 status</string>
-	<string name="air_defogger">air deffoger</string>
-	<string name="air_recirculation">air recirculation</string>
-	<string name="air_ac_state">air ac state</string>
-	<string name="bg_seat">bg seat</string>
-	<string name="air_direction">air direction</string>
-	<string name="ac_blow_auto">ac blow auto</string>
-	<string name="air_fan_speed">air fan speed</string>
-	<string name="ac_fan_mode">ac fan mode</string>
-	<string name="air_temp">air temp</string>
-	<string name="vol_mute">vol mute</string>
-	<string name="empty_temp">24.5</string>
-	<string name="speed">speed</string>
+    <string name="empty_str_2_dashes">--</string>
+    <string name="track_time">track time</string>
+    <string name="gps_distance">gps distance</string>
+    <string name="album_art">album art</string>
+    <string name="obd2_status">obd2 status</string>
+    <string name="air_defogger">air deffoger</string>
+    <string name="air_recirculation">air recirculation</string>
+    <string name="air_ac_state">air ac state</string>
+    <string name="bg_seat">bg seat</string>
+    <string name="air_direction">air direction</string>
+    <string name="ac_blow_auto">ac blow auto</string>
+    <string name="air_fan_speed">air fan speed</string>
+    <string name="ac_fan_mode">ac fan mode</string>
+    <string name="air_temp">air temp</string>
+    <string name="vol_mute">vol mute</string>
+    <string name="empty_temp">24.5</string>
+    <string name="speed">speed</string>
 </resources>

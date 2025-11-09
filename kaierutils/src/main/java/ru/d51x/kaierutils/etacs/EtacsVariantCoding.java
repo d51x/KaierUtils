@@ -1,4 +1,4 @@
-package ru.d51x.kaierutils.Data;
+package ru.d51x.kaierutils.etacs;
 
 import java.util.ArrayList;
 import java.util.Arrays;

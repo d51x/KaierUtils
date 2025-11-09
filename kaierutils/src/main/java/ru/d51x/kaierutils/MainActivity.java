@@ -1003,7 +1003,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private void showEtacsActivity(Context context) {
         try {
             Intent it = new Intent();
-            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.EtacsActivity");
+            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.etacs.EtacsActivity");
             it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(it);
         } catch (Exception e) {
