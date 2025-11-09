@@ -1,5 +1,6 @@
 package ru.d51x.kaierutils.etacs;
 
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_PART_NUMBER_CHANGED;
 import static ru.d51x.kaierutils.etacs.EtacsCustomCoding.getAvailableOptions;
 import static ru.d51x.kaierutils.etacs.EtacsCustomCoding.getAvailableValues;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_CODING_CHANGED;
@@ -118,6 +119,7 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
 
 
 
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_ETACS_PART_NUMBER_CHANGED));
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED));
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ETACS_VARIANT_CODING_CHANGED));
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_CODING_CHANGED));
@@ -129,7 +131,17 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
 
     private void readEtacsVersion() {
         String sVersion = "unknown";
-
+        if (App.obd.isConnected) {
+            this.runOnUiThread(() -> {
+                buffer.set(App.obd.readEtacsCodingCustom());
+                if (buffer.get() != null) {
+                    String s = bufferToHex(buffer.get(), 2, false);
+                    edtEtacsCustom.setText(s);
+                    edtEtacsCustom.setEnabled(true);
+                    edtEtacsCustom2.setText(s);
+                }
+            });
+        }
         tvEtacsVersion.setText(sVersion);
     }
 

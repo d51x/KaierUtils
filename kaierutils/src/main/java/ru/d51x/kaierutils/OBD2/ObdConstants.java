@@ -42,6 +42,10 @@ public class ObdConstants {
 
     public static final String BLOCK_620 = "620";   // ETACS
     public static final String BLOCK_RX_504 = "504";   // ETACS RX
+    public static final String BLOCK_620_PID_1A87 = "1A87";   // PartNumber and DiagVersion
+    public static final String BLOCK_620_PID_1A88 = "1A88";   // Etacs Current Vin
+    public static final String BLOCK_620_PID_1A90 = "1A90";   // Etacs Original Vin
+    public static final String BLOCK_620_PID_1A9C = "1A9C";   // PartNumber SW
     public static final String BLOCK_620_PID_21B2 = "21B2";   // ETACS Read Custom Coding
     public static final String BLOCK_620_PID_3BB2 = "3BB2";   // ETACS Write Custom Coding
     public static final String BLOCK_620_PID_21B0 = "21B0";   // ETACS Read Variant Coding
@@ -97,6 +101,7 @@ public class ObdConstants {
 
     public static final String OBD_BROADCAST_ACTION_STATUS_CHANGED = ACTION_PREFIX + "OBD_STATUS_CHANGED";
 
+    public static final String ACTION_OBD_ETACS_PART_NUMBER_CHANGED = ACTION_PREFIX + "OBD_ETACS_PART_NUMBER";
     public static final String ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED = ACTION_PREFIX + "OBD_ETACS_CUSTOM_CODING";
     public static final String ACTION_OBD_ETACS_VARIANT_CODING_CHANGED = ACTION_PREFIX + "OBD_ETACS_VARIANT_CODING";
     public static final String ACTION_OBD_ENGINE_CODING_CHANGED = ACTION_PREFIX + "OBD_ENGINE_CODING";
@@ -114,6 +119,13 @@ public class ObdConstants {
     public static final int MESSAGE_OBD_CAN_CVT = 0x07E10000;
     public static final int MESSAGE_OBD_CVT_2103 = 0x07E102103;
     public static final int MESSAGE_OBD_CVT_2110 = 0x07E102110;
+
+    // MESSAGES ETACS
+    public static final int MESSAGE_OBD_ETACS = 0x06200000;
+    public static final int MESSAGE_OBD_ETACS_1A87 = 0x06201A87;
+    public static final int MESSAGE_OBD_ETACS_1A88 = 0x06201A88;
+    public static final int MESSAGE_OBD_ETACS_1A90 = 0x06201A90;
+    public static final int MESSAGE_OBD_ETACS_1A9C = 0x06201A9C;
 
     // MESSAGES COMBINE METER
     public static final int MESSAGE_OBD_COMBINE_METER = 0x06A00000;

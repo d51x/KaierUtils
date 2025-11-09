@@ -1,6 +1,9 @@
 package ru.d51x.kaierutils.utils;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class StringUtils {
 
@@ -28,5 +31,20 @@ public class StringUtils {
             }
         }
         return buffer;
+    }
+
+    public static byte[] toByteArray(Collection<Integer> ints, int fromIdx) {
+        // an integer in Java is a 32-bit number (i.e., 4 bytes)
+        int capacity = Math.multiplyExact(ints.size(), 4);
+        ByteBuffer buffer = ByteBuffer.allocate(capacity);
+        //ints.forEach(buffer::putInt);
+        AtomicInteger i = new AtomicInteger();
+        ints.forEach( integer -> {
+            if (i.get() >= fromIdx) {
+                buffer.put(integer.byteValue());
+            }
+            i.getAndIncrement();
+        });
+        return buffer.array();
     }
 }

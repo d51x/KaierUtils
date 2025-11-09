@@ -671,6 +671,33 @@ public class Obd2 {
         }
     }
 
+
+    public String readEtacsPartNumber() {
+        String s = "unknown";
+        ArrayList<Integer> buff = readBlockPartNumber(BLOCK_620, BLOCK_RX_504);
+
+        return s;
+    }
+    public ArrayList<Integer> readBlockPartNumber(String blockId, String rxAddr) {
+        ArrayList<Integer> buffer = null;
+        isServiceCommand = true;
+        try {
+            Thread.sleep(2000);
+            if (startExtendedDiagnosticSession(blockId, rxAddr)) {
+                buffer = runObdCommand(BLOCK_620_PID_1A87, socket);
+                Log.d(TAG, "Block Data: " + buffer);
+                Log.d(TAG, "Block Data: " + bufferToHex(buffer, 0, true));
+                processObdCommandResult(BLOCK_620_PID_1A87, blockId, buffer);
+                stopDiagnosticSession(blockId, rxAddr);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            isServiceCommand = false;
+        }
+        return buffer;
+    }
+
     private ArrayList<Integer> runObdCommand(String PID, BluetoothSocket sock) {
         try {
             CanObdCommand cmd = new CanObdCommand(PID);
@@ -1134,6 +1161,7 @@ public class Obd2 {
         switch (blockId) {
             case BLOCK_7E0: ObdEngine.processResult(mHandler, pid, buffer); break;
             case BLOCK_7E1: ObdCvt.processResult(mHandler, pid, buffer); break;
+            case BLOCK_620: ObdEtacs.processResult(mHandler, pid, buffer); break;
             case BLOCK_688: ObdClimate.processResult(mHandler, pid, buffer); break;
             case BLOCK_6A0: ObdCombineMeter.processResult(mHandler, pid, buffer); break;
             case BLOCK_763: OdbParking.processResult(mHandler, pid, buffer); break;
