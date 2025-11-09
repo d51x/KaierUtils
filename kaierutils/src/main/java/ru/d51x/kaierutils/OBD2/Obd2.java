@@ -6,6 +6,8 @@ import static ru.d51x.kaierutils.utils.MessageUtils.SendBroadcastAction;
 import static ru.d51x.kaierutils.utils.SecurityUtils.calculateSkeyCVT;
 import static ru.d51x.kaierutils.utils.SecurityUtils.calculateSkeyEngine;
 import static ru.d51x.kaierutils.utils.SecurityUtils.calculateSkeyEtacs;
+import static ru.d51x.kaierutils.utils.SecurityUtils.getDiagVersion;
+import static ru.d51x.kaierutils.utils.SecurityUtils.getPartNumber;
 import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
 
 import android.Manifest;
@@ -52,6 +54,7 @@ import ru.d51x.kaierutils.Data.ClimateData;
 import ru.d51x.kaierutils.Data.CombineMeterData;
 import ru.d51x.kaierutils.Data.CvtData;
 import ru.d51x.kaierutils.Data.EngineData;
+import ru.d51x.kaierutils.Data.EtacsData;
 import ru.d51x.kaierutils.Data.ObdData;
 import ru.d51x.kaierutils.Data.TripData;
 
@@ -673,21 +676,24 @@ public class Obd2 {
 
 
     public String readEtacsPartNumber() {
-        String s = "unknown";
-        ArrayList<Integer> buff = readBlockPartNumber(BLOCK_620, BLOCK_RX_504);
-
-        return s;
+        return readBlockPartNumber(BLOCK_620, BLOCK_RX_504, BLOCK_620_PID_1A87);
     }
-    public ArrayList<Integer> readBlockPartNumber(String blockId, String rxAddr) {
+
+    public String readBlockPartNumber(String blockId, String rxAddr, String pid) {
         ArrayList<Integer> buffer = null;
+        String partNumber = "unknown";
         isServiceCommand = true;
         try {
             Thread.sleep(2000);
             if (startExtendedDiagnosticSession(blockId, rxAddr)) {
-                buffer = runObdCommand(BLOCK_620_PID_1A87, socket);
+                buffer = runObdCommand(pid, socket);
                 Log.d(TAG, "Block Data: " + buffer);
                 Log.d(TAG, "Block Data: " + bufferToHex(buffer, 0, true));
-                processObdCommandResult(BLOCK_620_PID_1A87, blockId, buffer);
+
+                if (!buffer.isEmpty() && (buffer.size() >= 22)) {
+                    partNumber = getPartNumber(buffer);
+                }
+                processObdCommandResult(pid, blockId, buffer);
                 stopDiagnosticSession(blockId, rxAddr);
             }
         } catch (InterruptedException e) {
@@ -695,7 +701,7 @@ public class Obd2 {
         } finally {
             isServiceCommand = false;
         }
-        return buffer;
+        return partNumber;
     }
 
     private ArrayList<Integer> runObdCommand(String PID, BluetoothSocket sock) {
@@ -1138,6 +1144,23 @@ public class Obd2 {
                  App.obd.can.meter.setServiceReminderPeriod(((CombineMeterData) message.obj).getServiceReminderPeriod());
                  SendBroadcastAction(ACTION_OBD_METER_21BC_CHANGED, KEY_OBD_METER_21BC, (CombineMeterData) message.obj);
                  break;
+
+             // ******************* ETACS ***********************************************
+             case MESSAGE_OBD_ETACS_1A87: {
+                 SendBroadcastAction(ACTION_OBD_ETACS_DIAG_AND_PART_NUMBER_CHANGED, KEY_OBD_ETACS_1A87, (EtacsData) message.obj);
+             }
+             case MESSAGE_OBD_ETACS_1A88: {
+                 SendBroadcastAction(ACTION_OBD_ETACS_ORIGINAL_VIN_CHANGED, KEY_OBD_ETACS_1A88, (EtacsData) message.obj);
+             }
+             case MESSAGE_OBD_ETACS_1A90: {
+                 SendBroadcastAction(ACTION_OBD_ETACS_CURRENT_VIN_CHANGED, KEY_OBD_ETACS_1A90, (EtacsData) message.obj);
+             }
+             case MESSAGE_OBD_ETACS_1A9C: {
+                 SendBroadcastAction(ACTION_OBD_ETACS_PART_NUMBER_SW_CHANGED, KEY_OBD_ETACS_1A9C, (EtacsData) message.obj);
+             }
+             break;
+
+             // ******************* PARKING SENORS ***********************************************
              case MESSAGE_OBD_PARKING_SENSORS:
                  if (Objects.nonNull(message.obj)) {
                      ArrayList<?> buffer = (ArrayList<?>) (message.obj);

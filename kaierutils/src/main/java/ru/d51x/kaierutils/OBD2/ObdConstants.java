@@ -101,7 +101,10 @@ public class ObdConstants {
 
     public static final String OBD_BROADCAST_ACTION_STATUS_CHANGED = ACTION_PREFIX + "OBD_STATUS_CHANGED";
 
-    public static final String ACTION_OBD_ETACS_PART_NUMBER_CHANGED = ACTION_PREFIX + "OBD_ETACS_PART_NUMBER";
+    public static final String ACTION_OBD_ETACS_DIAG_AND_PART_NUMBER_CHANGED = ACTION_PREFIX + "OBD_ETACS_DIAG_AND_PART_NUMBER";
+    public static final String ACTION_OBD_ETACS_PART_NUMBER_SW_CHANGED = ACTION_PREFIX + "OBD_ETACS_PART_NUMBER_SW";
+    public static final String ACTION_OBD_ETACS_CURRENT_VIN_CHANGED = ACTION_PREFIX + "OBD_ETACS_CURRENT_VIN";
+    public static final String ACTION_OBD_ETACS_ORIGINAL_VIN_CHANGED = ACTION_PREFIX + "OBD_ETACS_ORIGINAL_VIN";
     public static final String ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED = ACTION_PREFIX + "OBD_ETACS_CUSTOM_CODING";
     public static final String ACTION_OBD_ETACS_VARIANT_CODING_CHANGED = ACTION_PREFIX + "OBD_ETACS_VARIANT_CODING";
     public static final String ACTION_OBD_ENGINE_CODING_CHANGED = ACTION_PREFIX + "OBD_ENGINE_CODING";
@@ -189,6 +192,11 @@ public class ObdConstants {
     public static final String KEY_OBD_CLIMATE_2180 = "obd_climate_2180";
 
     public static final String KEY_OBD_PARKING_2101 = "obd_parking_2101";
+
+    public static final String KEY_OBD_ETACS_1A87 = "obd_etacs_1A87";
+    public static final String KEY_OBD_ETACS_1A88 = "obd_etacs_1A88";
+    public static final String KEY_OBD_ETACS_1A90 = "obd_etacs_1A90";
+    public static final String KEY_OBD_ETACS_1A9C = "obd_etacs_1A9C";
 
 
 

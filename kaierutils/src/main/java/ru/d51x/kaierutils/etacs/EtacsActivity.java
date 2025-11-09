@@ -1,61 +1,34 @@
 package ru.d51x.kaierutils.etacs;
 
-import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_PART_NUMBER_CHANGED;
-import static ru.d51x.kaierutils.etacs.EtacsCustomCoding.getAvailableOptions;
-import static ru.d51x.kaierutils.etacs.EtacsCustomCoding.getAvailableValues;
+import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_DIAG_AND_PART_NUMBER_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_CODING_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_VARIANT_CODING_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_STATUS_CHANGED;
 import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
-import static ru.d51x.kaierutils.utils.StringUtils.hexStringToBuffer;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 import ru.d51x.kaierutils.App;
-import ru.d51x.kaierutils.CodingAdapter;
 import ru.d51x.kaierutils.R;
-import ru.d51x.kaierutils.dialog.FileSelector;
-import ru.d51x.kaierutils.dialog.FileSelectorDialog;
-import ru.d51x.kaierutils.dialog.RadioListDialog;
 
 public class EtacsActivity  extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = "Etacs";
@@ -119,7 +92,7 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
 
 
 
-        registerReceiver(receiver, new IntentFilter(ACTION_OBD_ETACS_PART_NUMBER_CHANGED));
+        registerReceiver(receiver, new IntentFilter(ACTION_OBD_ETACS_DIAG_AND_PART_NUMBER_CHANGED));
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED));
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ETACS_VARIANT_CODING_CHANGED));
         registerReceiver(receiver, new IntentFilter(ACTION_OBD_ENGINE_CODING_CHANGED));
@@ -130,19 +103,12 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
 
 
     private void readEtacsVersion() {
-        String sVersion = "unknown";
         if (App.obd.isConnected) {
             this.runOnUiThread(() -> {
-                buffer.set(App.obd.readEtacsCodingCustom());
-                if (buffer.get() != null) {
-                    String s = bufferToHex(buffer.get(), 2, false);
-                    edtEtacsCustom.setText(s);
-                    edtEtacsCustom.setEnabled(true);
-                    edtEtacsCustom2.setText(s);
-                }
+                String sVersion = App.obd.readEtacsPartNumber();
+                tvEtacsVersion.setText(sVersion);
             });
         }
-        tvEtacsVersion.setText(sVersion);
     }
 
 
