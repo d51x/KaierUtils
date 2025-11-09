@@ -5,6 +5,8 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:overScrollMode="never"
     tools:context=".etacs.EtacsVariantFragment">
 
     <TextView
@@ -12,7 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="Variant:"
+        android:text="Etacs Variant Coding:"
+        android:visibility="gone"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,22 +34,127 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Read"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnEtacsWriteVariant" />
+        app:layout_constraintEnd_toStartOf="@+id/btnEtacsWriteVariant"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btnFromFileVariantCoding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="From File"
+        app:layout_constraintEnd_toStartOf="@+id/btnEtacsReadVariant"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnToFileVariantCoding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="To File"
+        app:layout_constraintEnd_toStartOf="@+id/btnFromFileVariantCoding"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnTestVariantCoding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test"
+        app:layout_constraintEnd_toStartOf="@+id/btnToFileVariantCoding"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/edtEtacsVariant"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_height="44dp"
+        android:editable="true"
+        android:lines="1"
+        android:singleLine="true"
+        android:text=""
+        android:textSize="14sp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@+id/cbShowExtend"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edtEtacsVariant2"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
         android:layout_marginEnd="16dp"
-        android:enabled="false"
+        android:visibility="gone"
         android:text=""
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textView27"
+        app:layout_constraintTop_toBottomOf="@+id/edtEtacsVariant" />
+
+    <TextView
+        android:id="@+id/textView25"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="New"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/edtEtacsVariant"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnEtacsWriteVariant" />
+        app:layout_constraintTop_toTopOf="@+id/edtEtacsVariant" />
+
+    <TextView
+        android:id="@+id/textView27"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Old"
+        android:visibility="gone"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/edtEtacsVariant2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edtEtacsVariant2" />
+
+    <TextView
+        android:id="@+id/textView28"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="New"
+        android:visibility="gone"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/edtEtacsVariant"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edtEtacsVariant" />
+
+
+
+            <ListView
+                android:id="@+id/lvEtacsVariant"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/black_color"
+                android:overScrollMode="always"
+                android:scrollIndicators="end"
+                android:scrollbarStyle="insideInset"
+                android:verticalScrollbarPosition="right"
+                tools:listitem="@layout/list_item_coding"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edtEtacsVariant2">
+
+            </ListView>
+
+    <CheckBox
+        android:id="@+id/cbShowExtend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Extend"
+        app:layout_constraintEnd_toStartOf="@+id/btnTestVariantCoding"
+        tools:layout_editor_absoluteY="2dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

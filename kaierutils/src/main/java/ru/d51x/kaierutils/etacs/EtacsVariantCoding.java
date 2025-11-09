@@ -190,7 +190,6 @@ public enum EtacsVariantCoding {
     ETACS_VARIANT_178(178, 40, 1, 0, 0b00000001, false, true,null, "ev_remote_ecu", "EV REMOTE-ECU"),
     ETACS_VARIANT_179(179, 40, 1, 1, 0b00000010, false, true,null, "automatic_high_beam", "Automatic High Beam"),
     ETACS_VARIANT_180(180, 40, 1, 2, 0b00000100, false, true,null, "automatic_high_beam_function", "Automatic High Beam function"),
-    ETACS_VARIANT_998(998, 0, 1, 0, 0, false, true,null, "", ""),
     ETACS_VARIANT_UNKNOWN(999, 0, 0, 0, 0, false, true, null, "unknown", "unknown");
     private int idx;
     private String name;
@@ -219,21 +218,63 @@ public enum EtacsVariantCoding {
         this.dataType = dataType;
     }
 
+    public static EtacsVariantCoding getById(int id) {
+        for (EtacsVariantCoding e: values()) {
+            if (e.idx == id) {
+                return e;
+            }
+        }
+        return EtacsVariantCoding.ETACS_VARIANT_UNKNOWN;
+    }
+
+    public int getIdx() {
+        return idx;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getByteIdx() {
+        return byteIdx;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public int getStartBit() {
+        return startBit;
+    }
+
+    public int getMask() {
+        return mask;
+    }
+
     public static String getCurrentValue(int id, int val) {
+        //int valuePos = getAvailableValues(id).stream().filter(v -> v == val).findFirst().orElse(0);
+        int valuePos = getAvailableValues(id).indexOf(val);
+        if (valuePos == -1) return "unknown";
         ArrayList<String> res = getAvailableOptions(id);
-        if (val < res.size()) {
-            return res.get(val);
+        if (valuePos < res.size()) {
+            return res.get(valuePos);
         } else {
             return res.get(res.size()-1);
         }
     }
+
+
 
     public static ArrayList<String> getAvailableOptions(int id) {
         Stream<String> stream;
 
         switch (id) {
             case 1:
-                stream = Arrays.stream(EtacsCustomData.EtacsCustomData1.values()).map(EtacsCustomData.EtacsCustomData1::getTitle);
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData1.values()).map(EtacsVariantData.EtacsVariantData1::getTitle);
                 break;
             case 2:
                 stream = Arrays.stream(EtacsVariantData.EtacsVariantData2.values()).map(EtacsVariantData.EtacsVariantData2::getTitle);
@@ -367,6 +408,411 @@ public enum EtacsVariantCoding {
             case 45:
                 stream = Arrays.stream(EtacsVariantData.EtacsVariantData45.values()).map(EtacsVariantData.EtacsVariantData45::getTitle);
                 break;
+            case 46:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData46.values()).map(EtacsVariantData.EtacsVariantData46::getTitle);
+                break;
+            case 47:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData47.values()).map(EtacsVariantData.EtacsVariantData47::getTitle);
+                break;
+            case 48:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData48.values()).map(EtacsVariantData.EtacsVariantData48::getTitle);
+                break;
+            case 49:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData49.values()).map(EtacsVariantData.EtacsVariantData49::getTitle);
+                break;
+            case 50:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData50.values()).map(EtacsVariantData.EtacsVariantData50::getTitle);
+                break;
+            case 51:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData51.values()).map(EtacsVariantData.EtacsVariantData51::getTitle);
+                break;
+            case 52:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData52.values()).map(EtacsVariantData.EtacsVariantData52::getTitle);
+                break;
+            case 53:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData53.values()).map(EtacsVariantData.EtacsVariantData53::getTitle);
+                break;
+            case 54:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData54.values()).map(EtacsVariantData.EtacsVariantData54::getTitle);
+                break;
+            case 55:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData55.values()).map(EtacsVariantData.EtacsVariantData55::getTitle);
+                break;
+            case 56:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData56.values()).map(EtacsVariantData.EtacsVariantData56::getTitle);
+                break;
+            case 57:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData57.values()).map(EtacsVariantData.EtacsVariantData57::getTitle);
+                break;
+            case 58:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData58.values()).map(EtacsVariantData.EtacsVariantData58::getTitle);
+                break;
+            case 59:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData59.values()).map(EtacsVariantData.EtacsVariantData59::getTitle);
+                break;
+            case 60:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData60.values()).map(EtacsVariantData.EtacsVariantData60::getTitle);
+                break;
+            case 61:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData61.values()).map(EtacsVariantData.EtacsVariantData61::getTitle);
+                break;
+            case 62:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData62.values()).map(EtacsVariantData.EtacsVariantData62::getTitle);
+                break;
+            case 63:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData63.values()).map(EtacsVariantData.EtacsVariantData63::getTitle);
+                break;
+            case 64:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData64.values()).map(EtacsVariantData.EtacsVariantData64::getTitle);
+                break;
+            case 65:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData65.values()).map(EtacsVariantData.EtacsVariantData65::getTitle);
+                break;
+            case 66:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData66.values()).map(EtacsVariantData.EtacsVariantData66::getTitle);
+                break;
+            case 67:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData67.values()).map(EtacsVariantData.EtacsVariantData67::getTitle);
+                break;
+            case 68:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData68.values()).map(EtacsVariantData.EtacsVariantData68::getTitle);
+                break;
+            case 69:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData69.values()).map(EtacsVariantData.EtacsVariantData69::getTitle);
+                break;
+            case 70:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData70.values()).map(EtacsVariantData.EtacsVariantData70::getTitle);
+                break;
+            case 71:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData71.values()).map(EtacsVariantData.EtacsVariantData71::getTitle);
+                break;
+            case 72:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData72.values()).map(EtacsVariantData.EtacsVariantData72::getTitle);
+                break;
+            case 73:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData73.values()).map(EtacsVariantData.EtacsVariantData73::getTitle);
+                break;
+            case 74:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData74.values()).map(EtacsVariantData.EtacsVariantData74::getTitle);
+                break;
+            case 75:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData75.values()).map(EtacsVariantData.EtacsVariantData75::getTitle);
+                break;
+            case 76:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData76.values()).map(EtacsVariantData.EtacsVariantData76::getTitle);
+                break;
+            case 77:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData77.values()).map(EtacsVariantData.EtacsVariantData77::getTitle);
+                break;
+            case 78:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData78.values()).map(EtacsVariantData.EtacsVariantData78::getTitle);
+                break;
+            case 79:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData79.values()).map(EtacsVariantData.EtacsVariantData79::getTitle);
+                break;
+            case 80:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData80.values()).map(EtacsVariantData.EtacsVariantData80::getTitle);
+                break;
+            case 81:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData81.values()).map(EtacsVariantData.EtacsVariantData81::getTitle);
+                break;
+            case 82:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData82.values()).map(EtacsVariantData.EtacsVariantData82::getTitle);
+                break;
+            case 83:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData83.values()).map(EtacsVariantData.EtacsVariantData83::getTitle);
+                break;
+            case 84:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData84.values()).map(EtacsVariantData.EtacsVariantData84::getTitle);
+                break;
+            case 85:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData85.values()).map(EtacsVariantData.EtacsVariantData85::getTitle);
+                break;
+            case 86:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData86.values()).map(EtacsVariantData.EtacsVariantData86::getTitle);
+                break;
+            case 87:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData87.values()).map(EtacsVariantData.EtacsVariantData87::getTitle);
+                break;
+            case 88:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData88.values()).map(EtacsVariantData.EtacsVariantData88::getTitle);
+                break;
+            case 89:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData89.values()).map(EtacsVariantData.EtacsVariantData89::getTitle);
+                break;
+            case 90:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData90.values()).map(EtacsVariantData.EtacsVariantData90::getTitle);
+                break;
+            case 91:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData91.values()).map(EtacsVariantData.EtacsVariantData91::getTitle);
+                break;
+            case 92:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData92.values()).map(EtacsVariantData.EtacsVariantData92::getTitle);
+                break;
+            case 93:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData93.values()).map(EtacsVariantData.EtacsVariantData93::getTitle);
+                break;
+            case 94:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData94.values()).map(EtacsVariantData.EtacsVariantData94::getTitle);
+                break;
+            case 95:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData95.values()).map(EtacsVariantData.EtacsVariantData95::getTitle);
+                break;
+            case 96:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData96.values()).map(EtacsVariantData.EtacsVariantData96::getTitle);
+                break;
+            case 97:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData97.values()).map(EtacsVariantData.EtacsVariantData97::getTitle);
+                break;
+            case 98:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData98.values()).map(EtacsVariantData.EtacsVariantData98::getTitle);
+                break;
+            case 99:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData99.values()).map(EtacsVariantData.EtacsVariantData99::getTitle);
+                break;
+            case 100:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData100.values()).map(EtacsVariantData.EtacsVariantData100::getTitle);
+                break;
+            case 101:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData101.values()).map(EtacsVariantData.EtacsVariantData101::getTitle);
+                break;
+            case 102:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData102.values()).map(EtacsVariantData.EtacsVariantData102::getTitle);
+                break;
+            case 103:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData103.values()).map(EtacsVariantData.EtacsVariantData103::getTitle);
+                break;
+            case 104:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData104.values()).map(EtacsVariantData.EtacsVariantData104::getTitle);
+                break;
+            case 105:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData105.values()).map(EtacsVariantData.EtacsVariantData105::getTitle);
+                break;
+            case 106:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData106.values()).map(EtacsVariantData.EtacsVariantData106::getTitle);
+                break;
+            case 107:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData107.values()).map(EtacsVariantData.EtacsVariantData107::getTitle);
+                break;
+            case 108:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData108.values()).map(EtacsVariantData.EtacsVariantData108::getTitle);
+                break;
+            case 109:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData109.values()).map(EtacsVariantData.EtacsVariantData109::getTitle);
+                break;
+            case 110:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData110.values()).map(EtacsVariantData.EtacsVariantData110::getTitle);
+                break;
+            case 111:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData111.values()).map(EtacsVariantData.EtacsVariantData111::getTitle);
+                break;
+            case 112:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData112.values()).map(EtacsVariantData.EtacsVariantData112::getTitle);
+                break;
+            case 113:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData113.values()).map(EtacsVariantData.EtacsVariantData113::getTitle);
+                break;
+            case 114:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData114.values()).map(EtacsVariantData.EtacsVariantData114::getTitle);
+                break;
+            case 115:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData115.values()).map(EtacsVariantData.EtacsVariantData115::getTitle);
+                break;
+            case 116:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData116.values()).map(EtacsVariantData.EtacsVariantData116::getTitle);
+                break;
+            case 117:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData117.values()).map(EtacsVariantData.EtacsVariantData117::getTitle);
+                break;
+            case 118:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData118.values()).map(EtacsVariantData.EtacsVariantData118::getTitle);
+                break;
+            case 119:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData119.values()).map(EtacsVariantData.EtacsVariantData119::getTitle);
+                break;
+            case 120:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData120.values()).map(EtacsVariantData.EtacsVariantData120::getTitle);
+                break;
+            case 121:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData121.values()).map(EtacsVariantData.EtacsVariantData121::getTitle);
+                break;
+            case 122:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData122.values()).map(EtacsVariantData.EtacsVariantData122::getTitle);
+                break;
+            case 123:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData123.values()).map(EtacsVariantData.EtacsVariantData123::getTitle);
+                break;
+            case 124:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData124.values()).map(EtacsVariantData.EtacsVariantData124::getTitle);
+                break;
+            case 125:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData125.values()).map(EtacsVariantData.EtacsVariantData125::getTitle);
+                break;
+            case 126:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData126.values()).map(EtacsVariantData.EtacsVariantData126::getTitle);
+                break;
+            case 127:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData127.values()).map(EtacsVariantData.EtacsVariantData127::getTitle);
+                break;
+            case 128:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData128.values()).map(EtacsVariantData.EtacsVariantData128::getTitle);
+                break;
+            case 129:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData129.values()).map(EtacsVariantData.EtacsVariantData129::getTitle);
+                break;
+            case 130:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData130.values()).map(EtacsVariantData.EtacsVariantData130::getTitle);
+                break;
+            case 131:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData131.values()).map(EtacsVariantData.EtacsVariantData131::getTitle);
+                break;
+            case 132:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData132.values()).map(EtacsVariantData.EtacsVariantData132::getTitle);
+                break;
+            case 133:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData133.values()).map(EtacsVariantData.EtacsVariantData133::getTitle);
+                break;
+            case 134:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData134.values()).map(EtacsVariantData.EtacsVariantData134::getTitle);
+                break;
+            case 135:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData135.values()).map(EtacsVariantData.EtacsVariantData135::getTitle);
+                break;
+            case 136:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData136.values()).map(EtacsVariantData.EtacsVariantData136::getTitle);
+                break;
+            case 137:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData137.values()).map(EtacsVariantData.EtacsVariantData137::getTitle);
+                break;
+            case 138:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData138.values()).map(EtacsVariantData.EtacsVariantData138::getTitle);
+                break;
+            case 139:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData139.values()).map(EtacsVariantData.EtacsVariantData139::getTitle);
+                break;
+            case 140:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData140.values()).map(EtacsVariantData.EtacsVariantData140::getTitle);
+                break;
+            case 141:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData141.values()).map(EtacsVariantData.EtacsVariantData141::getTitle);
+                break;
+            case 142:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData142.values()).map(EtacsVariantData.EtacsVariantData142::getTitle);
+                break;
+            case 143:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData143.values()).map(EtacsVariantData.EtacsVariantData143::getTitle);
+                break;
+            case 144:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData144.values()).map(EtacsVariantData.EtacsVariantData144::getTitle);
+                break;
+            case 145:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData145.values()).map(EtacsVariantData.EtacsVariantData145::getTitle);
+                break;
+            case 146:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData146.values()).map(EtacsVariantData.EtacsVariantData146::getTitle);
+                break;
+            case 147:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData147.values()).map(EtacsVariantData.EtacsVariantData147::getTitle);
+                break;
+            case 148:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData148.values()).map(EtacsVariantData.EtacsVariantData148::getTitle);
+                break;
+            case 149:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData149.values()).map(EtacsVariantData.EtacsVariantData149::getTitle);
+                break;
+            case 150:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData150.values()).map(EtacsVariantData.EtacsVariantData150::getTitle);
+                break;
+            case 151:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData151.values()).map(EtacsVariantData.EtacsVariantData151::getTitle);
+                break;
+            case 152:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData152.values()).map(EtacsVariantData.EtacsVariantData152::getTitle);
+                break;
+            case 153:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData153.values()).map(EtacsVariantData.EtacsVariantData153::getTitle);
+                break;
+            case 154:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData154.values()).map(EtacsVariantData.EtacsVariantData154::getTitle);
+                break;
+            case 155:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData155.values()).map(EtacsVariantData.EtacsVariantData155::getTitle);
+                break;
+            case 156:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData156.values()).map(EtacsVariantData.EtacsVariantData156::getTitle);
+                break;
+            case 157:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData157.values()).map(EtacsVariantData.EtacsVariantData157::getTitle);
+                break;
+            case 158:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData158.values()).map(EtacsVariantData.EtacsVariantData158::getTitle);
+                break;
+            case 159:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData159.values()).map(EtacsVariantData.EtacsVariantData159::getTitle);
+                break;
+            case 160:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData160.values()).map(EtacsVariantData.EtacsVariantData160::getTitle);
+                break;
+            case 161:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData161.values()).map(EtacsVariantData.EtacsVariantData161::getTitle);
+                break;
+            case 162:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData162.values()).map(EtacsVariantData.EtacsVariantData162::getTitle);
+                break;
+            case 163:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData163.values()).map(EtacsVariantData.EtacsVariantData163::getTitle);
+                break;
+            case 164:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData164.values()).map(EtacsVariantData.EtacsVariantData164::getTitle);
+                break;
+            case 165:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData165.values()).map(EtacsVariantData.EtacsVariantData165::getTitle);
+                break;
+            case 166:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData166.values()).map(EtacsVariantData.EtacsVariantData166::getTitle);
+                break;
+            case 167:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData167.values()).map(EtacsVariantData.EtacsVariantData167::getTitle);
+                break;
+            case 168:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData168.values()).map(EtacsVariantData.EtacsVariantData168::getTitle);
+                break;
+            case 169:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData169.values()).map(EtacsVariantData.EtacsVariantData169::getTitle);
+                break;
+            case 170:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData170.values()).map(EtacsVariantData.EtacsVariantData170::getTitle);
+                break;
+            case 171:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData171.values()).map(EtacsVariantData.EtacsVariantData171::getTitle);
+                break;
+            case 172:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData172.values()).map(EtacsVariantData.EtacsVariantData172::getTitle);
+                break;
+            case 173:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData173.values()).map(EtacsVariantData.EtacsVariantData173::getTitle);
+                break;
+            case 174:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData174.values()).map(EtacsVariantData.EtacsVariantData174::getTitle);
+                break;
+            case 175:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData175.values()).map(EtacsVariantData.EtacsVariantData175::getTitle);
+                break;
+            case 176:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData176.values()).map(EtacsVariantData.EtacsVariantData176::getTitle);
+                break;
+            case 177:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData177.values()).map(EtacsVariantData.EtacsVariantData177::getTitle);
+                break;
+            case 178:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData178.values()).map(EtacsVariantData.EtacsVariantData178::getTitle);
+                break;
+            case 179:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData179.values()).map(EtacsVariantData.EtacsVariantData179::getTitle);
+                break;
+            case 180:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData180.values()).map(EtacsVariantData.EtacsVariantData180::getTitle);
+                break;
             default: stream = Stream.of("unknown");
         }
         return stream.collect(Collectors.toCollection(ArrayList::new));
@@ -381,25 +827,25 @@ public enum EtacsVariantCoding {
                 break;
             case 2:
                 stream = Arrays.stream(EtacsVariantData.EtacsVariantData2.values()).map(EtacsVariantData.EtacsVariantData2::getIdx);
-               break;
+                break;
             case 3:
                 stream = Arrays.stream(EtacsVariantData.EtacsVariantData3.values()).map(EtacsVariantData.EtacsVariantData3::getIdx);
-               break;
+                break;
             case 4:
                 stream = Arrays.stream(EtacsVariantData.EtacsVariantData4.values()).map(EtacsVariantData.EtacsVariantData4::getIdx);
-               break;
+                break;
             case 5:
                 stream = Arrays.stream(EtacsVariantData.EtacsVariantData5.values()).map(EtacsVariantData.EtacsVariantData5::getIdx);
-               break;
+                break;
             case 6:
                 stream = Arrays.stream(EtacsVariantData.EtacsVariantData6.values()).map(EtacsVariantData.EtacsVariantData6::getIdx);
-               break;
+                break;
             case 7:
                 stream = Arrays.stream(EtacsVariantData.EtacsVariantData7.values()).map(EtacsVariantData.EtacsVariantData7::getIdx);
-               break;
+                break;
             case 8:
                 stream = Arrays.stream(EtacsVariantData.EtacsVariantData8.values()).map(EtacsVariantData.EtacsVariantData8::getIdx);
-               break;
+                break;
             case 9:
                 stream = Arrays.stream(EtacsVariantData.EtacsVariantData9.values()).map(EtacsVariantData.EtacsVariantData9::getIdx);
                 break;
@@ -511,8 +957,429 @@ public enum EtacsVariantCoding {
             case 45:
                 stream = Arrays.stream(EtacsVariantData.EtacsVariantData45.values()).map(EtacsVariantData.EtacsVariantData45::getIdx);
                 break;
+            case 46:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData46.values()).map(EtacsVariantData.EtacsVariantData46::getIdx);
+                break;
+            case 47:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData47.values()).map(EtacsVariantData.EtacsVariantData47::getIdx);
+                break;
+            case 48:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData48.values()).map(EtacsVariantData.EtacsVariantData48::getIdx);
+                break;
+            case 49:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData49.values()).map(EtacsVariantData.EtacsVariantData49::getIdx);
+                break;
+            case 50:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData50.values()).map(EtacsVariantData.EtacsVariantData50::getIdx);
+                break;
+            case 51:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData51.values()).map(EtacsVariantData.EtacsVariantData51::getIdx);
+                break;
+            case 52:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData52.values()).map(EtacsVariantData.EtacsVariantData52::getIdx);
+                break;
+            case 53:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData53.values()).map(EtacsVariantData.EtacsVariantData53::getIdx);
+                break;
+            case 54:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData54.values()).map(EtacsVariantData.EtacsVariantData54::getIdx);
+                break;
+            case 55:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData55.values()).map(EtacsVariantData.EtacsVariantData55::getIdx);
+                break;
+            case 56:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData56.values()).map(EtacsVariantData.EtacsVariantData56::getIdx);
+                break;
+            case 57:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData57.values()).map(EtacsVariantData.EtacsVariantData57::getIdx);
+                break;
+            case 58:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData58.values()).map(EtacsVariantData.EtacsVariantData58::getIdx);
+                break;
+            case 59:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData59.values()).map(EtacsVariantData.EtacsVariantData59::getIdx);
+                break;
+            case 60:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData60.values()).map(EtacsVariantData.EtacsVariantData60::getIdx);
+                break;
+            case 61:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData61.values()).map(EtacsVariantData.EtacsVariantData61::getIdx);
+                break;
+            case 62:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData62.values()).map(EtacsVariantData.EtacsVariantData62::getIdx);
+                break;
+            case 63:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData63.values()).map(EtacsVariantData.EtacsVariantData63::getIdx);
+                break;
+            case 64:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData64.values()).map(EtacsVariantData.EtacsVariantData64::getIdx);
+                break;
+            case 65:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData65.values()).map(EtacsVariantData.EtacsVariantData65::getIdx);
+                break;
+            case 66:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData66.values()).map(EtacsVariantData.EtacsVariantData66::getIdx);
+                break;
+            case 67:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData67.values()).map(EtacsVariantData.EtacsVariantData67::getIdx);
+                break;
+            case 68:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData68.values()).map(EtacsVariantData.EtacsVariantData68::getIdx);
+                break;
+            case 69:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData69.values()).map(EtacsVariantData.EtacsVariantData69::getIdx);
+                break;
+            case 70:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData70.values()).map(EtacsVariantData.EtacsVariantData70::getIdx);
+                break;
+            case 71:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData71.values()).map(EtacsVariantData.EtacsVariantData71::getIdx);
+                break;
+            case 72:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData72.values()).map(EtacsVariantData.EtacsVariantData72::getIdx);
+                break;
+            case 73:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData73.values()).map(EtacsVariantData.EtacsVariantData73::getIdx);
+                break;
+            case 74:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData74.values()).map(EtacsVariantData.EtacsVariantData74::getIdx);
+                break;
+            case 75:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData75.values()).map(EtacsVariantData.EtacsVariantData75::getIdx);
+                break;
+            case 76:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData76.values()).map(EtacsVariantData.EtacsVariantData76::getIdx);
+                break;
+            case 77:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData77.values()).map(EtacsVariantData.EtacsVariantData77::getIdx);
+                break;
+            case 78:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData78.values()).map(EtacsVariantData.EtacsVariantData78::getIdx);
+                break;
+            case 79:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData79.values()).map(EtacsVariantData.EtacsVariantData79::getIdx);
+                break;
+            case 80:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData80.values()).map(EtacsVariantData.EtacsVariantData80::getIdx);
+                break;
+            case 81:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData81.values()).map(EtacsVariantData.EtacsVariantData81::getIdx);
+                break;
+            case 82:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData82.values()).map(EtacsVariantData.EtacsVariantData82::getIdx);
+                break;
+            case 83:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData83.values()).map(EtacsVariantData.EtacsVariantData83::getIdx);
+                break;
+            case 84:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData84.values()).map(EtacsVariantData.EtacsVariantData84::getIdx);
+                break;
+            case 85:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData85.values()).map(EtacsVariantData.EtacsVariantData85::getIdx);
+                break;
+            case 86:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData86.values()).map(EtacsVariantData.EtacsVariantData86::getIdx);
+                break;
+            case 87:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData87.values()).map(EtacsVariantData.EtacsVariantData87::getIdx);
+                break;
+            case 88:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData88.values()).map(EtacsVariantData.EtacsVariantData88::getIdx);
+                break;
+            case 89:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData89.values()).map(EtacsVariantData.EtacsVariantData89::getIdx);
+                break;
+            case 90:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData90.values()).map(EtacsVariantData.EtacsVariantData90::getIdx);
+                break;
+            case 91:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData91.values()).map(EtacsVariantData.EtacsVariantData91::getIdx);
+                break;
+            case 92:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData92.values()).map(EtacsVariantData.EtacsVariantData92::getIdx);
+                break;
+            case 93:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData93.values()).map(EtacsVariantData.EtacsVariantData93::getIdx);
+                break;
+            case 94:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData94.values()).map(EtacsVariantData.EtacsVariantData94::getIdx);
+                break;
+            case 95:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData95.values()).map(EtacsVariantData.EtacsVariantData95::getIdx);
+                break;
+            case 96:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData96.values()).map(EtacsVariantData.EtacsVariantData96::getIdx);
+                break;
+            case 97:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData97.values()).map(EtacsVariantData.EtacsVariantData97::getIdx);
+                break;
+            case 98:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData98.values()).map(EtacsVariantData.EtacsVariantData98::getIdx);
+                break;
+            case 99:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData99.values()).map(EtacsVariantData.EtacsVariantData99::getIdx);
+                break;
+            case 100:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData100.values()).map(EtacsVariantData.EtacsVariantData100::getIdx);
+                break;
+            case 101:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData101.values()).map(EtacsVariantData.EtacsVariantData101::getIdx);
+                break;
+            case 102:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData102.values()).map(EtacsVariantData.EtacsVariantData102::getIdx);
+                break;
+            case 103:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData103.values()).map(EtacsVariantData.EtacsVariantData103::getIdx);
+                break;
+            case 104:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData104.values()).map(EtacsVariantData.EtacsVariantData104::getIdx);
+                break;
+            case 105:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData105.values()).map(EtacsVariantData.EtacsVariantData105::getIdx);
+                break;
+            case 106:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData106.values()).map(EtacsVariantData.EtacsVariantData106::getIdx);
+                break;
+            case 107:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData107.values()).map(EtacsVariantData.EtacsVariantData107::getIdx);
+                break;
+            case 108:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData108.values()).map(EtacsVariantData.EtacsVariantData108::getIdx);
+                break;
+            case 109:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData109.values()).map(EtacsVariantData.EtacsVariantData109::getIdx);
+                break;
+            case 110:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData110.values()).map(EtacsVariantData.EtacsVariantData110::getIdx);
+                break;
+            case 111:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData111.values()).map(EtacsVariantData.EtacsVariantData111::getIdx);
+                break;
+            case 112:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData112.values()).map(EtacsVariantData.EtacsVariantData112::getIdx);
+                break;
+            case 113:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData113.values()).map(EtacsVariantData.EtacsVariantData113::getIdx);
+                break;
+            case 114:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData114.values()).map(EtacsVariantData.EtacsVariantData114::getIdx);
+                break;
+            case 115:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData115.values()).map(EtacsVariantData.EtacsVariantData115::getIdx);
+                break;
+            case 116:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData116.values()).map(EtacsVariantData.EtacsVariantData116::getIdx);
+                break;
+            case 117:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData117.values()).map(EtacsVariantData.EtacsVariantData117::getIdx);
+                break;
+            case 118:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData118.values()).map(EtacsVariantData.EtacsVariantData118::getIdx);
+                break;
+            case 119:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData119.values()).map(EtacsVariantData.EtacsVariantData119::getIdx);
+                break;
+            case 120:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData120.values()).map(EtacsVariantData.EtacsVariantData120::getIdx);
+                break;
+            case 121:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData121.values()).map(EtacsVariantData.EtacsVariantData121::getIdx);
+                break;
+            case 122:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData122.values()).map(EtacsVariantData.EtacsVariantData122::getIdx);
+                break;
+            case 123:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData123.values()).map(EtacsVariantData.EtacsVariantData123::getIdx);
+                break;
+            case 124:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData124.values()).map(EtacsVariantData.EtacsVariantData124::getIdx);
+                break;
+            case 125:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData125.values()).map(EtacsVariantData.EtacsVariantData125::getIdx);
+                break;
+            case 126:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData126.values()).map(EtacsVariantData.EtacsVariantData126::getIdx);
+                break;
+            case 127:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData127.values()).map(EtacsVariantData.EtacsVariantData127::getIdx);
+                break;
+            case 128:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData128.values()).map(EtacsVariantData.EtacsVariantData128::getIdx);
+                break;
+            case 129:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData129.values()).map(EtacsVariantData.EtacsVariantData129::getIdx);
+                break;
+            case 130:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData130.values()).map(EtacsVariantData.EtacsVariantData130::getIdx);
+                break;
+            case 131:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData131.values()).map(EtacsVariantData.EtacsVariantData131::getIdx);
+                break;
+            case 132:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData132.values()).map(EtacsVariantData.EtacsVariantData132::getIdx);
+                break;
+            case 133:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData133.values()).map(EtacsVariantData.EtacsVariantData133::getIdx);
+                break;
+            case 134:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData134.values()).map(EtacsVariantData.EtacsVariantData134::getIdx);
+                break;
+            case 135:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData135.values()).map(EtacsVariantData.EtacsVariantData135::getIdx);
+                break;
+            case 136:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData136.values()).map(EtacsVariantData.EtacsVariantData136::getIdx);
+                break;
+            case 137:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData137.values()).map(EtacsVariantData.EtacsVariantData137::getIdx);
+                break;
+            case 138:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData138.values()).map(EtacsVariantData.EtacsVariantData138::getIdx);
+                break;
+            case 139:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData139.values()).map(EtacsVariantData.EtacsVariantData139::getIdx);
+                break;
+            case 140:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData140.values()).map(EtacsVariantData.EtacsVariantData140::getIdx);
+                break;
+            case 141:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData141.values()).map(EtacsVariantData.EtacsVariantData141::getIdx);
+                break;
+            case 142:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData142.values()).map(EtacsVariantData.EtacsVariantData142::getIdx);
+                break;
+            case 143:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData143.values()).map(EtacsVariantData.EtacsVariantData143::getIdx);
+                break;
+            case 144:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData144.values()).map(EtacsVariantData.EtacsVariantData144::getIdx);
+                break;
+            case 145:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData145.values()).map(EtacsVariantData.EtacsVariantData145::getIdx);
+                break;
+            case 146:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData146.values()).map(EtacsVariantData.EtacsVariantData146::getIdx);
+                break;
+            case 147:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData147.values()).map(EtacsVariantData.EtacsVariantData147::getIdx);
+                break;
+            case 148:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData148.values()).map(EtacsVariantData.EtacsVariantData148::getIdx);
+                break;
+            case 149:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData149.values()).map(EtacsVariantData.EtacsVariantData149::getIdx);
+                break;
+            case 150:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData150.values()).map(EtacsVariantData.EtacsVariantData150::getIdx);
+                break;
+            case 151:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData151.values()).map(EtacsVariantData.EtacsVariantData151::getIdx);
+                break;
+            case 152:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData152.values()).map(EtacsVariantData.EtacsVariantData152::getIdx);
+                break;
+            case 153:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData153.values()).map(EtacsVariantData.EtacsVariantData153::getIdx);
+                break;
+            case 154:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData154.values()).map(EtacsVariantData.EtacsVariantData154::getIdx);
+                break;
+            case 155:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData155.values()).map(EtacsVariantData.EtacsVariantData155::getIdx);
+                break;
+            case 156:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData156.values()).map(EtacsVariantData.EtacsVariantData156::getIdx);
+                break;
+            case 157:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData157.values()).map(EtacsVariantData.EtacsVariantData157::getIdx);
+                break;
+            case 158:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData158.values()).map(EtacsVariantData.EtacsVariantData158::getIdx);
+                break;
+            case 159:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData159.values()).map(EtacsVariantData.EtacsVariantData159::getIdx);
+                break;
+            case 160:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData160.values()).map(EtacsVariantData.EtacsVariantData160::getIdx);
+                break;
+            case 161:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData161.values()).map(EtacsVariantData.EtacsVariantData161::getIdx);
+                break;
+            case 162:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData162.values()).map(EtacsVariantData.EtacsVariantData162::getIdx);
+                break;
+            case 163:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData163.values()).map(EtacsVariantData.EtacsVariantData163::getIdx);
+                break;
+            case 164:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData164.values()).map(EtacsVariantData.EtacsVariantData164::getIdx);
+                break;
+            case 165:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData165.values()).map(EtacsVariantData.EtacsVariantData165::getIdx);
+                break;
+            case 166:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData166.values()).map(EtacsVariantData.EtacsVariantData166::getIdx);
+                break;
+            case 167:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData167.values()).map(EtacsVariantData.EtacsVariantData167::getIdx);
+                break;
+            case 168:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData168.values()).map(EtacsVariantData.EtacsVariantData168::getIdx);
+                break;
+            case 169:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData169.values()).map(EtacsVariantData.EtacsVariantData169::getIdx);
+                break;
+            case 170:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData170.values()).map(EtacsVariantData.EtacsVariantData170::getIdx);
+                break;
+            case 171:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData171.values()).map(EtacsVariantData.EtacsVariantData171::getIdx);
+                break;
+            case 172:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData172.values()).map(EtacsVariantData.EtacsVariantData172::getIdx);
+                break;
+            case 173:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData173.values()).map(EtacsVariantData.EtacsVariantData173::getIdx);
+                break;
+            case 174:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData174.values()).map(EtacsVariantData.EtacsVariantData174::getIdx);
+                break;
+            case 175:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData175.values()).map(EtacsVariantData.EtacsVariantData175::getIdx);
+                break;
+            case 176:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData176.values()).map(EtacsVariantData.EtacsVariantData176::getIdx);
+                break;
+            case 177:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData177.values()).map(EtacsVariantData.EtacsVariantData177::getIdx);
+                break;
+            case 178:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData178.values()).map(EtacsVariantData.EtacsVariantData178::getIdx);
+                break;
+            case 179:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData179.values()).map(EtacsVariantData.EtacsVariantData179::getIdx);
+                break;
+            case 180:
+                stream = Arrays.stream(EtacsVariantData.EtacsVariantData180.values()).map(EtacsVariantData.EtacsVariantData180::getIdx);
+                break;
             default: stream = Stream.of(-1);
         }
         return stream.collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public boolean isExtended() {
+        return extended;
+    }
+
+    public void setExtended(boolean extended) {
+        this.extended = extended;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

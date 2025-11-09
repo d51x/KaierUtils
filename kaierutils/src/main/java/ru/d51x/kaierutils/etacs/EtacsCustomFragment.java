@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -35,7 +36,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import ru.d51x.kaierutils.App;
-import ru.d51x.kaierutils.CodingAdapter;
 import ru.d51x.kaierutils.R;
 import ru.d51x.kaierutils.dialog.FileSelector;
 import ru.d51x.kaierutils.dialog.FileSelectorDialog;
@@ -59,12 +59,12 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
 
 
     private EditText edtEtacsCustom;
-    private EditText edtEtacsCustom2;
+    //private EditText edtEtacsCustom2;
 
-
+    private CheckBox cbCustomExtended;
     private ListView lvEtacsCustom;
 
-    private CodingAdapter etacsCustomCodingAdapter;
+    private CustomCodingAdapter etacsCustomCustomCodingAdapter;
     private final ArrayList<EtacsCustomCoding> customCoding = new ArrayList<>();
     private ArrayList<Integer> customCodingBuffer = new ArrayList<>();
     private final ArrayList<Integer> prevCustomCodingBuffer = new ArrayList<>();
@@ -116,11 +116,15 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
         View v = inflater.inflate(R.layout.fragment_etacs_custom, container, false);
 
         parentActivity = (EtacsActivity) getActivity();
+        cbCustomExtended = v.findViewById(R.id.cbCustomExtended);
+        cbCustomExtended.setOnCheckedChangeListener((compoundButton, isChecked) -> prepareAndFillCustomCodingList(isChecked));
+
+
         edtEtacsCustom = v.findViewById(R.id.edtEtacsCustom);
         edtEtacsCustom.setText("11302210F222120FF03F0F113F0FFFFF00000F1F2FF1FFFFFF");
 
-        edtEtacsCustom2 = v.findViewById(R.id.edtEtacsCustom2);
-        edtEtacsCustom2.setText("11302210F222120FF03F0F113F0FFFFF00000F1F2FF1FFFFFF");
+        //edtEtacsCustom2 = v.findViewById(R.id.edtEtacsCustom2);
+        //edtEtacsCustom2.setText("11302210F222120FF03F0F113F0FFFFF00000F1F2FF1FFFFFF");
 
 
         Button btnToFileCustomCoding = v.findViewById(R.id.btnToFileCustomCoding);
@@ -186,7 +190,7 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
                     edtEtacsCustom.setText(newCodingStr);
 
                     int index = lvEtacsCustom.getFirstVisiblePosition();
-                    etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
+                    etacsCustomCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
                             prevCustomCodingBuffer, customCoding);
                     lvEtacsCustom.setSelection(index);
                 });
@@ -201,33 +205,39 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
         return v;
     }
 
-    private CodingAdapter updateListView(ListView lv, ArrayList<Integer> buffer,
-                                         ArrayList<Integer> prevBuffer,
-                                         List<EtacsCustomCoding> list) {
-        CodingAdapter adapter = new CodingAdapter(getActivity(), buffer, prevBuffer,
+    public CustomCodingAdapter updateListView(ListView lv, ArrayList<Integer> buffer,
+                                              ArrayList<Integer> prevBuffer,
+                                              List<EtacsCustomCoding> list) {
+        CustomCodingAdapter adapter = new CustomCodingAdapter(parentActivity, buffer, prevBuffer,
                 R.layout.list_item_coding, list);
         lv.setAdapter(adapter);
 
-        if (adapter.getCount() > 10) {
-            View item = adapter.getView(0, null, lv);
-            item.measure(0, 0);
-            ViewGroup.LayoutParams params = lv.getLayoutParams();
-            params.height = (int) (10.5 * item.getMeasuredHeight());
-            lv.setLayoutParams(params);
-        }
+//        if (adapter.getCount() > 10) {
+//            View item = adapter.getView(0, null, lv);
+//            item.measure(0, 0);
+//            ViewGroup.LayoutParams params = lv.getLayoutParams();
+//            params.height = (int) (10.5 * item.getMeasuredHeight());
+//            lv.setLayoutParams(params);
+//        }
 
         return adapter;
     }
 
     private void prepareAndFillCustomCodingList(boolean showExtended) {
+        if (customCodingBuffer.isEmpty()) return;
         prevCustomCodingBuffer.clear();
         prevCustomCodingBuffer.addAll(customCodingBuffer);
         customCoding.clear();
         customCoding.addAll(Arrays.stream(EtacsCustomCoding.values())
                 //.filter(i -> i.getIdx() % 2 == 0)
-                .filter(i -> i.getIdx() != 999)
+                .filter(i -> i.getIdx() != 999 &&
+                        (
+                                (showExtended && (i.isExtended() || !i.isExtended()))
+                                        || (!showExtended && !i.isExtended())
+                        )
+                )
                 .collect(Collectors.toList()));
-        etacsCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
+        etacsCustomCustomCodingAdapter = updateListView(lvEtacsCustom, customCodingBuffer,
                 prevCustomCodingBuffer, customCoding);
     }
 
@@ -269,9 +279,9 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
             case R.id.btnTestCustomCoding: {
                 String str = edtEtacsCustom.getText().toString().trim();
                 if (str.isEmpty()) return;
-                edtEtacsCustom2.setText(str);
+                //edtEtacsCustom2.setText(str);
                 customCodingBuffer = hexStringToBuffer(str, 0);
-                prepareAndFillCustomCodingList(true);
+                prepareAndFillCustomCodingList(cbCustomExtended.isChecked());
             }
             break;
             case R.id.btnEtacsReadCustom: {
@@ -282,7 +292,7 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
                     return;
                 }
                 customCodingBuffer = readEtacsCodingCustom();
-                prepareAndFillCustomCodingList(true);
+                prepareAndFillCustomCodingList(cbCustomExtended.isChecked());
             }
             break;
 //            case R.id.btnEtacsReadVariant:
@@ -345,7 +355,7 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
                     String s = bufferToHex(buffer.get(), 2, false);
                     edtEtacsCustom.setText(s);
                     edtEtacsCustom.setEnabled(true);
-                    edtEtacsCustom2.setText(s);
+                    //edtEtacsCustom2.setText(s);
                 }
             });
         }
@@ -367,10 +377,14 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
             File f = new File(path, fName);
             in = new BufferedReader(new FileReader(f));
             String sCoding = in.readLine();
+            if (sCoding == null || sCoding.isEmpty()) {
+                Log.e(TAG, "Error reading coding file " + fName);
+                return;
+            }
             customCodingBuffer = hexStringToBuffer(sCoding, 0);
             edtEtacsCustom.setText(sCoding);
-            edtEtacsCustom2.setText(sCoding);
-            prepareAndFillCustomCodingList(true);
+            //edtEtacsCustom2.setText(sCoding);
+            prepareAndFillCustomCodingList(cbCustomExtended.isChecked());
         } catch (FileNotFoundException e) {
             Log.e(TAG, "File " + fName + " not found");
         } catch (IOException e) {
@@ -391,11 +405,11 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
         fileSelectorDialog.show();
     }
 
-    public CodingAdapter getEtacsCustomCodingAdapter() {
-        return etacsCustomCodingAdapter;
+    public CustomCodingAdapter getEtacsCustomCodingAdapter() {
+        return etacsCustomCustomCodingAdapter;
     }
 
-    public void setEtacsCustomCodingAdapter(CodingAdapter etacsCustomCodingAdapter) {
-        this.etacsCustomCodingAdapter = etacsCustomCodingAdapter;
+    public void setEtacsCustomCodingAdapter(CustomCodingAdapter etacsCustomCustomCodingAdapter) {
+        this.etacsCustomCustomCodingAdapter = etacsCustomCustomCodingAdapter;
     }
 }

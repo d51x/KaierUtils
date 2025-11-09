@@ -8,53 +8,53 @@ import java.util.stream.Stream;
 public enum EtacsCustomCoding {
 
 
-    ETACS_CUSTOM_001(1, 0, 4, 0, 0b00001111, "turn_power_source", "Turn power source"),
-    ETACS_CUSTOM_002(2,  0, 4, 4, 0b11110000, "comfort_flasher", "Comfort flasher"),
-    ETACS_CUSTOM_003(3,  1, 4, 0, 0b00001111, "hazard_answer_back", "Hazard answer back"),
-    ETACS_CUSTOM_004(4,  1, 4, 4, 0b11110000, "front_wiper_operation", "Front wiper operation"),
-    ETACS_CUSTOM_005(5,  2, 4, 0, 0b00001111, "front_rear_wiper_washer", "Front/rear wiper washer"),
-    ETACS_CUSTOM_006(6,  2, 4, 4, 0b11110000, "Intermittent_time_of_rear_wiper", "Intermittent time of rear wiper"),
-    ETACS_CUSTOM_007(7,  3, 4, 0, 0b00001111, "rear_wiper_low_speed_mode", "Rear wiper Low speed mode"),
-    ETACS_CUSTOM_008(8,  3,4,4, 0b11110000, "auto_fold_mirror", "Auto fold mirror"),
-    ETACS_CUSTOM_009(9, 4, 4, 0, 0b00001111, "sensitivity_for_auto_lamp", "Sensitivity for auto lamp"),
-    ETACS_CUSTOM_010(10, 4, 4, 4, 0b11110000, "auto_lamp_linked_wiper", "Auto lamp linked wiper"),
-    ETACS_CUSTOM_011(11, 5, 4, 0, 0b00001111, "room_lamp_delay_timer_with_door", "Room lamp delay timer with door"),
-    ETACS_CUSTOM_012(12, 5, 4, 4, 0b11110000, "head_lamp_auto_cut_customize", "Head lamp auto cut customize"),
-    ETACS_CUSTOM_013(13, 6, 4, 0, 0b00001111, "interior_lamp_auto_cut_timer", "Interior lamp auto cut timer"),
-    ETACS_CUSTOM_014(14, 6, 4, 4, 0b11110000, "auto_door_lock_by_vehicle_speed", "Auto door lock by vehicle speed"),
-    ETACS_CUSTOM_015(15, 7, 4, 4, 0b11110000, "auto_door_unlock", "Auto door unlock"),
-    ETACS_CUSTOM_016(16, 8, 4, 0, 0b00001111, "door_unlock_mode", "Door unlock mode"),
-    ETACS_CUSTOM_017(17, 8, 4, 4, 0b11110000, "power_door_unlock_by_knob", "Power Door Unlock by Knob"),
-    ETACS_CUSTOM_018(18, 9, 4, 0, 0b00001111, "deadlock_button_operation", "Deadlock Button Operation"),
-    ETACS_CUSTOM_019(19, 9, 4, 4, 0b11110000, "horn_chirp_by_keyless", "Horn chirp by keyless"),
-    ETACS_CUSTOM_020(20, 10, 4, 0, 0b00001111, "buzzer_answer_back", "Buzzer answer back"),
-    ETACS_CUSTOM_021(21, 10, 4, 4, 0b11110000, "timer_lock_timer", "Timer lock timer"),
-    ETACS_CUSTOM_022(22, 11, 4, 0, 0b00001111, "alarm", "Alarm"),
-    ETACS_CUSTOM_023(23, 11, 4, 4, 0b11110000, "power_window_key_off_timer", "Power window key off timer"),
-    ETACS_CUSTOM_024(24, 12, 4, 0, 0b00001111, "duration_of_pre-alarm", "Duration of pre-alarm"),
-    ETACS_CUSTOM_025(25, 12, 4, 4, 0b11110000, "multi_mode", "Multi mode"),
-    ETACS_CUSTOM_026(26, 13, 4, 0, 0b00001111, "panic_alarm_switch", "Panic alarm switch"),
-    ETACS_CUSTOM_027(27, 13, 4, 4, 0b11110000, "duration_of_horn_chirp", "Duration of horn chirp"),
-    ETACS_CUSTOM_028(28, 14, 4, 4, 0b11110000, "kos_key_detect_out_from_window", "KOS key detect out from window"),
-    ETACS_CUSTOM_029(29, 15, 4, 0, 0b00001111, "kos_feature", "KOS feature"),
-    ETACS_CUSTOM_030(30, 15, 4, 4, 0b11110000, "kos_unlock_disable_time", "KOS unlock disable time"),
-    ETACS_CUSTOM_031(31, 16, 4, 0, 0b00001111, "remote_eng_starter_answer_back", "Remote ENG starter answer back"),
-    ETACS_CUSTOM_032(32, 16, 4, 4, 0b11110000, "p_w_down_operation_after_ig_off", "P/W down operation after IG OFF"),
-    ETACS_CUSTOM_033(33, 17, 4, 0, 0b00001111, "pw_main_sw_during_pw_locked", "P/W main SW during P/W locked"),
-    ETACS_CUSTOM_034(34, 17, 4, 4, 0b11110000, "acc_power_auto_cut", "ACC power auto cut"),
-    ETACS_CUSTOM_035(35, 18, 4, 4, 0b11110000, "comfort_flasher_switch_time", "Comfort flasher switch time"),
-    ETACS_CUSTOM_036(36, 19, 4, 4, 0b11110000, "intelligent_comfort_washer_custom", "Intelligent/Comfort washer custom"),
-    ETACS_CUSTOM_037(37, 20, 4, 0, 0b00001111, "interior_illumination_control", "Interior illumination control"),
-    ETACS_CUSTOM_038(38, 20, 4, 4, 0b11110000, "coming_home_light", "Coming home light"),
-    ETACS_CUSTOM_039(39, 21, 4, 0, 0b00001111, "welcome_light", "Welcome light"),
-    ETACS_CUSTOM_040(40, 22, 4, 0, 0b00001111, "rear_wiper_linked_reverse_gear", "Rear wiper(linked reverse gear)"),
-    ETACS_CUSTOM_041(41, 22, 4, 4, 0b11110000, "sensitivity_for_security_sensor", "Sensitivity for security sensor"),
-    ETACS_CUSTOM_042(42, 23, 4, 0, 0b00001111, "outer_buzzer_volume", "Outer buzzer volume"),
-    ETACS_CUSTOM_043(43, 23, 4, 4, 0b11110000, "siren_answer_back", "Siren answer back"),
-    ETACS_CUSTOM_044(44, 24, 4, 0, 0b00001111, "remote_light_on", "Remote Light ON"),
-    ETACS_CUSTOM_045(45, 24, 4, 4, 0b11110000, "hl_ev_remote_car_finder", "H/L(EV REMOTE Car finder)"),
+    ETACS_CUSTOM_001(1, 0, 4, 0, 0b00001111, false, "turn_power_source", "Turn power source"),
+    ETACS_CUSTOM_002(2,  0, 4, 4, 0b11110000, false, "comfort_flasher", "Comfort flasher"),
+    ETACS_CUSTOM_003(3,  1, 4, 0, 0b00001111, false, "hazard_answer_back", "Hazard answer back"),
+    ETACS_CUSTOM_004(4,  1, 4, 4, 0b11110000, false, "front_wiper_operation", "Front wiper operation"),
+    ETACS_CUSTOM_005(5,  2, 4, 0, 0b00001111, false, "front_rear_wiper_washer", "Front/rear wiper washer"),
+    ETACS_CUSTOM_006(6,  2, 4, 4, 0b11110000, false, "Intermittent_time_of_rear_wiper", "Intermittent time of rear wiper"),
+    ETACS_CUSTOM_007(7,  3, 4, 0, 0b00001111, false, "rear_wiper_low_speed_mode", "Rear wiper Low speed mode"),
+    ETACS_CUSTOM_008(8,  3,4,4, 0b11110000, false, "auto_fold_mirror", "Auto fold mirror"),
+    ETACS_CUSTOM_009(9, 4, 4, 0, 0b00001111, false, "sensitivity_for_auto_lamp", "Sensitivity for auto lamp"),
+    ETACS_CUSTOM_010(10, 4, 4, 4, 0b11110000, false, "auto_lamp_linked_wiper", "Auto lamp linked wiper"),
+    ETACS_CUSTOM_011(11, 5, 4, 0, 0b00001111, false, "room_lamp_delay_timer_with_door", "Room lamp delay timer with door"),
+    ETACS_CUSTOM_012(12, 5, 4, 4, 0b11110000, false, "head_lamp_auto_cut_customize", "Head lamp auto cut customize"),
+    ETACS_CUSTOM_013(13, 6, 4, 0, 0b00001111, false, "interior_lamp_auto_cut_timer", "Interior lamp auto cut timer"),
+    ETACS_CUSTOM_014(14, 6, 4, 4, 0b11110000, false, "auto_door_lock_by_vehicle_speed", "Auto door lock by vehicle speed"),
+    ETACS_CUSTOM_015(15, 7, 4, 4, 0b11110000, false, "auto_door_unlock", "Auto door unlock"),
+    ETACS_CUSTOM_016(16, 8, 4, 0, 0b00001111, false, "door_unlock_mode", "Door unlock mode"),
+    ETACS_CUSTOM_017(17, 8, 4, 4, 0b11110000, false, "power_door_unlock_by_knob", "Power Door Unlock by Knob"),
+    ETACS_CUSTOM_018(18, 9, 4, 0, 0b00001111, false, "deadlock_button_operation", "Deadlock Button Operation"),
+    ETACS_CUSTOM_019(19, 9, 4, 4, 0b11110000, false, "horn_chirp_by_keyless", "Horn chirp by keyless"),
+    ETACS_CUSTOM_020(20, 10, 4, 0, 0b00001111, false, "buzzer_answer_back", "Buzzer answer back"),
+    ETACS_CUSTOM_021(21, 10, 4, 4, 0b11110000, false, "timer_lock_timer", "Timer lock timer"),
+    ETACS_CUSTOM_022(22, 11, 4, 0, 0b00001111, false, "alarm", "Alarm"),
+    ETACS_CUSTOM_023(23, 11, 4, 4, 0b11110000, false, "power_window_key_off_timer", "Power window key off timer"),
+    ETACS_CUSTOM_024(24, 12, 4, 0, 0b00001111, false, "duration_of_pre-alarm", "Duration of pre-alarm"),
+    ETACS_CUSTOM_025(25, 12, 4, 4, 0b11110000, false, "multi_mode", "Multi mode"),
+    ETACS_CUSTOM_026(26, 13, 4, 0, 0b00001111, false, "panic_alarm_switch", "Panic alarm switch"),
+    ETACS_CUSTOM_027(27, 13, 4, 4, 0b11110000, false, "duration_of_horn_chirp", "Duration of htrueorn chirp"),
+    ETACS_CUSTOM_028(28, 14, 4, 4, 0b11110000, false, "kos_key_detect_out_from_window", "KOS key detect out from window"),
+    ETACS_CUSTOM_029(29, 15, 4, 0, 0b00001111, false, "kos_feature", "KOS feature"),
+    ETACS_CUSTOM_030(30, 15, 4, 4, 0b11110000, false, "kos_unlock_disable_time", "KOS unlock disable time"),
+    ETACS_CUSTOM_031(31, 16, 4, 0, 0b00001111, false, "remote_eng_starter_answer_back", "Remote ENG starter answer back"),
+    ETACS_CUSTOM_032(32, 16, 4, 4, 0b11110000, false, "p_w_down_operation_after_ig_off", "P/W down operation after IG OFF"),
+    ETACS_CUSTOM_033(33, 17, 4, 0, 0b00001111, false, "pw_main_sw_during_pw_locked", "P/W main SW during P/W locked"),
+    ETACS_CUSTOM_034(34, 17, 4, 4, 0b11110000, false, "acc_power_auto_cut", "ACC power auto cut"),
+    ETACS_CUSTOM_035(35, 18, 4, 4, 0b11110000, false, "comfort_flasher_switch_time", "Comfort flasher switch time"),
+    ETACS_CUSTOM_036(36, 19, 4, 4, 0b11110000, false, "intelligent_comfort_washer_custom", "Intelligent/Comfort washer custom"),
+    ETACS_CUSTOM_037(37, 20, 4, 0, 0b00001111, false, "interior_illumination_control", "Interior illumination control"),
+    ETACS_CUSTOM_038(38, 20, 4, 4, 0b11110000, false, "coming_home_light", "Coming home light"),
+    ETACS_CUSTOM_039(39, 21, 4, 0, 0b00001111, false, "welcome_light", "Welcome light"),
+    ETACS_CUSTOM_040(40, 22, 4, 0, 0b00001111, false, "rear_wiper_linked_reverse_gear", "Rear wiper(linked reverse gear)"),
+    ETACS_CUSTOM_041(41, 22, 4, 4, 0b11110000, false, "sensitivity_for_security_sensor", "Sensitivity for security sensor"),
+    ETACS_CUSTOM_042(42, 23, 4, 0, 0b00001111, false, "outer_buzzer_volume", "Outer buzzer volume"),
+    ETACS_CUSTOM_043(43, 23, 4, 4, 0b11110000, false, "siren_answer_back", "Siren answer back"),
+    ETACS_CUSTOM_044(44, 24, 4, 0, 0b00001111, false, "remote_light_on", "Remote Light ON"),
+    ETACS_CUSTOM_045(45, 24, 4, 4, 0b11110000, false, "hl_ev_remote_car_finder", "H/L(EV REMOTE Car finder)"),
     //ETACS_CUSTOM_998(998, "", "", 0, 4, 0, 0, 0),
-    ETACS_CUSTOM_UNKNOWN(999, 0, 0, 0, 0, "unknown", "unknown");
+    ETACS_CUSTOM_UNKNOWN(999, 0, 0, 0, 0, true, "unknown", "unknown");
     private int idx;
     private String name;
     private String title;
@@ -62,9 +62,10 @@ public enum EtacsCustomCoding {
     private int length;
     private int startBit;
     private int mask;
+    private boolean extended;
 
     EtacsCustomCoding(int idx, int byteIdx, int length,
-                      int startBit, int mask, String name, String title) {
+                      int startBit, int mask, boolean extended, String name, String title) {
         this.idx = idx;
         this.name = name;
         this.title = title;
@@ -72,6 +73,7 @@ public enum EtacsCustomCoding {
         this.length = length;
         this.startBit = startBit;
         this.mask = mask;
+        this.extended = extended;
     }
 
     public static EtacsCustomCoding getById(int id) {
@@ -112,9 +114,12 @@ public enum EtacsCustomCoding {
     }
 
     public static String getCurrentValue(int id, int val) {
+        //ArrayList<String> res = getAvailableOptions(id);
+        int valuePos = getAvailableValues(id).indexOf(val);
+        if (valuePos == -1) return "unknown";
         ArrayList<String> res = getAvailableOptions(id);
-        if (val < res.size()) {
-            return res.get(val);
+        if (valuePos < res.size()) {
+            return res.get(valuePos);
         } else {
             return res.get(res.size()-1);
         }
@@ -406,5 +411,13 @@ public enum EtacsCustomCoding {
             default: stream = Stream.of(-1);
         }
         return stream.collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public boolean isExtended() {
+        return extended;
+    }
+
+    public void setExtended(boolean extended) {
+        this.extended = extended;
     }
 }

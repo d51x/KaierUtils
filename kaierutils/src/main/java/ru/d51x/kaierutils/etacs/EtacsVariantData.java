@@ -91,7 +91,7 @@ public class EtacsVariantData {
             return title;
         }
     }
-
+// XXXXX
     public enum EtacsVariantData5 {
         etacs_variant_data_1(1, "5MT"),
         etacs_variant_data_2(2, "6MT"),
@@ -115,7 +115,7 @@ public class EtacsVariantData {
             return title;
         }
     }
-
+// XXXXX
     public enum EtacsVariantData6 {
         etacs_variant_data_1(1, "3.0L S4 MIVEC"),
         etacs_variant_data_2(2, "DIESEL 2.0L [BSY or BWC]"),
@@ -237,7 +237,7 @@ public class EtacsVariantData {
             return title;
         }
     }
-
+// XXXXXX
     public enum EtacsVariantData11 {
         etacs_variant_data_1(1, "Front Drive" ),
         etacs_variant_data_2(2, "Rear Drive"),
