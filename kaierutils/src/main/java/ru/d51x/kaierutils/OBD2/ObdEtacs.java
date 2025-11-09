@@ -4,8 +4,6 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_620_PID_1A87;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_620_PID_1A88;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_620_PID_1A90;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.BLOCK_620_PID_1A9C;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CVT_2103;
-import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_CVT_2110;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ETACS_1A87;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ETACS_1A88;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.MESSAGE_OBD_ETACS_1A90;
@@ -14,17 +12,12 @@ import static ru.d51x.kaierutils.utils.MessageUtils.sendMessage;
 import static ru.d51x.kaierutils.utils.SecurityUtils.getDiagVersion;
 import static ru.d51x.kaierutils.utils.SecurityUtils.getPartNumber;
 import static ru.d51x.kaierutils.utils.SecurityUtils.getVIN;
-import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
-import static ru.d51x.kaierutils.utils.StringUtils.toByteArray;
 
 import android.os.Handler;
 import android.util.Log;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import ru.d51x.kaierutils.Data.CvtData;
 import ru.d51x.kaierutils.Data.EtacsData;
 
 public class ObdEtacs {

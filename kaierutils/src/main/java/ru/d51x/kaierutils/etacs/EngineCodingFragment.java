@@ -1,7 +1,6 @@
 package ru.d51x.kaierutils.etacs;
 
 import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
-import static ru.d51x.kaierutils.utils.StringUtils.hexStringToBuffer;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.R;
+import ru.d51x.kaierutils.utils.SecurityUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +39,7 @@ public class EngineCodingFragment extends Fragment   implements View.OnClickList
 
     private EditText edtEngineCoding;
 
+    private EtacsActivity parentActivity;
     public EngineCodingFragment() {
         // Required empty public constructor
     }
@@ -75,6 +76,7 @@ public class EngineCodingFragment extends Fragment   implements View.OnClickList
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_engine_coding, container, false);
+        parentActivity = (EtacsActivity) getActivity();
 
         Button btnEngineCodingRead = v.findViewById(R.id.btnEngineCodingRead);
         btnEngineCodingRead.setOnClickListener(this);
@@ -101,7 +103,7 @@ public class EngineCodingFragment extends Fragment   implements View.OnClickList
                     Log.w(TAG, "Engine coding is empty");
                 } else {
                     Log.d(TAG, "Engine coding: " + engineCoding);
-                    writeEngineCoding(engineCoding);
+                    writeEngineCoding(engineCoding, parentActivity.engineVendor);
                 }
                 break;
         }
@@ -109,8 +111,8 @@ public class EngineCodingFragment extends Fragment   implements View.OnClickList
 
     private void readEngineCoding() {
         if (App.obd.isConnected) {
-            getActivity().runOnUiThread(() -> {
-                ArrayList<Integer> buffer = App.obd.readEngineCoding();
+            parentActivity.runOnUiThread(() -> {
+                ArrayList<Integer> buffer = App.obd.readEngineCoding(parentActivity.engineVendor);
                 if (buffer != null) {
                     String s = bufferToHex(buffer, 2, false);
                     edtEngineCoding.setText(s);
@@ -120,9 +122,9 @@ public class EngineCodingFragment extends Fragment   implements View.OnClickList
         }
     }
 
-        private void writeEngineCoding(String coding) {
+        private void writeEngineCoding(String coding, SecurityUtils.Vendor vendor) {
         if (App.obd.isConnected) {
-            getActivity().runOnUiThread(() -> App.obd.writeEngineCoding(coding));
+            parentActivity.runOnUiThread(() -> App.obd.writeEngineCoding(coding, vendor));
         }
     }
 }

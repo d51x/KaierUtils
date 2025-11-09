@@ -6,7 +6,6 @@ import static ru.d51x.kaierutils.utils.MessageUtils.SendBroadcastAction;
 import static ru.d51x.kaierutils.utils.SecurityUtils.calculateSkeyCVT;
 import static ru.d51x.kaierutils.utils.SecurityUtils.calculateSkeyEngine;
 import static ru.d51x.kaierutils.utils.SecurityUtils.calculateSkeyEtacs;
-import static ru.d51x.kaierutils.utils.SecurityUtils.getDiagVersion;
 import static ru.d51x.kaierutils.utils.SecurityUtils.getPartNumber;
 import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
 
@@ -57,6 +56,7 @@ import ru.d51x.kaierutils.Data.EngineData;
 import ru.d51x.kaierutils.Data.EtacsData;
 import ru.d51x.kaierutils.Data.ObdData;
 import ru.d51x.kaierutils.Data.TripData;
+import ru.d51x.kaierutils.utils.SecurityUtils;
 
 /**
  */
@@ -549,7 +549,7 @@ public class Obd2 {
         // ответ 7BB2 = 3BB2 + 0x4000 т.е.   успешно
     }
 
-    public ArrayList<Integer> readEtacsCodingCustom() {
+    public ArrayList<Integer> readEtacsCodingCustom(SecurityUtils.Vendor vendor) {
         ArrayList<Integer> buffer = null;
         isServiceCommand = true;
         try {
@@ -568,7 +568,25 @@ public class Obd2 {
         }
         return buffer;
     }
-    public ArrayList<Integer> readEtacsCodingVariant() {
+
+    public void writeEtacsCodingCustom(String coding, SecurityUtils.Vendor vendor) {
+        isServiceCommand = true;
+        try {
+            Thread.sleep(2000);
+            if (startExtendedDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
+                Log.d(TAG, "Write Etacs Custom: ");
+                String pid = "3BB2";
+                writeCoding(pid, coding);
+            }
+            stopDiagnosticSession(BLOCK_620, BLOCK_RX_504);
+        }  catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            isServiceCommand = false;
+        }
+    }
+
+    public ArrayList<Integer> readEtacsCodingVariant(SecurityUtils.Vendor vendor) {
         ArrayList<Integer> buffer = null;
         isServiceCommand = true;
         try {
@@ -588,23 +606,7 @@ public class Obd2 {
         return buffer;
     }
 
-    public void writeEtacsCodingCustom(String coding) {
-        isServiceCommand = true;
-        try {
-            Thread.sleep(2000);
-            if (startExtendedDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
-                Log.d(TAG, "Write Etacs Custom: ");
-                writeCoding("3BB2", coding);
-            }
-            stopDiagnosticSession(BLOCK_620, BLOCK_RX_504);
-        }  catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } finally {
-            isServiceCommand = false;
-        }
-    }
-
-    public void writeEtacsCodingVariant(String coding) {
+    public void writeEtacsCodingVariant(String coding, SecurityUtils.Vendor vendor) {
         isServiceCommand = true;
         ArrayList<Integer> buffer;
         try {
@@ -612,7 +614,7 @@ public class Obd2 {
             if (startExtendedDiagnosticSession(BLOCK_620, BLOCK_RX_504)) {
                 int seed = requestSeed();
                 if (seed != 0) {
-                    int skey = calculateSkeyEtacs(seed, 0); // TODO: put correct ecu type
+                    int skey = calculateSkeyEtacs(seed, vendor); // TODO: put correct ecu type
                     String command = "06" + "2702" + String.format("%08X",skey);
                     buffer = runObdCommand(command, socket);
                     if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
@@ -629,13 +631,22 @@ public class Obd2 {
         }
     }
 
-    public ArrayList<Integer> readEngineCoding() {
+    public ArrayList<Integer> readEngineCoding(SecurityUtils.Vendor vendor) {
         ArrayList<Integer> buffer = null;
         isServiceCommand = true;
         try {
             Thread.sleep(2000);
             if (startExtendedDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8)) {
-                buffer = runObdCommand("21C0", socket);
+                if (vendor == SecurityUtils.Vendor.Melco) {
+                    buffer = runObdCommand("2152", socket);
+                }
+                else if (vendor == SecurityUtils.Vendor.Denso) {
+                    Log.e(TAG, "Read Engine Coding. Vendor " + vendor + " not supported");
+                    isServiceCommand = false;
+                    return buffer;
+                } else {
+                    buffer = runObdCommand("21C0", socket);
+                }
                 Log.d(TAG, "Engine Coding: " + buffer);
                 Log.d(TAG, "Engine Coding: " + bufferToHex(buffer, 0, true));
 
@@ -649,7 +660,7 @@ public class Obd2 {
         return buffer;
     }
 
-    public void writeEngineCoding(String coding) {
+    public void writeEngineCoding(String coding, SecurityUtils.Vendor vendor) {
         isServiceCommand = true;
         ArrayList<Integer> buffer;
         try {
@@ -657,12 +668,21 @@ public class Obd2 {
             if (startExtendedDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8)) {
                 int seed = requestSeed();
                 if (seed != 0) {
-                    int skey = calculateSkeyEngine(seed);
+                    int skey = calculateSkeyEngine(seed, vendor);
                     String command = "06" + "2702" + String.format("%08X", skey);
                     buffer = runObdCommand(command, socket);
                     if (buffer.get(0) == 0x67 && buffer.get(1) == 0x02) {
                         Log.d(TAG, "Write Engine Coding: ");
-                        writeCoding("3BC0", coding);
+                        if (vendor == SecurityUtils.Vendor.Melco) {
+                            writeCoding("3B52", coding);
+                        }
+                        else if (vendor == SecurityUtils.Vendor.Denso) {
+                            Log.e(TAG, "Write Engine Coding. Vendor " + vendor + " not supported");
+                            isServiceCommand = false;
+                            return;
+                        } else {
+                            writeCoding("3BC0", coding);
+                        }
                     }
                 }
                 stopDiagnosticSession(BLOCK_7E0, BLOCK_RX_7E8);

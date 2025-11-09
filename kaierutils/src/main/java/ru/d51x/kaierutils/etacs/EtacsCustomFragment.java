@@ -40,6 +40,7 @@ import ru.d51x.kaierutils.R;
 import ru.d51x.kaierutils.dialog.FileSelector;
 import ru.d51x.kaierutils.dialog.FileSelectorDialog;
 import ru.d51x.kaierutils.dialog.RadioListDialog;
+import ru.d51x.kaierutils.utils.SecurityUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,6 +72,8 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private EtacsActivity parentActivity;
 
     public EtacsCustomFragment() {
         // Required empty public constructor
@@ -111,6 +114,8 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_etacs_custom, container, false);
+
+        parentActivity = (EtacsActivity) getActivity();
         edtEtacsCustom = v.findViewById(R.id.edtEtacsCustom);
         edtEtacsCustom.setText("11302210F222120FF03F0F113F0FFFFF00000F1F2FF1FFFFFF");
 
@@ -132,7 +137,6 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
 
         Button btnEtacsWriteCustom = v.findViewById(R.id.btnEtacsWriteCustom);
         btnEtacsWriteCustom.setOnClickListener(this);
-
 
         lvEtacsCustom = v.findViewById(R.id.lvEtacsCustom);
         lvEtacsCustom.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -229,7 +233,7 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
 
     private void saveCustomToFile() {
         String sValue = bufferToHex(customCodingBuffer, 0, false);
-        File path = getActivity().getFilesDir();
+        File path = parentActivity.getFilesDir();
         SimpleDateFormat formater = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
         Date date = new Date();
         String fName = String.format("etacs_custom_%s.cuf", formater.format(date));
@@ -271,7 +275,12 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
             }
             break;
             case R.id.btnEtacsReadCustom: {
-                Log.d(TAG, "Read Etacs Custom coding...");
+                Log.d(TAG, "Read Etacs Custom coding... Vendor is " + parentActivity.etacsVendor);
+                if (parentActivity.etacsVendor == SecurityUtils.Vendor.Unknown) {
+                    // read block first
+                    Log.e(TAG, "Error read etacs custom. Read block  first...");
+                    return;
+                }
                 customCodingBuffer = readEtacsCodingCustom();
                 prepareAndFillCustomCodingList(true);
             }
@@ -281,13 +290,18 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
 //                readEtacsCodingVariant();
 //                break;
             case R.id.btnEtacsWriteCustom:
-                Log.d(TAG, "Write Etacs Custom coding...");
+                Log.d(TAG, "Write Etacs Custom coding... Vendor is " + parentActivity.etacsVendor);
+                if (parentActivity.etacsVendor == SecurityUtils.Vendor.Unknown) {
+                    // read block first
+                    Log.e(TAG, "Error read etacs custom. Read block  first...");
+                    return;
+                }
                 String customCoding = edtEtacsCustom.getText().toString().trim();
                 if (customCoding.isEmpty()) {
                     Log.w(TAG, "Custom coding is empty");
                 } else {
                     Log.d(TAG, "Custom: " + customCoding);
-                    writeEtacsCodingCustom(customCoding);
+                    writeEtacsCodingCustom(customCoding, parentActivity.etacsVendor);
                     prevCustomCodingBuffer.clear();
                     prevCustomCodingBuffer.addAll(customCodingBuffer);
 
@@ -325,8 +339,8 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
     private ArrayList<Integer> readEtacsCodingCustom() {
         AtomicReference<ArrayList<Integer>> buffer = new AtomicReference<>();
         if (App.obd.isConnected) {
-            getActivity().runOnUiThread(() -> {
-                buffer.set(App.obd.readEtacsCodingCustom());
+            parentActivity.runOnUiThread(() -> {
+                buffer.set(App.obd.readEtacsCodingCustom(parentActivity.etacsVendor));
                 if (buffer.get() != null) {
                     String s = bufferToHex(buffer.get(), 2, false);
                     edtEtacsCustom.setText(s);
@@ -338,9 +352,9 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
         return buffer.get();
     }
 
-    private void writeEtacsCodingCustom(String coding) {
+    private void writeEtacsCodingCustom(String coding, SecurityUtils.Vendor vendor) {
         if (App.obd.isConnected) {
-            getActivity().runOnUiThread(() -> App.obd.writeEtacsCodingCustom(coding));
+            parentActivity.runOnUiThread(() -> App.obd.writeEtacsCodingCustom(coding, vendor));
         }
     }
 
@@ -349,7 +363,7 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
     private void loadFile(String fName) {
         BufferedReader in;
         try {
-            File path = getActivity().getFilesDir();
+            File path = parentActivity.getFilesDir();
             File f = new File(path, fName);
             in = new BufferedReader(new FileReader(f));
             String sCoding = in.readLine();
@@ -365,11 +379,11 @@ public class EtacsCustomFragment extends Fragment  implements View.OnClickListen
     }
 
     private void doSearchFile(String fileType) {
-        String path = getActivity().getFilesDir().getAbsolutePath();
+        String path = parentActivity.getFilesDir().getAbsolutePath();
         FileSelector fileSelector = new FileSelector(path, fileType);
         List<File> resultList = fileSelector.getFiles(path, fileType);
 
-        FileSelectorDialog fileSelectorDialog = new FileSelectorDialog(getActivity(),
+        FileSelectorDialog fileSelectorDialog = new FileSelectorDialog(parentActivity,
                 resultList, file -> {
             Log.d(TAG, "File is " + file.getName());
             loadFile(file.getName());

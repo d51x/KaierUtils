@@ -5,7 +5,7 @@ import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ENGINE_CODING_CHAN
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_CUSTOM_CODING_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.ACTION_OBD_ETACS_VARIANT_CODING_CHANGED;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.OBD_BROADCAST_ACTION_STATUS_CHANGED;
-import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
+import static ru.d51x.kaierutils.utils.SecurityUtils.getVendor;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -29,6 +29,7 @@ import java.util.List;
 
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.R;
+import ru.d51x.kaierutils.utils.SecurityUtils;
 
 public class EtacsActivity  extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = "Etacs";
@@ -39,6 +40,8 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
 
 
 
+    public SecurityUtils.Vendor etacsVendor;
+    public SecurityUtils.Vendor engineVendor;
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
 
@@ -67,6 +70,7 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_etacs);
+        etacsVendor = SecurityUtils.Vendor.Unknown;
 
         tvObdStatus = findViewById(R.id.tvObdStatus);
         tvObdStatus.setText(App.obd.isConnected ? "Подключн" : "Не подключен");
@@ -106,6 +110,7 @@ public class EtacsActivity  extends AppCompatActivity implements View.OnClickLis
         if (App.obd.isConnected) {
             this.runOnUiThread(() -> {
                 String sVersion = App.obd.readEtacsPartNumber();
+                etacsVendor = getVendor(sVersion);
                 tvEtacsVersion.setText(sVersion);
             });
         }

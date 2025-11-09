@@ -27,25 +27,54 @@ public class SecurityUtils {
         return calculateSkey(seed, 0x67, 0x4206);
     }
 
-    public static int calculateSkeyEngine(int seed) {
-        return calculateSkey(seed, 0x67, 0x4206); // TODO find correct a and b
+    public static int calculateSkeyEngine(int seed, Vendor vendor) {
+        if (vendor == Vendor.Melco) {
+            return calculateSkey(seed, 0x28, 0x326);
+            //return calculateSkey(seed, 0x67, 0x4206);
+        } else if (vendor == Vendor.Denso) {
+            return calculateSkey(seed, 0x89, 0x2012);
+        } else {
+            // not supported
+        }
+        return -1; // TODO find correct a and b
     }
 
-    public static int calculateSkeyEtacs(int seed, int ecuType) {
+    public static int calculateSkeyEtacs(int seed, Vendor vendor) {
         int a = 0x89;
         int b = 0x2012;
 
-        if (ecuType == 0) {
+//        if (ecuType == 0) {
+//            a = 0x85; b = 0x2706;
+//        } else if (ecuType == 1) {
+//            a = 0x89; b = 0x1213;
+//        } else if (ecuType == 2) {
+//            a = 0xF7; b = 0x3C8A;
+//        } else if (ecuType == 3) {
+//            a = 0x21; b = 0x5261;
+//        } else if (ecuType == 5) {
+//            a = 0x28; b = 0x326;
+//        }
+
+        // lear 0
+        // omron 3
+        // continental - 2
+        // other - not supported
+
+        if (vendor == Vendor.Lear) {
             a = 0x85; b = 0x2706;
-        } else if (ecuType == 1) {
-            a = 0x89; b = 0x1213;
-        } else if (ecuType == 2) {
-            a = 0xF7; b = 0x3C8A;
-        } else if (ecuType == 3) {
-            a = 0x21; b = 0x5261;
-        } else if (ecuType == 5) {
-            a = 0x28; b = 0x326;
         }
+//        else if (ecuType == 1) {
+//            a = 0x89; b = 0x1213;
+//        }
+        else if (vendor == Vendor.Continental) {
+            a = 0xF7; b = 0x3C8A;
+        }
+        else if (vendor == Vendor.Omron) {
+            a = 0x21; b = 0x5261;
+        }
+//        else if (ecuType == 5) {
+//            a = 0x28; b = 0x326;
+//        }
         return calculateSkey(seed, a, b);
     }
 
@@ -60,7 +89,7 @@ public class SecurityUtils {
         Nippon,
         Mitsubishi_Heavy_Industry,
         Unknown
-    };
+    }
 
 
     // Vendors:

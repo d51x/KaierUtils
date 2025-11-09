@@ -1,7 +1,6 @@
 package ru.d51x.kaierutils.etacs;
 
 import static ru.d51x.kaierutils.utils.StringUtils.bufferToHex;
-import static ru.d51x.kaierutils.utils.StringUtils.hexStringToBuffer;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 
 import ru.d51x.kaierutils.App;
 import ru.d51x.kaierutils.R;
+import ru.d51x.kaierutils.utils.SecurityUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +39,8 @@ public class EtacsVariantFragment extends Fragment   implements View.OnClickList
     private String mParam2;
 
     private EditText edtEtacsVariant;
+
+    private EtacsActivity parentActivity;
 
     public EtacsVariantFragment() {
         // Required empty public constructor
@@ -76,6 +78,7 @@ public class EtacsVariantFragment extends Fragment   implements View.OnClickList
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_etacs_variant, container, false);
+        parentActivity = (EtacsActivity) getActivity();
 
         Button btnEtacsReadVariant = v.findViewById(R.id.btnEtacsReadVariant);
         btnEtacsReadVariant.setOnClickListener(this);
@@ -104,17 +107,17 @@ public class EtacsVariantFragment extends Fragment   implements View.OnClickList
                     Log.w(TAG, "Variant coding is empty");
                 } else {
                     Log.d(TAG, "Variant: " + variantCoding);
-                    writeEtacsCodingVariant(variantCoding);
+                    writeEtacsCodingVariant(variantCoding, parentActivity.etacsVendor);
                 }
                 break;
         }
     }
 
 
-    private void writeEtacsCodingVariant(String coding) {
+    private void writeEtacsCodingVariant(String coding, SecurityUtils.Vendor vendor) {
         if (App.obd.isConnected) {
-            getActivity().runOnUiThread(() -> {
-                App.obd.writeEtacsCodingVariant(coding);
+            parentActivity.runOnUiThread(() -> {
+                App.obd.writeEtacsCodingVariant(coding, vendor);
                 // String s = bufferToHex(buffer, 0, false);
             });
         }
@@ -122,8 +125,8 @@ public class EtacsVariantFragment extends Fragment   implements View.OnClickList
 
     private void readEtacsCodingVariant() {
         if (App.obd.isConnected) {
-            getActivity().runOnUiThread(() -> {
-                ArrayList<Integer> buffer = App.obd.readEtacsCodingVariant();
+            parentActivity.runOnUiThread(() -> {
+                ArrayList<Integer> buffer = App.obd.readEtacsCodingVariant(parentActivity.etacsVendor);
                 if (buffer != null) {
                     String s = bufferToHex(buffer, 2, false);
                     edtEtacsVariant.setText(s);
