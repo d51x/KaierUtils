@@ -949,8 +949,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 	        case R.id.menu_odb2_settings:
 		        showObd2Activity(MainActivity.this);
 		        return true;
-	        case R.id.menu_odb2_etacs:
-		        showEtacsActivity(MainActivity.this);
+	        case R.id.menu_odb2_coding:
+		        showCodingActivity(MainActivity.this);
 		        return true;
 	        case R.id.menu_agps_reset:
 		        Intent intent = new Intent();
@@ -1000,10 +1000,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
         }
     }
 
-    private void showEtacsActivity(Context context) {
+    private void showCodingActivity(Context context) {
         try {
             Intent it = new Intent();
-            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.etacs.EtacsActivity");
+            it.setClassName("ru.d51x.kaierutils", "ru.d51x.kaierutils.coding.CodingActivity");
             it.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP  | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(it);
         } catch (Exception e) {

@@ -11,8 +11,8 @@
 	<item android:id="@+id/menu_odb2_settings"
 	      android:title="@string/text_obd2_settings"
 		/>
-	<item android:id="@+id/menu_odb2_etacs"
-		android:title="@string/text_obd2_etacs"
+	<item android:id="@+id/menu_odb2_coding"
+		android:title="@string/text_obd2_coding"
 		/>
 
 </menu>

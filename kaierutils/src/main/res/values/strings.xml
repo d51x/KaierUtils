@@ -128,7 +128,7 @@
     <string name="dsc_delta_to_change_summary">Дельта скорости, внутри которой не сработает изменение громкости (текущее значение %1$d)</string>
     <string name="dsc_delta_to_change_dialogtitle">Выберите дельту скорости</string>
     <string name="text_obd2_settings">OBD 2</string>
-    <string name="text_obd2_etacs">Etacs</string>
+    <string name="text_obd2_coding">Coding</string>
     <string name="text_distance">%1$.1f</string>
     <string name="text_gps_distance">%1$.2f</string>
     <string name="text_average_speed">Avg: %1$s км/ч</string>
@@ -139,7 +139,7 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_obdii">OBDII информация</string>
-    <string name="title_activity_etacs">Скрытые функции</string>
+    <string name="title_activity_coding">Скрытые функции</string>
 
     <string name="odbii_device_name">Устройство: %1$s</string>
     <string name="odbii_device_status">Статус: %1$s</string>

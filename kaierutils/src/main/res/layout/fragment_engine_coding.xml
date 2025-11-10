@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".etacs.EngineCodingFragment">
+    tools:context=".coding.EngineCodingFragment">
 
     <TextView
         android:id="@+id/textView29"

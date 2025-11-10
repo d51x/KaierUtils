@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
     android:overScrollMode="never"
-    tools:context=".etacs.EtacsVariantFragment">
+    tools:context=".coding.EtacsVariantFragment">
 
     <TextView
         android:id="@+id/textView26"

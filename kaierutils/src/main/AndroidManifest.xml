@@ -86,8 +86,8 @@
             android:label="@string/title_activity_obdii"
             android:launchMode="singleTop" />
         <activity
-            android:name=".etacs.EtacsActivity"
-            android:label="@string/title_activity_etacs"
+            android:name=".coding.CodingActivity"
+            android:label="@string/title_activity_coding"
             android:launchMode="singleTop" />
         <receiver
             android:name=".TWUtils.TWUtilBroadcastReceiver"
