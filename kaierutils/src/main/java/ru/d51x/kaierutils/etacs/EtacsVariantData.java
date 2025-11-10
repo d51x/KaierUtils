@@ -261,7 +261,7 @@ public class EtacsVariantData {
 
     public enum EtacsVariantData12 {
         etacs_variant_data_1(1, "2WD" ),
-        etacs_variant_data_2(2, "ECC"),
+        etacs_variant_data_2(2, "ECC - электронная муфтв"),
         etacs_variant_data_3(3, "Center Diff + VCU"),
         etacs_variant_data_4(4, "ACD"),
         etacs_variant_data_5(5, "SS4-3"),
@@ -801,9 +801,9 @@ public class EtacsVariantData {
 
     public enum EtacsVariantData38 {
         etacs_variant_data_0(0, "Undefined" ),
-        etacs_variant_data_1(1, "Open" ),
-        etacs_variant_data_2(2, "Helical" ),
-        etacs_variant_data_3(3, "ELSD" ),
+        etacs_variant_data_1(1, "Open - открытый дифференциал (обычный)" ),
+        etacs_variant_data_2(2, "Helical - самоблокирующийся дифференциал" ),
+        etacs_variant_data_3(3, "ELSD - электронный дифференциал повышенного трения" ),
         ;
         private int idx;
         private String title;
@@ -822,9 +822,9 @@ public class EtacsVariantData {
 
     public enum EtacsVariantData39 {
         etacs_variant_data_0(0, "Undefined" ),
-        etacs_variant_data_1(1, "Open" ),
-        etacs_variant_data_2(2, "AYC" ),
-        etacs_variant_data_3(3, "LOM" ),
+        etacs_variant_data_1(1, "Open - открытый дифференциал (обычный)" ),
+        etacs_variant_data_2(2, "AYC – Активный" ),
+        etacs_variant_data_3(3, "LSD LOM" ),
         ;
         private int idx;
         private String title;
@@ -1207,7 +1207,7 @@ public class EtacsVariantData {
 
     public enum EtacsVariantData59 {
         etacs_variant_data_0(0, "Conventional or Not Present" ),
-        etacs_variant_data_1(1, "With Lo control" ),
+        etacs_variant_data_1(1, "With Lo control - с управлением на низкой скорости" ),
         ;
         private int idx;
         private String title;
@@ -1245,8 +1245,8 @@ public class EtacsVariantData {
 
     public enum EtacsVariantData61 {
         etacs_variant_data_0(0, "Disable" ),
-        etacs_variant_data_1(1, "Enable (default RR only)" ),
-        etacs_variant_data_2(2, "Enable (default FR & RR)" ),
+        etacs_variant_data_1(1, "Enable (default RR only) - активирован (по умолчанию при движении только назад)" ),
+        etacs_variant_data_2(2, "Enable (default FR & RR) - активирован (по умолчанию при движении вперед и назад)" ),
         ;
         private int idx;
         private String title;
@@ -1903,10 +1903,10 @@ public class EtacsVariantData {
         }
     }
     public enum EtacsVariantData95 {
-        etacs_variant_data_0(0, "Mode1 (trunk)" ),
-        etacs_variant_data_1(1, "Mode2 (cargo)" ),
-        etacs_variant_data_2(2, "Mode3 (cabin)" ),
-        etacs_variant_data_3(3, "Mode4 (side step lamp)" ),
+        etacs_variant_data_0(0, "Mode1 (trunk) - дверь" ),
+        etacs_variant_data_1(1, "Mode2 (cargo) - в багажнике" ),
+        etacs_variant_data_2(2, "Mode3 (cabin) - в кабине" ),
+        etacs_variant_data_3(3, "Mode4 (side step lamp) - боковая лампа" ),
         ;
         private int idx;
         private String title;
@@ -2152,8 +2152,8 @@ public class EtacsVariantData {
         }
     }
     public enum EtacsVariantData108 {
-        etacs_variant_data_0(0, "gate type" ),
-        etacs_variant_data_1(1, "trunk type" ),
+        etacs_variant_data_0(0, "gate type - открывание в бок" ),
+        etacs_variant_data_1(1, "trunk type - открывание в верх" ),
         ;
         private int idx;
         private String title;
@@ -2338,7 +2338,7 @@ public class EtacsVariantData {
             return title;
         }
     }
-    public enum EtacsVariantData118 {
+    public enum EtacsVariantData118 { //Not present or 2 height sensor
         etacs_variant_data_0(0, "Not present" ),
         etacs_variant_data_1(1, "Communication less and static type" ),
         etacs_variant_data_2(2, "Communication less and dynamic type" ),
@@ -3538,6 +3538,25 @@ public class EtacsVariantData {
         private int idx;
         private String title;
         EtacsVariantData180(int idx, String title) {
+            this.idx = idx;
+            this.title = title;
+        }
+        public int getIdx() {
+            return idx;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+    }
+
+    public enum EtacsVariantData205 {
+        etacs_variant_data_0(0, "Disable" ),
+        etacs_variant_data_1(1, "Enable" ),
+        ;
+        private int idx;
+        private String title;
+        EtacsVariantData205(int idx, String title) {
             this.idx = idx;
             this.title = title;
         }
