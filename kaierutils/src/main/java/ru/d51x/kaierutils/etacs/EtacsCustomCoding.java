@@ -34,7 +34,7 @@ public enum EtacsCustomCoding {
     ETACS_CUSTOM_024(24, 12, 4, 0, 0b00001111, false, "duration_of_pre-alarm", "Duration of pre-alarm", "Настройка длительности сигнала (внутри салона) после постановки на охрану"),
     ETACS_CUSTOM_025(25, 12, 4, 4, 0b11110000, false, "multi_mode", "Multi mode", "Настройка многорежимного бесключевого доступа для машин с электроприводом зеркал и электростеклоподъемниками"),
     ETACS_CUSTOM_026(26, 13, 4, 0, 0b00001111, false, "panic_alarm_switch", "Panic alarm switch", ""),
-    ETACS_CUSTOM_027(27, 13, 4, 4, 0b11110000, false, "duration_of_horn_chirp", "Duration of htrueorn chirp", ""),
+    ETACS_CUSTOM_027(27, 13, 4, 4, 0b11110000, false, "duration_of_horn_chirp", "Duration of horn chirp", "Время звучания гудка"),
     ETACS_CUSTOM_028(28, 14, 4, 4, 0b11110000, false, "kos_key_detect_out_from_window", "KOS key detect out from window", "Обнаружение брелка KOS вне машины"),
     ETACS_CUSTOM_029(29, 15, 4, 0, 0b00001111, false, "kos_feature", "KOS feature", "Функции KOS"),
     ETACS_CUSTOM_030(30, 15, 4, 4, 0b11110000, false, "kos_unlock_disable_time", "KOS unlock disable time", "Настройка времени разблокировки дверей после блокировки"),
