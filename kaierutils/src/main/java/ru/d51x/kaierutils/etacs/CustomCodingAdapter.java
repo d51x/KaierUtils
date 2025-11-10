@@ -55,10 +55,10 @@ public class CustomCodingAdapter extends ArrayAdapter<EtacsCustomCoding> {
                 tvIdx.setText(String.format("%03d", p.getIdx()));
             }
             if (tvCodingTitle != null) {
-                tvCodingTitle.setText(p.getName());
+                tvCodingTitle.setText(p.getTitle());
             }
             if (tvCodingSummary != null) {
-                tvCodingSummary.setText(p.getTitle());
+                tvCodingSummary.setText(p.getSummary());
             }
             if (tvCodingValue != null && tvOldValue != null) {
                 if (position < EtacsCustomCoding.values().length) {

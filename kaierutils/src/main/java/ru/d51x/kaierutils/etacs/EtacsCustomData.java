@@ -3,9 +3,9 @@ package ru.d51x.kaierutils.etacs;
 
 public class EtacsCustomData {
     public enum EtacsCustomData1 {
-        acc_or_ig1(0,"ACC or IG1"),
-        ig1(1, "IG1"),
-        cannot_select(0x0F, "Cannot change");
+        acc_or_ig1(0,"Operable with ACC or ON position"), //ACC or IG1
+        ig1(1, "Operable with ON position (initial condition)"), // IG1
+        cannot_select(0x0F, "Cannot change"); // в мануале нет
 
         private int idx;
         private String title;
@@ -25,7 +25,7 @@ public class EtacsCustomData {
     public enum EtacsCustomData2 {
         coding_disable(0, "Disabled"),
         coding_enable(1, "Enable"),
-        cannot_select(0x0F, "Cannot change");
+        cannot_select(0x0F, "Cannot change"); // в мануале нет
         private int idx;
         private String title;
         EtacsCustomData2(int idx, String title) {
@@ -41,14 +41,17 @@ public class EtacsCustomData {
         }
     }
     public enum EtacsCustomData3 {
-        lock_1_unlock_2(0, "Lock:1, Unlock:2" ),
-        lock_1_unlock_0(1, "Lock:1, Unlock:0"),
-        lock_0_unlock_2(2, "Lock:0, Unlock:2"),
-        lock_2_unlock_1(3, "Lock:2, Unlock:1"),
-        lock_0_unlock_1(4, "Lock:0, Unlock:1"),
-        lock_2_unlock_0(5, "Lock:2, Unlock:0"),
-        lock_0_unlock_0(6,"Lock:0, Unlock:0"),
-        cannot_select(0x0F, "Cannot change");
+        lock_1_unlock_2(0, "LOCK: Flashes once, UNLOCK: Flashes\n" +
+                "twice (initial condition)" ),  //Lock:1, Unlock:2
+        lock_1_unlock_0(1, "LOCK: Flashes once, UNLOCK: No flash"), //Lock:1, Unlock:0
+        lock_0_unlock_2(2, "LOCK: No flash, UNLOCK: Flash twice"), // Lock:0, Unlock:2
+        lock_2_unlock_1(3, "LOCK: Flash twice, UNLOCK: Flash once"), // Lock:2, Unlock:1
+
+        // в мануале поменяны местами
+        lock_0_unlock_1(4, "LOCK: No flash, UNLOCK: Flash once"),  // Lock:0, Unlock:1
+        lock_2_unlock_0(5, "LOCK: Flash twice, UNLOCK: No flash"),  // Lock:2, Unlock:0
+        lock_0_unlock_0(6,"No function"), // Lock:0, Unlock:0
+        cannot_select(0x0F, "Cannot change"); // в мануале нет
         private int idx;
         private String title;
         EtacsCustomData3(int idx, String title) {
@@ -64,11 +67,11 @@ public class EtacsCustomData {
         }
     }
     public enum EtacsCustomData4 {
-        normal_int(0, "Normal INT"),
-        variable_int(1, "Variable INT"),
-        speed_sensitive(2, "Speed Sensitive"),
-        rain_sensitive(3, "Rain Sensitive"),
-        cannot_select(0x0F, "Cannot change" );
+        normal_int(0, "fixed to 4 seconds"), // Normal INT
+        variable_int(1, "by the wiper volume control"), // Variable INT
+        speed_sensitive(2, "to the intermittent wiper volume control and vehicle speed"), //Speed Sensitive
+        rain_sensitive(3, "to the intermittent wiper volume control and lighting control sensor"), // Rain Sensitive
+        cannot_select(0x0F, "Cannot change" ); // нет в мануале
         private int idx;
         private String title;
         EtacsCustomData4(int idx, String title) {
@@ -86,9 +89,9 @@ public class EtacsCustomData {
 
     public enum EtacsCustomData5 {
         only_washer(0, "Only Washer"),
-        washer_wiper(1,"Washer & Wiper"),
-        with_after_wipe(2, "With after wipe"),
-        cannot_select(0x0F,"Cannot change");
+        washer_wiper(1,"Without delayed finishing wipe function"), // Washer & Wiper
+        with_after_wipe(2, "With delayed finishing wipe function"), // With after wipe
+        cannot_select(0x0F,"Cannot change"); // нет в мануале
         private int idx;
         private String title;
 
@@ -150,8 +153,8 @@ public class EtacsCustomData {
     public enum EtacsCustomData8 {
         not_auto(0, "Not Auto"),
         open_by_vehicle_speed(1, "Open By Vehicle Speed"),
-        open_close_by_ig(2, "Open/Close by IG"),
-        open_close_by_keyless(3, "Open/Close by Keyless"),
+        open_close_by_ig(2, "Open/Close by Ignition switch"), // Open/Close by IG
+        open_close_by_keyless(3, "Open/Close by Keyless (initial condition)"),
         cannot_select(0x0F,"Cannot change");
         private int idx;
         private String title;
@@ -170,11 +173,11 @@ public class EtacsCustomData {
     }
 
     public enum EtacsCustomData9 {
-        level1_bright(0, "Level1 bright"),
-        level2_bright(1, "Level2 bright"),
-        level3(2,"Level3"),
-        level4_dark(3,"Level4 dark"),
-        level5_dark(4,"Level5 dark"),
+        level1_bright(0, "High-high ambient brightness"), //"Level1 bright"),
+        level2_bright(1, "High ambient brightness"), //"Level2 bright"),
+        level3(2,"Standard ambient brightness (initial condition)"), // "Level3"), (initial condition)
+        level4_dark(3,"Low ambient brightness"), // "Level4 dark"),
+        level5_dark(4,"Low-low ambient brightness"), // "Level5 dark"),
         cannot_select(0x0F,"Cannot change");
         private int idx;
         private String title;
@@ -215,7 +218,7 @@ public class EtacsCustomData {
     public enum EtacsCustomData11 {
         time_sec_0(0, "0 sec"),
         time_sec_7_5(1, "7.5 sec"),
-        time_sec_15(2, "15 sec"),
+        time_sec_15(2, "15 sec (initial condition)"), // initial condition
         time_sec_30(3, "30 sec"),
         time_sec_60(4, "60 sec"),
         time_sec_120(5, "120 sec"),
@@ -264,7 +267,7 @@ public class EtacsCustomData {
     public enum EtacsCustomData13 {
         disable(0, "Disable"),
         time_min_3(1, "3 min"),
-        time_min_30(2, "30 min"),
+        time_min_30(2, "30 min (initial value)"),
         time_min_60(3, "60 min"),
         cannot_select(0x0F,"Cannot change");
         private int idx;
@@ -432,7 +435,7 @@ public class EtacsCustomData {
     }
 
     public enum EtacsCustomData21 {
-        time_sec_30(0, "30 sec"),
+        time_sec_30(0, "30 sec (initial value)"),
         time_sec_60(1, "60 sec"),
         time_sec_120(2, "120 sec"),
         time_sec_180(3, "180 sec"),
@@ -517,11 +520,11 @@ public class EtacsCustomData {
 
     public enum EtacsCustomData25 {
         disable(0, "Disable"),
-        custom25_1(1, "P/W:O&C, D/M:O&C"),
-        custom25_2(2, "P/W:O&C"),
-        custom25_3(3, "P/W:C, D/M:O&C"),
-        custom25_4(4, "D/M:O&C"),
-        custom25_5(5, "P/W:C"),
+        custom25_1(1, "Power window: open & close; Door Mirror: open & close"), // P/W:O&C, D/M:O&C
+        custom25_2(2, "Power window: open & close"), // P/W:O&C
+        custom25_3(3, "Power window: lose; Door Mirror: open & close"), // P/W:C, D/M:O&C
+        custom25_4(4, "Door mirror: fold/unfold only"), // D/M:O&C
+        custom25_5(5, "Power window: close only"), // P/W:C
         cannot_select(0x0F,"Cannot change");
         private int idx;
         private String title;
@@ -600,10 +603,10 @@ public class EtacsCustomData {
     }
 
     public enum EtacsCustomData29 {
-        both_enable(0, "Both enable"),
-        doorEntry_enable(1, "DoorEntry enable"),
-        eng_start_enable(2, "ENG start enable"),
-        both_disable(3, "Both disable"),
+        both_enable(0, "All KOS functions are enabled"), // Both enable
+        doorEntry_enable(1, "Only door entry function is enabled"), // DoorEntry enable
+        eng_start_enable(2, "Only engine starting function is enabled"), // ENG start enable
+        both_disable(3, "All KOS functions are disabled"), // Both disable
         cannot_select(0x0F,"Cannot change");
         private int idx;
         private String title;
@@ -724,8 +727,8 @@ public class EtacsCustomData {
     }
 
     public enum EtacsCustomData35 {
-        custom_normal(0, "Normal"),
-        custom_long(1, "Long"),
+        custom_normal(0, "Normal - 0.4 second"),
+        custom_long(1, "Long - 0.8 second"),
         cannot_select(0x0F,"Cannot change");
         private int idx;
         private String title;
@@ -809,7 +812,7 @@ public class EtacsCustomData {
 
     public enum EtacsCustomData39 {
         disable(0, "Disable"),
-        lamp_small(1, "Small lamp"),
+        lamp_small(1, "Small (tail) lamp"),
         lamp_head(2, "Head lamp"),
         cannot_select(0x0F,"Cannot change");
         private int idx;
@@ -829,8 +832,8 @@ public class EtacsCustomData {
     }
 
     public enum EtacsCustomData40 {
-        custom_40_0(0, "Enable(R wip.ON)"),
-        custom_40_1(1, "Enable(R/F wip.)"),
+        custom_40_0(0, "Enable(rear wiper switch is ON)"), // Enable(R wip.ON)
+        custom_40_1(1, "Enable(front or rear wiper switch is ON)"), // Enable(R/F wip.)
         cannot_select(0x0F,"Cannot change");
         private int idx;
         private String title;
@@ -849,10 +852,10 @@ public class EtacsCustomData {
     }
 
     public enum EtacsCustomData41 {
-        custom_41_0(0, "Level 1"),
-        custom_41_1(1, "Level 2"),
-        custom_41_2(2, "Level 3"),
-        custom_41_3(3, "Level 4"),
+        custom_41_0(0, "100% sensitivity"), // "Level 1"),
+        custom_41_1(1, "90% sensitivity"), // "Level 2"),
+        custom_41_2(2, "80% sensitivity"), // "Level 3"),
+        custom_41_3(3, "70% sensitivity"), // "Level 4"),
         cannot_select(0x0F,"Cannot change");
         private int idx;
         private String title;
@@ -874,7 +877,7 @@ public class EtacsCustomData {
         custom_42_0(0, "Volume 1"),
         custom_42_1(1, "Volume 2"),
         custom_42_2(2, "Volume 3"),
-        custom_42_3(3, "Volume auto"),
+        custom_42_3(3, "Volume auto"), // нет такого в документации
         cannot_select(0x0F,"Cannot change");
         private int idx;
         private String title;
