@@ -21,7 +21,7 @@
 	<color name="speed_lt_120">#9B6A00</color>
 	<color name="speed_max">#FF0000</color>
 
-	<style name="MmcTheme" parent="@Theme.AppCompat">
+	<style name="MmcTheme" parent="@style/Theme.AppCompat">
 		<item name="android:windowBackground">@color/black_color</item>
 		<item name="android:colorBackground">@color/black_color</item>
 		<item name="android:itemBackground">@color/black_color</item>

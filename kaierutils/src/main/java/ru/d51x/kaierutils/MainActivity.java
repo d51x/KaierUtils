@@ -1249,10 +1249,10 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private void show_fuel_consumption(int mode) {
         switch (mode) {
             case 0:
-                ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmInst, 52, 32);
+                ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmAvg, 52, 32);
                 break;
             case 1:
-                ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmAvg, 52, 32);
+                ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsLp100KmInst, 52, 32);
                 break;
             case 2:
                 ui.updateFuelConsumptionText(tvFuelConsump, App.obd.oneTrip.fuelConsumptionLph, 52, 32);
