@@ -14,5 +14,7 @@
 	<item android:id="@+id/menu_odb2_coding"
 		android:title="@string/text_obd2_coding"
 		/>
-
+	<item android:id="@+id/menu_odb2_dtc"
+		android:title="@string/text_obd2_dtc"
+		/>
 </menu>

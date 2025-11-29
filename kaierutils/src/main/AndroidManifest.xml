@@ -69,7 +69,8 @@
         <service
             android:name=".BackgroundService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
+
         <activity
             android:name=".Settings.SettingsActivity"
             android:exported="true"
@@ -88,6 +89,10 @@
         <activity
             android:name=".coding.CodingActivity"
             android:label="@string/title_activity_coding"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".dtc.DtcActivity"
+            android:label="@string/title_activity_dtc"
             android:launchMode="singleTop" />
         <receiver
             android:name=".TWUtils.TWUtilBroadcastReceiver"

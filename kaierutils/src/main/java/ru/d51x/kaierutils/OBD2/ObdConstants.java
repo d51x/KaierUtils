@@ -40,6 +40,21 @@ public class ObdConstants {
     public static final String BLOCK_RX_763 = "764";   // PARKING
     public static final String BLOCK_763_PID_2101 = "2101";   // PARKING
 
+    public static final String BLOCK_77B = "77B";   // AFS
+    public static final String BLOCK_RX_77A = "77A";   // AFS
+
+    public static final String BLOCK_784 = "784";   // ABS
+    public static final String BLOCK_RX_785 = "785";   // ABS
+
+    public static final String BLOCK_622 = "622";   // SAS
+    public static final String BLOCK_RX_484 = "484";   // SAS
+
+    public static final String BLOCK_6E0 = "6E0";   // SRS
+    public static final String BLOCK_RX_51C = "51C";   // SRS
+
+    public static final String BLOCK_600 = "600";   // Immo
+    public static final String BLOCK_RX_500 = "500";   // Immo
+
     public static final String BLOCK_620 = "620";   // ETACS
     public static final String BLOCK_RX_504 = "504";   // ETACS RX
     public static final String BLOCK_620_PID_1A87 = "1A87";   // PartNumber and DiagVersion
