@@ -1,21 +1,20 @@
 package ru.d51x.kaierutils.dtc;
 
-public class DtcError {
+public class DtcHistoryError {
     private final String code;
     private String description;
-    private final boolean isActive;
+    private final int atMileage;
 
-    public DtcError(String code, boolean isActive) {
+    public DtcHistoryError(String code, int mileage) {
         this.code = code;
-        this.isActive = isActive;
+        this.atMileage = mileage;
     }
 
     public String getCode() {
         return code;
     }
-
-    public boolean isActive() {
-        return isActive;
+    public int getAtMileage() {
+        return atMileage;
     }
 
     public String getDescription() {

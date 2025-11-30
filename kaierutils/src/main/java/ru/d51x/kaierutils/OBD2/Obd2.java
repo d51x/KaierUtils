@@ -3,8 +3,7 @@ package ru.d51x.kaierutils.OBD2;
 import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 import static ru.d51x.kaierutils.OBD2.ObdConstants.*;
 import static ru.d51x.kaierutils.dtc.DtcUtils.extractErrorsFromBuffer;
-import static ru.d51x.kaierutils.dtc.DtcUtils.getDtcErrorType;
-import static ru.d51x.kaierutils.dtc.DtcUtils.isActiveError;
+import static ru.d51x.kaierutils.dtc.DtcUtils.extractHistoryErrorsFromBuffer;
 import static ru.d51x.kaierutils.utils.MessageUtils.SendBroadcastAction;
 import static ru.d51x.kaierutils.utils.SecurityUtils.calculateSkeyCVT;
 import static ru.d51x.kaierutils.utils.SecurityUtils.calculateSkeyEngine;
@@ -26,6 +25,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -60,6 +60,7 @@ import ru.d51x.kaierutils.Data.EtacsData;
 import ru.d51x.kaierutils.Data.ObdData;
 import ru.d51x.kaierutils.Data.TripData;
 import ru.d51x.kaierutils.dtc.DtcError;
+import ru.d51x.kaierutils.dtc.DtcHistoryError;
 import ru.d51x.kaierutils.utils.SecurityUtils;
 
 /**
@@ -746,95 +747,145 @@ public class Obd2 {
         return buffer;
     }
 
+    public ArrayList<Integer> readDtcHistoryByBlockId(String blockAddr, String rxAddr) {
+        ArrayList<Integer> buffer = null;
+        //isServiceCommand = true;
+        try {
+            //Thread.sleep(2000);
+            if (startExtendedDiagnosticSession(blockAddr, rxAddr)) {
+                buffer = runObdCommand("33E2", socket);
+                stopDiagnosticSession(blockAddr, rxAddr);
+            }
+
+        } catch (Exception ignored) {
+
+        } finally {
+            //isServiceCommand = false;
+        }
+        return buffer;
+    }
+
     public ArrayList<DtcError> readDtcEngine() {
-        ArrayList<DtcError> dtcErrors = new ArrayList<>();
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_7E0, BLOCK_RX_7E8);
-        dtcErrors = extractErrorsFromBuffer(buffer);
-        return dtcErrors;
+        return extractErrorsFromBuffer(buffer);
+    }
+
+    public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistoryEngine() {
+        ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_7E0, BLOCK_RX_7E8);
+        return extractHistoryErrorsFromBuffer(buffer);
     }
 
     public ArrayList<DtcError> readDtcCVT() {
-        ArrayList<DtcError> dtcErrors = new ArrayList<>();
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_7E1, BLOCK_RX_7E9);
-        dtcErrors = extractErrorsFromBuffer(buffer);
-        return dtcErrors;
+        return extractErrorsFromBuffer(buffer);
+    }
+
+    public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistoryCVT() {
+        ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_7E1, BLOCK_RX_7E9);
+        return extractHistoryErrorsFromBuffer(buffer);
     }
 
     public ArrayList<DtcError> readDtcEtacs() {
-        ArrayList<DtcError> dtcErrors = new ArrayList<>();
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_620, BLOCK_RX_504);
-        dtcErrors = extractErrorsFromBuffer(buffer);
-        return dtcErrors;
+        return extractErrorsFromBuffer(buffer);
+    }
+
+    public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistoryEtacs() {
+        ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_620, BLOCK_RX_504);
+        return extractHistoryErrorsFromBuffer(buffer);
     }
 
     public ArrayList<DtcError> readDtcAFS() {
-        ArrayList<DtcError> dtcErrors = new ArrayList<>();
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_77B, BLOCK_RX_77A);
-        dtcErrors = extractErrorsFromBuffer(buffer);
-        return dtcErrors;
+        return extractErrorsFromBuffer(buffer);
+    }
+
+    public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistoryAFS() {
+        ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_77B, BLOCK_RX_77A);
+        return extractHistoryErrorsFromBuffer(buffer);
     }
 
     public ArrayList<DtcError> readDtcAWC() {
-        ArrayList<DtcError> dtcErrors = new ArrayList<>();
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_7B6, BLOCK_RX_7B7);
-        dtcErrors = extractErrorsFromBuffer(buffer);
-        return dtcErrors;
+        return extractErrorsFromBuffer(buffer);
+    }
+
+    public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistoryAWC() {
+        ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_7B6, BLOCK_RX_7B7);
+        return extractHistoryErrorsFromBuffer(buffer);
     }
 
     // block 786 - ????
     // block  - ABS
     public ArrayList<DtcError> readDtcABS() {
-        ArrayList<DtcError> dtcErrors = new ArrayList<>();
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_784, BLOCK_RX_785);
-        dtcErrors = extractErrorsFromBuffer(buffer);
-        return dtcErrors;
+        return extractErrorsFromBuffer(buffer);
+    }
+    public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistoryABS() {
+        ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_784, BLOCK_RX_785);
+        return extractHistoryErrorsFromBuffer(buffer);
     }
     // block  - SAS
     public ArrayList<DtcError> readDtcSAS() {
-        ArrayList<DtcError> dtcErrors = new ArrayList<>();
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_622, BLOCK_RX_484);
-        dtcErrors = extractErrorsFromBuffer(buffer);
-        return dtcErrors;
+        return extractErrorsFromBuffer(buffer);
+    }
+    public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistorySAS() {
+        ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_622, BLOCK_RX_484);
+        return extractHistoryErrorsFromBuffer(buffer);
     }
 
     // block  - Meter
     public ArrayList<DtcError> readDtcMeter() {
-        ArrayList<DtcError> dtcErrors = new ArrayList<>();
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_6A0, BLOCK_RX_514);
-        dtcErrors = extractErrorsFromBuffer(buffer);
-        return dtcErrors;
+        return extractErrorsFromBuffer(buffer);
+    }
+    public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistoryMeter() {
+        ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_6A0, BLOCK_RX_514);
+        return extractHistoryErrorsFromBuffer(buffer);
     }
 
     // block  - Parking
     public ArrayList<DtcError> readDtcParking() {
-        ArrayList<DtcError> dtcErrors = new ArrayList<>();
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_763, BLOCK_RX_763);
-        dtcErrors = extractErrorsFromBuffer(buffer);
-        return dtcErrors;
+        return extractErrorsFromBuffer(buffer);
+    }
+    public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistoryParking() {
+        ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_763, BLOCK_RX_763);
+        return extractHistoryErrorsFromBuffer(buffer);
     }
 
     // block  - Climate
     public ArrayList<DtcError> readDtcClimate() {
-        ArrayList<DtcError> dtcErrors = new ArrayList<>();
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_688, BLOCK_RX_511);
-        dtcErrors = extractErrorsFromBuffer(buffer);
-        return dtcErrors;
+        return extractErrorsFromBuffer(buffer);
+    }
+
+    public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistoryClimate() {
+       ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_688, BLOCK_RX_511);
+        return extractHistoryErrorsFromBuffer(buffer);
     }
 
     // block  - Immo
     public ArrayList<DtcError> readDtcImmo() {
-        ArrayList<DtcError> dtcErrors = new ArrayList<>();
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_600, BLOCK_RX_500);
-        dtcErrors = extractErrorsFromBuffer(buffer);
-        return dtcErrors;
+        return extractErrorsFromBuffer(buffer);
+    }
+
+    public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistoryImmo() {
+        ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_600, BLOCK_RX_500);
+        return extractHistoryErrorsFromBuffer(buffer);
     }
 
     // block  - SRS
     public ArrayList<DtcError> readDtcSRS() {
-        ArrayList<DtcError> dtcErrors = new ArrayList<>();
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_6E0, BLOCK_RX_51C);
-        dtcErrors = extractErrorsFromBuffer(buffer);
-        return dtcErrors;
+        return extractErrorsFromBuffer(buffer);
+    }
+
+    public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistorySRS() {
+        ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_6E0, BLOCK_RX_51C);
+        return extractHistoryErrorsFromBuffer(buffer);
     }
 
 

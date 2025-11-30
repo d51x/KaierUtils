@@ -1,6 +1,7 @@
 package ru.d51x.kaierutils.dtc;
 
 import static ru.d51x.kaierutils.dtc.DtcUtils.extractErrorsFromBuffer;
+import static ru.d51x.kaierutils.dtc.DtcUtils.extractHistoryErrorsFromBuffer;
 import static ru.d51x.kaierutils.utils.StringUtils.hexStringToBuffer;
 
 import android.annotation.SuppressLint;
@@ -42,6 +43,7 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
     private CheckBox cbDtcSas;
     private CheckBox cbDtcSrs;
     private CheckBox cbDtcImmo;
+    private CheckBox cbHistory;
 
     private RecyclerView lvDtcErrors;
 
@@ -73,6 +75,8 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
         cbDtcSrs = findViewById(R.id.cbDtcSrs);
         cbDtcImmo = findViewById(R.id.cbDtcImmo);
 
+        cbHistory = findViewById(R.id.cbHistory);
+
         lvDtcErrors = findViewById(R.id.lvDtcErrors);
         lvDtcErrors.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -92,55 +96,272 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
     private void readDtcErrorsTest() {
         List<Object> items = new ArrayList<>();
 
-        String dtcString1 = "5801A51520";
-        ArrayList<Integer> buffer = hexStringToBuffer(dtcString1, 0);
-        ArrayList<DtcError> dtcErrors1 = extractErrorsFromBuffer(buffer);
-        for (DtcError e: dtcErrors1) {
-            if (DtcEngineErrorDescription.getByCode(e.getCode()) != null) {
-                String description = Objects.requireNonNull(DtcEngineErrorDescription.getByCode(e.getCode())).getDescription() ;
-                e.setDescription(description);
-            }
-            e.setBlock("Engine");
-        }
+        String dtcString1 = "";
 
-        items.add(new DtcHeader("Engine", dtcErrors1.size(), 0));
-        items.addAll(dtcErrors1);
+        if (cbHistory.isChecked()) {
+            dtcString1 = "73E2136659C217023FC1840721C1691297C01914BE96A85011FFFFFFFFFFFFFFFFFFFFFFFF";
 
-        dtcString1 = "5802C18460C16960";
-        buffer = hexStringToBuffer(dtcString1, 0);
-        ArrayList<DtcError> dtcErrors2 = extractErrorsFromBuffer(buffer);
-        for (DtcError e: dtcErrors2) {
-            if (DtcEtacsErrorDescription.getByCode(e.getCode()) != null) {
-                String description = Objects.requireNonNull(DtcEtacsErrorDescription.getByCode(e.getCode())).getDescription() ;
-                e.setDescription(description);
+            ArrayList<Integer> buffer = hexStringToBuffer(dtcString1, 0);
+            Pair<Integer, ArrayList<DtcHistoryError>> dtcErrors1 = extractHistoryErrorsFromBuffer(buffer);
+            for (DtcHistoryError e : dtcErrors1.second) {
+                if (DtcEtacsErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcEtacsErrorDescription.getByCode(e.getCode())).getDescription();
+                    e.setDescription(description);
+                }
             }
-            e.setBlock("Engine");
-        }
-        items.add(new DtcHeader("Etacs", dtcErrors2.size(), 0));
-        items.addAll(dtcErrors2);
 
-        dtcString1 = "5800";
-        buffer = hexStringToBuffer(dtcString1, 0);
-        ArrayList<DtcError> dtcErrors3 = extractErrorsFromBuffer(buffer);
-        for (DtcError e: dtcErrors3) {
-            if (DtcCVTErrorDescription.getByCode(e.getCode()) != null) {
-                String description = Objects.requireNonNull(DtcCVTErrorDescription.getByCode(e.getCode())).getDescription() ;
-                e.setDescription(description);
+            items.add(new DtcHeader("ETACS", dtcErrors1.second.size(), dtcErrors1.first));
+            items.addAll(dtcErrors1.second);
+
+            // *******
+            dtcString1 = "73E2000000D4150000C4156318FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
+
+            buffer = hexStringToBuffer(dtcString1, 0);
+            dtcErrors1 = extractHistoryErrorsFromBuffer(buffer);
+            for (DtcHistoryError e : dtcErrors1.second) {
+                if (DtcAWCErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcAWCErrorDescription.getByCode(e.getCode())).getDescription();
+                    e.setDescription(description);
+                }
             }
-            e.setBlock("CVT");
+
+            items.add(new DtcHeader("4WD/AWC", dtcErrors1.second.size(), dtcErrors1.first));
+            items.addAll(dtcErrors1.second);
+
+            // *******
+            dtcString1 = "73E223665917736318FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
+
+            buffer = hexStringToBuffer(dtcString1, 0);
+            dtcErrors1 = extractHistoryErrorsFromBuffer(buffer);
+            for (DtcHistoryError e : dtcErrors1.second) {
+                if (DtcCVTErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcCVTErrorDescription.getByCode(e.getCode())).getDescription();
+                    e.setDescription(description);
+                }
+            }
+
+            items.add(new DtcHeader("CVT/AT/TC-SST", dtcErrors1.second.size(), dtcErrors1.first));
+            items.addAll(dtcErrors1.second);
+
+            // *******
+            dtcString1 = "73E2116659C1844AFCC184630AC184117BC18413EFC01914BEC1842B9BC18439D4C184420F";
+
+            buffer = hexStringToBuffer(dtcString1, 0);
+            dtcErrors1 = extractHistoryErrorsFromBuffer(buffer);
+            for (DtcHistoryError e : dtcErrors1.second) {
+                if (DtcClimateErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcClimateErrorDescription.getByCode(e.getCode())).getDescription();
+                    e.setDescription(description);
+                }
+            }
+
+            items.add(new DtcHeader("Climate", dtcErrors1.second.size(), dtcErrors1.first));
+            items.addAll(dtcErrors1.second);
+
+            // *******
+            dtcString1 = "73E2116659C1846659C1846650C1846651C1846652C1846653C1846655C1846657C1846658";
+
+            buffer = hexStringToBuffer(dtcString1, 0);
+            dtcErrors1 = extractHistoryErrorsFromBuffer(buffer);
+            for (DtcHistoryError e : dtcErrors1.second) {
+                if (DtcSRSErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcSRSErrorDescription.getByCode(e.getCode())).getDescription();
+                    e.setDescription(description);
+                }
+            }
+
+            items.add(new DtcHeader("SRS", dtcErrors1.second.size(), dtcErrors1.first));
+            items.addAll(dtcErrors1.second);
+
+        } else {
+            dtcString1 = "5801A51520";
+            ArrayList<Integer> buffer = hexStringToBuffer(dtcString1, 0);
+            ArrayList<DtcError> dtcErrors1 = extractErrorsFromBuffer(buffer);
+            for (DtcError e : dtcErrors1) {
+                if (DtcEngineErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcEngineErrorDescription.getByCode(e.getCode())).getDescription();
+                    e.setDescription(description);
+                }
+            }
+
+            items.add(new DtcHeader("Engine", dtcErrors1.size(), 0));
+            items.addAll(dtcErrors1);
+
+            dtcString1 = "5802C18460C16960";
+            buffer = hexStringToBuffer(dtcString1, 0);
+            ArrayList<DtcError> dtcErrors2 = extractErrorsFromBuffer(buffer);
+            for (DtcError e : dtcErrors2) {
+                if (DtcEtacsErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcEtacsErrorDescription.getByCode(e.getCode())).getDescription();
+                    e.setDescription(description);
+                }
+            }
+            items.add(new DtcHeader("Etacs", dtcErrors2.size(), 0));
+            items.addAll(dtcErrors2);
+
+            dtcString1 = "5800";
+            buffer = hexStringToBuffer(dtcString1, 0);
+            ArrayList<DtcError> dtcErrors3 = extractErrorsFromBuffer(buffer);
+            for (DtcError e : dtcErrors3) {
+                if (DtcCVTErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcCVTErrorDescription.getByCode(e.getCode())).getDescription();
+                    e.setDescription(description);
+                }
+            }
+            items.add(new DtcHeader("CVT", dtcErrors3.size(), 0));
+            items.addAll(dtcErrors3);
         }
-        items.add(new DtcHeader("CVT", dtcErrors3.size(), 0));
-        items.addAll(dtcErrors3);
 
         DtcErrorAdapter adapter = new DtcErrorAdapter(DtcActivity.this, items);
         lvDtcErrors.setAdapter(adapter);
     }
 
     private void readDtcHistory() {
+        if (!cbHistory.isChecked()) return;
+        App.obd.isServiceCommand = true;
+        List<Object> items = new ArrayList<>();
 
+        // engine
+        if (cbDtcEngine.isChecked()) {
+            Pair<Integer, ArrayList<DtcHistoryError>> dtcErrorsEngine = App.obd.readDtcHistoryEngine();
+            for (DtcHistoryError e: dtcErrorsEngine.second) {
+                if (DtcEngineErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcEngineErrorDescription.getByCode(e.getCode())).getDescription() ;
+                    e.setDescription(description);
+                }
+            }
+            items.add(new DtcHeader("Engine", dtcErrorsEngine.second.size(), dtcErrorsEngine.first));
+            items.addAll(dtcErrorsEngine.second);
+        }
+
+        if (cbDtcCvt.isChecked()) {
+            Pair<Integer, ArrayList<DtcHistoryError>> dtcErrorsCvt = App.obd.readDtcHistoryCVT();
+            for (DtcHistoryError e: dtcErrorsCvt.second) {
+                if (DtcCVTErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcCVTErrorDescription.getByCode(e.getCode())).getDescription() ;
+                    e.setDescription(description);
+                }
+            }
+            items.add(new DtcHeader("CVT", dtcErrorsCvt.second.size(), dtcErrorsCvt.first));
+            items.addAll(dtcErrorsCvt.second);
+        }
+
+        if (cbDtcEtacs.isChecked()) {
+            Pair<Integer, ArrayList<DtcHistoryError>> dtcErrorsEtacs = App.obd.readDtcHistoryEtacs();
+            for (DtcHistoryError e: dtcErrorsEtacs.second) {
+                if (DtcEtacsErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcEtacsErrorDescription.getByCode(e.getCode())).getDescription() ;
+                    e.setDescription(description);
+                }
+            }
+            items.add(new DtcHeader("ETACS", dtcErrorsEtacs.second.size(), dtcErrorsEtacs.first));
+            items.addAll(dtcErrorsEtacs.second);
+        }
+
+        if (cbDtcAfs.isChecked()) {
+            Pair<Integer, ArrayList<DtcHistoryError>> dtcErrorsAfs = App.obd.readDtcHistoryAFS();
+            for (DtcHistoryError e: dtcErrorsAfs.second) {
+                if (DtcAFSErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcAFSErrorDescription.getByCode(e.getCode())).getDescription() ;
+                    e.setDescription(description);
+                }
+            }
+            items.add(new DtcHeader("AFS", dtcErrorsAfs.second.size(), dtcErrorsAfs.first));
+            items.addAll(dtcErrorsAfs.second);
+        }
+
+        if (cbDtcAwc.isChecked()) {
+            Pair<Integer, ArrayList<DtcHistoryError>> dtcErrorsAwc = App.obd.readDtcHistoryAWC();
+            for (DtcHistoryError e: dtcErrorsAwc.second) {
+                if (DtcAWCErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcAWCErrorDescription.getByCode(e.getCode())).getDescription() ;
+                    e.setDescription(description);
+                }
+            }
+            items.add(new DtcHeader("4WD/AWC", dtcErrorsAwc.second.size(), dtcErrorsAwc.first));
+            items.addAll(dtcErrorsAwc.second);
+        }
+
+        if (cbDtcAbs.isChecked()) {
+            Pair<Integer, ArrayList<DtcHistoryError>> dtcErrorsAbs = App.obd.readDtcHistoryABS();
+            for (DtcHistoryError e: dtcErrorsAbs.second) {
+                if (DtcAbsAscErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcAbsAscErrorDescription.getByCode(e.getCode())).getDescription() ;
+                    e.setDescription(description);
+                }
+            }
+            items.add(new DtcHeader("ABS/ASC", dtcErrorsAbs.second.size(), dtcErrorsAbs.first));
+            items.addAll(dtcErrorsAbs.second);
+        }
+
+        if (cbDtcMeter.isChecked()) {
+            Pair<Integer, ArrayList<DtcHistoryError>> dtcErrorsMeter = App.obd.readDtcHistoryMeter();
+            for (DtcHistoryError e: dtcErrorsMeter.second) {
+                if (DtcMeterErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcMeterErrorDescription.getByCode(e.getCode())).getDescription() ;
+                    e.setDescription(description);
+                }
+            }
+            items.add(new DtcHeader("Combine Meter", dtcErrorsMeter.second.size(), dtcErrorsMeter.first));
+            items.addAll(dtcErrorsMeter.second);
+        }
+
+        if (cbDtcParking.isChecked()) {
+            Pair<Integer, ArrayList<DtcHistoryError>> dtcErrorsParking = App.obd.readDtcHistoryParking();
+            for (DtcHistoryError e: dtcErrorsParking.second) {
+                if (DtcParkingErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcParkingErrorDescription.getByCode(e.getCode())).getDescription() ;
+                    e.setDescription(description);
+                }
+            }
+            items.add(new DtcHeader("Parking", dtcErrorsParking.second.size(), dtcErrorsParking.first));
+            items.addAll(dtcErrorsParking.second);
+        }
+
+        if (cbDtcClimate.isChecked()) {
+            Pair<Integer, ArrayList<DtcHistoryError>> dtcErrorsClimate = App.obd.readDtcHistoryClimate();
+            for (DtcHistoryError e: dtcErrorsClimate.second) {
+                if (DtcClimateErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcClimateErrorDescription.getByCode(e.getCode())).getDescription() ;
+                    e.setDescription(description);
+                }
+            }
+            items.add(new DtcHeader("Climate", dtcErrorsClimate.second.size(), dtcErrorsClimate.first));
+            items.addAll(dtcErrorsClimate.second);
+        }
+
+        if (cbDtcImmo.isChecked()) {
+            Pair<Integer, ArrayList<DtcHistoryError>> dtcErrorsImmo = App.obd.readDtcHistoryImmo();
+            for (DtcHistoryError e: dtcErrorsImmo.second) {
+                if (DtcKosWcmErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcKosWcmErrorDescription.getByCode(e.getCode())).getDescription() ;
+                    e.setDescription(description);
+                }
+            }
+            items.add(new DtcHeader("KOS/WCM/Immo", dtcErrorsImmo.second.size(), dtcErrorsImmo.first));
+            items.addAll(dtcErrorsImmo.second);
+        }
+
+        if (cbDtcSrs.isChecked()) {
+            Pair<Integer, ArrayList<DtcHistoryError>> dtcErrorsSrs = App.obd.readDtcHistorySRS();
+            for (DtcHistoryError e: dtcErrorsSrs.second) {
+                if (DtcSRSErrorDescription.getByCode(e.getCode()) != null) {
+                    String description = Objects.requireNonNull(DtcSRSErrorDescription.getByCode(e.getCode())).getDescription() ;
+                    e.setDescription(description);
+                }
+            }
+            items.add(new DtcHeader("SRS", dtcErrorsSrs.second.size(), dtcErrorsSrs.first));
+            items.addAll(dtcErrorsSrs.second);
+        }
+
+        App.obd.isServiceCommand = false;
+
+        DtcErrorAdapter adapter = new DtcErrorAdapter(DtcActivity.this, items);
+        lvDtcErrors.setAdapter(adapter);
     }
 
     private void readDtcErrors() {
+        if (cbHistory.isChecked()) return;
         App.obd.isServiceCommand = true;
         List<Object> items = new ArrayList<>();
 
@@ -164,7 +385,6 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
                     String description = Objects.requireNonNull(DtcCVTErrorDescription.getByCode(e.getCode())).getDescription() ;
                     e.setDescription(description);
                 }
-                e.setBlock("CVT");
             }
             items.add(new DtcHeader("CVT", dtcErrorsCvt.size(), 0));
             items.addAll(dtcErrorsCvt);
@@ -189,7 +409,6 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
                     String description = Objects.requireNonNull(DtcAFSErrorDescription.getByCode(e.getCode())).getDescription() ;
                     e.setDescription(description);
                 }
-                e.setBlock("AFS");
             }
             items.add(new DtcHeader("AFS", dtcErrorsAfs.size(), 0));
             items.addAll(dtcErrorsAfs);
