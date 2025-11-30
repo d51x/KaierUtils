@@ -12,10 +12,12 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -88,7 +90,7 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
 
 
     private void readDtcErrorsTest() {
-        ArrayList<DtcError> dtcErrors = new ArrayList<>();
+        List<Object> items = new ArrayList<>();
 
         String dtcString1 = "5801A51520";
         ArrayList<Integer> buffer = hexStringToBuffer(dtcString1, 0);
@@ -100,7 +102,9 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
             }
             e.setBlock("Engine");
         }
-        dtcErrors.addAll(dtcErrors1);
+
+        items.add(new DtcHeader("Engine", dtcErrors1.size(), 0));
+        items.addAll(dtcErrors1);
 
         dtcString1 = "5802C18460C16960";
         buffer = hexStringToBuffer(dtcString1, 0);
@@ -112,9 +116,23 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
             }
             e.setBlock("Engine");
         }
-        dtcErrors.addAll(dtcErrors2);
+        items.add(new DtcHeader("Etacs", dtcErrors2.size(), 0));
+        items.addAll(dtcErrors2);
 
-        DtcErrorAdapter adapter = new DtcErrorAdapter(DtcActivity.this, R.layout.list_item_dtc, dtcErrors);
+        dtcString1 = "5800";
+        buffer = hexStringToBuffer(dtcString1, 0);
+        ArrayList<DtcError> dtcErrors3 = extractErrorsFromBuffer(buffer);
+        for (DtcError e: dtcErrors3) {
+            if (DtcCVTErrorDescription.getByCode(e.getCode()) != null) {
+                String description = Objects.requireNonNull(DtcCVTErrorDescription.getByCode(e.getCode())).getDescription() ;
+                e.setDescription(description);
+            }
+            e.setBlock("CVT");
+        }
+        items.add(new DtcHeader("CVT", dtcErrors3.size(), 0));
+        items.addAll(dtcErrors3);
+
+        DtcErrorAdapter adapter = new DtcErrorAdapter(DtcActivity.this, items);
         lvDtcErrors.setAdapter(adapter);
     }
 
@@ -124,7 +142,8 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
 
     private void readDtcErrors() {
         App.obd.isServiceCommand = true;
-        ArrayList<DtcError> dtcErrors = new ArrayList<>();
+        List<Object> items = new ArrayList<>();
+
         // engine
         if (cbDtcEngine.isChecked()) {
             ArrayList<DtcError> dtcErrorsEngine = App.obd.readDtcEngine();
@@ -133,9 +152,9 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
                     String description = Objects.requireNonNull(DtcEngineErrorDescription.getByCode(e.getCode())).getDescription() ;
                     e.setDescription(description);
                 }
-                e.setBlock("Engine");
             }
-            dtcErrors.addAll(dtcErrorsEngine);
+            items.add(new DtcHeader("Engine", dtcErrorsEngine.size(), 0));
+            items.addAll(dtcErrorsEngine);
         }
 
         if (cbDtcCvt.isChecked()) {
@@ -147,7 +166,8 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
                 }
                 e.setBlock("CVT");
             }
-            dtcErrors.addAll(dtcErrorsCvt);
+            items.add(new DtcHeader("CVT", dtcErrorsCvt.size(), 0));
+            items.addAll(dtcErrorsCvt);
         }
 
         if (cbDtcEtacs.isChecked()) {
@@ -157,9 +177,9 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
                     String description = Objects.requireNonNull(DtcEtacsErrorDescription.getByCode(e.getCode())).getDescription() ;
                     e.setDescription(description);
                 }
-                e.setBlock("ETACS");
             }
-            dtcErrors.addAll(dtcErrorsEtacs);
+            items.add(new DtcHeader("ETACS", dtcErrorsEtacs.size(), 0));
+            items.addAll(dtcErrorsEtacs);
         }
 
         if (cbDtcAfs.isChecked()) {
@@ -171,7 +191,8 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
                 }
                 e.setBlock("AFS");
             }
-            dtcErrors.addAll(dtcErrorsAfs);
+            items.add(new DtcHeader("AFS", dtcErrorsAfs.size(), 0));
+            items.addAll(dtcErrorsAfs);
         }
 
         if (cbDtcAwc.isChecked()) {
@@ -181,9 +202,9 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
                     String description = Objects.requireNonNull(DtcAWCErrorDescription.getByCode(e.getCode())).getDescription() ;
                     e.setDescription(description);
                 }
-                e.setBlock("4WD/AWC");
             }
-            dtcErrors.addAll(dtcErrorsAwc);
+            items.add(new DtcHeader("4WD/AWC", dtcErrorsAwc.size(), 0));
+            items.addAll(dtcErrorsAwc);
         }
 
         if (cbDtcAbs.isChecked()) {
@@ -193,9 +214,9 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
                     String description = Objects.requireNonNull(DtcAbsAscErrorDescription.getByCode(e.getCode())).getDescription() ;
                     e.setDescription(description);
                 }
-                e.setBlock("ABS/ASC");
             }
-            dtcErrors.addAll(dtcErrorsAbs);
+            items.add(new DtcHeader("ABS/ASC", dtcErrorsAbs.size(), 0));
+            items.addAll(dtcErrorsAbs);
         }
 
 //        if (cbDtcSas.isChecked()) {
@@ -214,9 +235,9 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
                     String description = Objects.requireNonNull(DtcMeterErrorDescription.getByCode(e.getCode())).getDescription() ;
                     e.setDescription(description);
                 }
-                e.setBlock("Combine Meter");
             }
-            dtcErrors.addAll(dtcErrorsMeter);
+            items.add(new DtcHeader("Combine Meter", dtcErrorsMeter.size(), 0));
+            items.addAll(dtcErrorsMeter);
         }
 
         if (cbDtcParking.isChecked()) {
@@ -226,9 +247,9 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
                     String description = Objects.requireNonNull(DtcParkingErrorDescription.getByCode(e.getCode())).getDescription() ;
                     e.setDescription(description);
                 }
-                e.setBlock("Parking");
             }
-            dtcErrors.addAll(dtcErrorsParking);
+            items.add(new DtcHeader("Parking", dtcErrorsParking.size(), 0));
+            items.addAll(dtcErrorsParking);
         }
 
         if (cbDtcClimate.isChecked()) {
@@ -238,9 +259,9 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
                     String description = Objects.requireNonNull(DtcClimateErrorDescription.getByCode(e.getCode())).getDescription() ;
                     e.setDescription(description);
                 }
-                e.setBlock("Climate");
             }
-            dtcErrors.addAll(dtcErrorsClimate);
+            items.add(new DtcHeader("Climate", dtcErrorsClimate.size(), 0));
+            items.addAll(dtcErrorsClimate);
         }
 
         if (cbDtcImmo.isChecked()) {
@@ -250,9 +271,9 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
                     String description = Objects.requireNonNull(DtcKosWcmErrorDescription.getByCode(e.getCode())).getDescription() ;
                     e.setDescription(description);
                 }
-                e.setBlock("KOS/WCM/Immo");
             }
-            dtcErrors.addAll(dtcErrorsImmo);
+            items.add(new DtcHeader("KOS/WCM/Immo", dtcErrorsImmo.size(), 0));
+            items.addAll(dtcErrorsImmo);
         }
 
         if (cbDtcSrs.isChecked()) {
@@ -262,13 +283,13 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
                     String description = Objects.requireNonNull(DtcSRSErrorDescription.getByCode(e.getCode())).getDescription() ;
                     e.setDescription(description);
                 }
-                e.setBlock("SRS");
             }
-            dtcErrors.addAll(dtcErrorsSrs);
+            items.add(new DtcHeader("SRS", dtcErrorsSrs.size(), 0));
+            items.addAll(dtcErrorsSrs);
         }
         App.obd.isServiceCommand = false;
 
-        DtcErrorAdapter adapter = new DtcErrorAdapter(DtcActivity.this, R.layout.list_item_dtc, dtcErrors);
+        DtcErrorAdapter adapter = new DtcErrorAdapter(DtcActivity.this, items);
         lvDtcErrors.setAdapter(adapter);
     }
 
