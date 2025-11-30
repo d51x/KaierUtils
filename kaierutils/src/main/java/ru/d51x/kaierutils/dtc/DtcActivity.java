@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ConcatAdapter;
@@ -44,7 +45,7 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
     private CheckBox cbDtcSrs;
     private CheckBox cbDtcImmo;
     private CheckBox cbHistory;
-
+    private ProgressBar dtcProgressBar;
     private RecyclerView lvDtcErrors;
 
     @SuppressLint("MissingInflatedId")
@@ -77,6 +78,9 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
 
         cbHistory = findViewById(R.id.cbHistory);
 
+        dtcProgressBar = findViewById(R.id.dtcProgressBar);
+        dtcProgressBar.setVisibility(View.GONE);
+
         lvDtcErrors = findViewById(R.id.lvDtcErrors);
         lvDtcErrors.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -87,11 +91,21 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnDtcRead -> {
+                dtcProgressBar.setVisibility(View.VISIBLE);
                 readDtcErrors();
                 readDtcHistory();
+                dtcProgressBar.setVisibility(View.GONE);
             }
-            case R.id.btnDtcReset -> dtcErrorsReset();
-            case R.id.btnDtcTest -> readDtcErrorsTest();
+            case R.id.btnDtcReset -> {
+                dtcProgressBar.setVisibility(View.VISIBLE);
+                dtcErrorsReset();
+                dtcProgressBar.setVisibility(View.GONE);
+            }
+            case R.id.btnDtcTest -> {
+                dtcProgressBar.setVisibility(View.VISIBLE);
+                readDtcErrorsTest();
+                dtcProgressBar.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -516,7 +530,54 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
     }
 
     private void dtcErrorsReset() {
+        App.obd.isServiceCommand = true;
 
+        // engine
+        if (cbDtcEngine.isChecked()) {
+            App.obd.resetDtcEngine();
+        }
+
+        if (cbDtcCvt.isChecked()) {
+            App.obd.resetDtcCVT();
+        }
+
+        if (cbDtcEtacs.isChecked()) {
+            App.obd.readDtcEtacs();
+        }
+
+        if (cbDtcAfs.isChecked()) {
+            App.obd.readDtcAFS();
+        }
+
+        if (cbDtcAwc.isChecked()) {
+            App.obd.readDtcAWC();
+        }
+
+        if (cbDtcAbs.isChecked()) {
+            App.obd.readDtcABS();
+        }
+
+        if (cbDtcMeter.isChecked()) {
+            App.obd.readDtcMeter();
+        }
+
+        if (cbDtcParking.isChecked()) {
+            App.obd.readDtcParking();
+        }
+
+        if (cbDtcClimate.isChecked()) {
+            App.obd.readDtcClimate();
+        }
+
+        if (cbDtcImmo.isChecked()) {
+            App.obd.readDtcImmo();
+        }
+
+        if (cbDtcSrs.isChecked()) {
+            App.obd.readDtcSRS();
+        }
+
+        App.obd.isServiceCommand = false;
     }
 }
 

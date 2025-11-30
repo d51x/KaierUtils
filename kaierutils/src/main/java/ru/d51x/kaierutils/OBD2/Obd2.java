@@ -765,6 +765,24 @@ public class Obd2 {
         return buffer;
     }
 
+    public ArrayList<Integer> resetDtcByBlockId(String blockAddr, String rxAddr) {
+        ArrayList<Integer> buffer = null;
+        //isServiceCommand = true;
+        try {
+            //Thread.sleep(2000);
+            if (startExtendedDiagnosticSession(blockAddr, rxAddr)) {
+                buffer = runObdCommand("14FF00", socket);
+                stopDiagnosticSession(blockAddr, rxAddr);
+            }
+
+        } catch (Exception ignored) {
+
+        } finally {
+            //isServiceCommand = false;
+        }
+        return buffer;
+    }
+
     public ArrayList<DtcError> readDtcEngine() {
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_7E0, BLOCK_RX_7E8);
         return extractErrorsFromBuffer(buffer);
@@ -773,6 +791,10 @@ public class Obd2 {
     public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistoryEngine() {
         ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_7E0, BLOCK_RX_7E8);
         return extractHistoryErrorsFromBuffer(buffer);
+    }
+
+    public void resetDtcEngine() {
+        ArrayList<Integer> buffer = resetDtcByBlockId(BLOCK_7E0, BLOCK_RX_7E8);
     }
 
     public ArrayList<DtcError> readDtcCVT() {
@@ -785,6 +807,10 @@ public class Obd2 {
         return extractHistoryErrorsFromBuffer(buffer);
     }
 
+    public void resetDtcCVT() {
+        ArrayList<Integer> buffer = resetDtcByBlockId(BLOCK_7E1, BLOCK_RX_7E9);
+    }
+
     public ArrayList<DtcError> readDtcEtacs() {
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_620, BLOCK_RX_504);
         return extractErrorsFromBuffer(buffer);
@@ -793,6 +819,10 @@ public class Obd2 {
     public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistoryEtacs() {
         ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_620, BLOCK_RX_504);
         return extractHistoryErrorsFromBuffer(buffer);
+    }
+
+    public void resetDtcEtacs() {
+        ArrayList<Integer> buffer = resetDtcByBlockId(BLOCK_620, BLOCK_RX_504);
     }
 
     public ArrayList<DtcError> readDtcAFS() {
@@ -805,6 +835,10 @@ public class Obd2 {
         return extractHistoryErrorsFromBuffer(buffer);
     }
 
+    public void resetDtcAFS() {
+        ArrayList<Integer> buffer = resetDtcByBlockId(BLOCK_77B, BLOCK_RX_77A);
+    }
+
     public ArrayList<DtcError> readDtcAWC() {
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_7B6, BLOCK_RX_7B7);
         return extractErrorsFromBuffer(buffer);
@@ -813,6 +847,10 @@ public class Obd2 {
     public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistoryAWC() {
         ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_7B6, BLOCK_RX_7B7);
         return extractHistoryErrorsFromBuffer(buffer);
+    }
+
+    public void resetDtcAWC() {
+        ArrayList<Integer> buffer = resetDtcByBlockId(BLOCK_7B6, BLOCK_RX_7B7);
     }
 
     // block 786 - ????
@@ -825,6 +863,11 @@ public class Obd2 {
         ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_784, BLOCK_RX_785);
         return extractHistoryErrorsFromBuffer(buffer);
     }
+
+    public void resetDtcABS() {
+        ArrayList<Integer> buffer = resetDtcByBlockId(BLOCK_784, BLOCK_RX_785);
+    }
+
     // block  - SAS
     public ArrayList<DtcError> readDtcSAS() {
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_622, BLOCK_RX_484);
@@ -833,6 +876,9 @@ public class Obd2 {
     public Pair<Integer, ArrayList<DtcHistoryError>> readDtcHistorySAS() {
         ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_622, BLOCK_RX_484);
         return extractHistoryErrorsFromBuffer(buffer);
+    }
+    public void resetDtcSAS() {
+        ArrayList<Integer> buffer = resetDtcByBlockId(BLOCK_622, BLOCK_RX_484);
     }
 
     // block  - Meter
@@ -844,7 +890,9 @@ public class Obd2 {
         ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_6A0, BLOCK_RX_514);
         return extractHistoryErrorsFromBuffer(buffer);
     }
-
+    public void resetDtcMeter() {
+        ArrayList<Integer> buffer = resetDtcByBlockId(BLOCK_6A0, BLOCK_RX_514);
+    }
     // block  - Parking
     public ArrayList<DtcError> readDtcParking() {
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_763, BLOCK_RX_763);
@@ -854,7 +902,9 @@ public class Obd2 {
         ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_763, BLOCK_RX_763);
         return extractHistoryErrorsFromBuffer(buffer);
     }
-
+    public void resetDtcParking() {
+        ArrayList<Integer> buffer = resetDtcByBlockId(BLOCK_763, BLOCK_RX_763);
+    }
     // block  - Climate
     public ArrayList<DtcError> readDtcClimate() {
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_688, BLOCK_RX_511);
@@ -865,7 +915,9 @@ public class Obd2 {
        ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_688, BLOCK_RX_511);
         return extractHistoryErrorsFromBuffer(buffer);
     }
-
+    public void resetDtcClimate() {
+        ArrayList<Integer> buffer = resetDtcByBlockId(BLOCK_688, BLOCK_RX_511);
+    }
     // block  - Immo
     public ArrayList<DtcError> readDtcImmo() {
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_600, BLOCK_RX_500);
@@ -876,7 +928,9 @@ public class Obd2 {
         ArrayList<Integer> buffer = readDtcHistoryByBlockId(BLOCK_600, BLOCK_RX_500);
         return extractHistoryErrorsFromBuffer(buffer);
     }
-
+    public void resetDtcImmo() {
+        ArrayList<Integer> buffer = resetDtcByBlockId(BLOCK_600, BLOCK_RX_500);
+    }
     // block  - SRS
     public ArrayList<DtcError> readDtcSRS() {
         ArrayList<Integer> buffer = readDtcByBlockId(BLOCK_6E0, BLOCK_RX_51C);
@@ -888,6 +942,9 @@ public class Obd2 {
         return extractHistoryErrorsFromBuffer(buffer);
     }
 
+    public void resetDtcSRS() {
+        ArrayList<Integer> buffer = resetDtcByBlockId(BLOCK_6E0, BLOCK_RX_51C);
+    }
 
 
     private ArrayList<Integer> runObdCommand(String PID, BluetoothSocket sock) {
