@@ -144,7 +144,7 @@
         app:layout_constraintEnd_toStartOf="@+id/btnDtcTest"
         app:layout_constraintTop_toTopOf="@+id/btnDtcTest" />
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lvDtcErrors"
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -12,6 +12,8 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,7 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
     private CheckBox cbDtcSrs;
     private CheckBox cbDtcImmo;
 
-    private ListView lvDtcErrors;
+    private RecyclerView lvDtcErrors;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -70,6 +72,7 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
         cbDtcImmo = findViewById(R.id.cbDtcImmo);
 
         lvDtcErrors = findViewById(R.id.lvDtcErrors);
+        lvDtcErrors.setLayoutManager(new LinearLayoutManager(this));
     }
 
 
@@ -114,6 +117,11 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
         DtcErrorAdapter adapter = new DtcErrorAdapter(DtcActivity.this, R.layout.list_item_dtc, dtcErrors);
         lvDtcErrors.setAdapter(adapter);
     }
+
+    private void readDtcHistory() {
+
+    }
+
     private void readDtcErrors() {
         App.obd.isServiceCommand = true;
         ArrayList<DtcError> dtcErrors = new ArrayList<>();
