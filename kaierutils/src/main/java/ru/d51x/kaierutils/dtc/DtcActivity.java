@@ -86,7 +86,10 @@ public class DtcActivity extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnDtcRead -> readDtcErrors();
+            case R.id.btnDtcRead -> {
+                readDtcErrors();
+                readDtcHistory();
+            }
             case R.id.btnDtcReset -> dtcErrorsReset();
             case R.id.btnDtcTest -> readDtcErrorsTest();
         }
